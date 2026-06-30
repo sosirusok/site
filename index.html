@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Shield Browser — 가볍고 빠른 프라이버시 브라우저</title>
+<meta name="description" content="광고·트래커 차단 내장, 크롬 수준 속도의 프라이버시 브라우저. Windows용 무료 다운로드." />
+<style>
+  :root{
+    --bg:#0f1115; --card:#171a21; --line:#272c37; --txt:#cdd3de; --dim:#8b93a3;
+    --accent:#7aa2f7; --accent2:#9ece6a; --danger:#f7768e;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--txt);
+    font:16px/1.6 "Segoe UI",system-ui,-apple-system,sans-serif}
+  a{color:var(--accent)}
+  .wrap{max-width:860px;margin:0 auto;padding:0 20px}
+  header{text-align:center;padding:72px 20px 40px}
+  .logo{font-size:64px;line-height:1}
+  h1{font-size:40px;margin:14px 0 6px;letter-spacing:-.5px}
+  .tag{color:var(--dim);font-size:18px;margin:0 0 28px}
+  .dl{display:inline-flex;align-items:center;gap:10px;background:var(--accent2);color:#0c1208;
+    font-weight:700;font-size:18px;text-decoration:none;padding:15px 30px;border-radius:12px;
+    box-shadow:0 8px 30px #9ece6a33;transition:transform .12s}
+  .dl:hover{transform:translateY(-2px)}
+  .meta{color:var(--dim);font-size:13px;margin-top:12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin:44px 0}
+  .f{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .f .i{font-size:24px}
+  .f h3{margin:10px 0 6px;font-size:16px}
+  .f p{margin:0;color:var(--dim);font-size:14px}
+  .steps{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px 24px;margin:8px 0 36px}
+  .steps li{margin:14px 0}
+  code{background:#0b0d11;border:1px solid var(--line);border-radius:6px;padding:2px 7px;font-size:13px;color:var(--accent2)}
+  .note{background:#7aa2f70d;border:1px solid #7aa2f733;border-radius:12px;padding:16px 20px;font-size:14px;color:var(--dim);margin:24px 0}
+  .note b{color:var(--txt)}
+  h2{font-size:24px;margin:40px 0 6px}
+  footer{text-align:center;color:var(--dim);font-size:13px;padding:40px 20px 60px;border-top:1px solid var(--line);margin-top:40px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">🛡</div>
+  <h1>Shield Browser</h1>
+  <p class="tag">가볍고 빠른 <b>프라이버시 브라우저</b> · 광고·트래커 차단 내장</p>
+  <a class="dl" href="https://github.com/sosirusok/shield-browser/releases/latest/download/Shield-Browser-win-x64.zip">⬇ Windows용 다운로드</a>
+  <div class="meta">Windows 10/11 · 64bit · 무료 · 설치 불필요(압축 풀고 실행)</div>
+</header>
+
+<div class="wrap">
+  <div class="grid">
+    <div class="f"><div class="i">🚫</div><h3>광고·트래커 차단</h3><p>EasyList + EasyPrivacy 필터 내장. 광고 요청 자체를 막아 더 빠르게.</p></div>
+    <div class="f"><div class="i">⚡</div><h3>크롬 수준 속도</h3><p>Chromium 엔진(Electron) 기반이라 속도는 크롬과 동일.</p></div>
+    <div class="f"><div class="i">🔒</div><h3>웹 추적 방어</h3><p>DNT/GPC 전송, 권한 기본 거부, WebRTC IP 누출 차단, 깨끗한 UA.</p></div>
+    <div class="f"><div class="i">🌐</div><h3>http·https 모두</h3><p>붙여넣은 링크 그대로 열림. 선생님들의 http 수업 사이트도 OK.</p></div>
+    <div class="f"><div class="i">🧹</div><h3>원클릭 데이터 삭제</h3><p>쿠키·캐시·스토리지 한 번에. 종료 시 자동 삭제 옵션.</p></div>
+    <div class="f"><div class="i">🪶</div><h3>가벼움</h3><p>저사양 노트북도 고려한 메모리 절약 설정.</p></div>
+  </div>
+
+  <h2>설치 방법</h2>
+  <ol class="steps">
+    <li>위 <b>다운로드</b> 버튼으로 zip을 받습니다.</li>
+    <li>zip을 <b>압축 해제</b>합니다 (원하는 폴더로).</li>
+    <li>폴더 안의 <code>Shield.bat</code>을 <b>더블클릭</b>하면 실행됩니다.</li>
+  </ol>
+  <p class="meta">※ 설치 없이 바로 실행되는 포터블 앱이라, Windows SmartScreen이 "알 수 없는 앱" 경고를 띄울 수 있어요. 서명되지 않은 개인 앱이라 그렇습니다 — <b>추가 정보 → 실행</b>으로 진행하면 됩니다.</p>
+
+  <div class="note">
+    <b>정직하게:</b> Shield는 <b>웹사이트·광고사로부터의</b> 프라이버시를 보호합니다(쿠키·트래커·핑거프린트 표면 축소).
+    기기에 관리자 권한으로 설치된 모니터링/관리 소프트웨어(학교·회사 MDM 등)나 통신사·기관의 망 차단은 우회하지 <b>않습니다</b> —
+    어떤 브라우저도 원리상 불가능하고, 의도하지도 않았습니다.
+  </div>
+
+  <h2>오픈소스</h2>
+  <p style="color:var(--dim)">소스 코드와 빌드 방법은 <a href="https://github.com/sosirusok/shield-browser">GitHub 저장소</a>에 공개되어 있어요.</p>
+</div>
+
+<footer>
+  Shield Browser · MIT License · made by <a href="https://github.com/sosirusok">sosirusok</a><br>
+  Chromium/Electron · @ghostery/adblocker
+</footer>
+</body>
+</html>
