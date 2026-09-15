@@ -7,19 +7,25 @@
   border: 1px solid var(--a-line); background: var(--a-panel); font-size: 15px; color: var(--a-ink-2);
 }
 .storeBtn:hover { border-color: #b9bfc6; }
-.storeBtnActive { border-color: var(--store); box-shadow: inset 4px 0 0 var(--store); color: var(--a-ink); font-weight: 700; }
+.storeBtnActive { border-color: #f0b429; box-shadow: inset 4px 0 0 #f0b429; color: var(--a-ink); font-weight: 700; }
 
 /* 미리보기: 794px(=210mm) 기준 시트를 컨테이너 너비에 맞춰 축소 */
 .previewOuter { overflow: hidden; }
 .previewInner { transform-origin: top left; width: 794px; }
 
-/* ── A4 시트 (손님용이므로 종이·세리프 언어) ── */
+/* ── A4 시트: 흰 종이, 검정 활자, 금색·빨강 강조 (인쇄 잉크 절약) ── */
 .sheet {
+  --p-ink: #111111;
+  --p-ink-2: #444444;
+  --p-ink-3: #777777;
+  --p-gold: #f0b429;
+  --p-red: #c8271f;
+  --p-line: #dddddd;
   width: 210mm;
   height: 297mm;
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--font-sans);
+  background: #ffffff;
+  color: var(--p-ink);
+  font-family: "Pretendard Variable", Pretendard, sans-serif;
   position: relative;
   overflow: hidden;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
@@ -28,54 +34,54 @@
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
-.sheet::before {
-  content: "";
-  position: absolute; inset: 0;
-  background-image: repeating-linear-gradient(0deg, rgba(26, 23, 20, 0.02) 0 1px, transparent 1px 4px);
-  pointer-events: none;
-}
 .band {
-  background: var(--store);
+  background: var(--p-ink);
   color: #fff;
-  padding: 8mm 14mm 7mm;
+  padding: 7mm 14mm;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 8mm;
 }
-.bandUnion { font-family: var(--font-mono); font-size: 11pt; letter-spacing: 0.08em; opacity: 0.92; }
-.bandStore { font-family: var(--font-serif); font-weight: 900; font-size: 18pt; letter-spacing: -0.02em; white-space: nowrap; }
-.body { padding: 10mm 14mm 0; display: grid; grid-template-rows: auto auto 1fr; gap: 9mm; position: relative; }
-.eyebrow { font-family: var(--font-mono); font-size: 10.5pt; letter-spacing: 0.06em; color: var(--ink-3); text-transform: uppercase; }
+.bandBrand { font-family: "Black Han Sans", sans-serif; font-size: 20pt; color: var(--p-gold); line-height: 1; }
+.bandBrand small { font-family: "Pretendard Variable", Pretendard, sans-serif; font-size: 9.5pt; color: #cfcfcf; margin-left: 3mm; letter-spacing: 0.04em; }
+.bandStore { font-size: 14pt; font-weight: 800; white-space: nowrap; }
+.bandStore b { color: var(--p-gold); margin-right: 1.5mm; }
+.bandStore em { font-style: normal; font-weight: 600; font-size: 10.5pt; color: #cfcfcf; margin-left: 2mm; }
+.body { padding: 11mm 14mm 0; display: grid; grid-template-rows: auto auto auto 1fr; gap: 7mm; position: relative; }
 .title {
-  font-family: var(--font-serif);
-  font-weight: 900;
-  font-size: 58pt;
-  line-height: 1.06;
-  letter-spacing: -0.035em;
-  margin: 1mm 0 0;
+  font-family: "Black Han Sans", sans-serif;
+  font-weight: 400;
+  font-size: 50pt;
+  line-height: 1.12;
+  letter-spacing: -0.005em;
+  margin: 0;
 }
-.title em { font-style: normal; color: var(--store-ink); box-shadow: inset 0 -0.35em 0 var(--store-paper); }
-.rules { display: grid; gap: 0; border-top: 3px solid var(--ink); }
-.rule { display: grid; grid-template-columns: 16mm 1fr; gap: 4mm; align-items: baseline; padding: 5mm 0; border-bottom: 1px solid var(--line-strong); }
-.rule:last-child { border-bottom: 0; }
-.ruleNo { font-family: var(--font-serif); font-weight: 900; font-size: 30pt; line-height: 1; color: var(--store); }
-.ruleText { font-size: 16.5pt; line-height: 1.45; font-weight: 500; }
-.ruleText small { display: block; font-size: 11.5pt; color: var(--ink-3); font-weight: 400; margin-top: 1mm; }
-.qrs { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; align-self: end; padding-bottom: 8mm; }
-.qrBox { display: grid; grid-template-columns: 50mm 1fr; gap: 5mm; align-items: center; border: 1.5px solid var(--ink); padding: 6mm 5mm; background: var(--thermal); }
-.qrBox svg { width: 50mm; height: 50mm; display: block; }
-.qrMissing { width: 50mm; height: 50mm; border: 1.5px dashed var(--line-strong); display: grid; place-items: center; text-align: center; font-size: 9.5pt; color: var(--ink-3); padding: 3mm; }
-.qrLabel { font-family: var(--font-serif); font-weight: 900; font-size: 15pt; line-height: 1.2; letter-spacing: -0.01em; }
-.qrHint { font-size: 11pt; color: var(--ink-2); margin-top: 1.5mm; line-height: 1.4; }
-.qrUrl { font-family: var(--font-mono); font-size: 8.5pt; color: var(--ink-3); margin-top: 2mm; word-break: break-all; }
-.foot { border-top: 3px solid var(--ink); margin: 0 14mm; padding: 6mm 0 10mm; display: grid; grid-template-columns: 1fr auto; gap: 6mm; align-items: end; }
-.footStores { display: flex; flex-wrap: wrap; gap: 3mm 7mm; font-size: 11pt; font-weight: 600; }
-.footStores span { display: inline-flex; align-items: center; gap: 2mm; }
-.footStores i { width: 3.2mm; height: 3.2mm; border-radius: 50%; background: var(--store); display: inline-block; }
-.footNote { font-size: 9.5pt; color: var(--ink-3); line-height: 1.45; text-align: right; }
-.footBrand { font-family: var(--font-serif); font-weight: 900; font-size: 13pt; }
-.footBrand small { font-family: var(--font-mono); font-weight: 400; font-size: 9pt; margin-left: 2mm; color: var(--ink-3); }
+.title em { font-style: normal; color: var(--p-red); }
+.sub { font-size: 15pt; line-height: 1.5; color: var(--p-ink-2); margin: -2mm 0 0; }
+.sub b { color: var(--p-ink); font-weight: 800; }
+.steps { list-style: none; margin: 0; padding: 0; border-top: 2.5px solid var(--p-ink); }
+.steps li { display: grid; grid-template-columns: 20mm 1fr; gap: 4mm; align-items: start; padding: 5mm 0; border-bottom: 1px solid var(--p-line); }
+.steps li:last-child { border-bottom: 0; }
+.stepNo { font-family: "Black Han Sans", sans-serif; font-size: 30pt; line-height: 1; color: var(--p-gold); }
+.stepTitle { font-size: 16pt; font-weight: 800; line-height: 1.35; margin: 0; }
+.stepDesc { font-size: 11pt; color: var(--p-ink-3); margin: 1.2mm 0 0; line-height: 1.45; }
+.qrs { display: grid; grid-template-columns: 1.25fr 1fr; gap: 6mm; align-self: end; padding-bottom: 7mm; }
+.qrBox { display: grid; grid-template-columns: 44mm 1fr; gap: 5mm; align-items: center; border: 2px solid var(--p-ink); padding: 6mm 5mm; }
+.qrMain { border-color: var(--p-gold); background: #fff8e6; }
+.qrImg svg { width: 44mm; height: 44mm; display: block; }
+.qrMissing { width: 44mm; height: 44mm; border: 1.5px dashed #bbb; display: grid; place-items: center; text-align: center; font-size: 9.5pt; color: var(--p-ink-3); padding: 3mm; }
+.qrLabel { font-family: "Black Han Sans", sans-serif; font-size: 17pt; line-height: 1.2; margin: 0; }
+.qrHint { font-size: 10.5pt; color: var(--p-ink-2); margin: 1.5mm 0 0; line-height: 1.4; }
+.qrUrl { font-family: "IBM Plex Mono", monospace; font-size: 8pt; color: var(--p-ink-3); margin: 2mm 0 0; word-break: break-all; }
+.foot { background: var(--p-gold); color: var(--p-ink); padding: 6mm 14mm 7mm; display: grid; gap: 3mm; }
+.footStores { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; }
+.footStores li { font-size: 11.5pt; font-weight: 800; line-height: 1.3; }
+.footStores li b { margin-right: 1.5mm; }
+.footStores li span { font-weight: 600; font-size: 9.5pt; margin-left: 1.5mm; opacity: 0.75; }
+.footStores li small { display: block; font-size: 8.5pt; font-weight: 500; opacity: 0.8; margin-top: 0.8mm; }
+.footHere { text-decoration: underline; text-decoration-thickness: 0.6mm; text-underline-offset: 1mm; }
+.footNote { font-size: 8.5pt; margin: 0; opacity: 0.85; }
 
 @page { size: A4; margin: 0; }
 @media print {

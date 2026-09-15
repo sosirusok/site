@@ -1,3 +1,4 @@
+import "./admin-globals.css";
 import type { Metadata, Viewport } from "next";
 import ui from "./admin.module.css";
 
