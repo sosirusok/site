@@ -1,0 +1,26 @@
+.header {
+  position: sticky; top: 0; z-index: 40;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: saturate(1.2) blur(10px);
+  -webkit-backdrop-filter: saturate(1.2) blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.inner { display: flex; align-items: center; gap: 20px; min-height: 60px; }
+.brand { display: inline-flex; align-items: baseline; gap: 6px; }
+.mark { font-size: 24px; line-height: 1; }
+.hanja { font-size: 12px; color: var(--ink-3); letter-spacing: 0.2em; }
+.nav { display: none; gap: 22px; margin-left: 8px; font-weight: 600; font-size: 15px; }
+.nav a { position: relative; padding: 4px 0; }
+.nav a::after { content: ""; position: absolute; left: 0; right: 100%; bottom: 0; height: 2px; background: var(--ink); transition: right 0.25s var(--ease-out); }
+.nav a:hover::after { right: 0; }
+.side { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+.login {
+  display: inline-flex; align-items: center; min-height: 38px; padding: 0 14px; border-radius: 999px;
+  border: 1.5px solid var(--ink); font-weight: 600; font-size: 14px; transition: background 0.2s, color 0.2s;
+}
+.login:hover { background: var(--ink); color: var(--paper); }
+.phone { font-size: 14px; padding: 8px 12px; border: 1px solid var(--line-strong); border-radius: 999px; }
+@media (min-width: 760px) {
+  .nav { display: flex; }
+  .mark { font-size: 26px; }
+}
