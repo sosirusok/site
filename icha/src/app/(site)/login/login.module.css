@@ -1,0 +1,25 @@
+.page { padding: 40px 0 24px; }
+.grid { display: grid; gap: 40px; }
+.main { display: grid; gap: 22px; align-content: start; max-width: 560px; }
+.title { margin-top: 4px; }
+.lead { margin-bottom: 6px; }
+.note { line-height: 1.7; }
+.link { border-bottom: 1px solid currentColor; color: var(--ink-2); }
+
+.aside { align-self: start; }
+.asideEyebrow { margin-bottom: 14px; }
+.steps { display: grid; gap: 16px; }
+.steps li { display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: start; }
+.num { font-size: 30px; line-height: 1; color: var(--ink-2); }
+.stepTitle { font-weight: 700; font-size: 15px; }
+.stepText { font-size: 14px; color: var(--ink-2); line-height: 1.6; margin-top: 2px; }
+.stores { display: grid; gap: 8px; }
+.store { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--store-ink); }
+.store svg { color: var(--store); }
+.drink { margin-left: auto; font-size: 13px; color: var(--ink-3); font-weight: 400; }
+
+@media (min-width: 760px) {
+  .page { padding: 72px 0 40px; }
+  .grid { grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.85fr); gap: 64px; align-items: start; }
+  .aside { margin-top: 36px; }
+}

@@ -1,0 +1,17 @@
+.page { display: grid; gap: 34px; padding: 36px 0 20px; }
+.head { display: grid; gap: 14px; }
+.title { font-size: clamp(38px, 9vw, 80px); line-height: 1.02; letter-spacing: -0.035em; }
+.lead { max-width: 44ch; }
+.grid { display: grid; gap: 40px; }
+.main { min-width: 0; }
+.side { display: grid; gap: 20px; align-content: start; }
+.rulesPaper { font-size: 14px; }
+.paperTitle { font-size: 20px; }
+.paperFoot { font-size: 13px; letter-spacing: 0.14em; color: var(--ink-3); text-align: center; }
+.sideCta { display: grid; gap: 12px; justify-items: center; }
+.sideLink { font-weight: 600; border-bottom: 1.5px solid currentColor; font-size: 15px; }
+@media (min-width: 900px) {
+  .page { padding-top: 56px; gap: 48px; }
+  .grid { grid-template-columns: minmax(0, 1fr) 320px; gap: 64px; align-items: start; }
+  .side { position: sticky; top: 80px; }
+}

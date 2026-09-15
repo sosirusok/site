@@ -1,0 +1,26 @@
+.page { padding: 36px 0 24px; }
+.grid { display: grid; gap: 36px; }
+.intro { display: grid; gap: 18px; align-content: start; }
+.title { margin-top: 2px; }
+.lead { max-width: 34em; }
+.from { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-left: 4px solid var(--store); background: var(--store-paper); color: var(--store-ink); font-size: 15px; line-height: 1.5; border-radius: 0 var(--radius) var(--radius) 0; }
+.from svg { color: var(--store); flex: none; }
+
+.terms { display: grid; grid-template-columns: minmax(80px, max-content) 1fr; border-top: 3px solid var(--ink); }
+.term { display: grid; grid-template-columns: subgrid; grid-column: 1 / -1; gap: 14px; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--line-strong); }
+.term dd { margin: 0; font-size: 15px; line-height: 1.6; color: var(--ink-2); }
+.termNum { font-size: 22px; font-weight: 600; line-height: 1; white-space: nowrap; }
+.termNum span { font-size: 14px; font-weight: 400; margin-left: 2px; color: var(--ink-3); }
+.termWord { font-size: 24px; line-height: 1; }
+.more { line-height: 1.7; }
+.link { border-bottom: 1px solid currentColor; color: var(--ink-2); }
+
+.uploader { max-width: 520px; }
+.paused { display: grid; gap: 12px; justify-items: start; }
+.pausedTitle { font-size: 22px; }
+
+@media (min-width: 760px) {
+  .page { padding: 64px 0 40px; }
+  .grid { grid-template-columns: minmax(0, 1fr) minmax(360px, 480px); gap: 64px; align-items: start; }
+  .uploader { max-width: none; position: sticky; top: 84px; }
+}

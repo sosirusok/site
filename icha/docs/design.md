@@ -8,20 +8,27 @@
 
 주 사용 환경: **손님이 술집 테이블에서 휴대폰으로** (포스터 QR → 사이트). 모바일이 기본, 데스크톱은 확장. 직원은 매장 태블릿/휴대폰으로 관리자 화면을 본다.
 
-## 2. 디자인 언어 — "종이 위에 잉크와 도장"
-- 배경은 따뜻한 종이색(`--paper`), 글자는 잉크(`--ink`). 흰색(#fff) 배경 카드 남발 금지.
-- 매장마다 색 하나: 조선칼국수 테라코타 `--joseon`, 도쿄스탠드 앰버 `--tokyo`, 와르르맨숀 병 초록 `--wareureu`. 요소에 `data-store="joseon|tokyo|wareureu"` 를 붙이면 `--store`, `--store-ink`, `--store-paper` 가 잡힌다.
-- 활자: 제목은 **Noto Serif KR 900** (`.serif`, `.h1~.h3`, `.display`), 본문은 Pretendard(`--font-sans`), 숫자·코드·영수증·시간은 **IBM Plex Mono** (`.mono`). 세 서체를 섞어 쓰는 것이 이 사이트의 인상이다.
-- 모티프: 영수증 종이(`.paper` — 톱니 가장자리, 감열지 결), 도장(`<Stamp text="승인" slam />`), 절취선(점선 + 양끝 구멍), 세 술 아이콘(`DrinkIcon`), 큰 활자 포스터 레이아웃(비대칭, 굵은 괘선 `.rule-thick`).
-- 움직임: `.rise` 클래스를 주면 스크롤 진입 시 떠오른다(`.rise-d1~d4` 지연). 도장은 `slam`. 그 밖의 움직임은 CSS transition 으로 직접 만든다. 라이브러리(framer-motion, gsap 등) 추가 금지. `prefers-reduced-motion` 은 globals 에서 처리됨.
-- **금지**: 보라·파랑 그라데이션, 유리(glass) 효과, 둥근 카드 3개 나열식 "기능 소개", 이모지, ✨, 회색 12px 이하 보조 글자, 영어 마케팅 문구(“Get Started”), 스톡 일러스트, 아이콘 라이브러리(lucide 등), Tailwind, 외부 UI 킷. 사진은 매장 실사만.
-- 글자 크기 최소 14px(보조), 본문 16px, 탭 영역 최소 44px. 명도 대비 4.5:1 이상.
-- 한국어 문장은 사람이 쓴 것처럼: 짧고 구체적으로. "지금 바로", "특별한 혜택", "최고의", "~을 경험하세요" 같은 광고 말투 금지. 존댓말(해요체 또는 합쇼체) 통일 — 손님 화면은 해요체, 관리자 화면은 간결한 명사형/합쇼체.
+## 2. 디자인 언어 v2 — "서면 밤거리, 실사진과 굵은 활자" (참고: www.ganmaek.com 간빠맥주)
+
+사장님이 원하는 인상은 **실제 한국 술집 브랜드 사이트**다. 참고 사이트(간빠맥주)의 문법을 따른다: 어두운 차콜 바탕, 밤거리 실사진을 크게, 아주 굵은 한글 디스플레이 활자(Black Han Sans)로 한 줄씩 강하게, 금색 강조 하나, 큰 숫자, 테이프처럼 흐르는 띠, 실제 지도(매장 찾기), 사업자 정보가 있는 푸터. 종이색 바탕·세리프·파스텔 매장색·손그림 약도는 **모두 버린다**.
+
+- 바탕 `--bg` #141414, 표면 `--surface`, 글자 `--fg` 따뜻한 흰색. 강조는 **금색 `--gold` 하나**(버튼·키워드·번호). 도장·경고만 빨강 `--red`. 매장별 색은 쓰지 않는다 — 매장은 **사진·번호(01/02/03)·술 태그**로 구분한다.
+- 활자: 큰 제목은 **Black Han Sans**(`.display`, `.h1`, `.h2`), 그 아래는 Pretendard 800/700, 본문 Pretendard 16px, 숫자는 `.num`(tabular). 영수증·쿠폰 종이 안에서만 IBM Plex Mono(`.paper` 가 기본 적용).
+- 사진이 주인공: 각 매장의 **밤 외관·간판·내부·음식 실사진**을 크게, 위에 어두운 그라데이션(`.dim`)을 얹고 글자를 올린다. 사진이 없는 자리는 만들지 않는다(아이콘으로 대체 금지).
+- 큰 숫자: "24시간", "3곳", "사이드 1접시", "도보 2~4분", 네이버 리뷰 점수·개수(실제 값) 같은 숫자를 `.num` 으로 크게.
+- 띠(테이프) 마키: 금색 바탕에 검정 글자 또는 빨간 바탕에 흰 글자로 "1차 → 2차 · 영수증 한 장 · 사이드 한 접시 · 서면역 6번 출구 …" 가 흐른다.
+- 실제 지도: `StoreMap` 컴포넌트(네이버 지도 API 키가 있으면 네이버, 없으면 OpenStreetMap). 홈 `#map` 섹션과 매장 상세에 넣는다. 위치 문구는 `src/lib/locations.ts`(출구·도보 시간·랜드마크·층·주차) 를 쓴다. 손그림 약도 금지.
+- 종이 요소(영수증 접수증·쿠폰)는 어두운 바탕 위에 **밝은 종이 + 잉크 글자**로 남긴다(`.paper`, `.stamp`). 감열 프린터·도장·찢기·시계 연출은 유지.
+- 움직임: 스크롤 등장(`.rise`), 히어로 사진 크로스페이드, 숫자 카운트업, 띠 마키, 사진 hover 확대(1.04). 라이브러리 추가 금지.
+- **금지**: 종이색/베이지 바탕, 세리프 제목, 매장별 파스텔, 손그림 지도, 보라·파랑 그라데이션, 유리 효과, 둥근 카드 3개 나열식 기능 소개, 이모지, 아이콘 라이브러리, Tailwind, 12px 이하 글자, 영어 마케팅 문구.
+- 문장은 **실제 술집 홍보물 말투**로 짧고 직설적으로: "서면에서 1차 했으면, 2차 사이드는 공짜." "영수증 한 장이면 됩니다." 실제 숫자(영업시간, 리뷰 점수, 거리)를 쓴다. 손님 화면 해요체, 관리자 화면은 간결한 명사형.
 
 ## 3. 이미 있는 것 (수정 금지, 사용만)
 - `src/app/globals.css` — 토큰과 유틸 클래스(.wrap .btn .btn-store .btn-ghost .btn-block .btn-lg .input .field .label .help .error .paper .dots .row .stamp .rise .eyebrow .lead .small .h1.. .display .mono .serif .rule .rule-thick .sr-only)
 - `src/app/layout.tsx`(루트), `src/app/(site)/layout.tsx`(손님 사이트: Header+Footer+Reveal)
 - `src/components/site/Header.tsx`, `Footer.tsx`
+- `src/components/site/StoreMap.tsx` (+ StoreMap.css, StoreMap.module.css) — 실제 지도. props: stores(MapStore[]: id,name,shortName,drink,lat,lng,address,naverPlaceId,subway?,directions?,floor?), focusId?, height?, compact?(목록·패널 숨김). 클라이언트 컴포넌트.
+- `src/lib/geo.ts` (distanceM, walkMinutes, formatDistance, naverWalkUrl, kakaoMapUrl, googleMapUrl, SEOMYEON_STATION), `src/lib/locations.ts` (LOCATIONS[storeId]: subway, directions, floor, landmarks, parking)
 - `src/components/ui/icons.tsx` (MakgeolliIcon BeerIcon SojuIcon DrinkIcon ReceiptIcon StampIcon TicketIcon PinIcon ArrowIcon ClockIcon PhoneIcon CameraIcon), `Stamp.tsx`, `Reveal.tsx`
 - `src/lib/config.ts` (BRAND, Rules, REASONS/reasonText, normalizePhone/formatPhone/maskPhone/formatWon)
 - `src/lib/stores.ts` (STORES, STORE_BY_ID, getStore, giftStoresFor, naverPlaceUrl) — 데이터는 채워지는 중. 화면은 반드시 이 데이터로 렌더링하고 매장 정보를 하드코딩하지 않는다. 사진은 `store.images[]`(src는 /images/stores/<id>/... , kind: hero/exterior/interior/food/drink/menu).
@@ -43,14 +50,18 @@
 ## 5. 화면 목록과 요구사항
 
 ### 손님 사이트 `(site)` — 소유: A(홈·매장·안내), B(흐름)
-A-1 `/` 홈 (`src/app/(site)/page.tsx`)
- - 첫 화면: 큰 활자로 개념을 한 번에. 예) "1차는 마음대로. / 2차는 한 접시 얹어드립니다." 아래 한 줄 규칙(BRAND.ruleOneLiner) 과 두 버튼: [영수증 인증하기 → /verify] [세 매장 보기 → #stores]. 세 술 아이콘 또는 세 매장 색 띠가 아이덴티티 역할.
- - 이용 순서 3단계(사진 없이 활자와 괘선으로): ① 세 곳 중 한 곳에서 결제 ② 영수증 사진 인증 ③ 나머지 두 곳에서 사이드 한 접시. 각 단계는 번호를 큰 세리프로.
- - 세 매장 섹션 `#stores`: 매장별 사진(hero) + 이름 + 대표 술 + 한 줄(headline) + 영업시간 요약 + [매장 자세히] [네이버 플레이스 ↗]. 세 매장이 같은 카드 반복처럼 보이지 않게(색 띠·번호·엇갈린 배치).
- - 서면 골목 약도: 세 매장의 lat/lng 로 상대 위치를 그린 인라인 SVG(손그림 느낌의 선, 서면역 표시). 좌표가 null 이면 숨김.
- - 등급 안내 한 단락(누적 금액으로 단골/VIP/VVIP; 기준 금액은 `getRules()` 의 tiers 로 표시).
- - 공지(`rules.notice`) 있으면 상단에 얇은 띠.
-A-2 `/stores/[id]` 매장 상세 — 사진 갤러리(가로 스크롤 또는 벽돌 배치), 소개(intro), 영업시간 표, 주소·전화·길찾기(네이버 지도 링크 `https://map.naver.com/p/entry/place/<id>`; 모바일은 `nmap://place?id=<id>` 도 시도 가능), 메뉴(DB `listMenu(storeId)`; 무료 사이드 대상은 `isGift` 표시 — “이 메뉴는 다른 매장 영수증으로 무료”), 리뷰 인용 2~3개(`store.quotes` 가 있으면). 상단에 "이 매장 영수증이 있나요? → /verify" / "이 매장에서 쓸 쿠폰이 있나요? → /wallet".
+A-1 `/` 홈 (`src/app/(site)/page.tsx`) — 참고 사이트의 흐름을 따른다:
+ 1. **히어로(첫 화면 전체)**: 세 매장 밤 외관 실사진이 6초 간격으로 크로스페이드(`store.images` 중 kind exterior/hero) + `.dim`. 위에 작은 금색 줄 "서면 2차 연합 · 조선칼국수 × 도쿄스탠드 × 와르르맨숀", 그 아래 Black Han Sans 로 두 줄 "1차 영수증 한 장, / 2차 사이드는 **공짜**."(공짜만 금색), 한 문단 설명(세 곳 중 한 곳에서 계산했다면 나머지 두 곳에서 사이드 메뉴 하나 무료. 서면역 6번 출구 도보 2~4분.), 버튼 [영수증 인증하기](금색) [매장·위치 보기](outline). 하단에 지금 보이는 사진의 매장 이름 표시(슬라이드 인디케이터 겸).
+ 2. **띠 마키**(금색): "1차 → 2차 · 영수증 한 장 · 사이드 한 접시 · 조선칼국수 · 도쿄스탠드 · 와르르맨숀 · 서면역 6번 출구 …".
+ 3. **이렇게 받아요** — 01/02/03 큰 금색 번호 + 짧은 제목 + 한 줄, 각 단계 옆에 실사진(결제→매장 내부 사진, 인증→휴대폰 대신 영수증 종이 미니 연출(`.paper`), 사이드→음식 사진). `getRules()` 의 시간·최소 금액·하루 한도를 문장에.
+ 4. **세 곳, 세 가지 술** `#stores` — 매장당 큰 사진 카드(hero 이미지, hover 확대), 번호 01/02/03, 이름, 술 태그, 오늘 영업시간 한 줄(hours), 서면역에서 도보 n분(`geo.ts`), [매장 자세히] [네이버 플레이스 ↗]. 모바일은 세로로 크게, 데스크톱은 3열 또는 1+2 배치.
+ 5. **공짜로 받을 수 있는 사이드** — DB `listMenu(id,{giftOnly:true})` 의 사진 있는 메뉴를 매장별로 가로 스크롤/격자(사진 크게, 이름, 원래 가격에 취소선 + "무료"). 비어 있으면 섹션 숨김.
+ 6. **찾아오는 길** `#map` — 제목 + "세 곳은 서로 도보 2~3분" 문장(좌표로 계산) + `StoreMap`(세 매장, `LOCATIONS` 의 subway/directions/floor 전달).
+ 7. **자주 오면 등급** — 금색 큰 숫자로 기준 금액(`getRules().tiers`), 짧은 설명.
+ 8. **다녀간 분들** — `store.quotes` 실제 리뷰 인용 카드(매장명, 날짜) + 네이버 방문자 평점/리뷰 수는 `stores.ts` 에 값이 있을 때만.
+ 9. **마무리 CTA 띠** + 푸터(공용).
+ 공지(`rules.notice`)는 헤더 아래 얇은 금색 띠.
+A-2 `/stores/[id]` 매장 상세 — 상단 전체 폭 실사진 히어로(이름·술·오늘 영업 여부), 사진 격자 갤러리(가로 스크롤 또는 벽돌 배치), 소개(intro), 영업시간 표, 주소·전화·`StoreMap`(compact, 그 매장만) + `LOCATIONS` 의 출구·길 설명·층·주차, 메뉴(DB `listMenu(storeId)`; 무료 사이드 대상은 `isGift` 표시 — “이 메뉴는 다른 매장 영수증으로 무료”), 리뷰 인용 2~3개(`store.quotes` 가 있으면). 상단에 "이 매장 영수증이 있나요? → /verify" / "이 매장에서 쓸 쿠폰이 있나요? → /wallet".
 A-3 `/guide` 이용 방법·유의사항 — FAQ 형식(영수증 인정 기간, 인정 안 되는 경우, 쿠폰 유효기간, 직원 확인 방법, 전화번호만으로 로그인하는 이유, 개인정보 처리 한 단락). 값은 `getRules()` 에서 읽어 문장에 넣는다.
 A-4 `not-found.tsx`, `error.tsx`(`(site)` 안) — 종이 위에 짧은 문장.
 

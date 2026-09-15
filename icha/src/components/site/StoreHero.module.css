@@ -1,0 +1,20 @@
+.hero { background: var(--store-paper); color: var(--store-ink); border-top: 10px solid var(--store); border-bottom: 1px solid var(--line-strong); }
+.inner { display: grid; gap: 12px; padding: 26px 0 30px; }
+.eyebrow { display: flex; gap: 14px; align-items: center; font-size: 13px; letter-spacing: 0.1em; }
+.num { padding: 3px 8px; border: 1.5px solid currentColor; }
+.drink { display: inline-flex; align-items: center; gap: 6px; }
+.name { font-size: clamp(40px, 11vw, 96px); line-height: 1; letter-spacing: -0.035em; }
+.full { font-size: 13px; opacity: 0.85; }
+.headline { font-size: clamp(19px, 2.6vw, 26px); font-weight: 700; line-height: 1.4; max-width: 30ch; margin-top: 4px; }
+.asks { display: grid; gap: 12px; margin-top: 16px; color: var(--ink); }
+.ask { display: grid; grid-template-columns: 34px 1fr; grid-template-rows: auto auto; column-gap: 12px; row-gap: 4px; --tooth: 8px; padding: calc(var(--tooth) + 16px) 18px; transition: transform 0.2s var(--ease-out); }
+.ask:hover { transform: translateY(-2px); }
+.askIcon { grid-row: 1 / span 2; color: var(--store); align-self: start; padding-top: 2px; }
+.askQ { font-family: var(--font-serif); font-weight: 900; font-size: 18px; line-height: 1.3; }
+.askA { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--ink-2); }
+@media (min-width: 760px) {
+  .inner { padding: 40px 0 44px; grid-template-columns: minmax(0, 1fr) 380px; column-gap: 48px; align-items: end; }
+  .eyebrow, .name, .full, .headline { grid-column: 1; }
+  .asks { grid-column: 2; grid-row: 1 / span 5; align-self: end; margin-top: 0; }
+  .name { font-size: clamp(56px, 7.5vw, 104px); }
+}

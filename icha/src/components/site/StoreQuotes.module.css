@@ -1,0 +1,11 @@
+.list { display: grid; gap: 18px; }
+.item { border-top: 1px solid var(--line-strong); padding-top: 18px; }
+.quote { position: relative; margin: 0; padding-left: 30px; display: grid; gap: 10px; }
+.mark { position: absolute; left: -2px; top: -12px; font-size: 48px; line-height: 1; color: var(--store); }
+.text { font-weight: 700; font-size: clamp(17px, 2vw, 20px); line-height: 1.55; letter-spacing: -0.01em; }
+.foot { font-size: 13px; color: var(--ink-3); letter-spacing: 0.04em; }
+@media (min-width: 760px) {
+  .list { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px; }
+  .item { border-top: 0; border-left: 3px solid var(--store); padding: 4px 0 4px 22px; }
+  .quote { padding-left: 26px; }
+}

@@ -1,0 +1,10 @@
+.head { display: grid; gap: 14px; }
+.row { display: grid; gap: 6px; align-items: baseline; }
+.num { font-size: 14px; color: var(--ink-3); letter-spacing: 0.1em; }
+.title { margin: 0; }
+.sub { color: var(--ink-2); font-size: 16px; max-width: 52ch; }
+@media (min-width: 760px) {
+  .row { grid-template-columns: 80px 1fr; column-gap: 20px; }
+  .num { padding-top: 10px; font-size: 15px; }
+  .sub { grid-column: 2; }
+}

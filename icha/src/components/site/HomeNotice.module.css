@@ -1,0 +1,4 @@
+.band { background: var(--tokyo-paper); color: var(--tokyo-ink); border-bottom: 1px solid var(--line-strong); }
+.inner { display: flex; align-items: baseline; gap: 14px; min-height: 44px; padding: 10px 0; }
+.label { font-size: 15px; flex-shrink: 0; }
+.text { font-size: 14px; line-height: 1.5; }

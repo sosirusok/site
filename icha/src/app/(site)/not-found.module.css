@@ -1,0 +1,9 @@
+.wrap { display: grid; place-items: center; padding: 56px 0 24px; }
+.paper { width: min(420px, 100%); display: grid; gap: 14px; text-align: center; }
+.code { font-size: 13px; letter-spacing: 0.2em; color: var(--ink-3); }
+.title { font-size: clamp(26px, 5vw, 34px); line-height: 1.2; }
+.text { font-size: 16px; color: var(--ink-2); line-height: 1.6; }
+.stamp { display: grid; place-items: center; padding: 6px 0 2px; }
+.actions { display: grid; gap: 10px; padding-top: 6px; }
+.link { font-weight: 600; border-bottom: 1.5px solid currentColor; width: fit-content; justify-self: center; font-size: 15px; }
+.detail { font-size: 13px; color: var(--ink-3); word-break: break-all; }

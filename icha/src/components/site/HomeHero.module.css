@@ -1,0 +1,55 @@
+.hero { position: relative; overflow: hidden; padding: 20px 0 44px; }
+.watermark {
+  position: absolute; left: -0.08em; bottom: -0.32em; z-index: 0; pointer-events: none;
+  font-size: clamp(220px, 46vw, 560px); line-height: 1; color: rgba(26, 23, 20, 0.045); letter-spacing: -0.06em;
+}
+.grid { position: relative; z-index: 1; display: grid; gap: 26px; }
+
+/* 세 매장 색 띠 */
+.spine { display: grid; grid-template-columns: repeat(3, 1fr); border: 1.5px solid var(--ink); }
+.band { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 8px 6px; background: var(--store); color: #fff; }
+.band[data-store="tokyo"] { color: var(--tokyo-ink); }
+.bandName { font-size: 15px; letter-spacing: -0.01em; }
+.bandDrink { display: none; font-size: 12px; letter-spacing: 0.14em; opacity: 0.85; }
+
+.text { display: grid; gap: 18px; align-content: start; }
+.eyebrow { font-size: 13px; }
+.title { font-size: clamp(40px, 10.4vw, 92px); line-height: 1.02; letter-spacing: -0.035em; display: grid; }
+.line { display: block; }
+.em {
+  font-style: normal; color: inherit;
+  background-image: linear-gradient(transparent 62%, rgba(184, 49, 42, 0.34) 62% 92%, transparent 92%);
+  padding: 0 0.04em;
+}
+.lead { max-width: 30ch; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.actions > * { flex: 1 1 200px; }
+.downIcon { transform: rotate(90deg); }
+.meta { font-size: 14px; color: var(--ink-2); line-height: 1.7; }
+
+/* 예시 영수증 */
+.sample { width: min(300px, 100%); margin: 12px auto 0; transform: rotate(-2deg); font-size: 14px; }
+.sampleHead { display: flex; justify-content: space-between; align-items: baseline; font-size: 18px; }
+.sampleHanja { font-size: 11px; letter-spacing: 0.2em; color: var(--ink-3); }
+.sampleTag { font-size: 12px; letter-spacing: 0.18em; border: 1px solid var(--line-strong); padding: 2px 6px; }
+.sampleGift { font-size: 14px; line-height: 1.6; padding-right: 76px; }
+.sampleGift b { font-weight: 700; }
+.sampleStamp { position: absolute; right: 14px; bottom: 16px; }
+
+@media (min-width: 760px) {
+  .hero { padding: 36px 0 64px; }
+  .grid { grid-template-columns: minmax(0, 1fr) 156px; grid-template-rows: auto auto; column-gap: 48px; row-gap: 0; align-items: stretch; }
+  .spine { grid-column: 2; grid-row: 1 / span 2; grid-template-columns: repeat(3, 1fr); min-height: 560px; }
+  .band { writing-mode: vertical-rl; justify-content: flex-start; padding: 22px 0; gap: 12px; }
+  .bandName { font-size: 20px; }
+  .bandDrink { display: inline; }
+  .text { grid-column: 1; grid-row: 1; gap: 22px; padding-bottom: 30px; }
+  .lead { max-width: 36ch; }
+  .actions > * { flex: 0 0 auto; min-width: 220px; }
+  .sample { grid-column: 1; grid-row: 2; justify-self: end; margin: -40px 0 0; transform: rotate(-3.5deg); width: 280px; }
+}
+@media (min-width: 1040px) {
+  .text { min-height: 520px; grid-template-rows: auto auto auto auto 1fr; }
+  .meta { align-self: end; }
+  .sample { margin-top: -120px; margin-right: 8px; }
+}

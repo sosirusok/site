@@ -1,0 +1,109 @@
+/* ── 종이 티켓 ── */
+.ticket {
+  --p: 0;
+  position: relative; max-width: 460px; margin: 0 auto;
+  background: var(--thermal); color: var(--ink);
+  background-image: repeating-linear-gradient(0deg, rgba(26, 23, 20, 0.025) 0 1px, transparent 1px 3px);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-paper);
+  user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+}
+.band {
+  display: flex; align-items: center; gap: 10px; padding: 16px 20px;
+  background: var(--store); color: #fff; border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+.bandName { font-weight: 800; font-size: 18px; letter-spacing: -0.01em; }
+.bandKind { margin-left: auto; font-size: 12px; letter-spacing: 0.08em; opacity: 0.92; }
+
+.body { display: grid; gap: 18px; padding: 22px 20px 6px; }
+.menu { font-size: clamp(34px, 9vw, 44px); line-height: 1.1; letter-spacing: -0.03em; margin-top: -8px; }
+.rows { display: grid; gap: 8px; border-top: 1px solid var(--line-strong); padding-top: 14px; }
+.rows > div { display: grid; grid-template-columns: 76px 1fr; gap: 12px; font-size: 15px; line-height: 1.5; }
+.rows dt { color: var(--ink-3); }
+.rows dd { margin: 0; }
+.left { color: var(--stamp); font-weight: 600; }
+
+.codeBlock { display: grid; gap: 4px; padding: 16px 18px; border: 2px solid var(--ink); border-radius: var(--radius); }
+.code { font-size: clamp(36px, 10vw, 46px); font-weight: 600; letter-spacing: 0.22em; line-height: 1.1; padding-left: 0.1em; }
+.codeHelp { font-size: 14px; color: var(--ink-3); line-height: 1.5; }
+
+.show { text-align: center; font-size: 19px; padding: 22px 20px 18px; }
+
+/* 절취선 — 점선 + 양끝 구멍 + 찢어지는 선 */
+.perf {
+  position: relative; height: 24px; margin: 0 -1px;
+  background:
+    radial-gradient(circle at 0 50%, var(--paper) 11px, transparent 12px),
+    radial-gradient(circle at 100% 50%, var(--paper) 11px, transparent 12px);
+}
+.perf::before { content: ""; position: absolute; left: 20px; right: 20px; top: 50%; border-top: 2px dashed var(--line-strong); opacity: calc(1 - var(--p)); }
+.tear { position: absolute; left: 12px; right: 12px; top: 2px; width: calc(100% - 24px); height: 20px; overflow: visible; }
+.tear path { fill: none; stroke: var(--paper); stroke-width: 6; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.tear path { filter: drop-shadow(0 1px 0 rgba(26, 23, 20, 0.35)); }
+
+/* 아랫도리(스텁): 누르는 동안 왼쪽이 처진다 */
+.stub {
+  display: grid; gap: 12px; padding: 16px 20px 22px;
+  transform-origin: 100% 0;
+  transform: translateY(calc(var(--p) * 8px)) rotate(calc(var(--p) * -3deg));
+  filter: drop-shadow(0 calc(var(--p) * 10px) calc(var(--p) * 12px) rgba(26, 23, 20, calc(var(--p) * 0.35)));
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+.ticket:not(.holding) .stub { transition: transform 0.2s var(--ease-out); }
+.torn .stub { animation: fall 0.8s var(--ease-out) forwards; pointer-events: none; }
+@keyframes fall {
+  0% { transform: translateY(8px) rotate(-3deg); opacity: 1; }
+  100% { transform: translateY(90px) rotate(-9deg); opacity: 0; }
+}
+
+.hold {
+  position: relative; display: flex; align-items: center; justify-content: center; gap: 10px; overflow: hidden;
+  min-height: 64px; padding: 0 20px; border-radius: var(--radius);
+  border: 2px solid var(--store); color: var(--store-ink); background: var(--thermal);
+  font-weight: 700; font-size: 17px; touch-action: none; -webkit-tap-highlight-color: transparent;
+}
+.hold:disabled { opacity: 0.6; }
+.holdFill { position: absolute; left: 0; top: 0; bottom: 0; width: calc(var(--p) * 100%); background: var(--store-paper); }
+.holding .holdFill { background: var(--store); opacity: 0.35; }
+.holdLabel, .holdSec { position: relative; }
+.holdSec { font-size: 13px; color: var(--ink-3); font-weight: 400; }
+.holdHelp { font-size: 14px; color: var(--ink-3); line-height: 1.6; text-align: center; }
+
+/* 만료/취소 */
+.inactive { display: grid; gap: 12px; justify-items: start; padding: 6px 0 18px; }
+.inactiveText { font-size: 15px; line-height: 1.6; color: var(--ink-2); }
+.ticket[data-status="expired"] .band, .ticket[data-status="void"] .band { filter: grayscale(0.7); opacity: 0.8; }
+.ticket[data-status="expired"] .menu, .ticket[data-status="void"] .menu { color: var(--ink-3); }
+.ticket[data-status="expired"] .codeBlock, .ticket[data-status="void"] .codeBlock { border-color: var(--line-strong); color: var(--ink-3); }
+
+/* ── 사용 완료: 화면 전체가 잉크색으로 ── */
+.used {
+  position: relative; min-height: calc(100dvh - 60px);
+  background: var(--ink); color: var(--paper);
+  /* 가로 스크롤 없이 화면 폭 전체를 잉크색으로 (그림자로 바깥을 채우고 clip 으로 넓힌다) */
+  box-shadow: 0 0 0 100vmax var(--ink); clip-path: inset(0 -100vmax);
+  display: grid; align-content: center; justify-items: center; padding: 48px var(--gutter) 64px;
+  animation: inkIn 0.5s var(--ease-out) both;
+}
+@keyframes inkIn { from { opacity: 0; } }
+.usedInner { display: grid; gap: 14px; justify-items: center; text-align: center; max-width: 520px; width: 100%; }
+.usedEyebrow { color: var(--paper); opacity: 0.7; }
+.clock { display: grid; gap: 4px; }
+.clockTime { font-size: clamp(56px, 16vw, 96px); font-weight: 500; line-height: 1; letter-spacing: 0.02em; white-space: nowrap; }
+.clockDate { font-size: 14px; opacity: 0.7; }
+.usedRule { width: 100%; border: 0; border-top: 3px solid var(--store); margin: 14px 0 6px; }
+.usedMenu { font-size: clamp(30px, 8vw, 40px); line-height: 1.15; }
+.usedStore { display: flex; align-items: center; gap: 6px; font-size: 16px; opacity: 0.85; }
+.usedStore svg { color: var(--store); }
+.usedRows { display: grid; gap: 6px; width: 100%; margin-top: 8px; }
+.usedRows > div { display: flex; justify-content: space-between; gap: 12px; font-size: 15px; padding: 8px 0; border-bottom: 1px solid rgba(243, 238, 228, 0.18); }
+.usedRows dt { opacity: 0.7; }
+.usedRows dd { margin: 0; }
+.usedNote { font-size: 14px; line-height: 1.65; opacity: 0.75; margin-top: 8px; }
+.usedBtn { background: var(--paper); color: var(--ink); border-color: var(--paper); margin-top: 10px; }
+.usedBtn:hover { background: var(--paper-2); }
+
+@media (min-width: 760px) {
+  .body { padding: 26px 26px 8px; }
+  .band { padding: 18px 26px; }
+  .stub { padding: 18px 26px 26px; }
+}

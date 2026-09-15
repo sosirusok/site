@@ -1,0 +1,20 @@
+/* 지도 핀·패널 — Leaflet/네이버 지도 안에 삽입되는 HTML 이라 전역 클래스로 둔다 */
+.sm-pin { width: 38px; height: 48px; position: relative; filter: drop-shadow(0 4px 6px rgba(0,0,0,.45)); cursor: pointer; }
+.sm-pin__body {
+  position: absolute; left: 0; top: 0; width: 38px; height: 38px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
+  background: #f0b429; border: 2px solid #1a1a1a; box-sizing: border-box;
+}
+.sm-pin__num {
+  position: absolute; left: 0; top: 0; width: 38px; height: 38px; display: grid; place-items: center;
+  font: 800 16px/1 "Pretendard Variable", Pretendard, sans-serif; color: #1a1a1a; letter-spacing: -0.02em;
+}
+.sm-pin--active .sm-pin__body { background: #c8271f; border-color: #fff; }
+.sm-pin--active .sm-pin__num { color: #fff; }
+.sm-pin__label {
+  position: absolute; left: 50%; top: 100%; transform: translate(-50%, 2px); white-space: nowrap;
+  background: #1a1a1a; color: #fff; font: 700 12px/1 "Pretendard Variable", Pretendard, sans-serif; padding: 5px 8px; border-radius: 4px;
+}
+.sm-station { width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 4px solid #2b5cd9; box-sizing: border-box; box-shadow: 0 0 0 2px #fff; }
+.sm-station__label { position: absolute; left: 26px; top: 1px; white-space: nowrap; font: 700 12px/1.2 "Pretendard Variable", Pretendard, sans-serif; color: #1b3fa0; text-shadow: 0 0 3px #fff, 0 0 3px #fff; }
+.leaflet-container { font-family: "Pretendard Variable", Pretendard, sans-serif; background: #e9e5df; }
+.leaflet-control-attribution { font-size: 10px; opacity: .8; }

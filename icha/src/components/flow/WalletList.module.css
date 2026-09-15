@@ -1,0 +1,55 @@
+/* 사용 가능 쿠폰 — 종이 티켓 */
+.tickets { display: grid; gap: 12px; }
+.ticket {
+  position: relative; display: grid; grid-template-columns: 8px 1fr auto; align-items: stretch;
+  background: var(--thermal); box-shadow: var(--shadow-paper); border-radius: var(--radius);
+  overflow: hidden; transition: transform 0.2s var(--ease-out), box-shadow 0.2s;
+}
+.ticket:hover { transform: translateY(-2px); box-shadow: 0 1px 0 rgba(26, 23, 20, 0.06), 0 18px 34px -18px rgba(26, 23, 20, 0.55); }
+.band { background: var(--store, var(--ink)); }
+.ticketBody { display: grid; gap: 4px; padding: 14px 14px 14px 16px; min-width: 0; }
+.ticketStore { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; color: var(--store-ink, var(--ink)); }
+.ticketStore svg { color: var(--store, var(--ink)); }
+.kind { margin-left: 6px; font-size: 12px; font-weight: 400; color: var(--ink-3); letter-spacing: 0.04em; }
+.ticketName { font-size: 22px; line-height: 1.25; }
+.ticketMeta { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; color: var(--ink-3); margin-top: 2px; }
+.ticketMeta > span:first-child { letter-spacing: 0.14em; color: var(--ink-2); font-weight: 600; }
+.urgent { color: var(--stamp); font-weight: 600; }
+.ticketArrow { display: grid; place-items: center; padding: 0 16px; font-size: 22px; color: var(--ink-3); border-left: 2px dotted var(--line-strong); }
+
+/* 승인됐지만 아직 안 고른 영수증 */
+.pickables { display: grid; gap: 10px; }
+.pickable {
+  display: grid; gap: 12px; padding: 16px; border: 2px solid var(--store, var(--ink)); border-radius: var(--radius-lg);
+  background: var(--store-paper, var(--paper-2));
+}
+.pickableTitle { font-size: 16px; line-height: 1.4; color: var(--store-ink, var(--ink)); }
+.pickableMeta { font-size: 13px; color: var(--ink-2); margin-top: 2px; }
+@media (min-width: 560px) {
+  .pickable { grid-template-columns: 1fr auto; align-items: center; }
+}
+
+/* 확인 대기 */
+.pending { display: grid; }
+.pendingRow {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 10px 14px; align-items: center;
+  padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 15px;
+}
+.pendingWhen { font-size: 13px; color: var(--ink-3); }
+.pendingStore { color: var(--ink-2); }
+.pendingState { font-size: 13px; font-weight: 700; color: var(--ink-3); padding: 3px 8px; border: 1.5px solid var(--line-strong); border-radius: 999px; }
+@media (max-width: 480px) {
+  .pendingRow { grid-template-columns: 1fr auto; }
+  .pendingWhen { grid-area: 1 / 1; }
+  .pendingState { grid-area: 1 / 2; }
+  .pendingStore { grid-area: 2 / 1 / 3 / 3; }
+}
+
+/* 지난 쿠폰 */
+.past { display: grid; }
+.pastRow { border-bottom: 1px solid var(--line); }
+.pastLink { display: grid; grid-template-columns: 10px 1fr auto; gap: 12px; align-items: center; padding: 12px 0; color: var(--ink-3); }
+.pastDot { width: 10px; height: 10px; border-radius: 50%; background: var(--store, var(--ink-3)); opacity: 0.55; }
+.pastName { font-size: 15px; color: var(--ink-2); text-decoration: line-through; text-decoration-color: var(--line-strong); }
+.pastStore { font-size: 13px; color: var(--ink-3); margin-left: 4px; }
+.pastState { font-size: 13px; }

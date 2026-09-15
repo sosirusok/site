@@ -1,0 +1,29 @@
+.page { padding: 36px 0 120px; display: grid; gap: 28px; }
+.head { display: grid; gap: 22px; }
+.headText { display: grid; gap: 8px; }
+.title { margin-top: 2px; }
+.titleSub { display: block; font-size: 0.55em; font-weight: 700; color: var(--ink-2); margin-top: 8px; letter-spacing: -0.01em; }
+
+.receipt {
+  position: relative; display: grid; gap: 4px; max-width: 360px; padding: 18px 20px 18px 24px;
+  background: var(--thermal); box-shadow: inset 5px 0 0 var(--store), var(--shadow-paper); border-radius: 0 var(--radius) var(--radius) 0;
+  background-image: repeating-linear-gradient(0deg, rgba(26, 23, 20, 0.025) 0 1px, transparent 1px 3px);
+}
+.receiptEyebrow { margin-bottom: 4px; }
+.receiptStore { display: flex; align-items: center; gap: 6px; font-size: 18px; color: var(--store-ink); }
+.receiptStore svg { color: var(--store); }
+.receiptMeta { font-size: 14px; color: var(--ink-2); }
+.receiptStamp { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); }
+
+.foot { line-height: 1.7; max-width: 44em; }
+
+.notice { display: grid; gap: 18px; justify-items: start; max-width: 560px; margin: 20px auto 0; }
+.noticeTitle { font-size: 24px; line-height: 1.3; }
+.noticeText { margin-top: 8px; color: var(--ink-2); line-height: 1.65; }
+.noticeMeta { margin-top: 10px; font-size: 13px; color: var(--ink-3); }
+.noticeActions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+@media (min-width: 760px) {
+  .page { padding: 64px 0 140px; gap: 36px; }
+  .head { grid-template-columns: minmax(0, 1fr) 360px; align-items: end; gap: 40px; }
+}
