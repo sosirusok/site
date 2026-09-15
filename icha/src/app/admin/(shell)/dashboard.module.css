@@ -1,0 +1,57 @@
+.stats {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (min-width: 720px) { .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .stats { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+.stat {
+  background: var(--a-panel);
+  border: 1px solid var(--a-line);
+  border-radius: var(--a-radius);
+  padding: 12px 14px 10px;
+  display: grid;
+  gap: 2px;
+  align-content: start;
+  min-height: 84px;
+  color: inherit;
+}
+.statLabel { font-size: 14px; color: var(--a-ink-3); }
+.statValue { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 28px; font-weight: 600; line-height: 1.1; }
+.statSub { font-size: 14px; color: var(--a-ink-3); }
+.statSub b { color: var(--a-ink-2); font-weight: 600; }
+.pending {
+  grid-column: span 2;
+  background: var(--a-warn-bg);
+  border-color: #efd39b;
+}
+.pending .statLabel { color: var(--a-warn); font-weight: 600; }
+.pending .statValue { color: var(--a-warn); font-size: 40px; }
+.pending:hover { background: #fbe8c0; }
+.pendingZero { background: var(--a-ok-bg); border-color: #bfe3cf; }
+.pendingZero .statLabel, .pendingZero .statValue { color: var(--a-ok); }
+.pendingZero:hover { background: #d4ecdf; }
+
+.chart {
+  display: grid;
+  grid-template-columns: repeat(14, minmax(0, 1fr));
+  gap: 4px;
+  align-items: end;
+  height: 170px;
+  padding-top: 8px;
+}
+.col { display: grid; grid-template-rows: 1fr auto; height: 100%; gap: 6px; min-width: 0; }
+.bars { display: flex; align-items: flex-end; justify-content: center; gap: 2px; height: 100%; }
+.bar { width: 45%; max-width: 16px; min-height: 2px; border-radius: 2px 2px 0 0; background: var(--a-ink); }
+.barUsed { background: #8a9199; }
+.colLabel { text-align: center; font-family: var(--font-mono); font-size: 13px; color: var(--a-ink-3); line-height: 1; }
+.colToday .colLabel { color: var(--a-ink); font-weight: 600; }
+.legend { display: flex; gap: 14px; font-size: 14px; color: var(--a-ink-3); }
+.legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: var(--a-ink); margin-right: 6px; vertical-align: -1px; }
+.legend .legendUsed::before { background: #8a9199; }
+
+.tiers { display: grid; gap: 8px; }
+.tierRow { display: grid; grid-template-columns: 72px 1fr 64px; align-items: center; gap: 10px; font-size: 14px; }
+.tierBar { height: 12px; background: var(--a-muted-bg); border-radius: 2px; overflow: hidden; }
+.tierFill { height: 100%; background: var(--a-ink); }
+.tierN { font-family: var(--font-mono); text-align: right; }

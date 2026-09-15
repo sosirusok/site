@@ -1,0 +1,13 @@
+.root { display: grid; gap: 22px; }
+.list { display: grid; gap: 12px; }
+.card { position: relative; display: block; aspect-ratio: 16 / 10; overflow: hidden; border-radius: var(--radius); background: var(--surface); isolation: isolate; }
+.img { object-fit: cover; z-index: -2; transition: transform 0.9s var(--ease-out); }
+.card:hover .img { transform: scale(1.04); }
+.shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.85) 100%); }
+.text { position: absolute; left: 18px; right: 18px; bottom: 16px; display: grid; gap: 2px; color: #fff; }
+.num { color: var(--gold); font-weight: 800; font-size: 13px; }
+.name { font-family: var(--font-display); font-size: 30px; line-height: 1.1; }
+.meta { font-size: 13.5px; color: rgba(255,255,255,0.75); font-weight: 600; }
+.cta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; }
+.guide { font-weight: 700; border-bottom: 1px solid var(--line-strong); font-size: 15px; }
+@media (min-width: 760px) { .list { grid-template-columns: 1fr 1fr; gap: 18px; } .name { font-size: 34px; } }

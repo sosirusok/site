@@ -71,7 +71,7 @@ export function ReceiptResult({
     receipt.status === "approved"
       ? { stamp: "승인", color: undefined as string | undefined, title: "승인됐어요.", text: `${giftNames.join(" · ")}에서 사이드 한 접시를 고를 수 있어요. 쿠폰은 발급일부터 ${rules.couponValidDays}일 동안 써요.` }
       : receipt.status === "review"
-        ? { stamp: "대기", color: "#6b625a", title: "직원이 직접 확인해요.", text: "자동으로 읽지 못한 부분을 직원이 사진으로 확인해요. 영업 중에는 보통 몇 분이면 끝나고, 승인되면 쿠폰함에서 사이드를 고를 수 있어요." }
+        ? { stamp: "대기", color: "#6b665e", title: "직원이 직접 확인해요.", text: "자동으로 읽지 못한 부분을 직원이 사진으로 확인해요. 영업 중에는 보통 몇 분이면 끝나고, 승인되면 쿠폰함에서 사이드를 고를 수 있어요." }
         : { stamp: "반려", color: undefined, title: "이번 영수증은 받을 수 없어요.", text: "아래 사유를 확인해 주세요. 사진 문제라면 다시 찍어 올릴 수 있어요." };
 
   return (
@@ -111,7 +111,7 @@ export function ReceiptResult({
           {stampOn && <Stamp text={verdict.stamp} slam color={verdict.color} size={104} />}
         </div>
         <div className={`${styles.verdictText} ${stampOn ? styles.shown : ""}`}>
-          <p className={`serif ${styles.verdictTitle}`}>{verdict.title}</p>
+          <p className={styles.verdictTitle}>{verdict.title}</p>
           <p className={styles.verdictBody}>{verdict.text}</p>
         </div>
       </div>
@@ -143,13 +143,13 @@ export function ReceiptResult({
           {receipt.status === "review" && (
             <>
               <Link href="/wallet" className="btn btn-lg btn-block">쿠폰함에서 확인하기</Link>
-              <button type="button" className="btn btn-ghost btn-block" onClick={onRetry}>다른 영수증 올리기</button>
+              <button type="button" className={`btn btn-block ${styles.inkOutline}`} onClick={onRetry}>다른 영수증 올리기</button>
             </>
           )}
           {receipt.status === "rejected" && (
             <>
               <button type="button" className="btn btn-lg btn-block" onClick={onRetry}>다시 찍기</button>
-              <Link href="/guide" className="btn btn-ghost btn-block">인정되지 않는 경우 보기</Link>
+              <Link href="/guide" className={`btn btn-block ${styles.inkOutline}`}>인정되지 않는 경우 보기</Link>
             </>
           )}
         </div>

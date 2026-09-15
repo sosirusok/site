@@ -1,24 +1,25 @@
-import { STORES } from "@/lib/stores";
-import { DrinkIcon } from "@/components/ui/icons";
 import styles from "./Marquee.module.css";
 
-/** 세 매장 이름과 대표 술이 흐르는 띠. 순수 CSS 애니메이션. */
-export function Marquee({ tone = "ink" }: { tone?: "ink" | "paper" }) {
-  const items = STORES.map((s) => (
-    <span key={s.id} data-store={s.id} className={styles.item}>
-      <span className={styles.icon}><DrinkIcon drink={s.drink} size={22} /></span>
-      <span className={`serif ${styles.name}`}>{s.shortName}</span>
-      <span className={`mono ${styles.drink}`}>{s.drink}</span>
-    </span>
-  ));
-  return (
-    <div className={`${styles.band} ${tone === "paper" ? styles.paperTone : ""}`} aria-hidden="true">
-      <div className={styles.track}>
-        <div className={styles.group}>{items}</div>
-        <div className={styles.group}>{items}</div>
-        <div className={styles.group}>{items}</div>
-        <div className={styles.group}>{items}</div>
+/**
+ * 테이프처럼 흐르는 띠. 금색 바탕에 검정 글자(기본) 또는 빨간 바탕에 흰 글자.
+ * 순수 CSS 애니메이션. 장식이므로 aria-hidden.
+ */
+export function Marquee({ items, tone = "gold", tilt = false, speed = 38 }: { items: string[]; tone?: "gold" | "red"; tilt?: boolean; speed?: number }) {
+  const group = (k: string) => (
+    <div className={styles.group} key={k}>
+      {items.map((t, i) => (
+        <span key={`${k}-${i}`} className={styles.item}>{t}</span>
+      ))}
+    </div>
+  );
+  const band = (
+    <div className={`${styles.band} ${tone === "red" ? styles.red : ""} ${tilt ? styles.tilt : ""}`} aria-hidden="true">
+      <div className={styles.track} style={{ animationDuration: `${speed}s` }}>
+        {group("a")}
+        {group("b")}
       </div>
     </div>
   );
+  // 기울인 띠는 화면 폭보다 넓어지므로 가로 스크롤이 생기지 않게 감싼다
+  return tilt ? <div className={styles.tiltWrap}>{band}</div> : band;
 }

@@ -1,4 +1,4 @@
-.footer { margin-top: 80px; background: #0f0f0f; border-top: 1px solid var(--line); padding: 48px 0 calc(32px + env(safe-area-inset-bottom)); color: var(--fg-2); }
+.footer { margin-top: 0; background: #0f0f0f; border-top: 1px solid var(--line); padding: 48px 0 calc(32px + env(safe-area-inset-bottom)); color: var(--fg-2); }
 .top { display: grid; gap: 40px; }
 .brand { font-family: var(--font-display); font-size: 34px; line-height: 1; color: var(--gold); }
 .brand span { font-family: var(--font-sans); font-size: 13px; color: var(--fg-3); margin-left: 8px; letter-spacing: 0.15em; }

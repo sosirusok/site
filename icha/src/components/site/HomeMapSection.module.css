@@ -1,0 +1,11 @@
+.section { background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.section > div { display: grid; gap: 32px; }
+.map { min-width: 0; }
+.notes { display: grid; gap: 18px; }
+.notes li { display: grid; gap: 4px; padding-top: 14px; border-top: 1px solid var(--line); }
+.noteName { font-weight: 800; font-size: 16px; display: flex; gap: 8px; align-items: baseline; }
+.noteName span { color: var(--gold); font-size: 13px; }
+.noteName em { font-style: normal; font-size: 13px; color: var(--fg-3); font-weight: 700; }
+.noteLine { font-size: 14.5px; color: var(--fg-2); line-height: 1.6; }
+.noteSmall { font-size: 13px; color: var(--fg-3); }
+@media (min-width: 760px) { .notes { grid-template-columns: repeat(3, 1fr); gap: 28px; } }

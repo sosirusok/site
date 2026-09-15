@@ -54,6 +54,8 @@ export type Store = {
   keywords: string[];
   /** 방문자 리뷰 인용 (실제 리뷰, 날짜 포함) */
   quotes: { text: string; date: string }[];
+  /** 네이버 방문자 평점·리뷰 수 (조사 시점 값, 확인된 것만) */
+  naverRating: { score: number; count: number; asOf: string } | null;
   images: StoreImage[];
   menu: MenuSeed[];
   sort: number;
@@ -107,6 +109,7 @@ export const STORES: Store[] = [
       { text: "영업시간이 길어서 늦게 가기 좋은 술집입니다. 수제비와 냉면이 맛있었어요.", date: "2026.02" },
       { text: "조칼 가면 무조건 먹어야 하는 칼국수와 전. 그리고 조칼이 계란말이 맛집이거덩여.", date: "2024.11" },
     ],
+    naverRating: { score: 4.52, count: 729, asOf: "2026-09-15" },
     images: [
       { src: `${J}/hero.jpg`, alt: "밤에 불을 켠 통나무 매장과 조선칼국수·통막걸리 간판, 장승과 테라스", kind: "hero" },
       { src: `${J}/exterior-day.jpg`, alt: "낮에 본 정면. 돌길 진입로와 나무 장승, 1층 목조 테라스", kind: "exterior" },
@@ -225,6 +228,7 @@ export const STORES: Store[] = [
       { text: "서서 마시는데도 전혀 불편함 없고, 오히려 옆 테이블과 자연스럽게 소통하는 재미도 있었습니다.", date: "2026.09" },
       { text: "교토 산토리 공장 갔을 때랑 비슷한 맛이 납니다. 비싸지 않고 좋아요.", date: "2026.09" },
     ],
+    naverRating: { score: 4.82, count: 17, asOf: "2026-09-15" },
     images: [
       { src: `${T}/hero.jpg`, alt: "밤의 정면. 파란 '도쿄스탠드' 간판과 '산토리공식매장' 노렌, 유리창의 콜드햄·생맥주 그림", kind: "hero" },
       { src: `${T}/exterior-alley.jpg`, alt: "골목에서 비스듬히 본 매장. 파란 간판과 돌출 간판", kind: "exterior" },
@@ -321,6 +325,7 @@ export const STORES: Store[] = [
       { text: "김피탕 추천합니다. 진짜 소주든 맥주든 잘 어울려요. 분위기도 좋고 혼술하기도 좋을 것 같아요.", date: "2026.09" },
       { text: "좌석 간 간격도 넓어서 대화하기도 편하고 대형 스크린도 있어서 스포츠 보기도 좋아요!", date: "2026.08" },
     ],
+    naverRating: { score: 4.89, count: 939, asOf: "2026-09-15" },
     images: [
       { src: `${W}/hero.jpg`, alt: "티파니 조명 두 개 아래 '와르르맨숀' 로고 벽과 접이식 철문, 소파 위 인형", kind: "hero" },
       { src: `${W}/exterior-dusk.jpg`, alt: "해질녘 골목에서 올려다본 2층 초록 간판 '와르르맨숀'", kind: "exterior" },

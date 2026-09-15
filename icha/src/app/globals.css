@@ -120,6 +120,9 @@ ul, ol { padding: 0; list-style: none; }
 .btn-block { width: 100%; }
 .btn-lg { min-height: 60px; font-size: 18px; padding: 0 30px; }
 .btn-sm { min-height: 40px; font-size: 14px; padding: 0 14px; }
+/* 종이(.paper) 위 보조 버튼 */
+.btn-ink { background: transparent; color: var(--ink); border-color: var(--ink); }
+.btn-ink:hover { background: rgba(26, 26, 26, 0.06); }
 
 /* 입력 (어두운 바탕용) */
 .field { display: grid; gap: 8px; }

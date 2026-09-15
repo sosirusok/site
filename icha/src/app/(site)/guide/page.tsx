@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { BRAND, formatWon } from "@/lib/config";
 import { getRules } from "@/lib/settings";
 import { STORES } from "@/lib/stores";
-import { ArrowIcon } from "@/components/ui/icons";
 import { GuideFaq, type FaqItem } from "@/components/site/GuideFaq";
+import { firstOfKind, wonShort } from "@/components/site/StoreHelpers";
+import { Marquee } from "@/components/site/Marquee";
+import hero from "@/components/site/HomeHero.module.css";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
@@ -18,6 +21,7 @@ export default async function GuidePage() {
   const rules = await getRules();
   const names = STORES.map((s) => s.shortName);
   const tiers = rules.tiers;
+  const bg = (STORES[1] && firstOfKind(STORES[1], "interior")) ?? (STORES[0] && firstOfKind(STORES[0], "interior")) ?? null;
 
   const faq: FaqItem[] = [
     {
@@ -140,22 +144,44 @@ export default async function GuidePage() {
     },
   ];
 
+  const bigNums: { n: string; unit: string; label: string }[] = [
+    { n: String(rules.receiptValidHours), unit: "시간", label: "결제 후 인정" },
+    { n: "1", unit: "접시", label: "영수증 한 장에" },
+    { n: String(rules.dailyLimitPerMember), unit: "장", label: "하루 한도" },
+    { n: String(rules.couponValidDays), unit: "일", label: "쿠폰 유효" },
+  ];
+
   return (
-    <div className={`wrap ${styles.page}`}>
-      <header className={`rise ${styles.head}`}>
-        <p className="eyebrow">{BRAND.unionName}</p>
-        <h1 className={`serif ${styles.title}`}>이용 방법과<br />유의사항</h1>
-        <p className={`lead ${styles.lead}`}>{BRAND.ruleOneLiner} 궁금할 만한 것을 짧게 적었어요.</p>
+    <div className={styles.page}>
+      <header className={styles.head}>
+        {bg && <Image src={bg.src} alt="" fill sizes="100vw" priority className={styles.bgImg} />}
+        <div className={styles.shade} aria-hidden="true" />
+        <div className={`wrap ${styles.headInner}`}>
+          <p className={`${hero.enter} ${styles.eyebrow}`}>{BRAND.unionName}</p>
+          <h1 className={`display ${hero.enter} ${hero.enterD1} ${styles.title}`}>이용 방법과<br /><em>유의사항</em></h1>
+          <p className={`lead ${hero.enter} ${hero.enterD2} ${styles.lead}`}>{BRAND.ruleOneLiner} 궁금할 만한 것을 짧게 적었어요.</p>
+          <ul className={`${hero.enter} ${hero.enterD3} ${styles.nums}`} aria-label="숫자로 보는 규칙">
+            {bigNums.map((b) => (
+              <li key={b.label}>
+                <span className={styles.numBig}><span className="num">{b.n}</span><em>{b.unit}</em></span>
+                <span className={styles.numLabel}>{b.label}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </header>
 
-      <div className={styles.grid}>
+      <Marquee items={["영수증 한 장", "사이드 한 접시", ...names, "직원 앞에서 사용", "전화번호만으로"]} speed={44} />
+
+      <div className={`wrap ${styles.grid}`}>
         <div className={styles.main}>
           <GuideFaq items={faq} />
         </div>
 
         <aside className={styles.side}>
-          <div className={`paper rise rise-d1 ${styles.rulesPaper}`}>
-            <p className={`serif ${styles.paperTitle}`}>숫자로 보는 규칙</p>
+          <div className={`paper paper-shadow rise rise-d1 ${styles.rulesPaper}`}>
+            <p className={styles.paperTitle}>{BRAND.name} <span>{BRAND.hanja}</span></p>
+            <p className={styles.paperSub}>숫자로 보는 규칙</p>
             <hr className="dots" />
             <div className="row"><b>영수증 인정</b><span className="val">결제 후 {rules.receiptValidHours}시간</span></div>
             {rules.minAmount > 0 && <div className="row"><b>최소 금액</b><span className="val">{formatWon(rules.minAmount)}</span></div>}
@@ -163,16 +189,17 @@ export default async function GuidePage() {
             <div className="row"><b>쿠폰 유효</b><span className="val">{rules.couponValidDays}일</span></div>
             <div className="row"><b>영수증 1장</b><span className="val">사이드 1접시</span></div>
             <hr className="dots" />
-            {tiers.map((t) => (
-              <div className="row" key={t.key}><b>{t.name}</b><span className="val">{formatWon(t.minSpend)}부터</span></div>
-            ))}
+            {tiers.map((t) => {
+              const w = wonShort(t.minSpend);
+              return <div className="row" key={t.key}><b>{t.name}</b><span className="val">누적 {w.num}{w.unit}부터</span></div>;
+            })}
             <hr className="dots" />
-            <p className={`mono ${styles.paperFoot}`}>{rules.eventActive ? "진행 중" : "잠시 쉬는 중"}</p>
+            <p className={styles.paperFoot}>{rules.eventActive ? "* 진행 중" : "* 잠시 쉬는 중"}</p>
           </div>
 
           <div className={`rise rise-d2 ${styles.sideCta}`}>
-            <Link href="/verify" className="btn btn-block btn-lg">영수증 인증하기 <ArrowIcon size={20} /></Link>
-            <Link href="/#stores" className={styles.sideLink}>세 매장 보기</Link>
+            <Link href="/verify" className="btn btn-block btn-lg">영수증 인증하기</Link>
+            <Link href="/#stores" className="btn btn-block btn-outline">세 매장 보기</Link>
           </div>
         </aside>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useId, useRef, useState, type ChangeEvent } from "react";
-import { CameraIcon, ReceiptIcon } from "@/components/ui/icons";
+import { CameraIcon } from "@/components/ui/icons";
 import { fmtTime } from "./format";
 import { ReceiptResult } from "./ReceiptResult";
 import type { ApiFail, ReceiptApiOk, StoreLite, UploadRules } from "./types";
@@ -121,8 +121,7 @@ export function ReceiptUploader({ rules, stores }: { rules: UploadRules; stores:
             <span>카메라로 찍기</span>
             <input id={`${id}-camera`} className="sr-only" type="file" accept="image/*" capture="environment" onChange={onPick} />
           </label>
-          <label className={`btn btn-ghost btn-lg btn-block ${styles.pickBtn}`} htmlFor={`${id}-album`}>
-            <ReceiptIcon size={22} />
+          <label className={`btn btn-outline btn-lg btn-block ${styles.pickBtn}`} htmlFor={`${id}-album`}>
             <span>앨범에서 고르기</span>
             <input id={`${id}-album`} className="sr-only" type="file" accept="image/*" onChange={onPick} />
           </label>
@@ -140,7 +139,6 @@ export function ReceiptUploader({ rules, stores }: { rules: UploadRules; stores:
           <figure className={styles.frame}>
             {previewBroken ? (
               <figcaption className={styles.frameFallback}>
-                <ReceiptIcon size={40} />
                 <span>이 형식(HEIC 등)은 미리보기가 안 돼요.<br />인증은 그대로 진행할 수 있어요.</span>
               </figcaption>
             ) : (
@@ -152,7 +150,7 @@ export function ReceiptUploader({ rules, stores }: { rules: UploadRules; stores:
           <p className={`mono ${styles.fileLabel}`}>{fileLabel(phase.file)}</p>
           <div className={styles.previewActions}>
             <button type="button" className="btn btn-lg btn-block" onClick={submit}>이 사진으로 인증하기</button>
-            <button type="button" className="btn btn-ghost btn-block" onClick={reset}>다른 사진 고르기</button>
+            <button type="button" className="btn btn-outline btn-block" onClick={reset}>다른 사진 고르기</button>
           </div>
         </div>
       )}
@@ -165,7 +163,7 @@ export function ReceiptUploader({ rules, stores }: { rules: UploadRules; stores:
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={phase.url} alt="" onError={() => setPreviewBroken(true)} />
               ) : (
-                <ReceiptIcon size={20} />
+                <span className={`mono ${styles.thumbMark}`}>IMG</span>
               )}
             </span>
             <span className={`mono ${styles.thumbLabel}`}>{"file" in phase ? fileLabel(phase.file) : ""}</span>
@@ -181,7 +179,7 @@ export function ReceiptUploader({ rules, stores }: { rules: UploadRules; stores:
             </div>
             <div className={styles.feed}>
               <div className={styles.tape} key={phase.kind === "printing" ? "wait" : "final"}>
-                <p className={`serif ${styles.tapeTitle}`}>영수증 접수증</p>
+                <p className={styles.tapeTitle}>영수증 접수증</p>
                 {phase.kind === "printing" && (
                   <ul className={styles.lines} aria-label="처리 단계">
                     {lines.map((l) => (
@@ -202,14 +200,14 @@ export function ReceiptUploader({ rules, stores }: { rules: UploadRules; stores:
                       </li>
                     </ul>
                     <hr className={styles.sep} style={{ "--i": 1 } as React.CSSProperties} />
-                    <p className={`serif ${styles.verdictTitle} ${styles.errorTitle}`} role="alert">{phase.message}</p>
+                    <p className={`${styles.verdictTitle} ${styles.errorTitle}`} role="alert">{phase.message}</p>
                     <div className={styles.actions}>
                       {phase.status === 401 ? (
                         <Link href="/login?next=/verify" className="btn btn-lg btn-block">다시 로그인하기</Link>
                       ) : (
                         <button type="button" className="btn btn-lg btn-block" onClick={submit}>같은 사진으로 다시 시도</button>
                       )}
-                      <button type="button" className="btn btn-ghost btn-block" onClick={reset}>다른 사진 고르기</button>
+                      <button type="button" className={`btn btn-block ${styles.inkOutline}`} onClick={reset}>다른 사진 고르기</button>
                     </div>
                   </div>
                 )}

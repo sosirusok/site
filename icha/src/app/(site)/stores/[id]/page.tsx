@@ -1,16 +1,15 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { listMenu } from "@/lib/db/queries";
-import { getStore, giftStoresFor, naverPlaceUrl, STORES } from "@/lib/stores";
-import { ArrowIcon, DrinkIcon } from "@/components/ui/icons";
+import { getStore, giftStoresFor, naverPlaceUrl } from "@/lib/stores";
 import { SectionHead } from "@/components/site/HomeSectionHead";
-import { StoreContact } from "@/components/site/StoreContact";
+import { josa } from "@/components/site/StoreHelpers";
 import { StoreGallery } from "@/components/site/StoreGallery";
 import { StoreHero } from "@/components/site/StoreHero";
-import { StoreHours } from "@/components/site/StoreHours";
 import { StoreMenu } from "@/components/site/StoreMenu";
+import { StoreNext } from "@/components/site/StoreNext";
 import { StoreQuotes } from "@/components/site/StoreQuotes";
+import { StoreVisit } from "@/components/site/StoreVisit";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
@@ -33,95 +32,56 @@ export default async function StorePage({ params }: Props) {
   const store = getStore(id);
   if (!store) notFound();
 
-  const menu = await listMenu(store.id);
+  const menu = await listMenu(store.id).catch(() => []);
   const naver = naverPlaceUrl(store);
   const others = giftStoresFor(store.id);
   const introParas = store.intro.split(/\n+/).map((p) => p.trim()).filter(Boolean);
+  const menuBoards = store.images.filter((i) => i.kind === "menu");
+  const otherNames = others.map((s, i) => (i < others.length - 1 ? josa(s.shortName, "이나") : s.shortName)).join(" ");
 
   return (
-    <article data-store={store.id}>
+    <article>
       <StoreHero store={store} />
 
-      <div className={`wrap ${styles.body}`}>
-        <section className={styles.gallery} aria-label="매장 사진">
-          <StoreGallery store={store} />
-        </section>
+      <section className={styles.gallery} aria-label="매장 사진">
+        <StoreGallery store={store} />
+      </section>
 
+      <div className="wrap">
         <section className={styles.section} aria-labelledby="intro-title">
-          <SectionHead id="intro-title" num="소개" title="이런 곳이에요" />
+          <SectionHead id="intro-title" eyebrow="이런 곳이에요" title={<>{josa(store.shortName, "은는")}<br /><em>{store.drink}</em> 집.</>} />
           <div className={styles.introGrid}>
             <div className={`rise ${styles.intro}`}>
-              {introParas.length ? (
-                introParas.map((p, i) => <p key={i} className={styles.introPara}>{p}</p>)
-              ) : (
-                <p className={styles.introPara}>{store.headline} 소개 글은 정리하고 있어요.</p>
-              )}
+              {introParas.map((p, i) => <p key={i} className={styles.introPara}>{p}</p>)}
             </div>
             {store.keywords.length > 0 && (
               <ul className={`rise rise-d1 ${styles.keywords}`} aria-label="키워드">
-                {store.keywords.map((k) => (
-                  <li key={k} className={`mono ${styles.keyword}`}>#{k}</li>
-                ))}
+                {store.keywords.map((k) => <li key={k} className={styles.keyword}>{k}</li>)}
               </ul>
             )}
           </div>
         </section>
 
-        <section className={styles.section} aria-labelledby="visit-title">
-          <SectionHead id="visit-title" num="찾아가기" title="영업시간과 위치" />
-          <div className={styles.visitGrid}>
-            <div className={`rise ${styles.visitCol}`}>
-              <h3 className={`mono ${styles.colLabel}`}>영업시간</h3>
-              <StoreHours store={store} naverUrl={naver} />
-            </div>
-            <div className={`rise rise-d1 ${styles.visitCol}`}>
-              <h3 className={`mono ${styles.colLabel}`}>주소 · 전화</h3>
-              <StoreContact store={store} />
-            </div>
-          </div>
+        <section className={styles.section} id="visit" aria-labelledby="visit-title">
+          <SectionHead id="visit-title" eyebrow="영업시간과 위치" title={<>언제, <em>어디로</em></>} />
+          <div className="rise"><StoreVisit store={store} /></div>
         </section>
 
-        <section className={styles.section} aria-labelledby="menu-title">
-          <SectionHead
-            id="menu-title"
-            num="메뉴"
-            title="메뉴"
-            sub={`'무료 사이드' 표시가 있는 메뉴는 ${others.map((s) => s.shortName).join("이나 ")} 영수증으로 무료예요.`}
-          />
-          <div className="rise">
-            <StoreMenu store={store} items={menu} naverUrl={naver} />
-          </div>
+        <section className={styles.section} id="menu" aria-labelledby="menu-title">
+          <SectionHead id="menu-title" eyebrow="메뉴" title={<>뭘 <em>먹을까</em></>} sub={`'무료 사이드' 표시가 있는 메뉴는 ${otherNames} 영수증으로 무료예요.`} />
+          <div className="rise"><StoreMenu store={store} items={menu} others={others} naverUrl={naver} menuBoards={menuBoards} /></div>
         </section>
 
         {store.quotes.length > 0 && (
           <section className={styles.section} aria-labelledby="quotes-title">
-            <SectionHead id="quotes-title" num="다녀간 분들" title="이런 말을 남겼어요" />
-            <StoreQuotes quotes={store.quotes} />
+            <SectionHead id="quotes-title" eyebrow="다녀간 분들" title={<>이런 말을 <em>남겼어요</em></>} />
+            <StoreQuotes quotes={store.quotes.slice(0, 3)} />
           </section>
         )}
 
         <section className={`${styles.section} ${styles.next}`} aria-labelledby="next-title">
-          <SectionHead id="next-title" num="2차" title={`${store.shortName} 영수증이면, 사이드는 여기서`} sub="영수증을 받은 매장에서는 혜택이 없어요. 아래 두 곳 중 한 곳에서 한 접시." />
-          <ul className={styles.nextList}>
-            {others.map((s, i) => (
-              <li key={s.id} data-store={s.id} className={`rise rise-d${i + 1}`}>
-                <Link href={`/stores/${s.id}`} className={styles.nextCard}>
-                  <span className={styles.nextIcon}><DrinkIcon drink={s.drink} size={30} /></span>
-                  <span className={styles.nextText}>
-                    <span className={`mono ${styles.nextNum}`}>{String(STORES.findIndex((x) => x.id === s.id) + 1).padStart(2, "0")} · {s.drink}</span>
-                    <span className={`serif ${styles.nextName}`}>{s.shortName}</span>
-                    <span className={styles.nextHeadline}>{s.headline}</span>
-                  </span>
-                  <ArrowIcon size={22} className={styles.nextArrow} />
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <div className={`rise rise-d2 ${styles.nextCta}`}>
-            <Link href={`/verify?from=${store.id}`} className="btn btn-lg btn-store">
-              {store.shortName} 영수증 인증하기 <ArrowIcon size={20} />
-            </Link>
-          </div>
+          <SectionHead id="next-title" eyebrow="2차" title={<>{store.shortName} 영수증이면,<br />사이드는 <em>여기서.</em></>} sub="영수증을 받은 매장에서는 혜택이 없어요. 아래 두 곳 중 한 곳에서 한 접시." />
+          <StoreNext store={store} others={others} />
         </section>
       </div>
     </article>

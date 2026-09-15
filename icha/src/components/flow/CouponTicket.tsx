@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
-import { DrinkIcon } from "@/components/ui/icons";
 import { Stamp } from "@/components/ui/Stamp";
 import { daysLeft, fmtDate, fmtDateTime, fmtTime } from "./format";
 import type { ApiFail, RedeemApiOk } from "./types";
@@ -21,6 +20,8 @@ export type TicketCoupon = {
 
 export type TicketStore = {
   id: "joseon" | "tokyo" | "wareureu";
+  /** 01/02/03 */
+  no: string;
   shortName: string;
   name: string;
   drink: "막걸리" | "맥주" | "소주";
@@ -154,14 +155,14 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
 
   if (status === "used") {
     return (
-      <section className={styles.used} data-store={store.id}>
+      <section className={styles.used}>
         <div className={styles.usedInner}>
-          <p className={`eyebrow ${styles.usedEyebrow}`}>사용 완료</p>
+          <p className={styles.usedTitle}>사용 완료</p>
           <LiveClock />
           <hr className={styles.usedRule} />
-          <p className={`serif ${styles.usedMenu}`}>{coupon.menuName}</p>
+          <p className={styles.usedMenu}>{coupon.menuName}</p>
           <p className={styles.usedStore}>
-            <DrinkIcon drink={store.drink} size={18} />
+            <span className={styles.usedNo} aria-hidden="true">{store.no}</span>
             {store.shortName}
           </p>
           <dl className={styles.usedRows}>
@@ -171,7 +172,7 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
           <p className={styles.usedNote}>
             위 시계가 흐르고 있어야 방금 사용한 화면이에요. 캡처한 화면은 시각이 멈춰 있어 쓸 수 없어요. 직원이 확인했다면 닫아도 돼요.
           </p>
-          <Link href="/wallet" className={`btn ${styles.usedBtn}`}>쿠폰함으로</Link>
+          <Link href="/wallet" className="btn btn-dark">쿠폰함으로</Link>
         </div>
       </section>
     );
@@ -180,16 +181,17 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
   const inactive = status === "expired" || status === "void";
 
   return (
-    <article ref={ticketRef} className={`${styles.ticket} ${torn ? styles.torn : ""} ${holding ? styles.holding : ""}`} data-store={store.id} data-status={status}>
+    <article ref={ticketRef} className={`paper-shadow ${styles.ticket} ${torn ? styles.torn : ""} ${holding ? styles.holding : ""}`} data-status={status}>
       <header className={styles.band}>
-        <DrinkIcon drink={store.drink} size={22} />
+        <span className={styles.bandNo} aria-hidden="true">{store.no}</span>
         <span className={styles.bandName}>{store.shortName}</span>
-        <span className={`mono ${styles.bandKind}`}>{KIND_LABEL[coupon.kind]}</span>
+        <span className={styles.bandDrink}>{store.drink}</span>
+        <span className={styles.bandKind}>{KIND_LABEL[coupon.kind]}</span>
       </header>
 
       <div className={styles.body}>
-        <p className="eyebrow">무료 사이드</p>
-        <h1 className={`serif ${styles.menu}`}>{coupon.menuName}</h1>
+        <p className={styles.free}>무료 사이드</p>
+        <h1 className={styles.menu}>{coupon.menuName}</h1>
         <dl className={styles.rows}>
           <div><dt>사용 매장</dt><dd>{store.name}</dd></div>
           {store.address && <div><dt>주소</dt><dd>{store.address}</dd></div>}
@@ -205,27 +207,27 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
         </dl>
 
         <div className={styles.codeBlock}>
-          <p className="eyebrow">쿠폰 코드</p>
+          <p className={styles.codeLabel}>쿠폰 코드</p>
           <p className={`mono ${styles.code}`} aria-label={`쿠폰 코드 ${coupon.code.split("").join(" ")}`}>{coupon.code}</p>
           <p className={styles.codeHelp}>직원이 관리자 화면에서 코드로도 확인할 수 있어요.</p>
         </div>
 
         {inactive && (
           <div className={styles.inactive}>
-            <Stamp text={status === "expired" ? "만료" : "취소"} color="#6b625a" size={104} />
+            <Stamp text={status === "expired" ? "만료" : "취소"} color="#6b665e" size={104} />
             <p className={styles.inactiveText}>
               {status === "expired"
                 ? `이 쿠폰은 ${fmtDate(coupon.expiresAt)}에 만료됐어요. 새 영수증으로 다시 받을 수 있어요.`
                 : `매장에서 취소한 쿠폰이에요.${coupon.note ? ` (${coupon.note})` : ""} 궁금하면 직원에게 물어봐 주세요.`}
             </p>
-            <Link href="/verify" className="btn btn-ghost">영수증 다시 올리기</Link>
+            <Link href="/verify" className={`btn ${styles.inkOutline}`}>영수증 다시 올리기</Link>
           </div>
         )}
       </div>
 
       {!inactive && (
         <>
-          <p className={`serif ${styles.show}`}>직원에게 이 화면을 보여 주세요.</p>
+          <p className={styles.show}>직원에게 이 화면을 보여 주세요.</p>
 
           <div className={styles.perf} aria-hidden="true">
             <svg className={styles.tear} viewBox="0 0 400 20" preserveAspectRatio="none">

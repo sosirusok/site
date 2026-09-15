@@ -1,12 +1,13 @@
-.band { overflow: hidden; background: var(--ink); color: var(--paper); border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); }
-.paperTone { background: var(--paper-2); color: var(--ink); }
-.track { display: flex; width: max-content; animation: slide 36s linear infinite; }
+.band { overflow: hidden; background: var(--gold); color: var(--gold-ink); position: relative; z-index: 2; }
+.red { background: var(--red); color: #fff; }
+.tiltWrap { overflow: hidden; margin: -22px 0 -14px; padding: 22px 0 14px; position: relative; z-index: 2; }
+.tilt { transform: rotate(-1.4deg) scaleX(1.03); transform-origin: center; box-shadow: 0 10px 24px -12px rgba(0, 0, 0, 0.7); }
+.track { display: flex; width: max-content; animation: slide linear infinite; will-change: transform; }
 .group { display: flex; flex-shrink: 0; }
-.item { display: inline-flex; align-items: center; gap: 12px; padding: 12px 28px; white-space: nowrap; }
-.item::after { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--store); margin-left: 16px; }
-.icon { color: var(--store); display: inline-grid; }
-.paperTone .icon { color: var(--store-ink); }
-.name { font-size: 20px; }
-.drink { font-size: 13px; letter-spacing: 0.12em; opacity: 0.8; }
+.item {
+  display: inline-flex; align-items: center; white-space: nowrap;
+  font-family: var(--font-display); font-size: 22px; line-height: 1; padding: 15px 0 15px 26px; letter-spacing: 0.01em;
+}
+.item::after { content: ""; display: inline-block; width: 9px; height: 9px; background: currentColor; margin-left: 26px; transform: rotate(45deg); opacity: 0.85; }
 @keyframes slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-@media (min-width: 760px) { .name { font-size: 24px; } .item { padding: 14px 36px; } }
+@media (min-width: 760px) { .item { font-size: 27px; padding: 17px 0 17px 34px; } .item::after { margin-left: 34px; } }

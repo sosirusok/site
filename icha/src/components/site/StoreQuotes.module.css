@@ -1,11 +1,14 @@
-.list { display: grid; gap: 18px; }
-.item { border-top: 1px solid var(--line-strong); padding-top: 18px; }
-.quote { position: relative; margin: 0; padding-left: 30px; display: grid; gap: 10px; }
-.mark { position: absolute; left: -2px; top: -12px; font-size: 48px; line-height: 1; color: var(--store); }
-.text { font-weight: 700; font-size: clamp(17px, 2vw, 20px); line-height: 1.55; letter-spacing: -0.01em; }
-.foot { font-size: 13px; color: var(--ink-3); letter-spacing: 0.04em; }
+.list { display: grid; gap: 14px; }
+.item { min-width: 0; }
+.deskOnly { display: none; }
+.quote { position: relative; display: grid; gap: 14px; padding: 26px 22px 22px; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--line); height: 100%; }
+.mark { position: absolute; left: 16px; top: 2px; font-family: var(--font-display); font-size: 64px; line-height: 1; color: var(--gold); opacity: 0.9; }
+.text { font-weight: 600; font-size: 16.5px; line-height: 1.65; padding-top: 14px; color: var(--fg); }
+.foot { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 14px; font-size: 13px; color: var(--fg-3); }
+.foot b { color: var(--fg-2); font-weight: 800; font-size: 14px; }
+.num { color: var(--gold); margin-right: 6px; font-size: 12px; }
 @media (min-width: 760px) {
-  .list { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px; }
-  .item { border-top: 0; border-left: 3px solid var(--store); padding: 4px 0 4px 22px; }
-  .quote { padding-left: 26px; }
+  .list { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .two { grid-template-columns: repeat(2, 1fr); }
+  .deskOnly { display: block; }
 }

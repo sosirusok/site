@@ -1,10 +1,8 @@
-.head { display: grid; gap: 14px; }
-.row { display: grid; gap: 6px; align-items: baseline; }
-.num { font-size: 14px; color: var(--ink-3); letter-spacing: 0.1em; }
-.title { margin: 0; }
-.sub { color: var(--ink-2); font-size: 16px; max-width: 52ch; }
-@media (min-width: 760px) {
-  .row { grid-template-columns: 80px 1fr; column-gap: 20px; }
-  .num { padding-top: 10px; font-size: 15px; }
-  .sub { grid-column: 2; }
-}
+.head { display: grid; gap: 12px; max-width: 760px; }
+.center { margin-inline: auto; text-align: center; justify-items: center; }
+.eyebrow { display: inline-flex; align-items: center; gap: 10px; color: var(--gold); font-weight: 800; font-size: 14px; letter-spacing: 0.06em; }
+.eyebrow::before { content: ""; width: 22px; height: 3px; background: var(--gold); }
+.center .eyebrow::after { content: ""; width: 22px; height: 3px; background: var(--gold); }
+.title { color: var(--fg); }
+.title em { font-style: normal; color: var(--gold); }
+.sub { max-width: 46ch; }

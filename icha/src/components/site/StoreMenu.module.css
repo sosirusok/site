@@ -1,25 +1,60 @@
-.root { display: grid; gap: 28px; }
-.list { display: grid; }
-.row { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px dotted var(--line-strong); }
-.row:last-child { border-bottom: 0; }
-.thumb { flex: 0 0 64px; width: 64px; height: 64px; overflow: hidden; border: 1px solid var(--line); background: var(--paper-3); }
-.thumbImg { width: 100%; height: 100%; object-fit: cover; display: block; }
-.body { flex: 1 1 auto; min-width: 0; display: grid; gap: 3px; }
-.name { font-weight: 600; font-size: 17px; line-height: 1.35; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-.giftMark { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; padding: 2px 7px; border: 1.5px solid var(--store); color: var(--store-ink); background: var(--store-paper); border-radius: 2px; }
-.desc { font-size: 14px; color: var(--ink-3); line-height: 1.5; }
-.price { flex: 0 0 auto; font-size: 15px; white-space: nowrap; }
-.giftBox { border: 2px solid var(--store); padding: 18px 16px 6px; background: var(--thermal); position: relative; }
-.giftBox::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 8px; background: var(--store); }
-.giftHead { display: grid; gap: 6px; padding: 6px 0 12px; border-bottom: 2px dotted var(--line-strong); }
-.giftTitle { font-size: 20px; }
-.giftNote { font-size: 14px; color: var(--ink-2); line-height: 1.6; }
-.restLabel { font-size: 13px; color: var(--ink-3); letter-spacing: 0.08em; padding-bottom: 6px; border-bottom: 1px solid var(--line-strong); }
-.link { font-weight: 600; border-bottom: 1px solid currentColor; width: fit-content; }
-.foot { font-size: 14px; color: var(--ink-3); }
-.empty { display: grid; gap: 8px; padding: 28px 20px; border: 1.5px dashed var(--line-strong); color: var(--ink-2); }
-.emptyTitle { font-size: 22px; }
+.root { display: grid; gap: 48px; }
+.empty { display: grid; gap: 8px; padding: 28px; border: 1px dashed var(--line-strong); border-radius: var(--radius); color: var(--fg-2); }
+.emptyTitle { font-family: var(--font-display); font-size: 24px; color: var(--fg); }
+.link { font-weight: 800; color: var(--gold); font-size: 14px; }
+.link:hover { text-decoration: underline; }
+
+.gift { display: grid; gap: 20px; padding: 24px 20px 26px; background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--line); }
+.giftHead { display: grid; gap: 6px; }
+.giftTitle { font-family: var(--font-display); font-weight: 400; font-size: clamp(24px, 5.6vw, 34px); line-height: 1.2; }
+.giftTitle em { font-style: normal; color: var(--gold); }
+.giftSub { font-size: 13.5px; color: var(--fg-3); }
+.giftGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 12px; }
+.giftItem { display: grid; gap: 6px; }
+.giftPhoto { position: relative; aspect-ratio: 1; overflow: hidden; border-radius: var(--radius); background: var(--surface-2); display: grid; place-items: center; }
+.giftImg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.giftPlain { display: grid; gap: 0; border-top: 1px solid var(--line-strong); }
+.giftPlainItem { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.giftPlainItem .free { position: static; }
+.giftPlainName { font-weight: 800; font-size: 15px; display: grid; gap: 1px; }
+.giftPlainName small { font-weight: 500; font-size: 13px; color: var(--fg-3); }
+.free { position: absolute; left: 8px; top: 8px; background: var(--gold); color: var(--gold-ink); font-family: var(--font-display); font-size: 14px; line-height: 1; padding: 6px 8px 5px; border-radius: 3px; }
+.giftName { font-weight: 800; font-size: 14.5px; line-height: 1.35; }
+.giftPrice { display: flex; gap: 8px; align-items: baseline; font-size: 13.5px; }
+.giftPrice s { color: var(--fg-3); }
+.giftPrice b { color: var(--gold); font-size: 15px; }
+
+.all { display: grid; gap: 16px; }
+.allHead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 14px; }
+.allTitle { font-family: var(--font-display); font-weight: 400; font-size: 24px; }
+.allTitle span { color: var(--gold); font-size: 20px; margin-left: 4px; }
+.allSub { font-size: 13px; color: var(--fg-3); }
+.list { display: grid; border-top: 2px solid var(--line-strong); }
+.row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); }
+.noThumb { grid-template-columns: 1fr auto; }
+.thumb { position: relative; width: 52px; height: 52px; border-radius: 4px; overflow: hidden; background: var(--surface-2); }
+.thumbImg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.rowBody { display: grid; gap: 2px; min-width: 0; }
+.rowName { font-weight: 700; font-size: 15.5px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.giftMark { font-size: 11.5px; font-weight: 800; color: var(--gold-ink); background: var(--gold); padding: 2px 6px; border-radius: 3px; letter-spacing: 0.02em; }
+.rowDesc { font-size: 13px; color: var(--fg-3); line-height: 1.5; }
+.rowPrice { font-weight: 800; font-size: 15px; white-space: nowrap; }
+.more { display: grid; gap: 0; }
+.moreBtn { cursor: pointer; list-style: none; display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 18px; border: 1.5px solid var(--line-strong); border-radius: var(--radius); font-weight: 800; font-size: 15px; margin: 8px 0 12px; user-select: none; }
+.moreBtn::-webkit-details-marker { display: none; }
+.moreBtn:hover { border-color: #fff; }
+.more[open] .moreBtn { display: none; }
+.boards { display: grid; gap: 10px; margin-top: 10px; }
+.boardsLabel { font-weight: 800; font-size: 14px; color: var(--gold); }
+.boardList { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.board { position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--radius); background: var(--surface); }
+.boardImg { object-fit: cover; transition: transform 0.6s var(--ease-out); }
+.board:hover .boardImg { transform: scale(1.04); }
+.boardCap { font-size: 12.5px; color: var(--fg-3); margin-top: 6px; line-height: 1.5; }
 @media (min-width: 760px) {
-  .giftBox { padding: 22px 24px 8px; }
-  .row { padding: 16px 0; }
+  .gift { padding: 32px 30px 34px; gap: 24px; }
+  .giftGrid { grid-template-columns: repeat(3, 1fr); gap: 18px 16px; }
+  .list { grid-template-columns: 1fr 1fr; column-gap: 40px; }
+  .boardList { grid-template-columns: repeat(3, 1fr); }
 }
+@media (min-width: 1000px) { .giftGrid { grid-template-columns: repeat(5, 1fr); } }

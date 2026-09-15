@@ -1,69 +1,45 @@
 import Image from "next/image";
 import Link from "next/link";
-import { STORES, naverPlaceUrl, type Store } from "@/lib/stores";
-import { ArrowIcon, ClockIcon, DrinkIcon, PinIcon } from "@/components/ui/icons";
-import { hoursSummary } from "./StoreHours";
+import { distanceM, SEOMYEON_STATION, walkMinutes } from "@/lib/geo";
+import { naverPlaceUrl, STORES } from "@/lib/stores";
+import { heroImage, openStatus } from "./StoreHelpers";
 import styles from "./HomeStores.module.css";
 
-function heroImage(s: Store) {
-  return s.images.find((i) => i.kind === "hero") ?? s.images[0] ?? null;
-}
-
-export function HomeStores({ source = STORES }: { source?: Store[] }) {
+/** 세 곳, 세 가지 술 — 매장당 큰 실사진 카드. 번호·이름·술·오늘 영업·도보 시간·버튼 두 개. */
+export function HomeStores() {
+  const now = new Date();
   return (
-    <ul className={styles.list}>
-      {source.map((s, i) => {
+    <ol className={styles.grid}>
+      {STORES.map((s, i) => {
         const img = heroImage(s);
+        const st = openStatus(s, now);
+        const walk = s.lat != null && s.lng != null ? walkMinutes(distanceM(SEOMYEON_STATION, { lat: s.lat, lng: s.lng })) : null;
         const naver = naverPlaceUrl(s);
-        const hours = hoursSummary(s);
-        const num = String(i + 1).padStart(2, "0");
         return (
-          <li key={s.id} data-store={s.id} className={`rise ${styles.item}`}>
-            <div className={styles.photo}>
-              {img ? (
-                <Image src={img.src} alt={img.alt} fill sizes="(min-width: 760px) 56vw, 100vw" className={styles.img} priority={i === 0} />
-              ) : (
-                <div className={styles.fallback}>
-                  <DrinkIcon drink={s.drink} size={88} />
-                  <span className={`mono ${styles.fallbackNote}`}>사진 준비 중</span>
-                </div>
-              )}
-              <span className={`mono ${styles.badge}`} aria-hidden="true">{num}</span>
-            </div>
+          <li key={s.id} className={`${styles.card} rise rise-d${i + 1}`}>
+            <Link href={`/stores/${s.id}`} className={styles.photo} aria-label={`${s.shortName} 자세히`}>
+              {img && <Image src={img.src} alt={img.alt} fill sizes="(min-width: 1000px) 33vw, (min-width: 760px) 50vw, 100vw" className={styles.img} />}
+              <span className={styles.num} aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+              <span className={`${styles.status} ${st.open ? styles.open : ""}`}>{st.short}</span>
+            </Link>
             <div className={styles.body}>
-              <p className={styles.eyebrow}>
-                <span className={styles.drink}><DrinkIcon drink={s.drink} size={18} /> {s.drink}</span>
-                <span className={`mono ${styles.full}`}>{s.name}</span>
-              </p>
-              <h3 className={`serif ${styles.name}`}>
-                <span className={`mono ${styles.numInline}`} aria-hidden="true">{num}</span>
-                {s.shortName}
+              <p className={styles.drink}>{s.drink}</p>
+              <h3 className={styles.name}>
+                <Link href={`/stores/${s.id}`}>{s.shortName}</Link>
               </h3>
-              <p className={`serif ${styles.headline}`}>{s.headline}</p>
-              <dl className={styles.facts}>
-                <div className={styles.fact}>
-                  <dt className={styles.factKey}><ClockIcon size={18} /><span className="sr-only">영업시간</span></dt>
-                  <dd className={`mono ${styles.factVal}`}>{hours ?? "영업시간 확인 중"}</dd>
-                </div>
-                {s.address && (
-                  <div className={styles.fact}>
-                    <dt className={styles.factKey}><PinIcon size={18} /><span className="sr-only">주소</span></dt>
-                    <dd className={styles.factVal}>{s.address}</dd>
-                  </div>
-                )}
+              <p className={styles.headline}>{s.headline}</p>
+              <dl className={styles.meta}>
+                <div><dt>오늘</dt><dd className="num">{st.today}</dd></div>
+                <div><dt>{SEOMYEON_STATION.name}에서</dt><dd className="num">{walk != null ? `도보 ${walk}분` : "-"}</dd></div>
               </dl>
               <div className={styles.actions}>
-                <Link href={`/stores/${s.id}`} className="btn btn-store">
-                  매장 자세히 <ArrowIcon size={18} />
-                </Link>
-                {naver && (
-                  <a href={naver} target="_blank" rel="noreferrer" className={styles.naver}>네이버 플레이스 ↗</a>
-                )}
+                <Link href={`/stores/${s.id}`} className="btn btn-outline btn-sm">매장 자세히</Link>
+                {naver && <a href={naver} target="_blank" rel="noreferrer" className={styles.naver}>네이버 플레이스 ↗</a>}
               </div>
             </div>
           </li>
         );
       })}
-    </ul>
+    </ol>
   );
 }

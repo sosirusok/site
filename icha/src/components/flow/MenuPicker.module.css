@@ -1,70 +1,90 @@
 .root { position: relative; display: grid; gap: 22px; }
 
-/* 탭 — 두 매장. 밑줄이 매장 색 */
+/* 탭 — 두 매장. 밑줄과 번호가 금색 */
 .tabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--line-strong); }
 .tab {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  min-height: 56px; padding: 0 12px; font-weight: 700; font-size: 16px; color: var(--ink-3);
+  display: flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap;
+  min-height: 60px; padding: 0 8px; font-weight: 800; font-size: 16px; color: var(--fg-3);
   border-bottom: 3px solid transparent; margin-bottom: -1px; transition: color 0.2s, border-color 0.2s;
 }
-.tab svg { color: currentColor; }
-.tab[aria-selected="true"] { color: var(--store-ink); border-bottom-color: var(--store); }
-.tabCount { font-size: 13px; font-weight: 400; color: var(--ink-3); }
+.tabNo { font-family: var(--font-display); font-size: 22px; line-height: 1; }
+.tabDrink { display: none; font-size: 13px; font-weight: 700; color: var(--fg-3); border: 1px solid var(--line-strong); border-radius: 999px; padding: 1px 8px; }
+.tabCount { font-size: 14px; color: var(--fg-3); }
+.tab[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--gold); }
+.tab[aria-selected="true"] .tabNo { color: var(--gold); }
+.tab[aria-selected="true"] .tabDrink { color: var(--fg-2); border-color: var(--fg-3); }
 
 .panel { display: grid; gap: 16px; }
 .panel[hidden] { display: none; }
-.headline { font-size: 15px; color: var(--ink-2); }
-.headline b { color: var(--store-ink); }
-.empty { font-size: 15px; color: var(--ink-2); }
+.headline { font-size: 15px; color: var(--fg-2); line-height: 1.6; }
+.headline b { color: var(--fg); }
+.empty { font-size: 15px; color: var(--fg-2); padding: 18px; background: var(--surface); border-radius: var(--radius); }
 
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .item {
-  position: relative; display: grid; width: 100%; text-align: left;
-  background: var(--thermal); border: 1.5px solid var(--line); border-radius: var(--radius-lg); overflow: hidden;
+  position: relative; display: grid; width: 100%; text-align: left; color: var(--fg);
+  background: var(--surface); border: 1.5px solid var(--line); border-radius: var(--radius-lg); overflow: hidden;
   transition: border-color 0.2s, transform 0.2s var(--ease-out), box-shadow 0.2s;
 }
 .item:hover { border-color: var(--line-strong); }
+.item:hover .photo img { transform: scale(1.04); }
 .item:active { transform: scale(0.99); }
-.item.on { border-color: var(--store); box-shadow: 0 0 0 2px var(--store); }
-.photo { position: relative; display: block; aspect-ratio: 5 / 4; background: var(--paper-3); overflow: hidden; }
-.photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.noPhoto { position: absolute; inset: 0; display: grid; place-items: center; color: var(--store); opacity: 0.7; }
-.free { position: absolute; left: 10px; top: 10px; padding: 3px 8px; border-radius: 2px; background: var(--store); color: #fff; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; }
+.item.on { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold); }
+.photo { position: relative; display: block; aspect-ratio: 4 / 3; background: var(--surface-2); overflow: hidden; }
+.photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--ease-out); }
+.noPhoto { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-display); font-size: 30px; color: rgba(255, 255, 255, 0.16); }
+.free { position: absolute; left: 10px; top: 10px; padding: 3px 9px; border-radius: 3px; background: var(--gold); color: var(--gold-ink); font-size: 13px; font-weight: 800; letter-spacing: 0.02em; }
 .itemBody { display: grid; gap: 2px; padding: 12px 12px 14px; }
-.itemName { font-size: 17px; line-height: 1.3; }
-.itemPrice { font-size: 13px; color: var(--ink-3); text-decoration: line-through; }
-.itemDesc { font-size: 13px; color: var(--ink-2); line-height: 1.5; margin-top: 4px; }
+.itemName { font-weight: 800; font-size: 17px; line-height: 1.3; letter-spacing: -0.02em; }
+.itemPrice { font-size: 14px; color: var(--fg-3); text-decoration: line-through; font-weight: 600; }
+.itemDesc { font-size: 14px; color: var(--fg-2); line-height: 1.5; margin-top: 4px; }
 .check {
   position: absolute; right: 10px; top: 10px; display: grid; place-items: center;
   min-width: 40px; height: 26px; padding: 0 8px; border-radius: 999px;
-  background: var(--ink); color: var(--paper); font-size: 13px; font-weight: 700;
+  background: var(--gold); color: var(--gold-ink); font-size: 13px; font-weight: 800;
   opacity: 0; transform: scale(0.7); transition: opacity 0.2s, transform 0.25s var(--ease-snap);
 }
 .on .check { opacity: 1; transform: none; }
 
-/* 확인 시트 — 화면 아래 종이 */
+/* 사진이 없는 매장 — 목록형 */
+.list { display: grid; gap: 8px; }
+.row {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px; width: 100%; text-align: left; color: var(--fg);
+  padding: 14px 16px; background: var(--surface); border: 1.5px solid var(--line); border-radius: var(--radius-lg);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.row:hover { border-color: var(--line-strong); }
+.row.on { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold); }
+.rowFree { padding: 3px 9px; border-radius: 3px; background: var(--gold); color: var(--gold-ink); font-size: 13px; font-weight: 800; }
+.rowBody { display: grid; gap: 2px; min-width: 0; }
+.rowRight { display: grid; justify-items: end; gap: 6px; }
+.rowCheck { display: none; padding: 2px 10px; border-radius: 999px; background: var(--gold); color: var(--gold-ink); font-size: 13px; font-weight: 800; }
+.on .rowCheck { display: inline-block; }
+
+/* 확인 시트 — 화면 아래 */
 .sheetWrap { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; padding: 0 var(--gutter) calc(12px + env(safe-area-inset-bottom)); pointer-events: none; }
 .sheet {
   pointer-events: auto; max-width: 560px; margin: 0 auto; padding: 20px 20px 18px;
-  background: var(--thermal); border-top: 4px solid var(--store); border-radius: var(--radius-lg) var(--radius-lg) var(--radius) var(--radius);
-  box-shadow: 0 -8px 30px -12px rgba(26, 23, 20, 0.5), 0 20px 40px -20px rgba(26, 23, 20, 0.6);
+  background: var(--surface-2); border: 1px solid var(--line-strong); border-top: 3px solid var(--gold);
+  border-radius: var(--radius-lg) var(--radius-lg) var(--radius) var(--radius);
+  box-shadow: 0 -8px 30px -12px rgba(0, 0, 0, 0.9), 0 20px 40px -20px rgba(0, 0, 0, 0.9);
   animation: sheetUp 0.4s var(--ease-out) both;
   display: grid; gap: 10px;
 }
 @keyframes sheetUp { from { transform: translateY(110%); } }
 .sheetBusy { opacity: 0.85; }
-.sheetTitle { font-size: 22px; line-height: 1.3; color: var(--store-ink); }
-.sheetNote { font-size: 14px; color: var(--ink-2); line-height: 1.6; }
+.sheetTitle { font-family: var(--font-display); font-size: 25px; line-height: 1.25; }
+.sheetNote { font-size: 14px; color: var(--fg-2); line-height: 1.6; }
 .sheetActions { display: grid; gap: 8px; margin-top: 4px; }
 
 /* 발급 연출 — 절취선에서 떨어져 나오는 쿠폰 */
-.issueWrap { position: fixed; inset: 0; z-index: 60; display: grid; align-content: start; justify-items: center; padding-top: 18vh; background: color-mix(in srgb, var(--paper) 92%, transparent); animation: fadeIn 0.3s both; }
+.issueWrap { position: fixed; inset: 0; z-index: 60; display: grid; align-content: start; justify-items: center; padding-top: 18vh; background: rgba(20, 20, 20, 0.94); animation: fadeIn 0.3s both; }
 @keyframes fadeIn { from { opacity: 0; } }
-.issueStub { width: min(340px, 86vw); padding: 12px 16px; background: var(--thermal); border-radius: var(--radius) var(--radius) 0 0; box-shadow: var(--shadow-paper); }
-.issueStubText { font-size: 12px; letter-spacing: 0.06em; color: var(--ink-3); text-align: center; }
-.perf { width: min(340px, 86vw); height: 0; border-top: 2px dashed var(--line-strong); }
+.issueStub { width: min(340px, 86vw); padding: 12px 16px; background: var(--paper-2); color: var(--ink); border-radius: var(--radius) var(--radius) 0 0; }
+.issueStubText { font-size: 13px; letter-spacing: 0.06em; color: var(--ink-3); text-align: center; }
+.perf { width: min(340px, 86vw); height: 0; border-top: 2px dashed rgba(20, 20, 20, 0.9); position: relative; z-index: 1; }
 .issued {
-  width: min(340px, 86vw); background: var(--thermal); box-shadow: 0 30px 40px -20px rgba(26, 23, 20, 0.6);
+  width: min(340px, 86vw); background: var(--paper); color: var(--ink); box-shadow: 0 30px 40px -20px rgba(0, 0, 0, 0.9);
   border-radius: 0 0 var(--radius-lg) var(--radius-lg); overflow: hidden; display: grid; gap: 6px; padding-bottom: 20px;
   transform-origin: 100% 0; animation: tearOff 1.5s var(--ease-out) 0.35s both;
 }
@@ -74,15 +94,18 @@
   60% { transform: rotate(-3deg) translateY(4px); }
   100% { transform: translateY(60vh) rotate(-9deg); opacity: 0; }
 }
-.issuedBand { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: var(--store); color: #fff; font-weight: 700; }
-.issuedKind { margin-left: auto; font-size: 12px; font-weight: 400; letter-spacing: 0.08em; opacity: 0.9; }
-.issuedName { font-size: 28px; padding: 14px 16px 0; }
-.issuedCode { font-size: 28px; letter-spacing: 0.2em; padding: 0 16px; }
+.issuedBand { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--ink); color: var(--gold); font-weight: 800; }
+.issuedNo { font-family: var(--font-display); font-size: 22px; line-height: 1; }
+.issuedKind { margin-left: auto; font-size: 13px; font-weight: 700; color: var(--fg-2); letter-spacing: 0.04em; }
+.issuedName { font-family: var(--font-display); font-size: 30px; line-height: 1.15; padding: 14px 16px 0; }
+.issuedCode { font-size: 28px; font-weight: 600; letter-spacing: 0.2em; padding: 0 16px; }
 .issuedExp { font-size: 13px; color: var(--ink-3); padding: 0 16px; }
 
 @media (min-width: 760px) {
   .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
   .photo { aspect-ratio: 3 / 2; }
-  .tab { min-height: 60px; font-size: 17px; }
+  .tab { min-height: 64px; font-size: 17px; gap: 12px; }
+  .tabDrink { display: inline-block; }
+  .tabNo { font-size: 26px; }
   .itemName { font-size: 18px; }
 }

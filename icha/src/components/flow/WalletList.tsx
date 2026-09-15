@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { formatWon } from "@/lib/config";
-import { DrinkIcon } from "@/components/ui/icons";
 import { daysLeft, fmtDate, fmtDateTime, fmtShort } from "./format";
 import styles from "./WalletList.module.css";
+
+type StoreRef = { id: "joseon" | "tokyo" | "wareureu"; no: string; shortName: string; drink: "막걸리" | "맥주" | "소주" };
 
 export type WalletCoupon = {
   id: string;
@@ -12,7 +13,7 @@ export type WalletCoupon = {
   kind: "side" | "vip" | "manual";
   expiresAt: string;
   usedAt: string | null;
-  store: { id: "joseon" | "tokyo" | "wareureu"; shortName: string; drink: "막걸리" | "맥주" | "소주" } | null;
+  store: StoreRef | null;
 };
 
 export type WalletReceipt = {
@@ -22,11 +23,12 @@ export type WalletReceipt = {
   receiptAt: string | null;
   amount: number | null;
   reasons: string[];
-  store: { id: "joseon" | "tokyo" | "wareureu"; shortName: string } | null;
+  store: StoreRef | null;
 };
 
 const KIND_LABEL: Record<WalletCoupon["kind"], string> = { side: "영수증 인증", vip: "등급 혜택", manual: "매장 발급" };
 
+/** 사용 가능 쿠폰 — 어두운 바탕 위 종이 티켓 */
 export function ActiveCoupons({ coupons }: { coupons: WalletCoupon[] }) {
   const now = new Date();
   return (
@@ -34,18 +36,20 @@ export function ActiveCoupons({ coupons }: { coupons: WalletCoupon[] }) {
       {coupons.map((c) => {
         const left = daysLeft(c.expiresAt, now);
         return (
-          <li key={c.id} data-store={c.store?.id}>
-            <Link href={`/coupons/${c.id}`} className={styles.ticket}>
-              <span className={styles.band} aria-hidden="true" />
+          <li key={c.id}>
+            <Link href={`/coupons/${c.id}`} className={`paper-shadow ${styles.ticket}`}>
+              <span className={styles.stub} aria-hidden="true">
+                <span className={styles.stubNo}>{c.store?.no ?? "--"}</span>
+                <span className={styles.stubDrink}>{c.store?.drink ?? ""}</span>
+              </span>
               <span className={styles.ticketBody}>
                 <span className={styles.ticketStore}>
-                  {c.store && <DrinkIcon drink={c.store.drink} size={16} />}
                   <span>{c.store?.shortName ?? "매장 미정"}</span>
-                  <span className={`mono ${styles.kind}`}>{KIND_LABEL[c.kind]}</span>
+                  <span className={styles.kind}>{KIND_LABEL[c.kind]}</span>
                 </span>
-                <span className={`serif ${styles.ticketName}`}>{c.menuName}</span>
+                <span className={styles.ticketName}>{c.menuName}</span>
                 <span className={`mono ${styles.ticketMeta}`}>
-                  <span>{c.code}</span>
+                  <span className={styles.ticketCode}>{c.code}</span>
                   <span className={left <= 3 ? styles.urgent : undefined}>
                     {fmtDate(c.expiresAt)}까지{left <= 7 ? ` · ${Math.max(left, 0)}일 남음` : ""}
                   </span>
@@ -64,16 +68,17 @@ export function PickableReceipts({ receipts }: { receipts: WalletReceipt[] }) {
   return (
     <ul className={styles.pickables}>
       {receipts.map((r) => (
-        <li key={r.id} className={styles.pickable} data-store={r.store?.id}>
-          <div>
+        <li key={r.id} className={styles.pickable}>
+          <div className={styles.pickableText}>
             <p className={styles.pickableTitle}>
+              <span className={styles.pickableNo} aria-hidden="true">{r.store?.no ?? "--"}</span>
               <b>{r.store?.shortName ?? "매장"}</b> 영수증이 승인됐어요.
             </p>
             <p className={`mono ${styles.pickableMeta}`}>
               {fmtDateTime(r.receiptAt ?? r.createdAt)} · {r.amount == null ? "금액 미확인" : formatWon(r.amount)}
             </p>
           </div>
-          <Link href={`/pick/${r.id}`} className="btn btn-store">사이드 고르기</Link>
+          <Link href={`/pick/${r.id}`} className="btn">사이드 고르기</Link>
         </li>
       ))}
     </ul>
@@ -98,9 +103,9 @@ export function PastCoupons({ coupons }: { coupons: WalletCoupon[] }) {
   return (
     <ul className={styles.past}>
       {coupons.map((c) => (
-        <li key={c.id} className={styles.pastRow} data-store={c.store?.id}>
+        <li key={c.id} className={styles.pastRow}>
           <Link href={`/coupons/${c.id}`} className={styles.pastLink}>
-            <span className={styles.pastDot} aria-hidden="true" />
+            <span className={styles.pastNo} aria-hidden="true">{c.store?.no ?? "--"}</span>
             <span className={styles.pastName}>
               {c.menuName} <span className={styles.pastStore}>{c.store?.shortName ?? ""}</span>
             </span>

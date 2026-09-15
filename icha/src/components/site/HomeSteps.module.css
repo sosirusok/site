@@ -1,15 +1,25 @@
-.list { display: grid; }
-.step { display: grid; grid-template-columns: 64px 1fr; gap: 16px; padding: 22px 0; border-bottom: 1px solid var(--line-strong); }
-.step:last-child { border-bottom: 0; }
-.num { font-size: 72px; line-height: 0.85; letter-spacing: -0.04em; color: var(--ink); }
-.body { display: grid; gap: 10px; align-content: start; }
-.icons { display: inline-flex; gap: 8px; }
-.icon { color: var(--store, var(--ink-3)); display: inline-grid; }
-.title { font-size: clamp(20px, 2.4vw, 24px); font-weight: 900; line-height: 1.3; letter-spacing: -0.02em; }
-.text { font-size: 16px; line-height: 1.65; color: var(--ink-2); max-width: 36ch; }
+.list { display: grid; gap: 48px; }
+.step { display: grid; gap: 20px; }
+.media { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--radius); background: var(--surface); }
+.img { object-fit: cover; transition: transform 0.8s var(--ease-out); }
+.step:hover .img { transform: scale(1.04); }
+.paperMedia { display: grid; place-items: center; background: radial-gradient(120% 90% at 50% 20%, #2a2620 0%, #141414 70%); }
+.paper { width: min(300px, 78%); transform: rotate(-2.5deg); font-size: 13px; }
+.paperHead { font-weight: 700; font-size: 15px; text-align: center; }
+.paperSub { text-align: center; font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+.paperGift { font-size: 13px; line-height: 1.6; }
+.paperGift b { font-weight: 700; }
+.stamp { position: absolute; right: 10px; bottom: 14px; }
+.text { display: grid; gap: 10px; }
+.num { font-family: var(--font-display); font-size: 64px; line-height: 0.9; color: var(--gold); letter-spacing: -0.02em; }
+.title em { font-style: normal; color: var(--gold); }
+.desc { color: var(--fg-2); max-width: 40ch; }
+.desc b { color: var(--fg); font-weight: 800; }
 @media (min-width: 760px) {
-  .list { grid-template-columns: repeat(3, 1fr); }
-  .step { grid-template-columns: 1fr; grid-template-rows: auto 1fr; gap: 18px; padding: 8px 28px 8px 0; border-bottom: 0; border-right: 1px solid var(--line-strong); margin-right: 28px; }
-  .step:last-child { border-right: 0; margin-right: 0; padding-right: 0; }
-  .num { font-size: clamp(88px, 10vw, 128px); line-height: 0.85; }
+  .list { gap: 72px; }
+  .step { grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  .step:nth-child(even) .media { order: 2; }
+  .media { aspect-ratio: 5 / 4; }
+  .num { font-size: 96px; }
+  .text { padding-top: 8px; }
 }

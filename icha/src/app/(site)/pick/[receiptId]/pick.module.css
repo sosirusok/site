@@ -1,29 +1,34 @@
-.page { padding: 36px 0 120px; display: grid; gap: 28px; }
-.head { display: grid; gap: 22px; }
-.headText { display: grid; gap: 8px; }
+.page { padding: 32px 0 140px; display: grid; gap: 30px; }
+.head { display: grid; gap: 24px; }
+.headText { display: grid; gap: 10px; }
 .title { margin-top: 2px; }
-.titleSub { display: block; font-size: 0.55em; font-weight: 700; color: var(--ink-2); margin-top: 8px; letter-spacing: -0.01em; }
+.titleSub { max-width: 32em; }
 
+/* 승인된 영수증 — 종이 쪽지 */
 .receipt {
-  position: relative; display: grid; gap: 4px; max-width: 360px; padding: 18px 20px 18px 24px;
-  background: var(--thermal); box-shadow: inset 5px 0 0 var(--store), var(--shadow-paper); border-radius: 0 var(--radius) var(--radius) 0;
-  background-image: repeating-linear-gradient(0deg, rgba(26, 23, 20, 0.025) 0 1px, transparent 1px 3px);
+  position: relative; display: grid; gap: 2px; max-width: 360px; font-size: 14px;
+  transform: rotate(-1.2deg);
 }
-.receiptEyebrow { margin-bottom: 4px; }
-.receiptStore { display: flex; align-items: center; gap: 6px; font-size: 18px; color: var(--store-ink); }
-.receiptStore svg { color: var(--store); }
-.receiptMeta { font-size: 14px; color: var(--ink-2); }
-.receiptStamp { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); }
+.receiptEyebrow { font-family: var(--font-sans); font-weight: 700; font-size: 13px; letter-spacing: 0.04em; color: var(--ink-3); margin-bottom: 6px; }
+.receiptStore { display: flex; align-items: center; gap: 10px; font-family: var(--font-sans); font-size: 19px; padding-right: 84px; }
+.receiptStore b { font-weight: 800; }
+.receiptNo { font-family: var(--font-display); font-size: 24px; line-height: 1; color: var(--stamp); }
+.receiptDrink { font-size: 13px; font-weight: 700; color: var(--ink-3); border: 1px solid var(--ink-line-strong); border-radius: 999px; padding: 1px 8px; }
+.receiptStamp { position: absolute; right: 16px; top: 18px; }
 
 .foot { line-height: 1.7; max-width: 44em; }
 
-.notice { display: grid; gap: 18px; justify-items: start; max-width: 560px; margin: 20px auto 0; }
-.noticeTitle { font-size: 24px; line-height: 1.3; }
+/* 승인되지 않은 영수증 안내 */
+.notice { display: grid; gap: 18px; justify-items: start; max-width: 560px; margin: 20px auto 0; font-family: var(--font-sans); }
+.noticeTitle { font-family: var(--font-display); font-size: 26px; line-height: 1.25; }
 .noticeText { margin-top: 8px; color: var(--ink-2); line-height: 1.65; }
 .noticeMeta { margin-top: 10px; font-size: 13px; color: var(--ink-3); }
 .noticeActions { display: flex; flex-wrap: wrap; gap: 10px; }
+.inkOutline.inkOutline { background: transparent; color: var(--ink); border-color: var(--ink); }
+.inkOutline.inkOutline:hover { background: rgba(26, 26, 26, 0.06); }
 
 @media (min-width: 760px) {
-  .page { padding: 64px 0 140px; gap: 36px; }
+  .page { padding: 64px 0 160px; gap: 40px; }
   .head { grid-template-columns: minmax(0, 1fr) 360px; align-items: end; gap: 40px; }
+  .receipt { justify-self: end; width: 100%; }
 }

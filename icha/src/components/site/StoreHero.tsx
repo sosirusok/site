@@ -1,36 +1,47 @@
+import Image from "next/image";
 import Link from "next/link";
+import { distanceM, SEOMYEON_STATION, walkMinutes } from "@/lib/geo";
 import { STORES, type Store } from "@/lib/stores";
-import { ArrowIcon, DrinkIcon, ReceiptIcon, TicketIcon } from "@/components/ui/icons";
+import { heroImage, openStatus } from "./StoreHelpers";
 import styles from "./StoreHero.module.css";
 
+/** 매장 상세 상단 — 전체 폭 실사진, 번호·이름·술·오늘 영업, 영수증/쿠폰 바로가기. */
 export function StoreHero({ store }: { store: Store }) {
-  const index = STORES.findIndex((s) => s.id === store.id);
-  const num = String(index + 1).padStart(2, "0");
-  const total = String(STORES.length).padStart(2, "0");
-  return (
-    <section data-store={store.id} className={styles.hero} aria-labelledby="store-title">
-      <div className={`wrap ${styles.inner}`}>
-        <p className={`mono ${styles.eyebrow}`}>
-          <span className={styles.num}>{num} / {total}</span>
-          <span className={styles.drink}><DrinkIcon drink={store.drink} size={18} /> {store.drink}</span>
-        </p>
-        <h1 id="store-title" className={`serif ${styles.name}`}>{store.shortName}</h1>
-        <p className={`mono ${styles.full}`}>{store.name}</p>
-        <p className={`serif ${styles.headline}`}>{store.headline}</p>
+  const img = heroImage(store);
+  const st = openStatus(store);
+  const num = String(STORES.findIndex((s) => s.id === store.id) + 1).padStart(2, "0");
+  const walk = store.lat != null && store.lng != null ? walkMinutes(distanceM(SEOMYEON_STATION, { lat: store.lat, lng: store.lng })) : null;
 
-        <div className={styles.asks}>
-          <Link href={`/verify?from=${store.id}`} className={`paper ${styles.ask}`}>
-            <span className={styles.askIcon}><ReceiptIcon size={26} /></span>
-            <span className={styles.askQ}>이 매장 영수증이 있나요?</span>
-            <span className={styles.askA}>인증하고 다른 두 곳에서 사이드 고르기 <ArrowIcon size={16} /></span>
-          </Link>
-          <Link href="/wallet" className={`paper ${styles.ask}`}>
-            <span className={styles.askIcon}><TicketIcon size={26} /></span>
-            <span className={styles.askQ}>이 매장에서 쓸 쿠폰이 있나요?</span>
-            <span className={styles.askA}>쿠폰함 열기 <ArrowIcon size={16} /></span>
-          </Link>
-        </div>
+  return (
+    <header className={styles.hero}>
+      {img && <Image src={img.src} alt={img.alt} fill priority sizes="100vw" className={styles.img} />}
+      <div className={styles.shade} aria-hidden="true" />
+      <div className={`wrap ${styles.inner}`}>
+        <p className={styles.crumb}>
+          <Link href="/#stores">매장</Link>
+          <span aria-hidden="true">/</span>
+          <span>{num}</span>
+        </p>
+        <p className={styles.drink}>{store.drink} · {SEOMYEON_STATION.name}{walk != null ? ` 도보 ${walk}분` : ""}</p>
+        <h1 className={`display ${styles.name}`}>{store.shortName}</h1>
+        <p className={styles.full}>{store.name}</p>
+        <p className={`lead ${styles.headline}`}>{store.headline}</p>
+        <p className={`${styles.status} ${st.open ? styles.open : ""}`}>
+          <span className={styles.dot} aria-hidden="true" />
+          {st.text}
+          <span className={styles.today}>오늘 {st.today}{st.lastOrder ? ` · 주문 마감 ${st.lastOrder}` : ""}</span>
+        </p>
       </div>
-    </section>
+      <div className={`wrap ${styles.quick}`}>
+        <Link href={`/verify?from=${store.id}`} className={styles.quickItem}>
+          <b>이 매장 영수증이 있나요?</b>
+          <span>찍어서 올리면 나머지 두 곳 사이드 한 접시 →</span>
+        </Link>
+        <Link href="/wallet" className={styles.quickItem}>
+          <b>이 매장에서 쓸 쿠폰이 있나요?</b>
+          <span>쿠폰함을 열고 직원에게 보여 주세요 →</span>
+        </Link>
+      </div>
+    </header>
   );
 }

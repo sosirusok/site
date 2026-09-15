@@ -1,37 +1,12 @@
-.body { display: grid; gap: 0; }
-.gallery { padding-top: 28px; }
-.section { display: grid; gap: 26px; padding-top: 60px; }
+.gallery { padding: 22px 0 8px; }
+.section { display: grid; gap: 28px; padding: clamp(48px, 8vw, 96px) 0 0; scroll-margin-top: calc(var(--header-h) + 8px); }
 .introGrid { display: grid; gap: 22px; }
-.intro { display: grid; gap: 14px; }
-.introPara { font-size: clamp(17px, 2vw, 19px); line-height: 1.75; color: var(--ink-2); max-width: 60ch; }
+.intro { display: grid; gap: 14px; max-width: 60ch; }
+.introPara { font-size: 17px; line-height: 1.8; color: var(--fg-2); }
 .keywords { display: flex; flex-wrap: wrap; gap: 8px; align-content: start; }
-.keyword { font-size: 13px; padding: 5px 9px; border: 1px solid var(--line-strong); color: var(--ink-2); }
-.visitGrid { display: grid; gap: 34px; }
-.visitCol { display: grid; gap: 14px; align-content: start; }
-.colLabel { font-size: 13px; letter-spacing: 0.12em; color: var(--ink-3); padding-bottom: 8px; border-bottom: 1px solid var(--line-strong); }
-.next { padding-bottom: 8px; }
-.nextList { display: grid; gap: 14px; }
-.nextCard {
-  display: grid; grid-template-columns: 44px 1fr 28px; align-items: center; gap: 14px;
-  padding: 18px 16px; background: var(--store-paper); color: var(--store-ink); border-left: 8px solid var(--store);
-  transition: transform 0.2s var(--ease-out);
-}
-.nextCard:hover { transform: translateX(4px); }
-.nextIcon { color: var(--store); }
-.nextText { display: grid; gap: 2px; min-width: 0; }
-.nextNum { font-size: 12px; letter-spacing: 0.1em; opacity: 0.85; }
-.nextName { font-size: 26px; line-height: 1.1; }
-.nextHeadline { font-size: 14px; opacity: 0.9; }
-.nextArrow { color: var(--store-ink); }
-.nextCta { padding-top: 6px; }
-.nextCta a { width: 100%; }
+.keyword { font-size: 13.5px; font-weight: 800; padding: 8px 12px; border: 1.5px solid var(--line-strong); border-radius: 999px; color: var(--fg-2); }
+.next { padding-bottom: 20px; }
 @media (min-width: 760px) {
-  .gallery { padding-top: 40px; }
-  .section { gap: 34px; padding-top: 88px; }
-  .introGrid { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 48px; }
-  .visitGrid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 56px; }
-  .nextList { grid-template-columns: 1fr 1fr; gap: 20px; }
-  .nextCard { padding: 24px 22px; }
-  .nextName { font-size: 32px; }
-  .nextCta a { width: auto; }
+  .section { gap: 36px; }
+  .introGrid { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 48px; }
 }

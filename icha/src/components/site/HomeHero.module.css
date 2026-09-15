@@ -1,55 +1,60 @@
-.hero { position: relative; overflow: hidden; padding: 20px 0 44px; }
-.watermark {
-  position: absolute; left: -0.08em; bottom: -0.32em; z-index: 0; pointer-events: none;
-  font-size: clamp(220px, 46vw, 560px); line-height: 1; color: rgba(26, 23, 20, 0.045); letter-spacing: -0.06em;
+.hero {
+  position: relative; isolation: isolate; overflow: hidden;
+  min-height: calc(100svh - var(--header-h));
+  display: grid; grid-template-rows: 1fr auto; align-items: end;
+  background: #0d0d0d;
 }
-.grid { position: relative; z-index: 1; display: grid; gap: 26px; }
-
-/* 세 매장 색 띠 */
-.spine { display: grid; grid-template-columns: repeat(3, 1fr); border: 1.5px solid var(--ink); }
-.band { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 8px 6px; background: var(--store); color: #fff; }
-.band[data-store="tokyo"] { color: var(--tokyo-ink); }
-.bandName { font-size: 15px; letter-spacing: -0.01em; }
-.bandDrink { display: none; font-size: 12px; letter-spacing: 0.14em; opacity: 0.85; }
-
-.text { display: grid; gap: 18px; align-content: start; }
-.eyebrow { font-size: 13px; }
-.title { font-size: clamp(40px, 10.4vw, 92px); line-height: 1.02; letter-spacing: -0.035em; display: grid; }
-.line { display: block; }
-.em {
-  font-style: normal; color: inherit;
-  background-image: linear-gradient(transparent 62%, rgba(184, 49, 42, 0.34) 62% 92%, transparent 92%);
-  padding: 0 0.04em;
+.slides { position: absolute; inset: 0; z-index: -2; }
+.slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.4s var(--ease-out); }
+.slide.active { opacity: 1; }
+.img { object-fit: cover; object-position: center; transform: scale(1); transition: transform 8s linear; }
+.active .img { transform: scale(1.07); }
+.shade {
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(10, 10, 10, 0.55) 0%, rgba(10, 10, 10, 0.25) 30%, rgba(10, 10, 10, 0.55) 62%, rgba(20, 20, 20, 0.96) 100%),
+    linear-gradient(90deg, rgba(10, 10, 10, 0.55) 0%, rgba(10, 10, 10, 0) 70%);
 }
-.lead { max-width: 30ch; }
-.actions { display: flex; flex-wrap: wrap; gap: 10px; }
-.actions > * { flex: 1 1 200px; }
-.downIcon { transform: rotate(90deg); }
-.meta { font-size: 14px; color: var(--ink-2); line-height: 1.7; }
 
-/* 예시 영수증 */
-.sample { width: min(300px, 100%); margin: 12px auto 0; transform: rotate(-2deg); font-size: 14px; }
-.sampleHead { display: flex; justify-content: space-between; align-items: baseline; font-size: 18px; }
-.sampleHanja { font-size: 11px; letter-spacing: 0.2em; color: var(--ink-3); }
-.sampleTag { font-size: 12px; letter-spacing: 0.18em; border: 1px solid var(--line-strong); padding: 2px 6px; }
-.sampleGift { font-size: 14px; line-height: 1.6; padding-right: 76px; }
-.sampleGift b { font-weight: 700; }
-.sampleStamp { position: absolute; right: 14px; bottom: 16px; }
+.content { position: relative; padding: clamp(96px, 14vh, 150px) 0 28px; display: grid; gap: 18px; }
+/* 첫 화면 글자는 스크립트 없이도 바로 보이게 — CSS 애니메이션으로 올라온다 */
+.enter { animation: heroIn 0.9s var(--ease-out) both; }
+.enterD1 { animation-delay: 0.1s; } .enterD2 { animation-delay: 0.2s; } .enterD3 { animation-delay: 0.3s; } .enterD4 { animation-delay: 0.4s; }
+@keyframes heroIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+.eyebrow { display: inline-flex; align-items: center; gap: 10px; color: var(--gold); font-weight: 800; font-size: 13.5px; letter-spacing: 0.04em; }
+.eyebrow::before { content: ""; width: 26px; height: 3px; background: var(--gold); }
+.title { color: #fff; text-shadow: 0 2px 22px rgba(0, 0, 0, 0.55); }
+.title span { display: block; }
+.title em { font-style: normal; color: var(--gold); }
+.lead { max-width: 34ch; color: rgba(255, 255, 255, 0.86); text-shadow: 0 1px 12px rgba(0, 0, 0, 0.6); }
+.lead b { color: #fff; font-weight: 800; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.facts { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-top: 8px; font-size: 14px; color: rgba(255, 255, 255, 0.72); font-weight: 600; }
+.facts b { color: #fff; font-weight: 800; }
+
+.bottom { position: relative; display: grid; gap: 10px; padding-bottom: 18px; }
+.dots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.dot {
+  position: relative; width: 100%; text-align: left; display: grid; gap: 2px; padding: 12px 0 12px;
+  border-top: 2px solid rgba(255, 255, 255, 0.28); color: rgba(255, 255, 255, 0.62); transition: color 0.3s;
+}
+.dotActive { color: #fff; }
+.dotNum { font-size: 12px; font-weight: 800; letter-spacing: 0.06em; color: var(--gold); }
+.dotName { font-family: var(--font-display); font-size: 17px; line-height: 1.15; }
+.dotDrink { font-size: 12.5px; font-weight: 700; opacity: 0.8; }
+.bar { position: absolute; left: 0; top: -2px; height: 2px; width: 0; background: var(--gold); }
+.dotActive .bar { animation: grow linear forwards; }
+@keyframes grow { from { width: 0; } to { width: 100%; } }
+.caption { font-size: 12.5px; color: rgba(255, 255, 255, 0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 @media (min-width: 760px) {
-  .hero { padding: 36px 0 64px; }
-  .grid { grid-template-columns: minmax(0, 1fr) 156px; grid-template-rows: auto auto; column-gap: 48px; row-gap: 0; align-items: stretch; }
-  .spine { grid-column: 2; grid-row: 1 / span 2; grid-template-columns: repeat(3, 1fr); min-height: 560px; }
-  .band { writing-mode: vertical-rl; justify-content: flex-start; padding: 22px 0; gap: 12px; }
-  .bandName { font-size: 20px; }
-  .bandDrink { display: inline; }
-  .text { grid-column: 1; grid-row: 1; gap: 22px; padding-bottom: 30px; }
-  .lead { max-width: 36ch; }
-  .actions > * { flex: 0 0 auto; min-width: 220px; }
-  .sample { grid-column: 1; grid-row: 2; justify-self: end; margin: -40px 0 0; transform: rotate(-3.5deg); width: 280px; }
-}
-@media (min-width: 1040px) {
-  .text { min-height: 520px; grid-template-rows: auto auto auto auto 1fr; }
-  .meta { align-self: end; }
-  .sample { margin-top: -120px; margin-right: 8px; }
+  .hero { min-height: calc(100svh - var(--header-h)); }
+  .content { padding: clamp(110px, 16vh, 180px) 0 40px; gap: 22px; }
+  .lead { max-width: 44ch; }
+  .actions { gap: 12px; }
+  .bottom { grid-template-columns: minmax(0, 560px) 1fr; align-items: end; padding-bottom: 26px; }
+  .dot { padding: 14px 0 6px; }
+  .dotName { font-size: 20px; }
+  .caption { text-align: right; }
 }

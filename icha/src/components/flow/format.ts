@@ -1,6 +1,8 @@
 /**
  * 손님 화면용 날짜·시간 표기 (한국 시간 고정). 서버/클라이언트 어디서나 같은 결과가 나오도록 Intl 로만 계산한다.
  */
+import { STORE_IDS } from "@/lib/config";
+
 const TZ = "Asia/Seoul";
 
 type Parts = { y: string; m: string; d: string; h: string; mi: string; s: string };
@@ -94,4 +96,10 @@ export function safeNext(v: string | string[] | undefined, fallback: string): st
   const s = Array.isArray(v) ? v[0] : v;
   if (!s || !s.startsWith("/") || s.startsWith("//") || s.includes("\\")) return fallback;
   return s;
+}
+
+/** 매장 번호 01/02/03 — 홈·푸터와 같은 순서(STORE_IDS) */
+export function storeNo(id: string | null | undefined): string {
+  const i = id ? (STORE_IDS as string[]).indexOf(id) : -1;
+  return i < 0 ? "--" : String(i + 1).padStart(2, "0");
 }

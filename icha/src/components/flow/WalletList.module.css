@@ -1,30 +1,33 @@
-/* 사용 가능 쿠폰 — 종이 티켓 */
-.tickets { display: grid; gap: 12px; }
+/* 사용 가능 쿠폰 — 종이 티켓(검정 스텁 + 밝은 종이) */
+.tickets { display: grid; gap: 14px; }
 .ticket {
-  position: relative; display: grid; grid-template-columns: 8px 1fr auto; align-items: stretch;
-  background: var(--thermal); box-shadow: var(--shadow-paper); border-radius: var(--radius);
-  overflow: hidden; transition: transform 0.2s var(--ease-out), box-shadow 0.2s;
+  position: relative; display: grid; grid-template-columns: 64px 1fr auto; align-items: stretch;
+  background: var(--paper); color: var(--ink); border-radius: var(--radius);
+  overflow: hidden; transition: transform 0.2s var(--ease-out);
 }
-.ticket:hover { transform: translateY(-2px); box-shadow: 0 1px 0 rgba(26, 23, 20, 0.06), 0 18px 34px -18px rgba(26, 23, 20, 0.55); }
-.band { background: var(--store, var(--ink)); }
-.ticketBody { display: grid; gap: 4px; padding: 14px 14px 14px 16px; min-width: 0; }
-.ticketStore { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; color: var(--store-ink, var(--ink)); }
-.ticketStore svg { color: var(--store, var(--ink)); }
-.kind { margin-left: 6px; font-size: 12px; font-weight: 400; color: var(--ink-3); letter-spacing: 0.04em; }
-.ticketName { font-size: 22px; line-height: 1.25; }
+.ticket:hover { transform: translateY(-2px); }
+.stub {
+  display: grid; align-content: center; justify-items: center; gap: 6px;
+  background: var(--ink); color: var(--gold); border-right: 2px dashed rgba(255, 255, 255, 0.35);
+}
+.stubNo { font-family: var(--font-display); font-size: 26px; line-height: 1; }
+.stubDrink { font-size: 13px; font-weight: 700; color: var(--fg-2); }
+.ticketBody { display: grid; gap: 4px; padding: 14px 14px 14px 18px; min-width: 0; }
+.ticketStore { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 800; color: var(--ink-2); }
+.kind { font-size: 13px; font-weight: 700; color: var(--ink-3); border: 1px solid var(--ink-line-strong); border-radius: 999px; padding: 0 8px; }
+.ticketName { font-family: var(--font-display); font-size: 26px; line-height: 1.15; }
 .ticketMeta { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; color: var(--ink-3); margin-top: 2px; }
-.ticketMeta > span:first-child { letter-spacing: 0.14em; color: var(--ink-2); font-weight: 600; }
+.ticketCode { letter-spacing: 0.14em; color: var(--ink); font-weight: 600; font-size: 14px; }
 .urgent { color: var(--stamp); font-weight: 600; }
-.ticketArrow { display: grid; place-items: center; padding: 0 16px; font-size: 22px; color: var(--ink-3); border-left: 2px dotted var(--line-strong); }
+.ticketArrow { display: grid; place-items: center; padding: 0 16px; font-size: 22px; color: var(--ink-3); border-left: 2px dotted var(--ink-line-strong); }
 
 /* 승인됐지만 아직 안 고른 영수증 */
 .pickables { display: grid; gap: 10px; }
-.pickable {
-  display: grid; gap: 12px; padding: 16px; border: 2px solid var(--store, var(--ink)); border-radius: var(--radius-lg);
-  background: var(--store-paper, var(--paper-2));
-}
-.pickableTitle { font-size: 16px; line-height: 1.4; color: var(--store-ink, var(--ink)); }
-.pickableMeta { font-size: 13px; color: var(--ink-2); margin-top: 2px; }
+.pickable { display: grid; gap: 14px; padding: 18px; border: 2px solid var(--gold); border-radius: var(--radius-lg); background: var(--surface); }
+.pickableText { display: grid; gap: 4px; }
+.pickableTitle { display: flex; align-items: baseline; gap: 8px; font-size: 16px; line-height: 1.4; flex-wrap: wrap; }
+.pickableNo { font-family: var(--font-display); font-size: 22px; line-height: 1; color: var(--gold); }
+.pickableMeta { font-size: 13px; color: var(--fg-3); }
 @media (min-width: 560px) {
   .pickable { grid-template-columns: 1fr auto; align-items: center; }
 }
@@ -35,9 +38,9 @@
   display: grid; grid-template-columns: auto 1fr auto; gap: 10px 14px; align-items: center;
   padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 15px;
 }
-.pendingWhen { font-size: 13px; color: var(--ink-3); }
-.pendingStore { color: var(--ink-2); }
-.pendingState { font-size: 13px; font-weight: 700; color: var(--ink-3); padding: 3px 8px; border: 1.5px solid var(--line-strong); border-radius: 999px; }
+.pendingWhen { font-size: 13px; color: var(--fg-3); }
+.pendingStore { color: var(--fg-2); }
+.pendingState { font-size: 13px; font-weight: 700; color: var(--fg-2); padding: 3px 8px; border: 1px solid var(--line-strong); border-radius: 999px; }
 @media (max-width: 480px) {
   .pendingRow { grid-template-columns: 1fr auto; }
   .pendingWhen { grid-area: 1 / 1; }
@@ -48,8 +51,8 @@
 /* 지난 쿠폰 */
 .past { display: grid; }
 .pastRow { border-bottom: 1px solid var(--line); }
-.pastLink { display: grid; grid-template-columns: 10px 1fr auto; gap: 12px; align-items: center; padding: 12px 0; color: var(--ink-3); }
-.pastDot { width: 10px; height: 10px; border-radius: 50%; background: var(--store, var(--ink-3)); opacity: 0.55; }
-.pastName { font-size: 15px; color: var(--ink-2); text-decoration: line-through; text-decoration-color: var(--line-strong); }
-.pastStore { font-size: 13px; color: var(--ink-3); margin-left: 4px; }
+.pastLink { display: grid; grid-template-columns: 32px 1fr auto; gap: 12px; align-items: center; padding: 12px 0; color: var(--fg-3); }
+.pastNo { font-family: var(--font-display); font-size: 18px; line-height: 1; color: var(--fg-3); }
+.pastName { font-size: 15px; color: var(--fg-2); text-decoration: line-through; text-decoration-color: var(--line-strong); }
+.pastStore { font-size: 13px; color: var(--fg-3); margin-left: 4px; }
 .pastState { font-size: 13px; }

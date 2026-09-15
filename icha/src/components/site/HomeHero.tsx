@@ -1,81 +1,67 @@
-import Link from "next/link";
-import { BRAND, formatWon, type Rules } from "@/lib/config";
-import { STORES } from "@/lib/stores";
-import { ArrowIcon, DrinkIcon } from "@/components/ui/icons";
-import { Stamp } from "@/components/ui/Stamp";
+"use client";
+import Image from "next/image";
+import { useEffect, useState, type ReactNode } from "react";
 import styles from "./HomeHero.module.css";
 
-function kstToday(): string {
-  const d = new Date(Date.now() + 9 * 3600 * 1000);
-  return `${String(d.getUTCMonth() + 1).padStart(2, "0")}.${String(d.getUTCDate()).padStart(2, "0")}`;
-}
+export type HeroSlide = { id: string; num: string; name: string; drink: string; src: string; alt: string };
 
-export function HomeHero({ rules }: { rules: Rules }) {
-  const sampleStore = STORES[0];
-  const giftStores = STORES.slice(1);
-  const meta = [
-    `결제 후 ${rules.receiptValidHours}시간 안에`,
-    rules.minAmount > 0 ? `${formatWon(rules.minAmount)} 이상` : null,
-    `쿠폰은 ${rules.couponValidDays}일 동안`,
-    `하루 ${rules.dailyLimitPerMember}장까지`,
-  ].filter(Boolean);
+/**
+ * 첫 화면 — 세 매장 밤 외관 실사진이 6초마다 크로스페이드. 첫 장은 서버에서 그대로 렌더되어 바로 보인다.
+ * 글자(children)는 서버 컴포넌트가 넣어 준다. 하단의 매장 이름은 인디케이터이자 버튼.
+ */
+export function HomeHero({ slides, interval = 6000, children }: { slides: HeroSlide[]; interval?: number; children: ReactNode }) {
+  const [idx, setIdx] = useState(0);
+  const [tick, setTick] = useState(0); // 같은 장으로 되돌아와도 진행 막대를 다시 그리기 위한 카운터
+
+  useEffect(() => {
+    if (slides.length < 2) return;
+    const t = window.setInterval(() => {
+      setIdx((i) => (i + 1) % slides.length);
+      setTick((n) => n + 1);
+    }, interval);
+    return () => window.clearInterval(t);
+  }, [slides.length, interval, tick]);
+
+  const go = (i: number) => {
+    setIdx(i);
+    setTick((n) => n + 1);
+  };
 
   return (
     <section className={styles.hero} aria-labelledby="hero-title">
-      <span className={`serif ${styles.watermark}`} aria-hidden="true">{BRAND.hanja}</span>
-      <div className={`wrap ${styles.grid}`}>
-        <div className={styles.spine} aria-hidden="true">
-          {STORES.map((s) => (
-            <span key={s.id} data-store={s.id} className={styles.band}>
-              <DrinkIcon drink={s.drink} size={20} />
-              <span className={`serif ${styles.bandName}`}>{s.shortName}</span>
-              <span className={`mono ${styles.bandDrink}`}>{s.drink}</span>
-            </span>
+      <div className={styles.slides} aria-hidden="true">
+        {slides.map((s, i) => (
+          <div key={s.id} className={`${styles.slide} ${i === idx ? styles.active : ""}`}>
+            <Image src={s.src} alt="" fill sizes="100vw" priority={i === 0} className={styles.img} />
+          </div>
+        ))}
+      </div>
+      <div className={styles.shade} aria-hidden="true" />
+
+      <div className={`wrap ${styles.content}`}>{children}</div>
+
+      <div className={`wrap ${styles.bottom}`}>
+        <ol className={styles.dots} aria-label="지금 보이는 매장">
+          {slides.map((s, i) => (
+            <li key={s.id}>
+              <button
+                type="button"
+                className={`${styles.dot} ${i === idx ? styles.dotActive : ""}`}
+                onClick={() => go(i)}
+                aria-current={i === idx ? "true" : undefined}
+                aria-label={`${s.name} 사진 보기`}
+              >
+                <span className={styles.dotNum}>{s.num}</span>
+                <span className={styles.dotName}>{s.name}</span>
+                <span className={styles.dotDrink}>{s.drink}</span>
+                <span className={styles.bar} key={`${s.id}-${tick}`} style={{ animationDuration: `${interval}ms` }} />
+              </button>
+            </li>
           ))}
-        </div>
-
-        <div className={styles.text}>
-          <p className={`eyebrow rise ${styles.eyebrow}`}>
-            {BRAND.unionName} · {STORES.map((s) => s.shortName).join(" × ")}
-          </p>
-          <h1 id="hero-title" className={`serif ${styles.title}`}>
-            <span className={`${styles.line} rise`}>1차는 마음대로.</span>
-            <span className={`${styles.line} rise rise-d1`}>2차는 <em className={styles.em}>한 접시</em></span>
-            <span className={`${styles.line} rise rise-d2`}>얹어드립니다.</span>
-          </h1>
-          <p className={`lead rise rise-d2 ${styles.lead}`}>{BRAND.ruleOneLiner}</p>
-          <div className={`rise rise-d3 ${styles.actions}`}>
-            <Link href="/verify" className="btn btn-lg">
-              영수증 인증하기 <ArrowIcon size={20} />
-            </Link>
-            <a href="#stores" className={`btn btn-lg btn-ghost ${styles.down}`}>
-              세 매장 보기 <ArrowIcon size={20} className={styles.downIcon} />
-            </a>
-          </div>
-          <p className={`mono rise rise-d4 ${styles.meta}`}>{meta.join(" · ")}</p>
-        </div>
-
-        {sampleStore && (
-          <div className={`paper rise rise-d3 ${styles.sample}`} aria-label="영수증 인증 예시">
-            <div className={styles.sampleHead}>
-              <span className="serif">{BRAND.name} <span className={`mono ${styles.sampleHanja}`}>{BRAND.hanja}</span></span>
-              <span className={`mono ${styles.sampleTag}`}>예시</span>
-            </div>
-            <hr className="dots" />
-            <div className="row"><b>매장</b><span className="val">{sampleStore.shortName}</span></div>
-            <div className="row"><b>일시</b><span className="val">{kstToday()} 21:40</span></div>
-            <div className="row"><b>합계</b><span className="val">42,000원</span></div>
-            <hr className="dots" />
-            <p className={styles.sampleGift}>
-              <span className="mono">→</span> {giftStores.map((s) => s.shortName).join(" 또는 ")}에서
-              <br />
-              <b>사이드 한 접시 무료</b>
-            </p>
-            <span className={styles.sampleStamp}>
-              <Stamp text="승인" size={84} slam />
-            </span>
-          </div>
-        )}
+        </ol>
+        <p className={styles.caption} aria-live="polite">
+          {slides[idx]?.alt}
+        </p>
       </div>
     </section>
   );

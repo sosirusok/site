@@ -1,15 +1,30 @@
+import type { ReactNode } from "react";
 import styles from "./HomeSectionHead.module.css";
 
-/** 섹션 머리: 왼쪽 굵은 괘선 + 번호(mono) + 제목(세리프). 홈/매장/안내 공통. */
-export function SectionHead({ num, title, sub, id, as: Tag = "h2" }: { num?: string; title: string; sub?: string; id?: string; as?: "h1" | "h2" | "h3" }) {
+/**
+ * 섹션 머리 — 작은 금색 말머리 + Black Han Sans 제목(키워드만 금색) + 한 줄 설명.
+ * title 안에서 <em> 을 쓰면 금색이 된다.
+ */
+export function SectionHead({
+  eyebrow,
+  title,
+  sub,
+  id,
+  align = "left",
+  as: Tag = "h2",
+}: {
+  eyebrow?: string;
+  title: ReactNode;
+  sub?: ReactNode;
+  id?: string;
+  align?: "left" | "center";
+  as?: "h1" | "h2";
+}) {
   return (
-    <header className={`${styles.head} rise`} id={id}>
-      <hr className="rule-thick" />
-      <div className={styles.row}>
-        {num && <span className={`mono ${styles.num}`}>{num}</span>}
-        <Tag className={`h2 ${styles.title}`}>{title}</Tag>
-        {sub && <p className={styles.sub}>{sub}</p>}
-      </div>
+    <header className={`${styles.head} ${align === "center" ? styles.center : ""} rise`}>
+      {eyebrow && <p className={styles.eyebrow}>{eyebrow}</p>}
+      <Tag id={id} className={`h1 ${styles.title}`}>{title}</Tag>
+      {sub && <p className={`lead ${styles.sub}`}>{sub}</p>}
     </header>
   );
 }

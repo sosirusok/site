@@ -7,9 +7,8 @@ import { getReceipt, listMenu } from "@/lib/db/queries";
 import { getRules } from "@/lib/settings";
 import { getStore, giftStoresFor } from "@/lib/stores";
 import { Stamp } from "@/components/ui/Stamp";
-import { DrinkIcon } from "@/components/ui/icons";
 import { MenuPicker, type PickStore } from "@/components/flow/MenuPicker";
-import { fmtDateTime } from "@/components/flow/format";
+import { fmtDateTime, storeNo } from "@/components/flow/format";
 import styles from "./pick.module.css";
 
 export const metadata: Metadata = { title: "무료 사이드 고르기" };
@@ -31,10 +30,10 @@ export default async function PickPage({ params }: { params: Promise<{ receiptId
     const waiting = receipt.status === "review";
     return (
       <section className={`wrap ${styles.page}`}>
-        <div className={`paper ${styles.notice}`}>
-          <Stamp text={waiting ? "대기" : receipt.status === "rejected" ? "반려" : "보류"} color={waiting ? "#6b625a" : undefined} size={96} />
+        <div className={`paper paper-shadow ${styles.notice}`}>
+          <Stamp text={waiting ? "대기" : receipt.status === "rejected" ? "반려" : "보류"} color={waiting ? "#6b665e" : undefined} size={96} />
           <div>
-            <p className={`serif ${styles.noticeTitle}`}>
+            <p className={styles.noticeTitle}>
               {waiting ? "아직 직원이 확인하는 중이에요." : receipt.status === "rejected" ? "받을 수 없었던 영수증이에요." : "매장을 확인하지 못한 영수증이에요."}
             </p>
             <p className={styles.noticeText}>
@@ -48,7 +47,7 @@ export default async function PickPage({ params }: { params: Promise<{ receiptId
           </div>
           <div className={styles.noticeActions}>
             <Link href="/wallet" className="btn">쿠폰함 보기</Link>
-            <Link href="/verify" className="btn btn-ghost">영수증 다시 올리기</Link>
+            <Link href="/verify" className={`btn ${styles.inkOutline}`}>영수증 다시 올리기</Link>
           </div>
         </div>
       </section>
@@ -62,6 +61,7 @@ export default async function PickPage({ params }: { params: Promise<{ receiptId
       const items = await listMenu(s.id, { giftOnly: true });
       return {
         id: s.id,
+        no: storeNo(s.id),
         shortName: s.shortName,
         name: s.name,
         drink: s.drink,
@@ -83,20 +83,21 @@ export default async function PickPage({ params }: { params: Promise<{ receiptId
         <div className={styles.headText}>
           <p className="eyebrow">무료 사이드 고르기</p>
           <h1 className={`h1 ${styles.title}`}>
-            한 접시 고르세요.<br />
-            <span className={styles.titleSub}>{gifts.map((s) => s.shortName).join(" 또는 ")}에서 드려요.</span>
+            <span className="gold">한 접시</span> 고르세요.
           </h1>
+          <p className={`lead ${styles.titleSub}`}>{gifts.map((s) => s.shortName).join(" 또는 ")}에서 드려요. 영수증 한 장에 한 접시예요.</p>
         </div>
-        <div className={styles.receipt} data-store={store.id}>
-          <p className={`eyebrow ${styles.receiptEyebrow}`}>승인된 영수증</p>
+        <div className={`paper paper-shadow ${styles.receipt}`} aria-label="승인된 영수증">
+          <p className={styles.receiptEyebrow}>승인된 영수증</p>
           <p className={styles.receiptStore}>
-            <DrinkIcon drink={store.drink} size={18} />
+            <span className={styles.receiptNo}>{storeNo(store.id)}</span>
             <b>{store.shortName}</b>
+            <span className={styles.receiptDrink}>{store.drink}</span>
           </p>
-          <p className={`mono ${styles.receiptMeta}`}>
-            {fmtDateTime(receipt.receiptAt ?? receipt.createdAt)} · {receipt.amount == null ? "금액 미확인" : formatWon(receipt.amount)}
-          </p>
-          <span className={styles.receiptStamp}><Stamp text="승인" size={72} /></span>
+          <hr className="dots" />
+          <div className="row"><b>결제</b><span className="val">{fmtDateTime(receipt.receiptAt ?? receipt.createdAt)}</span></div>
+          <div className="row"><b>금액</b><span className="val">{receipt.amount == null ? "미확인" : formatWon(receipt.amount)}</span></div>
+          <span className={styles.receiptStamp}><Stamp text="승인" size={76} /></span>
         </div>
       </header>
 
