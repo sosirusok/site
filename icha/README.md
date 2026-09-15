@@ -58,6 +58,20 @@ npx tsx scripts/export-schema.ts               # supabase/schema.sql 갱신
 
 관리자 사이트를 별도 도메인(예: `staff.도메인`)으로 쓰고 싶으면 Vercel 에 도메인을 추가하고 `src/proxy.ts` 에서 호스트가 그 도메인이면 `/admin` 으로 rewrite 하면 된다.
 
+## 새 저장소로 옮기기
+
+이 프로젝트는 `sosirusok/site` 저장소의 `icha/` 폴더에 들어 있다. 별도 저장소(예: `sosirusok/icha`)로 옮기려면:
+
+```bash
+# 1) GitHub 에서 빈 저장소 icha 를 만든다 (README 없이)
+# 2) 이 저장소에서 icha/ 폴더만 떼어 낸 브랜치를 만들고 밀어 넣는다
+git fetch origin claude/restaurant-info-site-kwnkyh
+git checkout claude/restaurant-info-site-kwnkyh
+git subtree split --prefix=icha -b icha-main
+git push https://github.com/sosirusok/icha.git icha-main:main
+```
+Vercel 은 새 저장소를 그대로 연결하면 된다(Root Directory 기본값).
+
 ## 구조
 
 ```
