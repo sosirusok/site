@@ -1,6 +1,5 @@
 "use client";
 import { useId, useState, type ChangeEvent, type FormEvent } from "react";
-import { ArtButton } from "@/components/art/ArtButton";
 import { formatPhone, normalizePhone } from "@/lib/config";
 import styles from "./PhoneForm.module.css";
 
@@ -28,7 +27,7 @@ export function PhoneForm({ next }: { next: string }) {
     e.preventDefault();
     const phone = normalizePhone(digits);
     if (!phone) {
-      setError("번호를 다시 확인해 주세요. 010으로 시작하는 11자리예요.");
+      setError("010으로 시작하는 11자리 번호를 넣어 주세요.");
       return;
     }
     setBusy(true);
@@ -40,40 +39,41 @@ export function PhoneForm({ next }: { next: string }) {
       });
       const data = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
       if (!res.ok || !data?.ok) {
-        setError(
-          res.status === 429
-            ? "시도가 너무 잦아요. 잠시 뒤에 다시 눌러 주세요."
-            : data?.error ?? "지금은 들어갈 수 없어요. 잠시 뒤에 다시 해 주세요.",
-        );
+        setError(res.status === 429 ? "너무 자주 눌렀어요. 잠시 뒤에 다시 해 주세요." : data?.error ?? "지금은 들어갈 수 없어요. 잠시 뒤에 다시 해 주세요.");
         setBusy(false);
         return;
       }
-      // 상단 메뉴(서버 컴포넌트)까지 로그인 상태로 바뀌도록 전체 이동
+      // 상단 바(서버 컴포넌트)까지 로그인 상태로 바뀌도록 전체 이동
       window.location.assign(next);
     } catch {
-      setError("연결이 끊겼어요. 통신 상태를 확인한 뒤 다시 눌러 주세요.");
+      setError("연결이 끊겼어요. 다시 눌러 주세요.");
       setBusy(false);
     }
   }
 
   return (
     <form className={styles.form} onSubmit={onSubmit} noValidate>
-      <label className={styles.label} htmlFor={id}>휴대폰 번호</label>
-      <input
-        id={id}
-        className={`input mono ${styles.input}`}
-        type="tel"
-        inputMode="numeric"
-        autoComplete="tel"
-        placeholder="010-0000-0000"
-        value={pretty(digits)}
-        onChange={onChange}
-        aria-invalid={error ? true : undefined}
-        aria-describedby={error ? `${id}-err` : undefined}
-        disabled={busy}
-      />
-      {error && <p id={`${id}-err`} className="error" role="alert">{error}</p>}
-      <ArtButton kind="start" type="submit" loading={busy} width={380} className={styles.submit} />
+      <div className="field">
+        <label className="label" htmlFor={id}>휴대폰 번호</label>
+        <input
+          id={id}
+          className="input mono"
+          type="tel"
+          inputMode="numeric"
+          autoComplete="tel"
+          placeholder="010-0000-0000"
+          value={pretty(digits)}
+          onChange={onChange}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? `${id}-err` : undefined}
+          disabled={busy}
+          autoFocus
+        />
+        {error && <p id={`${id}-err`} className="error" role="alert">{error}</p>}
+      </div>
+      <button type="submit" className="btn btn-block" disabled={busy || digits.length < 10}>
+        {busy ? "잠시만요" : "시작하기"}
+      </button>
     </form>
   );
 }

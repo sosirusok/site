@@ -358,6 +358,7 @@ export async function saveRulesAction(_prev: ActionState, fd: FormData): Promise
       minConfidence: Math.round(minConfidencePct) / 100,
       tiers,
       eventActive: fd.get("eventActive") === "on",
+      sameDayOnly: fd.get("sameDayOnly") === "on",
       notice: str(fd, "notice").slice(0, 200),
     };
     await saveRules(patch);

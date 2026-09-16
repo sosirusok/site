@@ -1,38 +1,7 @@
-.page { padding: 18px 0 40px; display: grid; gap: 30px; }
-.notice { background: var(--navy); color: #fff; padding: 10px 16px; border-radius: 10px; font-weight: 700; font-size: 15.5px; }
-.head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-
-/* 내 혜택 */
-.tier { display: grid; gap: 16px; scroll-margin-top: calc(var(--header-h) + 12px); }
-.tierHead { display: flex; align-items: center; gap: 10px; }
-.tierHead img { width: 64px; height: auto; }
-.progressBlock { display: grid; gap: 8px; max-width: 520px; }
-.track { position: relative; width: 100%; aspect-ratio: 900 / 60; overflow: hidden; }
-.track img { position: absolute; left: 0; top: -33.3%; width: 100%; height: auto; }
-.fill { position: absolute; left: 1.2%; top: 30%; height: 50%; border-radius: 999px; background: var(--navy); transition: width 0.6s var(--ease-out); }
-.progressText { font-size: 16.5px; line-height: 1.75; color: var(--fg-2); }
-.progressText b { color: var(--fg); }
-.ledgerRow { display: grid; gap: 12px; }
-.ledger { position: relative; width: min(62%, 260px); container-type: inline-size; }
-.ledger img { width: 100%; height: auto; }
-.ledgerRowBox { position: absolute; left: 0; right: 0; height: 8.4%; }
-.ledgerDash { position: absolute; left: 66%; width: 14%; top: 0; height: 24%; }
-.ledgerAmt { position: absolute; left: 10%; bottom: 0; font-size: max(15px, 6.2cqw); font-weight: 700; line-height: 1.1; color: var(--fg); }
-.ledgerText { font-size: 16px; line-height: 1.75; color: var(--fg-2); max-width: 34em; }
-
-/* 쿠폰 목록 */
-.block { display: grid; gap: 16px; }
-.count { font-family: var(--font-display); color: var(--red); margin-left: 6px; }
-.none { font-size: 16.5px; line-height: 1.75; color: var(--fg-2); }
-
-.foot { display: grid; gap: 14px; justify-items: start; padding-top: 20px; border-top: 2px solid var(--outline); }
-.footText { font-size: 15.5px; line-height: 1.7; color: var(--fg-3); }
-
-@media (min-width: 760px) {
-  .page { padding: 40px 0 96px; gap: 40px; }
-  .tier { grid-template-columns: 440px 1fr; column-gap: 40px; row-gap: 28px; align-items: center; }
-  .tierHead { grid-column: 1 / -1; }
-  .progressBlock { grid-column: 2; grid-row: 2; }
-  .ledgerRow { grid-column: 1 / -1; grid-row: 3; grid-template-columns: 240px 1fr; gap: 28px; align-items: center; }
-  .ledger { width: 240px; }
-}
+.page { display: grid; }
+.notice { background: var(--bg-2); color: var(--fg-2); font-size: 13px; padding: 10px var(--gutter); }
+.top { display: grid; gap: 16px; padding-block: 20px 24px; }
+.sec { padding-block: 24px; }
+.block { padding-bottom: 20px; }
+.count { color: var(--accent); margin-left: 6px; }
+.foot { display: grid; gap: 12px; justify-items: start; }

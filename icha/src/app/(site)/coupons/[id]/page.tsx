@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { CouponTicket, type TicketCoupon, type TicketStore } from "@/components/flow/CouponTicket";
+import { Chevron } from "@/components/ui/Chevron";
 import { getMemberSession } from "@/lib/auth/session";
 import { getCoupon } from "@/lib/db/queries";
 import { getStore } from "@/lib/stores";
@@ -36,8 +37,8 @@ export default async function CouponPage({ params }: { params: Promise<{ id: str
 
   return (
     <section className={`wrap ${styles.page}`}>
-      <p className={styles.back}>
-        <Link href="/wallet">← 쿠폰함</Link>
+      <p>
+        <Link href="/wallet" className={styles.back}><Chevron className="" />쿠폰함</Link>
       </p>
       <CouponTicket coupon={tc} store={ts} />
     </section>

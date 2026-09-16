@@ -1,56 +1,30 @@
-.root { display: grid; gap: 22px; }
+.root { display: grid; gap: 16px; }
 
-/* 올리기 영역 — 그림이 놓인 종이 패널, 누르면 사진 선택 */
-.drop { display: grid; grid-template-columns: 42% 1fr; gap: 16px; align-items: center; cursor: pointer; padding: 16px 18px; }
-.drop:active { background: var(--panel-2); }
-.drop:focus-within { outline: 3px solid var(--navy); outline-offset: 3px; }
-.dropArt img { width: 100%; height: auto; }
-.dropText { display: grid; gap: 6px; font-size: 17px; line-height: 1.6; }
-.dropText b { font-family: var(--font-display); font-size: 19px; }
-.dropSub { font-size: 15.5px; color: var(--fg-3); }
-.buttons { display: grid; gap: 10px; }
-.buttons > * { width: 100% !important; max-width: 400px; }
-
-/* 촬영 안내 */
-.guide { display: grid; gap: 14px; padding-top: 10px; }
-.guides { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4%; }
-.guides li { display: grid; gap: 6px; justify-items: center; text-align: center; }
-.guides img { width: 100%; height: auto; }
-.guideOk, .guideNo { font-weight: 700; font-size: 15.5px; line-height: 1.4; }
-.guideOk { color: var(--green); }
-.guideNo { color: var(--red); }
-.rules { font-size: 16px; line-height: 1.8; color: var(--fg-2); }
+/* 올리기 상자 — 점선 테두리, 가운데 정렬 */
+.drop { display: grid; gap: 6px; justify-items: center; text-align: center; padding: 28px 16px 20px; border: 1px dashed #c9cfd6; border-radius: var(--radius-lg); }
+.dropBtns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; margin-top: 12px; }
+.dropBtns .btn { height: 48px; padding: 0 12px; font-size: 15px; }
 
 /* 미리보기 */
-.preview { display: grid; gap: 14px; }
-.frame { margin: 0; padding: 10px; max-height: 480px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.frame img { width: 100%; height: auto; max-height: 456px; object-fit: contain; border-radius: 8px; }
-.frameFallback { padding: 40px 20px; text-align: center; font-size: 16px; color: var(--fg-2); }
-.previewText { font-size: 16px; color: var(--fg-2); }
-.actions { display: grid; gap: 10px; }
+.preview { display: grid; gap: 12px; }
+.frame { margin: 0; max-height: 420px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: var(--radius-lg); background: var(--bg-2); }
+.frame img { width: 100%; height: auto; max-height: 420px; object-fit: contain; }
+.frameFallback { padding: 40px 20px; text-align: center; font-size: 14px; color: var(--fg-2); }
+.actions { display: grid; gap: 8px; }
 
 /* 올리는 동안 */
-.progress { display: grid; gap: 16px; justify-items: start; }
-.progressArt { width: min(45%, 210px); margin: 0 auto; }
-.progressArt img { width: 100%; height: auto; }
-.progressHead { display: flex; align-items: center; gap: 12px; }
-.steps { display: grid; gap: 8px; width: 100%; max-width: 360px; }
-.step { display: flex; align-items: center; gap: 12px; font-size: 17px; color: var(--fg-3); transition: color 0.2s; }
-.stepDot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--outline); background: transparent; flex: none; }
-.step[data-state="now"] { color: var(--fg); font-weight: 700; }
-.step[data-state="now"] .stepDot { background: var(--navy); border-color: var(--navy); }
+.progress { display: grid; gap: 14px; }
+.progressHead { display: flex; align-items: center; gap: 10px; }
+.spin { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--line-2); border-top-color: var(--fg); animation: spin 0.8s linear infinite; flex: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.steps { display: grid; gap: 8px; }
+.step { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--fg-3); transition: color 0.2s; }
+.stepDot { width: 8px; height: 8px; border-radius: 50%; background: var(--line-2); flex: none; }
+.step[data-state="now"] { color: var(--fg); font-weight: 600; }
+.step[data-state="now"] .stepDot { background: var(--fg); }
 .step[data-state="done"] { color: var(--fg-2); }
-.step[data-state="done"] .stepDot { background: var(--green); border-color: var(--green); }
-.progressNote { font-size: 15.5px; color: var(--fg-3); }
+.step[data-state="done"] .stepDot { background: var(--green); }
 
 /* 접수 실패 */
-.failed { display: grid; gap: 14px; }
-.failedArt { width: min(36%, 160px); }
-.failedArt img { width: 100%; height: auto; }
-.failedText { font-size: 16.5px; line-height: 1.8; color: var(--fg-2); }
-
-@media (min-width: 760px) {
-  .root { max-width: 640px; }
-  .drop { grid-template-columns: 200px 1fr; gap: 24px; padding: 20px 24px; }
-  .buttons { grid-template-columns: 1fr 1fr; }
-}
+.failed { display: grid; gap: 10px; }
+.failedText { color: var(--fg-2); }

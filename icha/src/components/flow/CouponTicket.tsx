@@ -1,10 +1,7 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import { Art } from "@/components/art/Art";
-import { ArtButton } from "@/components/art/ArtButton";
-import { Fx } from "@/components/art/Fx";
 import { daysLeft, fmtDate, fmtDateTimeSec, fmtMD, fmtMDHM, fmtTime } from "./format";
 import type { ApiFail, RedeemApiOk } from "./types";
 import styles from "./CouponTicket.module.css";
@@ -28,9 +25,6 @@ export type TicketStore = {
   address: string;
 };
 
-const STAMP = { src: "/art/stamp-used.png", width: 279, height: 116 };
-const FRAME = { src: "/art/confirm-frame.png", width: 640, height: 587 };
-const USE_BTN = { src: "/art/btn-use-staff.png", width: 640, height: 125 };
 /** 이 시간 안에 사용한 쿠폰은 '방금 사용' 화면(흐르는 시계)을 보여 준다 */
 const FRESH_MS = 3 * 60 * 1000;
 
@@ -43,16 +37,16 @@ function LiveClock() {
     return () => clearInterval(t);
   }, []);
   return (
-    <p className={styles.clock} role="timer" aria-live="off">
-      <span className={styles.clockLabel}>지금 시각</span>
-      <span className={`mono ${styles.clockTime}`}>{now ? fmtTime(now) : "--:--:--"}</span>
-      <span className={styles.clockDate}>{now ? fmtDate(now) : ""}</span>
-    </p>
+    <div className={`card-soft ${styles.clock}`} role="timer" aria-live="off">
+      <p className="cap">지금 시각</p>
+      <p className={`h1 mono ${styles.clockTime}`}>{now ? fmtTime(now) : "--:--:--"}</p>
+      <p className="cap">{now ? fmtDate(now) : ""}</p>
+    </div>
   );
 }
 
-function ticketName(c: Pick<TicketCoupon, "kind">, store: TicketStore): string {
-  return c.kind === "vip" ? "vip-coupon" : `coupon-${store.id}`;
+function kindText(c: Pick<TicketCoupon, "kind">): string | null {
+  return c.kind === "vip" ? "등급 쿠폰" : c.kind === "manual" ? "매장 쿠폰" : null;
 }
 
 export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: TicketStore }) {
@@ -69,12 +63,14 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
     if (confirming) cancelRef.current?.focus();
   }, [confirming]);
 
-  // 확인 창이 열려 있으면 Esc 로 닫는다
+  // 확인 시트가 열려 있으면 Esc 로 닫고, 뒤 화면은 스크롤을 막는다
   useEffect(() => {
     if (!confirming) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape" && !busy) setConfirming(false); };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { window.removeEventListener("keydown", onKey); document.body.style.overflow = prev; };
   }, [confirming, busy]);
 
   async function redeem() {
@@ -89,15 +85,16 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
         setJustUsed(true);
         setStatus("used");
         setConfirming(false);
+        window.scrollTo(0, 0);
         return;
       }
-      const msg = (data && !data.ok && data.error) || (res.status === 401 ? "로그인이 풀렸어요. 다시 로그인해 주세요." : "사용 처리가 안 됐어요. 직원에게 쿠폰 코드를 보여 주세요.");
+      const msg = (data && !data.ok && data.error) || (res.status === 401 ? "로그인이 풀렸어요. 다시 로그인해 주세요." : "사용 처리가 안 됐어요. 직원에게 코드를 보여 주세요.");
       setError(msg);
       if (/이미 사용/.test(msg)) setStatus("used");
       else if (/기간이 지난/.test(msg)) setStatus("expired");
       else if (/취소된/.test(msg)) setStatus("void");
     } catch {
-      setError("연결이 끊겨서 처리하지 못했어요. 통신 상태를 확인한 뒤 다시 눌러 주세요.");
+      setError("연결이 끊겼어요. 다시 눌러 주세요.");
     } finally {
       setBusy(false);
     }
@@ -106,29 +103,27 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
   const left = daysLeft(coupon.expiresAt);
   const usedMs = usedAt ? Date.now() - new Date(usedAt).getTime() : Number.POSITIVE_INFINITY;
   const fresh = justUsed || usedMs < FRESH_MS;
-  const art = ticketName(coupon, store);
+  const kind = kindText(coupon);
+  const ticket = <Art name={`coupon-${store.id}`} alt={`${store.shortName} ${coupon.menuName} 무료 쿠폰`} sizes="(min-width: 480px) 440px, 92vw" priority className={styles.ticket} />;
 
-  /* 사용한 쿠폰: 티켓 위에 사용 완료 스탬프 */
+  /* 사용한 쿠폰 */
   if (status === "used") {
     return (
       <article className={styles.root} data-status="used" aria-live="polite">
-        <div className={styles.ticketArt}>
-          <Art name={art} alt={`${store.shortName} ${coupon.menuName} 무료 쿠폰`} sizes="(min-width: 760px) 520px, 92vw" priority className={styles.ticketDim} />
-          <Image src={STAMP.src} alt="사용 완료" width={STAMP.width} height={STAMP.height} sizes="(min-width: 760px) 220px, 40vw" className={styles.stamp} draggable={false} />
-        </div>
-        <div className={styles.doneHead}>
-          <Fx seq="check" width={80} />
-          <p className="h2">{fresh ? "잘 썼어요" : "이미 쓴 쿠폰이에요"}</p>
+        <div className={styles.dim}>{ticket}</div>
+        <div className={styles.state}>
+          <p className="status-ok">사용 완료</p>
+          <h1 className="h1">{fresh ? "잘 썼어요" : "이미 쓴 쿠폰이에요"}</h1>
         </div>
         {fresh && <LiveClock />}
-        <dl className={styles.rows}>
-          <div><dt>사용 시각</dt><dd className="mono">{usedAt ? fmtDateTimeSec(usedAt) : "방금"}</dd></div>
-          <div><dt>매장</dt><dd>{store.name}</dd></div>
-          <div><dt>품목</dt><dd>{coupon.menuName}</dd></div>
-          <div><dt>코드</dt><dd className={`mono ${styles.rowCode}`}>{coupon.code}</dd></div>
-        </dl>
-        {fresh && <p className={styles.doneNote}>직원분은 이 화면의 시각이 지금 시각과 같은지만 봐 주세요. 캡처한 화면은 시계가 멈춰 있어요.</p>}
-        <Link href="/wallet" className="btn btn-outline">쿠폰함으로</Link>
+        <div className="paper">
+          <div className="row"><b>사용 시각</b><span className="val mono">{usedAt ? fmtDateTimeSec(usedAt) : "방금"}</span></div>
+          <div className="row"><b>매장</b><span className="val">{store.shortName}</span></div>
+          <div className="row"><b>품목</b><span className="val">{coupon.menuName}</span></div>
+          <div className="row"><b>코드</b><span className="val mono">{coupon.code}</span></div>
+        </div>
+        {fresh && <p className="cap">직원은 위 시계가 지금 시각과 같은지만 봐 주세요. 캡처한 화면은 시계가 멈춰 있어요.</p>}
+        <Link href="/wallet" className="btn btn-secondary btn-block">쿠폰함으로</Link>
       </article>
     );
   }
@@ -137,27 +132,25 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
     const expired = status === "expired";
     return (
       <article className={styles.root} data-status={status}>
-        <div className={styles.ticketArt}>
-          <Art name={art} alt={`${store.shortName} ${coupon.menuName} 무료 쿠폰`} sizes="(min-width: 760px) 520px, 92vw" priority className={styles.ticketDim} />
+        <div className={styles.dim}>{ticket}</div>
+        <div className={styles.state}>
+          <p className="status-no">{expired ? "기간 지남" : "취소됨"}</p>
+          <h1 className="h1">{expired ? "기간이 지났어요" : "취소된 쿠폰이에요"}</h1>
+          <p className="cap">
+            {expired
+              ? `${fmtMD(coupon.expiresAt)}까지 쓸 수 있었어요. 새 영수증을 올리면 다시 받아요.`
+              : `매장에서 취소했어요.${coupon.note ? ` (${coupon.note})` : ""} 궁금한 점은 직원에게 물어봐 주세요.`}
+          </p>
         </div>
-        <div className={styles.stateRow}>
-          <div className={styles.stateArt} aria-hidden="true">
-            <Art name={expired ? "wallet-expired" : "status-used"} sizes="(min-width: 760px) 160px, 36vw" />
-          </div>
-          <div className={styles.stateText}>
-            <p className="h2">{expired ? "기간이 지났어요" : "취소된 쿠폰이에요"}</p>
-            <p>
-              {expired
-                ? `${fmtMD(coupon.expiresAt)}까지 쓸 수 있는 쿠폰이었어요. 새 영수증을 올리면 다시 받을 수 있어요.`
-                : `매장에서 취소한 쿠폰이에요.${coupon.note ? ` (${coupon.note})` : ""} 궁금한 점은 매장 직원에게 물어봐 주세요.`}
-            </p>
-            <p className={`mono ${styles.stateCode}`}>{coupon.code}</p>
-          </div>
+        <div className="paper">
+          <div className="row"><b>매장</b><span className="val">{store.shortName}</span></div>
+          <div className="row"><b>품목</b><span className="val">{coupon.menuName}</span></div>
+          <div className="row"><b>코드</b><span className="val mono">{coupon.code}</span></div>
         </div>
         {error && <p className="error" role="alert">{error}</p>}
         <div className={styles.actions}>
-          {expired ? <ArtButton kind="start" href="/verify" width={340} /> : null}
-          <Link href="/wallet" className="btn btn-outline">쿠폰함으로</Link>
+          {expired && <Link href="/verify" className="btn btn-block">영수증 올리기</Link>}
+          <Link href="/wallet" className="btn btn-secondary btn-block">쿠폰함으로</Link>
         </div>
       </article>
     );
@@ -166,52 +159,37 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
   /* 쓸 수 있는 쿠폰 */
   return (
     <article className={styles.root} data-status="active">
-      <div className={styles.ticketArt}>
-        <Art name={art} alt={`${store.shortName} ${coupon.menuName} 무료 쿠폰`} sizes="(min-width: 760px) 520px, 92vw" priority />
-      </div>
+      {ticket}
 
       <div className={styles.info}>
+        <h1 className="h1">{coupon.menuName}{kind && <span className={`tag ${styles.kind}`}>{kind}</span>}</h1>
         <p className={styles.store}>{store.name}</p>
-        <p className={styles.item}>
-          <b>{coupon.menuName}</b> 무료{coupon.kind === "vip" ? " · VIP 쿠폰" : coupon.kind === "manual" ? " · 매장에서 드린 쿠폰" : ""}
-        </p>
         <p className={`mono ${styles.code}`} aria-label={`쿠폰 코드 ${coupon.code.split("").join(" ")}`}>{coupon.code}</p>
-        <p className={styles.codeHelp}>직원이 코드로도 확인할 수 있어요.</p>
-        <p className={styles.exp}>
-          <b>{fmtMD(coupon.expiresAt)}까지</b>{left <= 7 && ` · ${Math.max(left, 0)}일 남았어요`} · {fmtMDHM(coupon.issuedAt)}에 받음
+        <p className="cap">
+          {fmtMD(coupon.expiresAt)}까지{left <= 7 && <span className={styles.soon}> · {Math.max(left, 0)}일 남음</span>} · {fmtMDHM(coupon.issuedAt)}에 받음
         </p>
-        {coupon.note && coupon.kind !== "side" && <p className={styles.note}>{coupon.note}</p>}
+        {coupon.note && coupon.kind !== "side" && <p className="cap">{coupon.note}</p>}
       </div>
 
       <div className={styles.use}>
-        <p className={styles.show}>직원에게 이 화면을 보여 주세요.</p>
         {error && <p className="error" role="alert">{error}</p>}
-        <button type="button" className={styles.useBtn} onClick={() => { setError(null); setConfirming(true); }} aria-label="직원 앞에서 사용하기">
-          <Image src={USE_BTN.src} alt="" width={USE_BTN.width} height={USE_BTN.height} sizes="(min-width: 760px) 380px, 92vw" draggable={false} />
-        </button>
-        <p className={styles.useHelp}>직원이 확인한 뒤에 눌러 주세요. 한 번 쓰면 다시 쓸 수 없어요.</p>
+        <button type="button" className="btn btn-block" onClick={() => { setError(null); setConfirming(true); }}>직원 앞에서 사용하기</button>
+        <p className="cap">직원이 확인한 뒤에 눌러 주세요. 한 번 쓰면 되돌릴 수 없어요.</p>
       </div>
 
       {confirming && (
         <div className={styles.overlay} onClick={() => !busy && setConfirming(false)}>
-          <div className={styles.confirm} role="dialog" aria-modal="true" aria-labelledby={`${id}-confirm`} onClick={(e) => e.stopPropagation()}>
-            <Image src={FRAME.src} alt="" width={FRAME.width} height={FRAME.height} sizes="(min-width: 760px) 400px, 88vw" priority draggable={false} />
-            <div className={styles.confirmBody}>
-              <p className={styles.confirmStore}>{store.shortName}</p>
-              <p id={`${id}-confirm`} className={styles.confirmTitle}>
-                <b data-store={store.id}>{coupon.menuName}</b> 무료 쿠폰
-              </p>
-              <div className={styles.confirmArt} aria-hidden="true">
-                <Art name={art} sizes="(min-width: 760px) 240px, 52vw" />
-              </div>
-              <p className={styles.confirmText}>직원이 확인했나요? 사용하기를 누르면 되돌릴 수 없어요.</p>
+          <div className={`fixed-col ${styles.sheetCol}`}>
+            <div className={styles.sheet} role="dialog" aria-modal="true" aria-labelledby={`${id}-confirm`} onClick={(e) => e.stopPropagation()}>
+              <p id={`${id}-confirm`} className="h2">쿠폰을 지금 사용할까요?</p>
+              <p className={styles.sheetSub}>{store.shortName} · {coupon.menuName} 무료</p>
+              <p className="cap">직원이 보고 있을 때만 눌러 주세요. 되돌릴 수 없어요.</p>
               {error && <p className="error" role="alert">{error}</p>}
+              <div className={styles.sheetBtns}>
+                <button ref={cancelRef} type="button" className="btn btn-secondary" onClick={() => setConfirming(false)} disabled={busy}>취소</button>
+                <button type="button" className="btn" onClick={redeem} disabled={busy} aria-busy={busy}>{busy ? "잠시만요" : "사용하기"}</button>
+              </div>
             </div>
-            {/* 그림 속 두 버튼 자리에 실제 버튼 */}
-            <button ref={cancelRef} type="button" className={`${styles.hit} ${styles.hitCancel}`} onClick={() => setConfirming(false)} disabled={busy} aria-label="취소" />
-            <button type="button" className={`${styles.hit} ${styles.hitUse}`} onClick={redeem} disabled={busy} aria-busy={busy} aria-label={busy ? "사용 처리 중" : "사용하기"}>
-              {busy && <span className={styles.hitBusy}><Fx seq="spin" loop width={34} /></span>}
-            </button>
           </div>
         </div>
       )}

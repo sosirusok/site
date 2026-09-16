@@ -85,9 +85,17 @@ test("인정 시간이 지난 영수증은 반려", () => {
   assert.deepEqual(d.reasons, ["EXPIRED"]);
 });
 
-test("23시간 59분 전은 아직 유효", () => {
-  const d = decide(ctx({ ocr: ocr({ paid_at: "2026-09-17T14:01:00" }) }));
+test("23시간 59분 전은 아직 유효 (당일 한정을 끈 경우)", () => {
+  const d = decide(ctx({ rules: { ...DEFAULT_RULES, sameDayOnly: false }, ocr: ocr({ paid_at: "2026-09-17T14:01:00" }) }));
   assert.equal(d.status, "approved");
+});
+
+test("당일 한정: 어제 밤 영수증은 오늘 반려, 오늘 낮 영수증은 승인", () => {
+  const yesterday = decide(ctx({ ocr: ocr({ paid_at: "2026-09-17T23:50:00" }) }));
+  assert.equal(yesterday.status, "rejected");
+  assert.deepEqual(yesterday.reasons, ["EXPIRED"]);
+  const today = decide(ctx({ ocr: ocr({ paid_at: "2026-09-18T12:00:00" }) }));
+  assert.equal(today.status, "approved");
 });
 
 test("주문서(빌지)는 반려", () => {

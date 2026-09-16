@@ -1,25 +1,2 @@
-.page {
-  padding: 20px 0 48px;
-  display: grid;
-  gap: 18px;
-  grid-template-areas: "art" "text" "form" "note";
-}
-.art { grid-area: art; width: min(55%, 240px); }
-.art img { width: 100%; height: auto; }
-.text { grid-area: text; display: grid; gap: 10px; }
-.lead { font-size: 17px; line-height: 1.8; color: var(--fg-2); max-width: 34em; }
-.form { grid-area: form; }
-.note { grid-area: note; font-size: 15.5px; line-height: 1.75; color: var(--fg-3); max-width: 34em; }
-
-@media (min-width: 760px) {
-  .page {
-    padding: 56px 0 96px;
-    grid-template-columns: 260px 1fr;
-    grid-template-areas: "art text" "art form" "art note";
-    column-gap: 56px;
-    row-gap: 22px;
-    align-items: start;
-    max-width: 880px;
-  }
-  .art { width: 240px; padding-top: 6px; }
-}
+.page { padding-block: 24px 40px; display: grid; gap: 20px; }
+.head { display: grid; gap: 6px; }

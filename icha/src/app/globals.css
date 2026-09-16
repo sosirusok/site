@@ -58,6 +58,7 @@ body {
   min-height: 100dvh;
 }
 /* 앱 화면 한 단 */
+.app:has(.sticky-cta) { padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 76px); }
 .app { position: relative; max-width: var(--app-max); min-height: 100dvh; margin: 0 auto; background: var(--bg); padding-top: var(--header-h); padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); }
 @media (min-width: 481px) { .app { box-shadow: 0 0 0 1px var(--line-2); } }
 /* 화면 폭에 고정되는 요소(헤더·탭·하단 버튼)를 한 단 안에 맞춘다 */
@@ -90,7 +91,7 @@ details > summary::-webkit-details-marker { display: none; }
 
 /* 레이아웃 */
 .wrap { padding-inline: var(--gutter); }
-.section { padding: 24px 0; }
+.section { padding-block: 24px; }
 .section-h { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .section-h .more { font-size: 13px; color: var(--fg-3); }
 .band { height: 8px; background: var(--bg-2); }
@@ -106,7 +107,7 @@ details > summary::-webkit-details-marker { display: none; }
 .row .title { font-size: 15px; font-weight: 700; line-height: 1.4; }
 .row .sub { font-size: 13px; color: var(--fg-3); margin-top: 2px; }
 .row .chev { flex: none; color: #b0b8c1; }
-.kv { display: grid; grid-template-columns: 64px 1fr; gap: 8px 12px; font-size: 14px; }
+.kv { display: grid; grid-template-columns: 80px 1fr; gap: 8px 12px; font-size: 14px; }
 .kv dt { color: var(--fg-3); }
 .kv dd { color: var(--fg); }
 
@@ -124,8 +125,8 @@ details > summary::-webkit-details-marker { display: none; }
 .btn-accent { background: var(--accent); }
 .btn-store { background: var(--store, var(--primary)); }
 .btn-block { width: 100%; }
-.btn-sm { height: 40px; font-size: 14px; padding: 0 14px; border-radius: 10px; }
-.btn-text { height: auto; padding: 0; background: none; color: var(--fg-2); font-weight: 500; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
+.btn-sm { height: 44px; font-size: 14px; padding: 0 14px; border-radius: 10px; }
+.btn-text { height: auto; padding: 10px 0; background: none; color: var(--fg-2); font-weight: 500; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
 
 /* 화면 아래 고정 버튼(탭 위) */
 .sticky-cta { bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); z-index: 30; padding: 10px var(--gutter) 12px; background: rgba(255,255,255,0.96); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-top: 1px solid var(--line); }

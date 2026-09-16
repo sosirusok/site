@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { Art } from "@/components/art/Art";
-import { ArtButton } from "@/components/art/ArtButton";
 import { MenuPicker, type PickStore } from "@/components/flow/MenuPicker";
-import { fmtMD, fmtMDHM } from "@/components/flow/format";
+import { fmtMD } from "@/components/flow/format";
 import { getMemberSession } from "@/lib/auth/session";
-import { REASONS, formatWon } from "@/lib/config";
+import { formatWon } from "@/lib/config";
 import { isPickExpired, pickDeadlineFor } from "@/lib/coupons";
-import { getReceipt, listMenu } from "@/lib/db/queries";
+import { getReceipt, listMenu, menuImageUrl } from "@/lib/db/queries";
 import { getRules } from "@/lib/settings";
 import { getStore, giftStoresFor } from "@/lib/stores";
 import styles from "./pick.module.css";
@@ -34,16 +32,13 @@ export default async function PickPage({ params }: { params: Promise<{ receiptId
   if (isPickExpired(receipt, rules)) {
     return (
       <section className={`wrap ${styles.page}`} aria-labelledby="pick-title">
-        <div className={styles.expiredArt} aria-hidden="true">
-          <Art name="wallet-expired" sizes="(min-width: 760px) 220px, 50vw" priority />
+        <div className={styles.head}>
+          <h1 id="pick-title" className="h1">고를 수 있는 기간이 지났어요</h1>
+          <p className="cap">{store.shortName} 영수증은 {fmtMD(deadline)}까지 고를 수 있었어요. 새 영수증을 올리면 다시 받아요.</p>
         </div>
-        <h1 id="pick-title" className="h1">고를 수 있는 기간이 지났어요</h1>
-        <p className={styles.lead}>
-          {REASONS.PICK_EXPIRED} {store.shortName} 영수증은 {fmtMD(deadline)}까지 고를 수 있었어요. 새 영수증을 올리면 다시 받을 수 있어요.
-        </p>
         <div className={styles.actions}>
-          <ArtButton kind="start" href="/verify" width={340} />
-          <Link href="/wallet" className="btn btn-outline">쿠폰함 보기</Link>
+          <Link href="/verify" className="btn btn-block">영수증 올리기</Link>
+          <Link href="/wallet" className="btn btn-secondary btn-block">쿠폰함 보기</Link>
         </div>
       </section>
     );
@@ -58,25 +53,24 @@ export default async function PickPage({ params }: { params: Promise<{ receiptId
         shortName: s.shortName,
         name: s.name,
         drink: s.drink,
-        items: items.map((it) => ({ id: it.id, name: it.name, price: it.price, description: it.description })),
+        items: items.map((it) => ({
+          id: it.id,
+          name: it.name,
+          price: it.price,
+          description: it.description,
+          image: it.hasImageData ? { src: menuImageUrl(it), local: false } : it.imagePath ? { src: it.imagePath, local: true } : null,
+        })),
       };
     }),
   );
 
   return (
     <section className={`wrap ${styles.page}`} aria-labelledby="pick-title">
-      <div className={styles.scene} aria-hidden="true">
-        <Art name={`pick-from-${store.id}`} sizes="(min-width: 760px) 360px, 80vw" priority />
+      <div className={styles.head}>
+        <h1 id="pick-title" className="h1">어느 집에서 받을까요?</h1>
+        <p className="cap">{store.shortName} 영수증 {receipt.amount == null ? "" : formatWon(receipt.amount)} · {fmtMD(deadline)}까지 골라요</p>
       </div>
-      <h1 id="pick-title" className="h1">
-        {store.shortName} 영수증이에요.<br />나머지 두 집 중 한 곳에서 한 잔 고르세요.
-      </h1>
-      <p className={styles.meta}>
-        {fmtMDHM(receipt.receiptAt ?? receipt.createdAt)} · {receipt.amount == null ? "금액 확인 중" : formatWon(receipt.amount)} · {fmtMD(deadline)}까지 고를 수 있어요
-      </p>
-      <div className={styles.picker}>
-        <MenuPicker receiptId={receipt.id} stores={stores} couponValidDays={rules.couponValidDays} />
-      </div>
+      <MenuPicker receiptId={receipt.id} stores={stores} couponValidDays={rules.couponValidDays} />
     </section>
   );
 }

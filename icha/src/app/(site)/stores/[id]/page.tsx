@@ -7,7 +7,7 @@ import { StoreHero } from "@/components/site/StoreHero";
 import { StoreMenu } from "@/components/site/StoreMenu";
 import { StoreReviews } from "@/components/site/StoreReviews";
 import { StoreVisit } from "@/components/site/StoreVisit";
-import { formatWon } from "@/lib/config";
+import { BRAND, formatWon } from "@/lib/config";
 import { listMenu } from "@/lib/db/queries";
 import { getStore, naverPlaceUrl } from "@/lib/stores";
 import styles from "./page.module.css";
@@ -62,6 +62,7 @@ export default async function StorePage({ params }: Props) {
             </div>
           ))}
           <p className="cap">다른 두 집 영수증으로 받아요.</p>
+          {BRAND.condition && <p className="cap">{BRAND.condition}</p>}
         </div>
       </div></section>
 

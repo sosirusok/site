@@ -1,4 +1,3 @@
 .page { padding-bottom: 8px; }
 .rule { margin-top: 6px; font-weight: 600; color: var(--fg); }
 .icon { flex: none; width: 48px; height: 48px; display: grid; place-items: center; }
-.cta { margin-top: 20px; }

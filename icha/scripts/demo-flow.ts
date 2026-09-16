@@ -2,9 +2,10 @@
  * 손님 흐름 시연 데이터 — 회원(01012345678, VIP), 승인(아직 안 고름)/대기/반려 영수증, 사용 가능 2장(매장 다름)/사용/만료/취소 쿠폰.
  * 파일 DB 를 쓰는 dev 서버와 같은 PGLITE_DIR 로 실행한다(서버를 잠시 내린 뒤; PGlite 파일 DB 는 한 프로세스만 연다).
  *   PGLITE_DIR=/path/to/pg npx tsx scripts/demo-flow.ts
- * 결과로 화면 확인에 쓸 id 들을 JSON 으로 출력한다.
+ * 결과로 화면 확인에 쓸 id 들을 JSON 으로 출력한다. DEMO_OUT=<파일> 이면 같은 JSON 을 그 파일에도 쓴다.
  */
 import { createHash } from "node:crypto";
+import { writeFileSync } from "node:fs";
 import sharp from "sharp";
 import { getDb, query, tx } from "../src/lib/db";
 import { applyApprovedSpend, findOrCreateMember, getMember, insertReceipt, listMenu, upsertMenuItem, type MenuItem } from "../src/lib/db/queries";
@@ -155,11 +156,13 @@ async function main() {
   const c5 = await voidCoupon({ couponId: voidRow[0]!.id, adminId: "owner", note: "직원 착오로 이중 발급" });
 
   const m = (await getMember(member.id))!;
-  console.log(JSON.stringify({
+  const out = JSON.stringify({
     phone: PHONE, memberId: member.id, totalSpend: m.totalSpend, visitCount: m.visitCount, tier: m.tier,
     receipts: { usedCoupon: r1, activeCoupon: r2, pickable: r3, review: r4, rejected: r5 },
     coupons: { used: c1.id, active: c2.id, expired: c3, vip: c4, void: c5.id },
-  }, null, 2));
+  }, null, 2);
+  console.log(out);
+  if (process.env.DEMO_OUT) writeFileSync(process.env.DEMO_OUT, out);
 }
 
 main().then(() => process.exit(0)).catch((e) => { console.error(e); process.exit(1); });

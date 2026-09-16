@@ -16,7 +16,7 @@ export const BRAND = {
   /** 포스터 문구 */
   eventTag: "영수증 릴레이 EVENT",
   course: "50m 안에서 즐기는 1차·2차·3차",
-  condition: "당일 영수증 한정 · 테이블당 1회 · 메인안주 1개 주문 시",
+  condition: "테이블당 1회 · 메인안주 1개 주문 시",
   slogan: "GOOD DRINKS GOOD FOOD GOOD PEOPLE in SEOMYEON",
 } as const;
 
@@ -27,6 +27,8 @@ export const STORE_IDS: StoreId[] = ["joseon", "tokyo", "wareureu"];
 export type Rules = {
   /** 영수증 결제 시각으로부터 인정되는 시간(시간 단위) */
   receiptValidHours: number;
+  /** 당일(한국 시간 기준 같은 날) 영수증만 인정 — 포스터 "당일 영수증 한정" */
+  sameDayOnly: boolean;
   /** 발급된 쿠폰의 유효 기간(일). 승인된 영수증으로 증정 쿠폰을 고를 수 있는 기간도 같다 */
   couponValidDays: number;
   /** 인정 최소 결제 금액(원). 0이면 제한 없음 */
@@ -53,6 +55,7 @@ export type Rules = {
 
 export const DEFAULT_RULES: Rules = {
   receiptValidHours: 24,
+  sameDayOnly: true,
   couponValidDays: 30,
   minAmount: 10000,
   maxAutoAmount: 1000000,

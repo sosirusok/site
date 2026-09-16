@@ -1,4 +1,1 @@
-.form { display: grid; gap: 10px; max-width: 420px; }
-.label { font-weight: 700; font-size: 16px; }
-.input { font-size: 26px; letter-spacing: 0.06em; min-height: 62px; }
-.submit { margin-top: 8px; width: 100% !important; max-width: 400px; }
+.form { display: grid; gap: 16px; }

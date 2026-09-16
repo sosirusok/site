@@ -57,6 +57,11 @@ export const MIN_APPROVAL_CONFIDENCE = 0.5;
 
 const digits = (s: string | null | undefined) => (s ?? "").replace(/\D/g, "");
 
+/** 한국 시간 기준 달력 날짜(YYYY-MM-DD) */
+function kstDate(d: Date): string {
+  return new Date(d.getTime() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+}
+
 export function decide(ctx: RuleContext): Decision {
   const { rules, ocr, now } = ctx;
   const reasons: ReasonCode[] = [];
@@ -111,6 +116,7 @@ export function decide(ctx: RuleContext): Decision {
     const ageMs = now.getTime() - receiptAt.getTime();
     if (ageMs < -30 * 60 * 1000) flag("FUTURE_DATE");
     else if (ageMs > rules.receiptValidHours * 3600 * 1000) return reject("EXPIRED");
+    else if (rules.sameDayOnly && kstDate(receiptAt) !== kstDate(now)) return reject("EXPIRED");
   }
 
   if (ocr.total_amount == null) {

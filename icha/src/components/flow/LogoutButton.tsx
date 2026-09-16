@@ -14,7 +14,7 @@ export function LogoutButton({ className = "" }: { className?: string }) {
   }
   return (
     <button type="button" className={className} onClick={logout} disabled={busy}>
-      {busy ? "처리 중" : "로그아웃"}
+      {busy ? "잠시만요" : "로그아웃"}
     </button>
   );
 }

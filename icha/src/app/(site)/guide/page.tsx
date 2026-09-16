@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Art } from "@/components/art/Art";
 import { GuideFaq, type FaqItem } from "@/components/site/GuideFaq";
+import { StickyCta } from "@/components/site/StickyCta";
 import { STEP_LINES, ruleLine } from "@/lib/copy";
 import { getRules } from "@/lib/settings";
 import styles from "./page.module.css";
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
   description: "영수증을 올리는 순서, 되는 영수증과 안 되는 영수증, 쿠폰 쓰는 법을 짧게 설명해요.",
 };
 
-/** 이용 안내 — 규칙 한 줄, 순서 셋, 자주 묻는 질문 다섯, 아래에 시작 버튼. */
+/** 이용 안내 — 규칙 한 줄, 순서 셋, 자주 묻는 질문 다섯. 시작 버튼은 화면 아래 고정. */
 export default async function GuidePage() {
   const rules = await getRules();
   const h = rules.receiptValidHours;
@@ -30,7 +31,7 @@ export default async function GuidePage() {
   ];
 
   return (
-    <div className={styles.page}>
+    <div className={`has-sticky ${styles.page}`}>
       <section className="section"><div className="wrap">
         <h1 className="h1">이용 안내</h1>
         <p className={`lead ${styles.rule}`}>{ruleLine(rules)}</p>
@@ -56,8 +57,9 @@ export default async function GuidePage() {
       <section className="section" aria-labelledby="faq-title"><div className="wrap">
         <div className="section-h"><h2 id="faq-title" className="h2">자주 묻는 질문</h2></div>
         <GuideFaq items={faq} />
-        <Link href="/verify" className={`btn btn-block ${styles.cta}`}>영수증 인증하기</Link>
       </div></section>
+
+      <StickyCta href="/verify">영수증 인증하기</StickyCta>
     </div>
   );
 }

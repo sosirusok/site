@@ -130,6 +130,9 @@ export function SettingsForm({ rules }: { rules: Rules }) {
                 <label className={ui.check}>
                   <input type="checkbox" name="eventActive" defaultChecked={rules.eventActive} /> 이벤트 진행 중 (끄면 인증을 받지 않고 안내만 보입니다)
                 </label>
+                <label className={ui.check}>
+                  <input type="checkbox" name="sameDayOnly" defaultChecked={rules.sameDayOnly} /> 당일 영수증만 인정 (포스터 "당일 영수증 한정")
+                </label>
               </div>
               <div className={ui.field}>
                 <label className={ui.label} htmlFor="st-notice">

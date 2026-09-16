@@ -1,9 +1,3 @@
-.page { padding: 20px 0 48px; display: grid; gap: 20px; }
-.head { display: grid; gap: 8px; }
-.lead { font-size: 17px; line-height: 1.8; color: var(--fg-2); max-width: 36em; }
-.paused { display: grid; grid-template-columns: 30% 1fr; gap: 18px; align-items: center; max-width: 640px; }
-.pausedArt img { width: 100%; height: auto; }
-.pausedText { display: grid; gap: 10px; justify-items: start; font-size: 16.5px; line-height: 1.75; color: var(--fg-2); }
-@media (min-width: 760px) {
-  .page { padding: 48px 0 96px; }
-}
+.page { padding-block: 24px 40px; display: grid; gap: 20px; }
+.head { display: grid; gap: 6px; }
+.paused { display: grid; gap: 8px; justify-items: start; }
