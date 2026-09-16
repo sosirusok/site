@@ -30,17 +30,17 @@ export function Counter() {
           한 곳에서 계산한 영수증을 사진으로 올려 주시면, 나머지 두 곳 중 한 곳에서 그 집 술 한 잔을 무료로 드려요.
           조선칼국수는 막걸리, 도쿄스탠드는 생맥주, 와르르맨숀은 소주예요.
         </p>
-        <p className={styles.para}>
-          앱을 깔거나 회원 가입을 할 필요는 없어요. 휴대폰 번호만 넣으면 쿠폰이 그 번호에 보관돼요.
-        </p>
-        <div className={styles.badges}>
-          <Link href="/stores/joseon"><Art name="badge-joseon" alt="조선칼국수" width={170} /></Link>
-          <Link href="/stores/tokyo"><Art name="badge-tokyo" alt="도쿄스탠드" width={170} /></Link>
-          <Link href="/stores/wareureu"><Art name="badge-wareureu" alt="와르르맨숀" width={170} /></Link>
-        </div>
         <div className={styles.actions}>
           <ArtButton kind="start" href="/verify" width={300} />
           <Link href="#how" className={styles.textLink}>어떻게 하는지 먼저 볼게요 ↓</Link>
+        </div>
+        <p className={styles.note}>
+          앱을 깔거나 회원 가입을 할 필요는 없어요. 휴대폰 번호만 넣으면 쿠폰이 그 번호에 보관돼요.
+        </p>
+        <div className={styles.badges}>
+          <Link href="/stores/joseon"><Art name="badge-joseon" alt="조선칼국수" sizes="170px" /></Link>
+          <Link href="/stores/tokyo"><Art name="badge-tokyo" alt="도쿄스탠드" sizes="170px" /></Link>
+          <Link href="/stores/wareureu"><Art name="badge-wareureu" alt="와르르맨숀" sizes="170px" /></Link>
         </div>
       </div>
     </section>

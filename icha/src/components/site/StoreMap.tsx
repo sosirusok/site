@@ -23,6 +23,7 @@ export type MapStore = {
   subway?: string;
   directions?: string;
   floor?: string;
+  parking?: string;
 };
 
 type Props = {
@@ -256,6 +257,7 @@ export function StoreMap({ stores, focusId, height = 440, compact = false, hideP
           <p className={styles.panelAddr}>{active.address}</p>
           {active.subway && <p className={styles.panelLine}>{active.subway}</p>}
           {active.directions && <p className={styles.panelLine}>{active.directions}</p>}
+          {active.parking && <p className={styles.panelLine}>{active.parking}</p>}
           <div className={styles.links}>
             <a href={naverWalkUrl({ lat: active.lat, lng: active.lng, name: active.name })} target="_blank" rel="noreferrer">네이버 지도 길찾기</a>
             <a href={kakaoMapUrl({ lat: active.lat, lng: active.lng, name: active.name })} target="_blank" rel="noreferrer">카카오맵</a>

@@ -7,7 +7,7 @@ import styles from "./MapSection.module.css";
 export function MapSection() {
   const mapStores: MapStore[] = STORES.filter((s) => s.lat != null && s.lng != null).map((s) => ({
     id: s.id, name: s.name, shortName: s.shortName, drink: s.drink, lat: s.lat!, lng: s.lng!, address: s.address, naverPlaceId: s.naverPlaceId,
-    subway: LOCATIONS[s.id].subway, directions: LOCATIONS[s.id].directions, floor: LOCATIONS[s.id].floor,
+    subway: LOCATIONS[s.id].subway, directions: LOCATIONS[s.id].directions, floor: LOCATIONS[s.id].floor, parking: LOCATIONS[s.id].parking,
   }));
   return (
     <section id="map" className="section" aria-labelledby="map-title">
@@ -22,23 +22,6 @@ export function MapSection() {
         <div className={styles.mapWrap}>
           <StoreMap stores={mapStores} height={420} />
         </div>
-        <table className={`table ${styles.table}`}>
-          <tbody>
-            {STORES.map((s) => {
-              const l = LOCATIONS[s.id];
-              return (
-                <tr key={s.id}>
-                  <th scope="row">{s.shortName}</th>
-                  <td>
-                    <p>{s.address} ({l.floor})</p>
-                    <p>{l.subway}. {l.directions}</p>
-                    <p className={styles.parking}>{l.parking}</p>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
       </div>
     </section>
   );

@@ -39,8 +39,25 @@ map["24. 매장별 적립 내역 디자인.png"] = ["ledger", 900];
 for (let n = 1; n <= 12; n++) map[`26. VIP 달성 안내와 전환 효과(${n}).png`] = [`vipcard-${String(n).padStart(2, "0")}`, 800];
 ["icon-receipt", "icon-coupon", "icon-store", "icon-phone", "icon-vip", "icon-history", "icon-ok", "icon-error", "icon-back"].forEach((n, i) => (map[`31. 사이트 공통 아이콘 세트(${i + 1}).png`] = [n, 256]));
 for (let n = 1; n <= 8; n++) map[`5. 상단 메뉴와 하단 이동 메뉴(${n}).png`] = [`nav-ref-${n}`, 1200];
+// 04번 묶음
+map["1. 3개 매장 통합 혜택 서비스 로고.png"] = ["logo", 600];
+map["2. 첫 화면 대표 그래픽.png"] = ["hero-graphic", 1400];
+map["8. 전화번호 입력 화면.png"] = ["phone-input", 900];
+map["9. 영수증 촬영과 업로드 영역(1).png"] = ["upload-area-1", 900];
+map["9. 영수증 촬영과 업로드 영역(2).png"] = ["upload-area-2", 900];
+["shoot-guide-1", "shoot-guide-2", "shoot-guide-3"].forEach((n, i) => (map[`10. 영수증 촬영 안내 그림(${i + 1}).png`] = [n, 700]));
+map["14. 혜택 선택 표시와 최종 확인창.png"] = ["choose-confirm", 800];
+map["16. 쿠폰 발급 완료 화면.png"] = ["coupon-issued", 800];
+map["19. 쿠폰 사용 완료 표시.png"] = ["coupon-used", 700];
+map["21. VIP 상징 이미지.png"] = ["vip-symbol", 600];
+map["22. VIP 회원 카드.png"] = ["vip-card", 900];
+map["25. VIP 전용 혜택과 쿠폰 디자인.png"] = ["vip-coupon", 900];
+map["29. 카카오톡 공유 미리보기 이미지.png"] = ["kakao-share", 1200];
+map["30. 이벤트 안내 배너 틀.png"] = ["banner-frame", 1400];
+for (let n = 1; n <= 32; n++) map[`32. 선택과 완료 동작에 들어가는 짧은 효과(${n}).png`] = [`fx-${String(n).padStart(2, "0")}`, 400];
 
-const manifest = {};
+const manifestPath = path.join(process.cwd(), "src", "lib", "art-manifest.json");
+const manifest = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, "utf8")) : {};
 let done = 0;
 for (const f of fs.readdirSync(src)) {
   const m = map[f];
@@ -55,5 +72,5 @@ for (const f of fs.readdirSync(src)) {
   manifest[name] = { src: `/art/${name}.png`, width: om.width, height: om.height };
   done++;
 }
-fs.writeFileSync(path.join(process.cwd(), "src", "lib", "art-manifest.json"), JSON.stringify(manifest, null, 1));
+fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 1));
 console.log("done", done, "files;", Object.keys(manifest).length, "in manifest");

@@ -13,7 +13,7 @@ export function Vip({ rules }: { rules: Rules }) {
         </div>
         <div className={styles.body}>
           <div className={styles.card}>
-            <Art name="vipcard-12" alt="VIP 카드" sizes="(min-width: 760px) 360px, 80vw" />
+            <Art name="vip-symbol" alt="VIP 카드" sizes="(min-width: 760px) 300px, 58vw" />
           </div>
           <div className={styles.text}>
             <p>

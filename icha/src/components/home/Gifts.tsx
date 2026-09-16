@@ -39,12 +39,10 @@ export function Gifts({ gifts }: { gifts: Record<string, MenuItem[]> }) {
                       <span className={styles.price}>
                         {m.price != null && <s>{formatWon(m.price)}</s>} <b>무료</b>
                       </span>
+                      {m.description && <span className={styles.desc}>{m.description}</span>}
                     </li>
                   ))}
                 </ul>
-                <p className={styles.note}>
-                  {s.shortName} 영수증으로는 {s.shortName} 쿠폰을 받을 수 없어요. 다른 두 집 것을 골라 주세요.
-                </p>
               </li>
             );
           })}

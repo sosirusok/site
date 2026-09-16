@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  devIndicators: false,
   // 병렬 작업/테스트용: 프로세스마다 다른 출력 폴더를 쓸 수 있게
   distDir: process.env.NEXT_DIST_DIR || ".next",
   reactStrictMode: true,

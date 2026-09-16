@@ -9,6 +9,7 @@ export function Footer() {
     <footer className={styles.footer}>
       <div className={`wrap ${styles.inner}`}>
         <div className={styles.brandCol}>
+          <Art name="logo" alt="" width={92} className={styles.logo} />
           <p className={styles.brand}>{BRAND.name}</p>
           <p className={styles.union}>{BRAND.unionName}</p>
           <p className={styles.rule}>{BRAND.ruleOneLiner}</p>

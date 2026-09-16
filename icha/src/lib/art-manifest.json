@@ -468,5 +468,245 @@
   "src": "/art/how-3.png",
   "width": 800,
   "height": 670
+ },
+ "logo": {
+  "src": "/art/logo.png",
+  "width": 600,
+  "height": 494
+ },
+ "shoot-guide-1": {
+  "src": "/art/shoot-guide-1.png",
+  "width": 700,
+  "height": 825
+ },
+ "shoot-guide-2": {
+  "src": "/art/shoot-guide-2.png",
+  "width": 700,
+  "height": 837
+ },
+ "shoot-guide-3": {
+  "src": "/art/shoot-guide-3.png",
+  "width": 700,
+  "height": 825
+ },
+ "choose-confirm": {
+  "src": "/art/choose-confirm.png",
+  "width": 800,
+  "height": 605
+ },
+ "coupon-issued": {
+  "src": "/art/coupon-issued.png",
+  "width": 800,
+  "height": 551
+ },
+ "coupon-used": {
+  "src": "/art/coupon-used.png",
+  "width": 700,
+  "height": 241
+ },
+ "hero-graphic": {
+  "src": "/art/hero-graphic.png",
+  "width": 1148,
+  "height": 1022
+ },
+ "vip-symbol": {
+  "src": "/art/vip-symbol.png",
+  "width": 600,
+  "height": 426
+ },
+ "vip-card": {
+  "src": "/art/vip-card.png",
+  "width": 900,
+  "height": 515
+ },
+ "vip-coupon": {
+  "src": "/art/vip-coupon.png",
+  "width": 900,
+  "height": 281
+ },
+ "kakao-share": {
+  "src": "/art/kakao-share.png",
+  "width": 1200,
+  "height": 818
+ },
+ "banner-frame": {
+  "src": "/art/banner-frame.png",
+  "width": 1256,
+  "height": 728
+ },
+ "fx-01": {
+  "src": "/art/fx-01.png",
+  "width": 400,
+  "height": 179
+ },
+ "fx-10": {
+  "src": "/art/fx-10.png",
+  "width": 400,
+  "height": 174
+ },
+ "fx-11": {
+  "src": "/art/fx-11.png",
+  "width": 400,
+  "height": 175
+ },
+ "fx-12": {
+  "src": "/art/fx-12.png",
+  "width": 400,
+  "height": 179
+ },
+ "fx-13": {
+  "src": "/art/fx-13.png",
+  "width": 400,
+  "height": 175
+ },
+ "fx-14": {
+  "src": "/art/fx-14.png",
+  "width": 400,
+  "height": 175
+ },
+ "fx-15": {
+  "src": "/art/fx-15.png",
+  "width": 400,
+  "height": 167
+ },
+ "fx-16": {
+  "src": "/art/fx-16.png",
+  "width": 400,
+  "height": 172
+ },
+ "fx-17": {
+  "src": "/art/fx-17.png",
+  "width": 400,
+  "height": 397
+ },
+ "fx-18": {
+  "src": "/art/fx-18.png",
+  "width": 400,
+  "height": 398
+ },
+ "fx-19": {
+  "src": "/art/fx-19.png",
+  "width": 400,
+  "height": 399
+ },
+ "fx-02": {
+  "src": "/art/fx-02.png",
+  "width": 400,
+  "height": 179
+ },
+ "fx-20": {
+  "src": "/art/fx-20.png",
+  "width": 400,
+  "height": 398
+ },
+ "fx-21": {
+  "src": "/art/fx-21.png",
+  "width": 400,
+  "height": 399
+ },
+ "fx-22": {
+  "src": "/art/fx-22.png",
+  "width": 400,
+  "height": 399
+ },
+ "fx-23": {
+  "src": "/art/fx-23.png",
+  "width": 400,
+  "height": 400
+ },
+ "fx-24": {
+  "src": "/art/fx-24.png",
+  "width": 400,
+  "height": 398
+ },
+ "fx-25": {
+  "src": "/art/fx-25.png",
+  "width": 400,
+  "height": 401
+ },
+ "fx-26": {
+  "src": "/art/fx-26.png",
+  "width": 400,
+  "height": 401
+ },
+ "fx-27": {
+  "src": "/art/fx-27.png",
+  "width": 400,
+  "height": 401
+ },
+ "fx-28": {
+  "src": "/art/fx-28.png",
+  "width": 400,
+  "height": 401
+ },
+ "fx-29": {
+  "src": "/art/fx-29.png",
+  "width": 400,
+  "height": 400
+ },
+ "fx-03": {
+  "src": "/art/fx-03.png",
+  "width": 400,
+  "height": 180
+ },
+ "fx-30": {
+  "src": "/art/fx-30.png",
+  "width": 400,
+  "height": 401
+ },
+ "fx-31": {
+  "src": "/art/fx-31.png",
+  "width": 400,
+  "height": 401
+ },
+ "fx-32": {
+  "src": "/art/fx-32.png",
+  "width": 400,
+  "height": 401
+ },
+ "fx-04": {
+  "src": "/art/fx-04.png",
+  "width": 400,
+  "height": 179
+ },
+ "fx-05": {
+  "src": "/art/fx-05.png",
+  "width": 400,
+  "height": 179
+ },
+ "fx-06": {
+  "src": "/art/fx-06.png",
+  "width": 400,
+  "height": 179
+ },
+ "fx-07": {
+  "src": "/art/fx-07.png",
+  "width": 400,
+  "height": 180
+ },
+ "fx-08": {
+  "src": "/art/fx-08.png",
+  "width": 400,
+  "height": 179
+ },
+ "fx-09": {
+  "src": "/art/fx-09.png",
+  "width": 400,
+  "height": 176
+ },
+ "phone-input": {
+  "src": "/art/phone-input.png",
+  "width": 900,
+  "height": 1143
+ },
+ "upload-area-1": {
+  "src": "/art/upload-area-1.png",
+  "width": 900,
+  "height": 989
+ },
+ "upload-area-2": {
+  "src": "/art/upload-area-2.png",
+  "width": 900,
+  "height": 982
  }
 }
