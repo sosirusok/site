@@ -1,5 +1,0 @@
-.section { padding: 24px 0; }
-.line { font-size: 16.5px; color: var(--fg-2); margin-bottom: 12px; }
-.map { border: 2px solid var(--outline); border-radius: var(--radius); overflow: hidden; background: var(--panel); }
-.addr { display: grid; gap: 4px; margin-top: 12px; font-size: 15.5px; color: var(--fg-2); }
-.addr b { color: var(--fg); }

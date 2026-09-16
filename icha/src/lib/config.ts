@@ -4,15 +4,20 @@
  */
 
 export const BRAND = {
-  /** 서비스 이름. 사장님 확정 전 임시 안 — 한 곳만 바꾸면 전체에 반영된다. */
-  name: "이차",
-  hanja: "二次",
+  /** 이벤트 이름 — 사장님 포스터 기준 */
+  name: "알콜부시기",
+  hanja: "",
   /** 한 줄 설명 */
-  tagline: "한 곳에서 계산한 영수증을 올리면, 나머지 두 곳에서 그 집 술 한 잔(막걸리·맥주·소주)을 무료로 드려요.",
+  tagline: "소주·맥주·막걸리, 서면 3가게 콜라보. 한 매장 영수증으로 50m 안 다른 매장에서 특별 혜택.",
   /** 연합 설명 */
-  unionName: "서면 2차 연합",
+  unionName: "서면 3가게 콜라보",
   /** 짧은 규칙 문구 */
-  ruleOneLiner: "세 매장 중 한 곳의 영수증으로 나머지 두 곳에서 막걸리·맥주·소주 중 하나가 무료예요.",
+  ruleOneLiner: "한 매장 이용 후 영수증을 올리면, 50m 안 다른 매장에서 메인안주 1개 주문 시 매장별 특별 혜택을 드려요.",
+  /** 포스터 문구 */
+  eventTag: "영수증 릴레이 EVENT",
+  course: "50m 안에서 즐기는 1차·2차·3차",
+  condition: "당일 영수증 한정 · 테이블당 1회 · 메인안주 1개 주문 시",
+  slogan: "GOOD DRINKS GOOD FOOD GOOD PEOPLE in SEOMYEON",
 } as const;
 
 export type StoreId = "joseon" | "tokyo" | "wareureu";

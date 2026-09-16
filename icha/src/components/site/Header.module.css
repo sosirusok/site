@@ -1,4 +1,4 @@
 .header { top: 0; z-index: 40; height: var(--header-h); display: flex; align-items: center; justify-content: space-between; padding: 0 var(--gutter); background: rgba(255,255,255,0.96); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
-.brand { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 800; letter-spacing: -0.02em; }
+.brand { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 21px; font-weight: 400; letter-spacing: 0; }
 .brand img { width: 26px; height: auto; }
 .me { font-size: 14px; font-weight: 600; color: var(--fg-2); padding: 8px 0; font-variant-numeric: tabular-nums; }

@@ -1,30 +1,10 @@
-.page { max-width: 800px; padding-bottom: 8px; }
-.section { padding-top: 30px; scroll-margin-top: calc(var(--header-h) + 8px); }
-.section :global(.sec-head) { margin-bottom: 12px; }
-.h { margin-bottom: 12px; }
+.page { padding-bottom: 8px; }
+.top { display: grid; gap: 14px; padding-block: 12px 20px; }
+.anchor { scroll-margin-top: calc(var(--header-h) + 8px); }
 
 /* 무료 한 잔 */
-.gift { display: grid; gap: 10px; margin-top: 16px; padding: 14px 16px 16px; background: var(--panel-2); border: 2px solid var(--outline); border-radius: var(--radius); }
-.ticket { width: min(54vw, 300px); }
-.ticket img { width: 100%; height: auto; transform: rotate(-1.2deg); }
-.giftBody { display: grid; gap: 6px; justify-items: start; }
-.giftRow { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; font-size: 17px; }
-.giftRow s { color: var(--fg-3); font-size: 15.5px; }
-.giftRow em { font-style: normal; color: var(--red); font-family: var(--font-display); font-size: 20px; }
-.giftText { font-size: 16.5px; line-height: 1.7; color: var(--fg-2); }
-.giftBody :global(a) { margin-top: 4px; }
-
-/* 소개 */
-.intro { font-size: 17px; line-height: 1.8; color: var(--fg-2); max-width: 40em; }
-
-/* 나머지 두 집 */
-.others { padding-bottom: 0; }
-.badges { display: flex; flex-wrap: wrap; gap: 10px; }
-.badge img { width: 165px; height: auto; transition: transform 0.15s; }
-.badge:hover img { transform: translateY(-2px); }
-
-@media (min-width: 760px) {
-  .section { padding-top: 40px; }
-  .gift { grid-template-columns: 300px 1fr; gap: 16px 28px; align-items: center; padding: 24px 28px; }
-  .badges { gap: 24px; }
-}
+.giftCard { display: grid; gap: 6px; }
+.ticket { width: 100%; height: auto; border-radius: 12px; margin-bottom: 4px; }
+.giftRow { border-bottom: 0; }
+.giftDesc { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.giftEmpty { padding: 8px 0; }

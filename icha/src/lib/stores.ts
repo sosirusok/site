@@ -31,6 +31,10 @@ export type Store = {
   aliases: string[];
   /** 대표 술 */
   drink: "막걸리" | "맥주" | "소주";
+  /** 포스터의 코스 순서와 한 마디(1차 맥주로 시작 → 2차 막걸리로 이어서 → 3차 소주로 마무리) */
+  course: { n: 1 | 2 | 3; line: string };
+  /** 포스터에 적힌 혜택 이름(짧게) */
+  benefitLabel: string;
   /** 매장 색 */
   accent: string;
   accentInk: string;
@@ -83,6 +87,8 @@ export const STORES: Store[] = [
       "조칼",
     ],
     drink: "막걸리",
+    course: { n: 2, line: "막걸리로 이어서!" },
+    benefitLabel: "막걸리 2통1반",
     accent: "#c8553d",
     accentInk: "#5a1f12",
     naverPlaceId: "32874065",
@@ -178,8 +184,8 @@ export const STORES: Store[] = [
       { name: "조선 도토리묵", price: 10500 },
       { name: "사리 추가(라면·당면·소면)", price: 1500 },
       // 주류·음료
-      { name: "조선막걸리 1통", price: 5500, description: "양은 통에 담아 내는 하우스 막걸리", image: `${J}/menu/joseon-makgeolli.jpg`, gift: true },
-      { name: "조선막걸리 2통 1반", price: 11500, description: "막걸리 2통에 사이다 1병을 섞어 큰 사발에", image: `${J}/menu/makgeolli-2tong1ban.jpg` },
+      { name: "조선막걸리 1통", price: 5500, description: "양은 통에 담아 내는 하우스 막걸리", image: `${J}/menu/joseon-makgeolli.jpg` },
+      { name: "조선막걸리 2통 1반", price: 11500, description: "막걸리 2통에 사이다 1병을 섞어 큰 사발에", image: `${J}/menu/makgeolli-2tong1ban.jpg`, gift: true },
       { name: "칵테일막걸리", price: 9000, description: "딸기·바나나·망고·키위·살구·복분자", image: `${J}/menu/cocktail-makgeolli.jpg` },
       { name: "꿀막걸리", price: 7500, image: `${J}/menu/honey-makgeolli.jpg` },
       { name: "보늬밤막걸리", price: 6000 },
@@ -202,6 +208,8 @@ export const STORES: Store[] = [
     shortName: "도쿄스탠드",
     aliases: ["도쿄스탠드", "도쿄 스탠드", "도쿄스탠드 서면", "도-쿄 스탠드", "TOKYO STAND", "Tokyo Stand 서면점", "tokyostand", "東京スタンド"],
     drink: "맥주",
+    course: { n: 1, line: "맥주로 시작!" },
+    benefitLabel: "산토리 프리미엄 생맥주",
     accent: "#d99a2b",
     accentInk: "#4a3305",
     naverPlaceId: "2071490466",
@@ -250,7 +258,7 @@ export const STORES: Store[] = [
     // 가격: 네이버 등록 메뉴(2026-09-10)와 매장 메뉴판 사진(2026-09-11) 일치.
     menu: [
       // 맥주
-      { name: "산토리 크리미 생맥주", price: 8900, description: "풍성한 크림 거품. 처음이라면 이 잔부터", image: `${T}/menu/suntory-creamy.jpg`, gift: true },
+      { name: "산토리 프리미엄 생맥주", price: 8900, description: "퍼펙트 푸어링 크리미 거품", image: `${T}/menu/suntory-creamy.jpg`, gift: true },
       { name: "산토리 소프트 생맥주", price: 8900, description: "쫀쫀한 거품에 탄산이 또렷한 잔", image: `${T}/menu/suntory-soft.jpg` },
       { name: "산토리 밀코 생맥주", price: 8900, description: "우유처럼 하얀 거품이 잔을 덮는 생맥주", image: `${T}/menu/suntory-milko.jpg` },
       { name: "도쿄 윗 비어", price: 8900, description: "직접 만든 호가든 스타일 밀맥주. 오렌지 슬라이스를 올려 냅니다" },
@@ -300,6 +308,8 @@ export const STORES: Store[] = [
       "프로그로스",
     ],
     drink: "소주",
+    course: { n: 3, line: "소주로 마무리!" },
+    benefitLabel: "요거트 아이스크림 or 소주",
     accent: "#2f6b4f",
     accentInk: "#0f2e21",
     naverPlaceId: "2013923953",
@@ -406,7 +416,7 @@ export const STORES: Store[] = [
       { name: "명란청양크림파스타", price: 16900 },
       // 과일·디저트
       { name: "와르르요거트(시그니처) 300g", price: 14500, description: "요거트에 초코쉘·벌집꿀·샤인머스켓·초코그래놀라", image: `${W}/menu/yogurt.jpg` },
-      { name: "와르르요거트(초코쉘)", price: 6500 },
+      { name: "와르르요거트(초코쉘)", price: 6500, gift: true },
       { name: "샤인머스켓크림치즈곶감말이", price: 14500 },
       { name: "무화과 크림치즈", price: 12500 }, // 네이버 메뉴 기준(7월 메뉴판에는 없음)
       { name: "계절과일플래터", price: 16500 },

@@ -1,10 +1,3 @@
-.block { display: grid; gap: 12px; justify-items: start; }
-.hours { display: grid; gap: 6px; font-size: 16.5px; }
-.hours li { display: flex; gap: 12px; align-items: baseline; }
-.hours b { flex: none; min-width: 56px; font-family: var(--font-display); }
-.lo { color: var(--fg-2); white-space: nowrap; }
-.line { font-size: 16.5px; line-height: 1.7; color: var(--fg-2); }
-.line b { color: var(--fg); }
-.mapWrap { width: 100%; border: 2px solid var(--outline); border-radius: var(--radius); padding: 8px; background: var(--panel); }
-.mapWrap :global(.leaflet-container) { background: var(--panel-2); }
-.naver { min-height: 48px; }
+.block { display: grid; gap: 16px; }
+.map { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--line-2); }
+.map :global(.leaflet-container) { background: var(--bg-2); }

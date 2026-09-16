@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Art } from "@/components/art/Art";
-import { ArtButton } from "@/components/art/ArtButton";
+import { StickyCta } from "@/components/site/StickyCta";
 import { StoreGallery } from "@/components/site/StoreGallery";
-import { STORE_COPY } from "@/components/site/StoreHelpers";
 import { StoreHero } from "@/components/site/StoreHero";
 import { StoreMenu } from "@/components/site/StoreMenu";
 import { StoreReviews } from "@/components/site/StoreReviews";
-import { StoreHours, StoreVisit } from "@/components/site/StoreVisit";
+import { StoreVisit } from "@/components/site/StoreVisit";
 import { formatWon } from "@/lib/config";
 import { listMenu } from "@/lib/db/queries";
-import { getStore, giftStoresFor, naverPlaceUrl } from "@/lib/stores";
+import { getStore, naverPlaceUrl } from "@/lib/stores";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
@@ -21,13 +19,14 @@ type Props = { params: Promise<{ id: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const store = getStore(id);
-  if (!store) return { title: "없는 페이지" };
+  if (!store) return { title: "없는 주소" };
   return {
     title: store.name,
     description: `${store.name} — ${store.address}. 다른 두 집 영수증이 있으면 여기서 ${store.drink} 한 잔이 무료예요.`,
   };
 }
 
+/** 매장 상세 — 사진 띠, 이름·영업·주소, 무료 한 잔, 메뉴, 위치, 리뷰. 아래에 '영수증 인증하기'. */
 export default async function StorePage({ params }: Props) {
   const { id } = await params;
   const store = getStore(id);
@@ -37,81 +36,64 @@ export default async function StorePage({ params }: Props) {
     listMenu(store.id).catch(() => []),
     listMenu(store.id, { giftOnly: true }).catch(() => []),
   ]);
-  const others = giftStoresFor(store.id);
+  const naver = naverPlaceUrl(store);
 
   return (
-    <article className={`wrap ${styles.page}`} data-store={store.id}>
-      <StoreHero store={store} />
-
-      {/* 무료 한 잔 — 티켓, 품목 한 줄, 한 문장, 시작하기 */}
-      <section className={styles.gift} aria-label="무료 한 잔">
-        <div className={styles.ticket}>
-          <Art name={`coupon-${store.id}`} alt={`${store.shortName} ${store.drink} 무료 쿠폰`} sizes="(min-width: 760px) 300px, 58vw" />
-        </div>
-        <div className={styles.giftBody}>
-          {gifts.length === 0 && <p className={styles.giftRow}>어떤 잔을 드릴지 정하고 있어요.</p>}
-          {gifts.map((g) => (
-            <p key={g.id} className={styles.giftRow}>
-              <b>{g.name}</b>
-              {g.price != null && <s>{formatWon(g.price)}</s>}
-              <em>무료</em>
-            </p>
-          ))}
-          <p className={styles.giftText}>다른 두 집 영수증이 있으면 여기서 받아요.</p>
-          <ArtButton kind="start" href={`/verify?from=${store.id}`} width={280} />
-        </div>
-      </section>
-
-      <section className={styles.section} aria-labelledby="intro-title">
-        <h2 id="intro-title" className={`h2 ${styles.h}`}>소개</h2>
-        <p className={styles.intro}>{STORE_COPY[store.id].intro}</p>
-      </section>
-
-      <section className={styles.section} aria-label="매장 사진">
+    <article className={`has-sticky ${styles.page}`} data-store={store.id}>
+      <div className={`wrap ${styles.top}`}>
         <StoreGallery store={store} />
-      </section>
+        <StoreHero store={store} />
+      </div>
 
-      <section className={styles.section} aria-labelledby="hours-title">
-        <div className="sec-head">
-          <Art name="icon-history" width={42} />
-          <h2 id="hours-title" className="h2">영업시간</h2>
+      <div className="band" />
+      <section className="section" aria-labelledby="gift-title"><div className="wrap">
+        <div className="section-h"><h2 id="gift-title" className="h2">무료 한 잔</h2></div>
+        <div className={`card ${styles.giftCard}`}>
+          <Art name={`coupon-${store.id}`} alt={`${store.shortName} ${store.drink} 무료 쿠폰`} className={styles.ticket} sizes="(min-width: 480px) 416px, 84vw" />
+          {gifts.length === 0 && <p className={`cap ${styles.giftEmpty}`}>어떤 잔을 드릴지 정하고 있어요.</p>}
+          {gifts.map((g) => (
+            <div key={g.id} className={`row ${styles.giftRow}`}>
+              <div className="body">
+                <p className="title">{g.name}</p>
+                {g.description && <p className={`sub ${styles.giftDesc}`}>{g.description}</p>}
+              </div>
+              {g.price != null && <s className="strike num">{formatWon(g.price)}</s>}
+              <span className="tag tag-free">무료</span>
+            </div>
+          ))}
+          <p className="cap">다른 두 집 영수증으로 받아요.</p>
         </div>
-        <StoreHours store={store} />
-      </section>
+      </div></section>
 
-      <section className={styles.section} id="visit" aria-labelledby="visit-title">
-        <div className="sec-head">
-          <Art name="icon-store" width={42} />
-          <h2 id="visit-title" className="h2">오시는 길</h2>
+      <div className="band" />
+      <section className={`section ${styles.anchor}`} id="menu" aria-labelledby="menu-title"><div className="wrap">
+        <div className="section-h">
+          <h2 id="menu-title" className="h2">메뉴</h2>
+          {menu.length > 0 && <span className="more num">{menu.length}개</span>}
         </div>
+        <StoreMenu store={store} items={menu} naverUrl={naver} />
+      </div></section>
+
+      <div className="band" />
+      <section className={`section ${styles.anchor}`} id="visit" aria-labelledby="visit-title"><div className="wrap">
+        <div className="section-h"><h2 id="visit-title" className="h2">위치</h2></div>
         <StoreVisit store={store} />
-      </section>
-
-      <section className={styles.section} id="menu" aria-labelledby="menu-title">
-        <div className="sec-head">
-          <Art name="icon-receipt" width={42} />
-          <h2 id="menu-title" className="h2">메뉴판</h2>
-        </div>
-        <StoreMenu store={store} items={menu} naverUrl={naverPlaceUrl(store)} />
-      </section>
+      </div></section>
 
       {(store.quotes.length > 0 || store.naverRating) && (
-        <section className={styles.section} aria-labelledby="reviews-title">
-          <h2 id="reviews-title" className={`h2 ${styles.h}`}>리뷰</h2>
-          <StoreReviews store={store} limit={1} />
-        </section>
+        <>
+          <div className="band" />
+          <section className="section" aria-labelledby="reviews-title"><div className="wrap">
+            <div className="section-h">
+              <h2 id="reviews-title" className="h2">리뷰</h2>
+              {naver && <a href={naver} target="_blank" rel="noreferrer" className="more">네이버에서 더 보기</a>}
+            </div>
+            <StoreReviews store={store} limit={2} />
+          </div></section>
+        </>
       )}
 
-      <section className={`${styles.section} ${styles.others}`} aria-labelledby="others-title">
-        <h2 id="others-title" className={`h2 ${styles.h}`}>나머지 두 집</h2>
-        <div className={styles.badges}>
-          {others.map((o) => (
-            <Link key={o.id} href={`/stores/${o.id}`} className={styles.badge}>
-              <Art name={`badge-${o.id}`} alt={`${o.name} 자세히`} sizes="165px" />
-            </Link>
-          ))}
-        </div>
-      </section>
+      <StickyCta href={`/verify?from=${store.id}`}>영수증 인증하기</StickyCta>
     </article>
   );
 }

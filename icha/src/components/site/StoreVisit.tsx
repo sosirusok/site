@@ -1,49 +1,39 @@
 import { LOCATIONS } from "@/lib/locations";
 import { naverPlaceUrl, type Store } from "@/lib/stores";
 import { StoreMap, type MapStore } from "./StoreMap";
-import { parseHours } from "./StoreHelpers";
 import styles from "./StoreVisit.module.css";
 
-/** 영업시간 — 요일이 전부 같으면 한 줄, 아니면 요일마다 한 줄 */
-export function StoreHours({ store }: { store: Store }) {
-  const lines = parseHours(store);
-  const first = lines[0];
-  const rows = first && lines.every((l) => l.time === first.time) ? [{ ...first, days: "매일" }] : lines;
-  return (
-    <ul className={styles.hours}>
-      {rows.map((l) => (
-        <li key={l.days}>
-          <b>{l.days}</b>
-          <span>
-            {l.openText}~{l.overnight ? "다음날 " : ""}{l.closeText}
-            {l.lastOrder && <span className={styles.lo}> · 주문 마감 {l.lastOrder}</span>}
-          </span>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-/** 오시는 길 — 지하철 한 줄, 길 설명 한 줄, 그 매장만 찍은 지도, 네이버 플레이스 */
+/** 위치 — 그 매장만 찍은 지도, 지하철·층·주차·오는 길, 네이버 플레이스. 문구는 lib/locations.ts 값 그대로. */
 export function StoreVisit({ store }: { store: Store }) {
   const loc = LOCATIONS[store.id];
   const naver = naverPlaceUrl(store);
-  // 길 설명은 첫 문장만 (locations.ts 값 그대로)
+  // 오는 길은 첫 문장만 (두 줄 안에 들어오게)
+  const cut = loc.directions.indexOf(". ");
+  const way = cut > 0 ? loc.directions.slice(0, cut + 1) : loc.directions;
   const mapStore: MapStore | null = store.lat != null && store.lng != null ? {
     id: store.id, name: store.name, shortName: store.shortName, drink: store.drink,
     lat: store.lat, lng: store.lng, address: store.address, naverPlaceId: store.naverPlaceId,
-    subway: loc.subway, directions: loc.directions, floor: loc.floor,
+    subway: loc.subway, directions: loc.directions, floor: loc.floor, parking: loc.parking,
   } : null;
 
   return (
     <div className={styles.block}>
-      <p className={styles.line}><b>{loc.subway}</b> · {loc.floor}</p>
       {mapStore && (
-        <div className={styles.mapWrap}>
-          <StoreMap stores={[mapStore]} focusId={store.id} compact height={220} />
+        <div className={styles.map}>
+          <StoreMap stores={[mapStore]} focusId={store.id} compact height={200} />
         </div>
       )}
-      {naver && <a href={naver} target="_blank" rel="noreferrer" className={`btn btn-outline ${styles.naver}`}>네이버 플레이스</a>}
+      <dl className="kv">
+        <dt>지하철</dt>
+        <dd>{loc.subway}</dd>
+        <dt>층</dt>
+        <dd>{loc.floor}</dd>
+        <dt>주차</dt>
+        <dd>{loc.parking}</dd>
+        <dt>오는 길</dt>
+        <dd>{way}</dd>
+      </dl>
+      {naver && <a href={naver} target="_blank" rel="noreferrer" className="btn btn-secondary btn-block">네이버 플레이스에서 보기</a>}
     </div>
   );
 }

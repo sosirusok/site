@@ -1,0 +1,37 @@
+/* 홈 전용 — 전역 .strip/.row/.card 위에 얹는 최소한의 보정만 둔다 */
+
+/* 1) 사진 띠 */
+.stripSection { padding-block: 12px 20px; }
+.shot { position: relative; width: 88%; height: 200px; border-radius: var(--radius-lg); overflow: hidden; background: var(--bg-2); }
+.shot img { object-fit: cover; }
+.chip { position: absolute; left: 12px; bottom: 12px; padding: 5px 9px; border-radius: 8px; background: rgba(0, 0, 0, 0.6); color: #fff; font-size: 13px; font-weight: 600; line-height: 1.2; }
+
+/* 2) 혜택 카드 */
+.benefit { padding-bottom: 24px; }
+.desc { margin-top: 8px; color: var(--fg-2); }
+.benefit :global(.cap) { margin-top: 10px; }
+
+/* 3) 이렇게 받아요 */
+.icon { width: 48px; height: 48px; flex: none; display: grid; place-items: center; }
+.icon img { width: 48px; height: 48px; object-fit: contain; }
+.rule { margin-top: 12px; }
+
+/* 4) 참여 매장 — 행 전체가 링크 */
+.link { display: flex; align-items: center; gap: 12px; width: 100%; }
+.link:active { background: var(--bg-2); }
+.title { display: flex; align-items: center; gap: 6px; }
+.sub { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* 5) 받을 수 있는 술 */
+.ticket { object-fit: contain !important; padding: 3px; }
+.price { display: flex; align-items: center; gap: 6px; flex: none; font-size: 14px; }
+
+/* 6) 오시는 길 */
+.mapBox { margin-top: 12px; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--line-2); }
+.mapBox :global(.leaflet-control-zoom) { display: none; }
+.addr { margin-top: 16px; grid-template-columns: 80px 1fr; }
+
+/* 7) 단골 등급 */
+.tierLine { font-size: 15px; font-weight: 600; }
+.tier :global(.cap) { margin-top: 6px; }
+
