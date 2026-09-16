@@ -21,4 +21,7 @@
 .lg .stubPhoto { width: 90px; height: 90px; }
 .stubCut { width: 74px; height: 74px; object-fit: contain; filter: drop-shadow(2px 3px 0 rgba(0, 0, 0, 0.28)); }
 .lg .stubCut { width: 96px; height: 96px; }
-.stubText { writing-mode: vertical-rl; font-size: 20px; letter-spacing: 0.12em; color: var(--ink-2); }
+/* 사진 없는 반쪽 — 글자를 한 자씩 세로로 쌓는다(가로쓰기 그대로, 기울거나 뒤집히지 않는다) */
+.stubText { display: grid; justify-items: center; gap: 2px; font-size: 19px; line-height: 1; color: var(--ink-2); }
+.stubText > span { display: block; }
+.lg .stubText { font-size: 23px; gap: 4px; }

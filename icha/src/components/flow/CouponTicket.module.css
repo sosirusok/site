@@ -19,7 +19,9 @@
 .useCap { font-size: 20px; text-align: center; }
 .err { background: var(--cream); padding: 6px 10px; border-radius: 4px; box-shadow: 2px 2px 0 #000; justify-self: start; }
 .hint { font-size: 20px; }
-.actions { display: grid; gap: 14px; }
+/* 사용 완료 아래 — 노란 스티커 하나 + 작은 밑줄 링크(44px 터치) */
+.actions { display: grid; gap: 8px; justify-items: center; }
+.actions :global(.btn-block) { justify-self: stretch; }
 
 /* 확인 시트 — 아래에서 올라오는 크림 종이 */
 .overlay { position: fixed; inset: 0; z-index: 60; background: rgba(0, 0, 0, 0.62); animation: fade 0.15s ease-out; }

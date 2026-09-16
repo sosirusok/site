@@ -129,16 +129,17 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
           <span className={`stamp stamp-green ${styles.bigStamp}`}>사용 완료</span>
         </div>
         {fresh && <LiveClock />}
+        {fresh && <p className={`hand hand-w ${styles.hint}`}>직원은 위 시계가 지금 시각과 같은지만 봐 주세요. 캡처한 화면은 시계가 멈춰 있어요.</p>}
         <div className="paper paper-l">
           <div className="row"><b>사용 시각</b><span className="val num">{usedAt ? fmtDateTimeSec(usedAt) : "방금"}</span></div>
           <div className="row"><b>매장</b><span className="val">{store.shortName}</span></div>
           <div className="row"><b>품목</b><span className="val">{coupon.menuName}</span></div>
           <div className="row"><b>코드</b><span className="val mono">{coupon.code}</span></div>
         </div>
-        {fresh && <p className={`hand hand-w ${styles.hint}`}>직원은 위 시계가 지금 시각과 같은지만 봐 주세요. 캡처한 화면은 시계가 멈춰 있어요.</p>}
+        {/* 기록 종이 아래 — 노란 리뷰 스티커 하나, 쿠폰함은 작은 밑줄 글자 */}
         <div className={styles.actions}>
-          {store.placeReview && <a href={store.placeReview} target="_blank" rel="noreferrer" className="btn btn-block">이 매장 네이버 리뷰 남기기</a>}
-          <Link href="/wallet" className="btn btn-secondary btn-block btn-r">쿠폰함으로</Link>
+          {store.placeReview && <a href={store.placeReview} target="_blank" rel="noreferrer" className="btn btn-block">네이버 리뷰 남기기</a>}
+          <Link href="/wallet" className="link link-w">쿠폰함으로</Link>
         </div>
       </article>
     );
@@ -162,7 +163,7 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
         </div>
         {error && <p className={`error ${styles.err}`} role="alert">{error}</p>}
         <div className={styles.actions}>
-          <Link href="/wallet" className="btn btn-secondary btn-block">쿠폰함으로</Link>
+          <Link href="/wallet" className="btn btn-block">쿠폰함으로</Link>
         </div>
       </article>
     );

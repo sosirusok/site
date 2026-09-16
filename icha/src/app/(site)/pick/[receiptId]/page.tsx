@@ -37,7 +37,7 @@ export default async function PickPage({ params }: { params: Promise<{ receiptId
           <h1 id="pick-title" className={`plate plate-red ${styles.h1}`}>기간이 지났어요</h1>
           <p className={`hand hand-w ${styles.sub}`}>{store.shortName}에서 받은 쿠폰은 {fmtMD(deadline)}까지 고를 수 있었어요. 다음에 계산할 때 번호를 말하면 다시 받아요.</p>
         </div>
-        <Link href="/wallet" className="btn btn-secondary btn-block">쿠폰함 보기</Link>
+        <Link href="/wallet" className="btn btn-block">쿠폰함 보기</Link>
       </section>
     );
   }

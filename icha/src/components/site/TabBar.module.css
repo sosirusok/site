@@ -3,5 +3,5 @@
 .item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 44px; color: #111; font-family: var(--font-display); font-size: 13px; line-height: 1; }
 .item:active { background: rgba(17, 17, 17, 0.06); }
 .label { display: inline-block; padding: 3px 5px 2px; border-radius: 3px; }
-/* 고른 탭 — 노란 형광펜 자국 */
-.active .label { background: var(--yellow); box-shadow: 2px 2px 0 #111; transform: rotate(-2deg); }
+/* 고른 탭 — 노란 형광펜 자국. 기울이지 않고 그림자는 1px 만 */
+.active .label { background: var(--yellow); box-shadow: 1px 1px 0 #111; }

@@ -1,12 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { HandArrow } from "@/components/site/HandArrow";
+import { NextStop } from "@/components/site/NextStop";
 import { benefitOf, Piece, plateOf } from "@/components/site/Poster";
 import { openStatus } from "@/components/site/StoreHelpers";
 import { FAN_PHOTOS } from "@/components/site/storePhotos";
-import type { Rules } from "@/lib/config";
-import { distanceM, walkMinutes } from "@/lib/geo";
+import type { Rules, StoreId } from "@/lib/config";
 import { placeLinks } from "@/lib/naver";
 import { STORES, type Store } from "@/lib/stores";
 import s from "./StoreBlocks.module.css";
@@ -19,10 +18,10 @@ function todayLine(store: Store, now: Date): string {
   return `오늘 ${hours} · ${st.open ? "지금 영업 중" : /오픈 예정/.test(st.text) ? "곧 열어요" : "오늘은 끝났어요"}`;
 }
 
-/** 두 가게 사이 걸어서 몇 분 */
-function walkMin(a: Store, b: Store): number {
-  if (a.lat == null || a.lng == null || b.lat == null || b.lng == null) return 1;
-  return walkMinutes(distanceM({ lat: a.lat, lng: a.lng }, { lat: b.lat, lng: b.lng }));
+/** 혜택 품목 이름들 → "산토리 프리미엄 생맥주" / "와르르요거트(초코쉘) 또는 소주 1병" (DB에 없으면 포스터의 혜택 이름) */
+function giftLine(store: Store, names: string[]): string {
+  const what = names.length ? names.join(" 또는 ") : store.benefitLabel;
+  return `다른 집 쿠폰 보여 주면 ${what} 무료!`;
 }
 
 const FAN_R = [
@@ -32,9 +31,11 @@ const FAN_R = [
 
 /**
  * 1차 · 2차 · 3차 — 가게마다 포스터 간판 조각(기울여 붙임, 누르면 가게 화면), 진짜 사진 세 장의 폴라로이드 부채,
- * 포스터 혜택 조각, 손글씨 영업시간, 초록 스티커 [예약하기] 하나. 블록 사이는 손글씨 화살표 메모.
+ * 포스터 혜택 조각 + 손글씨 영업시간, 그 아래 노란 손글씨 한 줄(다른 집 쿠폰 보여 주면 ○○ 무료!), 초록 스티커 [예약하기] 하나.
+ * 부채는 가운데 장이 위로 올라가 있고 양옆 장은 아래로 내려가 있어 손글씨 캡션이 전부 읽힌다. 블록 사이는 크림 메모(다음 집).
+ * gifts: 가게별 혜택 품목 이름(listMenu giftOnly).
  */
-export function StoreBlocks({ now, rules }: { now: Date; rules: Rules }) {
+export function StoreBlocks({ now, rules, gifts }: { now: Date; rules: Rules; gifts: Record<StoreId, string[]> }) {
   const ordered = [...STORES].sort((a, b) => a.course.n - b.course.n);
   return (
     <section className={s.list} aria-labelledby="stores-title">
@@ -68,12 +69,15 @@ export function StoreBlocks({ now, rules }: { now: Date; rules: Rules }) {
                     </Link>
                   );
                 })}
-                {i === 0 && <Piece name="mug" rotate={8} className={s.mug} sizes="80px" />}
               </div>
 
               <div className={s.under}>
                 <Piece name={benefitOf(st.id)} rotate={flip ? -2 : 1.5} sizes="240px" className={s.benefit} />
                 <p className={`hand hand-w ${s.today}`}>{todayLine(st, now)}</p>
+              </div>
+              <div className={s.giftRow}>
+                <p className={`hand hand-w hand-y ${s.gift}`}>{giftLine(st, gifts[st.id] ?? [])}</p>
+                {i === 0 && <Piece name="mug" rotate={8} className={s.mug} sizes="72px" />}
               </div>
               {notice && (
                 <div className={`scrap ${s.notice}`} style={{ "--r": "-1.5deg" } as CSSProperties}>
@@ -91,12 +95,7 @@ export function StoreBlocks({ now, rules }: { now: Date; rules: Rules }) {
               </div>
             </article>
 
-            {next && (
-              <p className={`hand hand-w ${s.walk}`}>
-                <HandArrow className={s.walkArrow} />
-                <span>걸어서 {walkMin(st, next)}분 → 다음은 {next.course.n}차 {next.shortName}</span>
-              </p>
-            )}
+            {next && <NextStop store={st} next={next} className={s.walk} rotate={flip ? 1.5 : -1.5} />}
           </div>
         );
       })}

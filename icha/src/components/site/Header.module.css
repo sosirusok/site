@@ -1,6 +1,8 @@
 /* 맨 위 한 줄 — 투명. 제목 조각은 작은 스티커, 로그인은 종이 꼬리표 */
 .header { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: var(--header-h); padding: 10px var(--gutter) 4px; }
-.brand { display: inline-flex; align-items: center; min-height: 44px; }
+.brand { display: inline-flex; align-items: center; min-height: 44px; opacity: 1; transition: opacity 0.3s ease; }
+/* 홈 첫 화면 — 포스터 머리에 제목이 크게 있으니 스티커는 감춘다(150px 내려가면 나타남) */
+.brandHidden { opacity: 0; pointer-events: none; }
 .brandImg { width: auto; height: 26px; border-radius: 3px; box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.5); transform: rotate(-2deg); }
 .me { display: inline-flex; align-items: center; min-height: 44px; }
 .meTag { display: inline-flex; align-items: center; min-height: 34px; padding: 0 12px; background: var(--cream); color: var(--ink); font-family: var(--font-display); font-size: 15px; line-height: 1; border: 2px solid #111; border-radius: 4px; box-shadow: 2px 2px 0 #000; transform: rotate(2deg); font-variant-numeric: tabular-nums; }

@@ -4,10 +4,15 @@
 .details { display: block; }
 .summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 60px; padding: 12px 0; user-select: none; -webkit-tap-highlight-color: transparent; }
 .q { font-size: 18px; line-height: 1.3; }
-.plus { position: relative; flex: none; width: 22px; height: 22px; }
+/* 손으로 그린 동그라미 안의 + — 열리면 노랗게 칠해지고 − 가 된다 */
+.plus { position: relative; flex: none; width: 32px; height: 32px; border: 2px solid #111; border-radius: 48% 52% 50% 50% / 52% 48% 52% 48%; background: #fff; box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.28); transition: background 0.15s, transform 0.15s; }
 .plus::before, .plus::after { content: ""; position: absolute; left: 50%; top: 50%; background: #111; border-radius: 2px; transform: translate(-50%, -50%); transition: transform 0.15s; }
-.plus::before { width: 18px; height: 3px; }
-.plus::after { width: 3px; height: 18px; }
+.plus::before { width: 16px; height: 3px; }
+.plus::after { width: 3px; height: 16px; }
+.details[open] .plus { background: var(--yellow); transform: rotate(-6deg); }
 .details[open] .plus::after { transform: translate(-50%, -50%) rotate(90deg); }
+.details[open] .summary { padding-bottom: 8px; }
 .a { padding: 0 0 16px; font-size: 14.5px; line-height: 1.55; color: var(--ink); border-top: 1px dashed var(--paper-line); padding-top: 12px; }
 .a a:not(:global(.btn)) { color: var(--ink); }
+/* 답 속 밑줄 링크 — 글자는 짧아도 누르는 폭은 44px 이상 */
+.a :global(.link) { padding-inline: 4px; margin-inline: -4px; min-width: 44px; justify-content: center; }

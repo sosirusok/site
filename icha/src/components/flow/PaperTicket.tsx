@@ -16,6 +16,9 @@ export type TicketData = {
   kindLabel?: string | null;
 };
 
+/** 사진이 없는 반쪽에 세로로 쌓는 이벤트 이름 — 글자를 하나씩 따로 놓는다(writing-mode 없이) */
+const STUB_LABEL = "알콜부시기";
+
 /**
  * 크림 종이 쿠폰 한 장 — 오른쪽에 점선으로 뜯는 반쪽(사진 또는 이벤트 이름), 위아래 구멍, 코드는 Do Hyeon.
  * md 는 쿠폰함 목록, lg 는 쿠폰 화면.
@@ -35,7 +38,11 @@ export function PaperTicket({ t, size = "md", rotate = 0, dim = false, className
           {t.image ? (
             <Image src={t.image.src} alt="" width={120} height={120} sizes="120px" unoptimized={!t.image.local} className={cut ? s.stubCut : s.stubPhoto} />
           ) : (
-            <span className={`disp ${s.stubText}`}>알콜부시기</span>
+            <span className={`disp ${s.stubText}`} aria-hidden="true">
+              {STUB_LABEL.split("").map((ch, i) => (
+                <span key={i}>{ch}</span>
+              ))}
+            </span>
           )}
         </div>
       </div>

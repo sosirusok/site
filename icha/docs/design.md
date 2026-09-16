@@ -8,26 +8,36 @@
 
 주 사용 환경: **손님이 술집 테이블에서 휴대폰으로** (포스터 QR → 네이버 플레이스 → 소개글 링크 → 이 사이트). 모바일이 기본, 데스크톱은 확장. 직원은 매장 태블릿·휴대폰으로 관리자 화면을 본다.
 
-## 2. 디자인 언어 v7 — "네온 사인" + 플레이스 깔때기
+## 2. 디자인 언어 v9 — "포스터 콜라주"
 
-- **이 사이트의 주목적은 네이버 플레이스 방문(10초 이상 체류)이다.** 버튼 하나가 아니라 플레이스로 갈 자연스러운 이유를 여러 개 둔다: **예약하기**(`placeLinks(store).booking`, 홈 매장 카드·매장 화면·플레이스 시트에서 가장 눈에 띄게), 리뷰 쓰기·리뷰 보기, 메뉴 전체 보기, 사진, 길찾기, 저장, 네이버 검색으로 찾기. 주소는 전부 `src/lib/naver.ts` 의 `placeLinks()`·`naverSearchUrl()` 에서만 만든다 — 화면에서 m.place 주소를 직접 쓰지 않는다.
-- **동선은 1차 → 2차 → 3차.** 매장 카드 아래 **다음 집** 카드가 다음 순서의 매장으로 이어 주고, 거리·도보는 `src/lib/locations.ts` 값만 쓴다.
-- **사장님이 채우는 한 줄 두 가지**(관리자 → 설정): **매장 소식**(매장별 80자, 홈 매장 카드·매장 화면에 한 줄) 과 **리뷰 이벤트**(매장별 40자, 홈 '리뷰 쓰기' 줄과 이용 안내 FAQ). 비우면 그 줄이 사라진다. 값은 `Rules.storeNotices` / `Rules.reviewBenefit`.
-- **쿠폰은 카운터에서만 나온다.** 계산할 때 직원이 `/admin/counter` 에 손님 번호를 넣는다(`src/lib/counter.ts`). **영수증 사진 업로드·자동 인식·VIP 등급·누적 금액·반려 사유는 손님 화면에 없다.**
-- **분위기는 사장님 포스터(`public/images/event/poster.jpg`)**: 밤거리, 네온, 굵은 붓글씨(Black Han Sans, 노랑 `--yellow`), 매장색 네온(도쿄 파랑 `--tokyo`, 조선 빨강 `--joseon`, 와르르 초록 `--wareureu`). 그 위에 한국 모바일 웹 문법(토스·배민·네이버 주문)을 얹는다: 480px 한 단, 목록 행·카드·큰 버튼·하단 탭.
-- **글**: 해요체, 제목 2~8자, 문단은 390px 에서 두 줄 안. 표어·개발 용어·이모지·작은 회색 군더더기 금지 — 표어는 `BRAND` 상수에 있는 것만 쓴다. 관리자 화면만 합쇼체.
-- **터치 44px 이상**, 첫 화면에 핵심 한 줄과 버튼.
+사장님 전단지(`public/images/event/poster.jpg`)가 화면 아래로 계속 이어지는 것처럼 보여야 한다. 손님 눈에 "가게가 직접 만든, 지금 운영 중인 사이트"여야지 "코드로 짠 데모"로 보이면 실패다. 상자·테두리·네온·그라데이션·아이콘 세트·생성 이미지는 쓰지 않는다.
 
-토큰·유틸(globals.css): 바탕 `--bg #0b0a12`, 카드 `--bg-2`, 글자 `--fg/--fg-2/--fg-3`, 제목 `.h1-event`(노랑 네온) `.h2-event`, 네온 글자 `.neon`(data-store 로 매장색), 네온 테두리 카드 `.card-neon`, 플레이스 버튼 `.btn-naver`(초록) `.btn-sm`, 주요 버튼 `.btn`(노랑), 보조 `.btn-secondary`, 목록 `.row .thumb .body .title .sub .chev`, 칩 `.tag-store .tag-neon .tag-free`, 사진 띠 `.strip`, 고정 버튼 `.sticky-cta`. 그림자·그라데이션 대신 **네온 글로우(text-shadow/box-shadow)만** 강조로 쓴다.
+- **배경**: 포스터의 밤거리 보케 한 장(`/images/poster/bokeh.jpg`)이 화면 전체에 고정되고(`.app::before`, `position: fixed`) 그 위에 35% 미만의 어두운 겹 하나. 스크롤해도 배경은 그대로고 내용만 지나간다. 배경을 섹션마다 바꾸지 않는다.
+- **조각 스티커**: 포스터에서 오려 낸 PNG(`/images/poster/*.png` — hero-top, title, title-tight, plate-*, benefit-*, ribbon-event, steps, step-1..4, pill-condition, note-*, mug, footer-line)를 `<Piece name=…>`(`src/components/site/Poster.tsx`)로 그대로 붙인다. 다시 그리지 않고, 글자가 든 조각은 alt 에 그 글자를 그대로 적는다. 기본은 `.stk`(모서리 6px, 딱딱한 그림자, `--r` 기울기 ±1~6°), 모서리 테이프는 `.tape*`. 매장 이름은 언제나 그 집의 포스터 간판 조각(`plateOf(id)`), 혜택은 `benefitOf(id)`.
+- **종이**: 크림색(`--cream`) 종이 카드 `.paper`(살짝 기울임 `.paper-l`/`.paper-r`), 찢은 메모 `.scrap > .scrap-in`, 종이 위 목록 `.row`, 정보표 `.kv`. 종이 위 글자는 잉크색 `--ink`, 보조는 `--ink-2`, 구분선은 점선 `--paper-line`. 쿠폰은 종이 티켓(`src/components/flow/PaperTicket.tsx`: 위아래 구멍, 점선으로 뜯는 반쪽, Do Hyeon 코드). 안내·자주 묻는 질문·입력 폼도 모두 종이 위에 놓는다.
+- **사진**: 진짜 매장 사진만 폴라로이드(`.pola`, 손글씨 캡션)로. 사진이 없는 자리는 비우거나 포스터 조각을 쓴다.
+- **손글씨**: 화면 곳곳의 한 줄 메모(부제, 안내, 남은 날짜)는 Nanum Pen Script(`.hand`). 보케 위에서는 `.hand-w`(흰 글자 + 검은 그림자), 강조는 `.hand-y`. 종이 위에서는 잉크색 그대로.
+- **글자**: 제목·간판·버튼·코드 = Do Hyeon(`.disp`, `.plate`, `.outl`, `.mono`), 손글씨 = Nanum Pen Script(`.hand`), 본문 = Pretendard(`--font-sans`). Do Hyeon 과 Nanum Pen Script 는 `src/app/fonts.css` 에서 자체 호스팅한다(`@fontsource/*` 의 한글 한 파일 + 라틴 한 파일) — Google Fonts 를 기다리는 동안 대체 글꼴이 보이거나, 유니코드 조각이 따로 도착해 한 단어 안에서 글꼴이 섞이는 일(막걸 → 막+걸)이 없다. Pretendard 는 layout.tsx 의 CDN 링크(가변 서브셋) 그대로.
+- **색 간판**: 섹션 제목과 상태 제목은 글자로 그린 판 `.plate`(`.plate-blue/-red/-green/-yellow/-cream`, 매장색은 `[data-store]` 안에서 `.plate-store`). 검은 테두리 2px, 잉크 그림자, 살짝 기울임. 작은 판은 `.plate-sm`.
+- **버튼 규칙**: 버튼은 스티커다 — `.btn`: 노랑, 검은 테두리 2px, 4px 잉크 그림자, 살짝 기울임(`--r`), Do Hyeon 20px, 높이 52px(작은 것 `.btn-sm` 44px), 누르면 그림자 쪽으로 눌린다. **초록(`.btn-naver`)은 가게마다 네이버 "예약하기" 하나뿐**(`placeLinks(store).booking`). 한 화면에 같은 가게의 초록 버튼이 둘 이상 보이면 잘못이다. 그 밖의 모든 행동(쿠폰 받기, 사용하기, 쿠폰 보기, 리뷰 남기기, 쿠폰함 보기, 홈으로, 번호로 시작)은 노란 스티커. 크림 `.btn-secondary` 는 노란 버튼 바로 옆의 보조(확인 시트의 취소)에만. 작은 이동(쿠폰함으로, 리뷰, 길찾기, 로그아웃)은 버튼이 아니라 밑줄 글자 `.link`(44px 터치, 보케 위 `.link-w`). 화면 아래 떠 있는 스티커 `.sticky-cta` 는 판 없이 스티커만 뜨고, 그 아래 내용은 `padding-bottom ≥ 96px` 로 비워 가려지지 않게 한다.
+- **도장·꼬리표**: 상태는 빨간(또는 초록 `.stamp-green`) 도장 `.stamp`(사용 완료, 발급 완료, 기간 지남), 꼬리표는 `.tag`(무료, 매장 쿠폰). 배지·칩·아이콘은 없다.
+- **플레이스 깔때기**: 이 사이트의 주목적은 네이버 플레이스 방문이다. 주소는 전부 `src/lib/naver.ts` 의 `placeLinks()`·`naverSearchUrl()` 에서만 만든다. 예약하기(초록 하나) 외의 리뷰·길찾기·검색은 밑줄 글자.
+- **동선은 1차 → 2차 → 3차**(`store.course.n`, 도쿄스탠드 → 조선칼국수 → 와르르맨숀). 거리·도보는 `src/lib/locations.ts` 값만 쓴다.
+- **사장님이 채우는 한 줄 두 가지**(관리자 → 설정): 매장 소식(`Rules.storeNotices`)과 리뷰 이벤트(`Rules.reviewBenefit`). 비우면 그 줄이 사라진다.
+- **쿠폰은 카운터에서만 나온다.** 계산할 때 직원이 `/admin/counter` 에 손님 번호를 넣는다. 영수증 사진·자동 인식·등급(VIP)·누적 금액·반려 사유는 손님 화면에 없다.
+- **글**: 해요체, 제목 2~8자, 문단은 390px 에서 두 줄 안. 표어는 `BRAND` 상수에 있는 것만. 이모지·개발 용어·작은 회색 군더더기 금지. 관리자 화면만 합쇼체.
+- **터치 44px 이상**, 가로 스크롤 없음(390px 에서 `document.documentElement.scrollWidth === 390`), 첫 화면에 핵심 한 줄과 버튼 하나.
+
+토큰·유틸(globals.css): 색 `--yellow --red --blue --green --cream --cream-2 --ink --ink-2 --naver`, 매장색 `[data-store]` → `--store`, 글꼴 `--font-display --font-hand --font-sans`, 그림자 `--shadow-hard --shadow-ink`. 스티커 `.stk .tape .tape-tl .tape-tr`, 종이 `.paper .paper-l .paper-r .scrap .scrap-in .row .kv`, 간판 `.plate .plate-* .plate-sm`, 폴라로이드 `.pola`, 버튼 `.btn .btn-naver .btn-secondary .btn-block .btn-sm .btn-r .btn-0 .link .link-w`, 도장·꼬리표 `.stamp .stamp-green .tag .tag-free .tag-store`, 검은 띠 `.marq`, 지도 종이 `.map-paper`, 고정 스티커 `.fixed-col .sticky-cta`, 입력 `.field .label .input .help .error`.
 
 
 ## 3. 이미 있는 것 (수정 금지, 사용만)
 - `src/app/globals.css` — 토큰과 유틸 클래스(.wrap .btn .btn-store .btn-ghost .btn-block .btn-lg .input .field .label .help .error .paper .dots .row .stamp .rise .eyebrow .lead .small .h1.. .display .mono .serif .rule .rule-thick .sr-only)
-- `src/app/layout.tsx`(루트), `src/app/(site)/layout.tsx`(손님 사이트: Header+Footer+Reveal)
+- `src/app/layout.tsx`(루트), `src/app/(site)/layout.tsx`(손님 사이트: Header+Footer+TabBar), `src/app/fonts.css`(자체 호스팅 글꼴)
 - `src/components/site/Header.tsx`, `Footer.tsx`
 - `src/components/site/StoreMap.tsx` (+ StoreMap.css, StoreMap.module.css) — 실제 지도. props: stores(MapStore[]: id,name,shortName,drink,lat,lng,address,naverPlaceId,subway?,directions?,floor?), focusId?, height?, compact?(목록·패널 숨김). 클라이언트 컴포넌트.
 - `src/lib/geo.ts` (distanceM, walkMinutes, formatDistance, naverWalkUrl, kakaoMapUrl, googleMapUrl, SEOMYEON_STATION), `src/lib/locations.ts` (LOCATIONS[storeId]: subway, directions, floor, landmarks, parking)
-- `src/components/ui/icons.tsx` (MakgeolliIcon BeerIcon SojuIcon DrinkIcon ReceiptIcon StampIcon TicketIcon PinIcon ArrowIcon ClockIcon PhoneIcon CameraIcon), `Stamp.tsx`, `Reveal.tsx`
+- `src/components/site/Poster.tsx` (PIECES, `<Piece>`, plateOf, benefitOf) — 포스터 조각. `src/components/site/StepsStrip.tsx`, `PlaceSheet.tsx`, `PlaceButton.tsx`, `StickyCta.tsx`
 - `src/lib/config.ts` (BRAND, Rules, REASONS/reasonText, normalizePhone/formatPhone/maskPhone/formatWon)
 - `src/lib/stores.ts` (STORES, STORE_BY_ID, getStore, giftStoresFor, naverPlaceUrl) — 데이터는 채워지는 중. 화면은 반드시 이 데이터로 렌더링하고 매장 정보를 하드코딩하지 않는다. 사진은 `store.images[]`(src는 /images/stores/<id>/... , kind: hero/exterior/interior/food/drink/menu).
 - `src/lib/db/queries.ts` (회원/영수증/메뉴/쿠폰/관리자/통계), `src/lib/settings.ts`(getRules/saveRules/tierFor), `src/lib/coupons.ts`, `src/lib/receipt/service.ts`(submitReceipt, adminDecideReceipt), `src/lib/auth/session.ts`(getMemberSession/getAdminSession …), `src/lib/auth/password.ts`, `src/lib/http.ts`
@@ -47,7 +57,7 @@
 
 ## 5. 화면 목록과 요구사항
 
-> 아래는 v1 때 쓴 초기 명세다. **화면 구성·문구·기능 범위는 2절(v7)이 우선한다** — 영수증 사진 인증(/verify, /pick)·VIP 등급·누적 금액은 더 이상 쓰지 않고, 쿠폰은 카운터에서만 나온다. 아래의 "사이드 메뉴"는 모두 "매장 특별 혜택"으로 읽는다. 라우트·API·데이터 흐름 설명은 참고용으로 남겨 둔다.
+> 아래는 v1 때 쓴 초기 명세다. **화면 구성·문구·기능 범위는 2절(v9)이 우선한다** — 영수증 사진 인증(/verify, /pick)·VIP 등급·누적 금액은 더 이상 쓰지 않고, 쿠폰은 카운터에서만 나온다. 아래의 "사이드 메뉴"는 모두 "매장 특별 혜택"으로 읽는다. 라우트·API·데이터 흐름 설명은 참고용으로 남겨 둔다.
 
 ### 손님 사이트 `(site)` — 소유: A(홈·매장·안내), B(흐름)
 A-1 `/` 홈 (`src/app/(site)/page.tsx`) — 실제 매장 사이트처럼 위에서 아래로 정보 순서대로:

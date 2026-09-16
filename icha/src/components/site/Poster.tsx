@@ -20,7 +20,7 @@ export const PIECES = {
   "step-2": { src: "/images/poster/step-2.png", w: 146, h: 84, alt: "2. 50m 안 다른 매장 방문" },
   "step-3": { src: "/images/poster/step-3.png", w: 136, h: 84, alt: "3. 메인안주 1개 주문 시" },
   "step-4": { src: "/images/poster/step-4.png", w: 214, h: 84, alt: "4. 각 매장별 특별 혜택!" },
-  "pill-condition": { src: "/images/poster/pill-condition.png", w: 380, h: 42, alt: "당일 영수증 한정 / 테이블당 1회" },
+  "pill-condition": { src: "/images/poster/pill-condition.png", w: 380, h: 38, alt: "당일 영수증 한정 / 테이블당 1회" },
   "note-good": { src: "/images/poster/note-good.png", w: 130, h: 140, alt: "좋은 술, 좋은 음식, 좋은 사람." },
   "note-again": { src: "/images/poster/note-again.png", w: 185, h: 95, alt: "먹고 마시고 또 가자!" },
   "note-today": { src: "/images/poster/note-today.png", w: 205, h: 100, alt: "오늘 서면에서 알콜부시기!" },

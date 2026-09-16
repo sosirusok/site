@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { CSSProperties } from "react";
 import { NextStop } from "@/components/site/NextStop";
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 /**
  * 가게 화면 — 밤 사진 위에 포스터 간판 조각, 손글씨 영업 한 줄, 종이(주소·전화),
- * 특별 혜택(포스터 혜택 조각 + 찢은 종이), 사진(폴라로이드 다섯), 메뉴판(크림 종이), 오시는 길(테이프 지도), 리뷰(종이 조각), 다음 집(손글씨 화살표).
+ * 특별 혜택(포스터 혜택 조각 + 오려 낸 품목 사진 + 찢은 종이), 사진(폴라로이드 다섯), 메뉴판(크림 종이), 오시는 길(테이프 지도), 리뷰(종이 조각), 다음 집(손글씨 화살표).
  * 초록 버튼은 아래 고정 [예약하기] 하나.
  */
 export default async function StorePage({ params }: Props) {
@@ -45,6 +46,8 @@ export default async function StorePage({ params }: Props) {
     getRules(),
   ]);
   const links = placeLinks(store);
+  /** 배경을 뺀 PNG 가 있는 혜택 품목(도쿄스탠드 생맥주) — 포스터 오려 붙인 듯 혜택 조각 옆에 크게 */
+  const cutout = gifts.find((g) => g.imagePath && /\.png$/i.test(g.imagePath)) ?? null;
   const notice = rules.storeNotices[store.id]?.trim() ?? "";
   const reviewBenefit = rules.reviewBenefit[store.id]?.trim() ?? "";
 
@@ -64,7 +67,10 @@ export default async function StorePage({ params }: Props) {
           <p className={`hand hand-w ${styles.lead}`}>다른 집 쿠폰으로 여기서 받는 것</p>
         </div>
         <div className={styles.giftRow}>
-          <Piece name={benefitOf(store.id)} rotate={-2} sizes="250px" className={`tape-tl ${styles.benefit}`} />
+          <div className={styles.giftTop}>
+            <Piece name={benefitOf(store.id)} rotate={-2} sizes="250px" className={`tape-tl ${styles.benefit}`} />
+            {cutout && <Image src={cutout.imagePath!} alt={cutout.name} width={160} height={320} sizes="110px" className={styles.cutout} draggable={false} />}
+          </div>
           <div className={`scrap ${styles.giftScrap}`} style={{ "--r": "1.5deg" } as CSSProperties}>
             <div className={`scrap-in ${styles.giftIn}`}>
               {gifts.length === 0 ? (
@@ -72,7 +78,7 @@ export default async function StorePage({ params }: Props) {
               ) : (
                 gifts.map((g) => (
                   <div key={g.id} className={styles.gift}>
-                    <MenuThumb m={g} size={64} />
+                    {g.id !== cutout?.id && <MenuThumb m={g} size={64} />}
                     <div className={styles.giftBody}>
                       <p className={styles.giftName}>{g.name}</p>
                       {g.description && <p className={styles.giftDesc}>{g.description}</p>}

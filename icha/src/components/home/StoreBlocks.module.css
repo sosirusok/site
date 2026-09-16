@@ -5,27 +5,33 @@
 /* 간판 조각 — 왼쪽 정렬, 짝수 블록은 오른쪽 */
 .top { position: relative; display: flex; align-items: flex-start; }
 .flip .top { justify-content: flex-end; }
-.plateLink { display: block; width: 76%; max-width: 300px; }
+.plateLink { position: relative; display: block; width: 76%; max-width: 300px; }
 .plate { width: 100%; }
 .noteAgain { position: absolute; right: -4px; top: -16px; width: 104px; z-index: 2; }
 .noteToday { position: absolute; left: -2px; top: -12px; width: 116px; z-index: 2; }
 
-/* 폴라로이드 부채 — 세 장이 조금씩 겹친다 */
-.fan { position: relative; aspect-ratio: 358 / 226; margin: 8px 0 0; }
+/* 폴라로이드 부채 — 가운데 장이 위(맨 앞), 양옆 장은 60px 아래. 가운데 장의 아랫변이 양옆 캡션보다 위에 있어 캡션이 다 보인다 */
+.fan { position: relative; aspect-ratio: 358 / 276; margin: 8px 0 0; }
 .pola { position: absolute; width: 46%; }
-.p0 { left: 0; top: 6%; z-index: 1; }
+.p0 { left: 0; top: 60px; z-index: 1; }
 .p1 { left: 27%; top: 0; z-index: 3; }
-.p2 { left: 54%; top: 7%; z-index: 2; }
+.p2 { left: 54%; top: 60px; z-index: 2; }
 .flip .p0 { left: 54%; }
 .flip .p2 { left: 0; }
-.mug { position: absolute; right: -4px; bottom: -10px; width: 68px; z-index: 4; }
 
 /* 혜택 조각 + 손글씨 영업시간 */
-.under { display: flex; align-items: center; gap: 12px; margin-top: -4px; }
+.under { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
 .flip .under { flex-direction: row-reverse; }
 .benefit { flex: 0 0 58%; max-width: 240px; }
 .today { flex: 1; min-width: 0; font-size: 22px; line-height: 1.1; }
 .flip .today { text-align: right; }
+
+/* 노란 손글씨 한 줄(다른 집 쿠폰 보여 주면 ○○ 무료!) — 1차는 오른쪽 아래에 포스터 맥주잔 */
+.giftRow { display: flex; align-items: flex-end; gap: 10px; margin-top: 8px; }
+.flip .giftRow { flex-direction: row-reverse; }
+.gift { flex: 1; min-width: 0; font-size: 24px; line-height: 1.1; }
+.flip .gift { text-align: right; }
+.mug { flex: none; width: 66px; margin: -18px 0 -6px; z-index: 2; }
 
 /* 오늘 소식(관리자가 적음) — 찢은 종이 */
 .notice { margin-top: 12px; align-self: start; max-width: 92%; }
@@ -36,6 +42,5 @@
 .cta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; }
 .flip .cta { flex-direction: row-reverse; }
 
-/* 블록 사이 — 손글씨 화살표 메모 */
-.walk { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 18px 8px 14px; font-size: 27px; transform: rotate(-2deg); }
-.walkArrow { flex: none; transform: rotate(20deg); }
+/* 블록 사이 — 다음 집 크림 메모(가로 여백은 .list 가 이미 준다) */
+.walk { padding: 26px 0 12px; }

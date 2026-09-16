@@ -111,7 +111,7 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
           return (
             <div key={s.id} className={`paper ${styles.card}`} data-on={on || undefined} data-store={s.id} style={{ "--r": `${i % 2 ? 1 : -1}deg` } as CSSProperties}>
               <div className={styles.cardHead}>
-                <Piece name={plateOf(s.id)} rotate={i % 2 ? 2 : -2} sizes="220px" className={styles.plate} />
+                <Piece name={plateOf(s.id)} rotate={i % 2 ? 2 : -2} sizes="220px" className={styles.plate} priority={i === 0} />
                 <span className="sr-only">{s.course.n}차 {s.shortName}</span>
               </div>
               {none ? (

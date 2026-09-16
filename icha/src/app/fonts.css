@@ -1,0 +1,8 @@
+/* 자체 호스팅 글꼴 — Google Fonts 를 기다리지 않고 이 서버에서 내려온다.
+   Do Hyeon(제목·간판·버튼)과 Nanum Pen Script(손글씨)는 한글 전체를 한 파일로 받는다(+라틴 한 파일).
+   유니코드 조각 100여 개로 나눠 받으면 조각이 따로 도착하는 동안 한 단어 안에서 글꼴이 섞인다(막걸 → 막+걸). 그걸 막는다.
+   본문 Pretendard 는 layout.tsx 의 CDN 링크(가변 서브셋) 그대로 둔다. */
+@import "@fontsource/do-hyeon/korean-400.css";
+@import "@fontsource/do-hyeon/latin-400.css";
+@import "@fontsource/nanum-pen-script/korean-400.css";
+@import "@fontsource/nanum-pen-script/latin-400.css";
