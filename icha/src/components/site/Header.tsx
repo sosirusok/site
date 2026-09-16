@@ -1,42 +1,21 @@
 import Link from "next/link";
 import { BRAND, maskPhone } from "@/lib/config";
-import { getMemberSession } from "@/lib/auth/session";
-import { TabBar } from "./TabBar";
 import { Art } from "@/components/art/Art";
 import styles from "./Header.module.css";
 
-export async function Header() {
-  const session = await getMemberSession();
+/** 앱 상단 바 — 왼쪽 로고, 오른쪽 로그인 상태. 화면 폭 480px 한 단에 고정. */
+export function Header({ loggedIn, phone }: { loggedIn: boolean; phone: string | null }) {
   return (
-    <>
-      <header className={styles.header}>
-        <div className={`wrap ${styles.inner}`}>
-          <Link href="/" className={styles.brand} aria-label={`${BRAND.name} 홈`}>
-            <Art name="logo" className={styles.logo} sizes="48px" priority />
-            <span className={styles.mark}>{BRAND.name}</span>
-            <span className={styles.sub}>{BRAND.unionName}</span>
-          </Link>
-          <nav className={styles.nav} aria-label="주요 메뉴">
-            <Link href="/#stores">세 집</Link>
-            <Link href="/#gifts">무료 한 잔</Link>
-            <Link href="/#map">오시는 길</Link>
-            <Link href="/guide">이용 안내</Link>
-            <Link href="/wallet">쿠폰함</Link>
-          </nav>
-          <div className={styles.side}>
-            {session ? (
-              <Link href="/wallet" className={styles.phone} title="내 쿠폰함">
-                <span className="mono">{maskPhone(session.phone)}</span>
-              </Link>
-            ) : (
-              <Link href="/verify" className={styles.cta}>
-                영수증 인증
-              </Link>
-            )}
-          </div>
-        </div>
-      </header>
-      <TabBar loggedIn={Boolean(session)} />
-    </>
+    <header className={`fixed-col ${styles.header}`}>
+      <Link href="/" className={styles.brand} aria-label={`${BRAND.name} 홈`}>
+        <Art name="logo" alt="" width={26} priority />
+        <span>{BRAND.name}</span>
+      </Link>
+      {loggedIn && phone ? (
+        <Link href="/wallet" className={styles.me}>{maskPhone(phone)}</Link>
+      ) : (
+        <Link href="/login" className={styles.me}>로그인</Link>
+      )}
+    </header>
   );
 }

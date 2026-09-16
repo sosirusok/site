@@ -8,22 +8,19 @@
 
 주 사용 환경: **손님이 술집 테이블에서 휴대폰으로** (포스터 QR → 사이트). 모바일이 기본, 데스크톱은 확장. 직원은 매장 태블릿/휴대폰으로 관리자 화면을 본다.
 
-## 2. 디자인 언어 v4 — 사장님이 보낸 일러스트 자산으로 만든 "동네 술집 안내판"
+## 2. 디자인 언어 v5 — "매일 쓰는 앱처럼"
 
-사장님이 ChatGPT 로 만든 자산(`public/art/*.png`, 투명 배경, `src/lib/art-manifest.json`) 을 그대로 쓴다: 아이보리 종이·목탄 외곽선의 일러스트, 남색 둥근 버튼(기본/눌림/처리 중/비활성 4장), 매장 배지, 매장 카드, 쿠폰 티켓(막걸리 빨강·맥주 파랑·소주 초록), 쿠폰함 포켓, 영수증 상태 그림, VIP 카드 12프레임, 이용 방법 그림 3장, 포스터·테이블 안내물 그림, 공통 아이콘 9종. **홈(`src/app/(site)/page.tsx`, `src/components/home/*`)이 완성본이자 기준**이다. 반드시 먼저 홈 코드와 스크린샷(`scratchpad/shots/v4/tiles/`)을 보고 같은 결로 만든다.
+의뢰인이 v4(일러스트·종이 바탕·둥근 글꼴)를 "AI 같고 불편하고 구리다"고 했다. v5 는 **휴대폰으로 매일 보는 서비스(토스·배달의민족·네이버 플레이스 상세) 화면의 문법**을 그대로 따른다. 독창성은 화면 구조가 아니라 내용(실제 사진·정확한 정보·짧은 문장)에서 나온다.
 
-- 바탕 `--bg` 따뜻한 종이색, 패널 `--panel` 아이보리 + `2px solid var(--outline)` 목탄 외곽선 + `border-radius: 14px`(자산과 같은 둥근 모서리). 글자 `--fg` 목탄, 보조 글자는 `--fg-3`(#5a544c)보다 옅게 쓰지 않는다. **회색 작은 글자 금지(최소 15px, 색은 --fg-3 까지)**.
-- 글꼴: 제목 `Cafe24Ssurround`(`.display .h1 .h2 .h3`), 본문 `Noto Sans KR` 16.5px. 숫자·코드만 IBM Plex Mono.
-- 강조색: 남색 `--navy`(버튼), 매장색 `--joseon/--tokyo/--wareureu`(빨강/파랑/초록 — 쿠폰 티켓 테두리와 같음), 무료 표시 빨강. 파스텔·그라데이션·그림자 카드 금지.
-- 버튼: 주요 동작은 `<ArtButton kind="start|shoot|pick-photo|menu|choose|get-coupon|use" />`(사장님 버튼 그림 4상태 자동), 나머지는 `.btn`(남색) / `.btn-outline`. 
-- 그림: `<Art name="..." />`(next/image). 아이콘은 `icon-receipt/coupon/store/phone/vip/history/ok/error/back`. 상태: `status-checking/ok/photo-fail/wrong-store/used`. 빈 상태: `empty-pocket/empty-holder/retry`. 쿠폰: `coupon-<store>`, 선택 화면: `pick-from-<store>`(영수증 매장을 기준으로 나머지 두 티켓이 살아 있는 그림), 쿠폰함: `wallet-active/used/expired`, VIP: `vipcard-01..12`(01 일반 → 12 VIP), 진행 막대 `vip-progress`, 장부 `ledger`, 확인 카드 `confirm-card`, 직원 앞 사용 버튼 `btn-use-staff`, 포스터 그림 `poster-art-<store>`, 테이블 안내 `tent-art-<store>`.
-- **증정 품목은 술 한 잔**(조선칼국수 막걸리 1통, 도쿄스탠드 산토리 생맥주 1잔, 와르르맨숀 소주 1병) — DB `menu_items.is_gift` 가 그 세 개. "사이드 메뉴"라는 말은 쓰지 않는다. 관리자가 품목을 바꿀 수 있으므로 코드에서는 항상 `listMenu(id,{giftOnly:true})` 를 쓴다.
-- 레이아웃: 발표 슬라이드처럼 "왼쪽 제목·오른쪽 그림" 블록을 똑같이 반복하지 않는다. 그림을 장면처럼 배치(카운터 위에 놓인 세 집, 길 따라 놓인 단계, 점선 이음줄 메뉴판, 티켓)하고 글은 한 단 문단으로. 홈을 참고.
-- 문구: 사장님이 손님에게 말하듯 **자연스러운 해요체**. 표어·감탄·"완벽한/특별한" 금지, 사실을 편하게 풀어 쓴다. 예) "영수증을 받은 집을 뺀 나머지 두 곳의 쿠폰이 보여요."
-- 위치 문구는 `src/lib/locations.ts` 값만. 지도는 `StoreMap`. 손님 페이지에 QR 없음(포스터는 관리자 인쇄물).
-- 모바일에는 하단 이동 메뉴(`TabBar`)가 있다: 본문 하단 여백은 body 에 이미 있음. 데스크톱은 상단 메뉴.
-- **04번 묶음(추가 자산)**: `logo`(헤더·푸터·앱 아이콘 `src/app/icon.png`·`apple-icon.png`), `hero-graphic`(첫 화면용 큰 그림 — 홈은 카운터 장면을 쓰므로 안내 페이지 상단에), `phone-input`(로그인), `upload-area-1/2`(영수증 올리기 영역), `shoot-guide-1..3`(촬영 안내: 1 좋은 예 / 2 잘린 예 / 3 흐린 예), `choose-confirm`(혜택 확인창 참고 그림), `coupon-issued`(발급 완료), `coupon-used`(사용 완료 스탬프 티켓), `vip-symbol`·`vip-card`·`vip-coupon`(VIP 화면), `kakao-share`(OG 이미지, layout.tsx), `banner-frame`(어두운 배너 틀 — 바탕이 검어서 손님 화면에는 쓰지 않음). 짧은 동작 효과는 `<Fx seq="select|ticket|check|spin" />`(`src/components/art/Fx.tsx`, 낱장 32장을 차례로 바꿈; 움직임 줄이기면 마지막 장만).
-- **모바일이 기본**(방문자 대부분이 휴대폰): 390px 에서 첫 화면 안에 핵심 문장과 주요 버튼이 보이게, 탭 영역 44px 이상, 가로 넘침 없음. 데스크톱은 그 위에 얹는다.
+- **화면은 항상 폭 480px 한 단.** `src/app/(site)/layout.tsx` 의 `.app` 이 가운데 한 단을 만들고, 헤더·탭·하단 버튼은 `.fixed-col` 로 그 단 안에 고정된다. 데스크톱 전용 레이아웃을 만들지 않는다(바깥은 연회색 바탕).
+- **바탕 흰색, 글자 검정(#191f28), 보조 글자 #4e5968, 설명 #8b95a1(13px 이상에서만).** 강조는 한 색(--accent 빨강, '무료' 표시)과 매장색 점(--store) 정도. 파스텔·그라데이션·그림자·굵은 외곽선·종이 질감 금지.
+- **글꼴 Pretendard(시스템 느낌).** 제목 22/17px 굵게, 본문 15px, 설명 13px. 장식 글꼴·둥근 글꼴 금지.
+- **버튼은 진짜 버튼.** `.btn`(검정 52px, 둥근 12px, 흰 글자) / `.btn-secondary`(연회색) / `.btn-sm`. 그림 버튼(ArtButton) 사용 금지. 주요 동작은 화면 아래 `<StickyCta>`(탭 위 고정) 또는 본문 `.btn-block`.
+- **사진이 먼저.** 매장은 실사진(`store.images`)을 크게(둥근 16px, 옆으로 넘기는 `.strip`), 메뉴는 오른쪽 56~72px 정사각 썸네일. 일러스트 자산은 다음에만 쓴다: `logo`(헤더 26px), `coupon-<id>` 티켓(쿠폰함·고르기·쿠폰 상세), `status-*`(영수증 결과), `how-1..3`(순서 아이콘 48~56px), `empty-pocket`(빈 쿠폰함). 카운터 장면·포스터 그림·카드 그림·VIP 카드 프레임·그림 버튼은 손님 화면에서 쓰지 않는다.
+- **목록 행(`.row`)과 카드(`.card`)로 짠다.** 정보는 "썸네일 · 제목 · 한 줄 설명 · ›" 행. 섹션 사이는 `.band`(8px 연회색 띠) 로 나눈다. 슬라이드처럼 같은 블록을 반복하지 않되, 목록 행의 반복은 정상이다.
+- **글은 짧게.** 제목 2~6자, 설명 한 줄, 문단은 최대 2줄. 표어·감탄·"특별한" 금지, 해요체. 기술 용어(서버·업로드·처리·자동 인식·관리자·시스템·데이터) 금지 — 손님이 쓰는 말만.
+- **첫 화면(390×844)** 에 사진·핵심 한 줄·시작 버튼이 보인다. 가로 넘침 금지, 탭 영역 44px 이상.
+- 지도는 `StoreMap`(compact, hidePanel). 위치 문구는 `src/lib/locations.ts`. 증정 품목은 `listMenu(id,{giftOnly:true})`.
 
 ## 3. 이미 있는 것 (수정 금지, 사용만)
 - `src/app/globals.css` — 토큰과 유틸 클래스(.wrap .btn .btn-store .btn-ghost .btn-block .btn-lg .input .field .label .help .error .paper .dots .row .stamp .rise .eyebrow .lead .small .h1.. .display .mono .serif .rule .rule-thick .sr-only)

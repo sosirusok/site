@@ -1,12 +1,5 @@
-.footer { margin-top: 40px; border-top: 2px solid var(--outline); background: var(--panel-2); padding: 28px 0 24px; font-size: 15.5px; color: var(--fg-2); }
-.inner { display: grid; gap: 14px; }
-.brand { display: flex; align-items: center; gap: 12px; color: var(--fg); }
-.brand b { font-family: var(--font-display); font-size: 20px; font-weight: 400; }
-.stores { display: grid; gap: 6px; }
-.stores li { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; }
-.stores a { text-decoration: underline; text-underline-offset: 3px; }
-.storeName { font-weight: 700; color: var(--fg); text-decoration: none !important; }
-.links { display: flex; gap: 16px; font-weight: 700; color: var(--fg); }
-.links a { border-bottom: 2px solid var(--line); }
-.note { font-size: 15px; color: var(--fg-3); }
-@media (min-width: 760px) { .inner { grid-template-columns: auto 1fr auto; align-items: center; gap: 12px 40px; } .note { grid-column: 1 / -1; } }
+.footer { margin-top: 24px; padding: 24px var(--gutter) 28px; background: var(--bg-2); font-size: 12px; line-height: 1.6; color: var(--fg-3); display: grid; gap: 8px; }
+.brand { font-weight: 700; color: var(--fg-2); }
+.stores { display: grid; gap: 2px; }
+.links { display: flex; gap: 14px; }
+.links a { font-weight: 600; color: var(--fg-2); }

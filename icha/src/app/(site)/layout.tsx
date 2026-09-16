@@ -1,14 +1,16 @@
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
-import { Reveal } from "@/components/ui/Reveal";
+import { TabBar } from "@/components/site/TabBar";
+import { getMemberSession } from "@/lib/auth/session";
 
-export default function SiteLayout({ children }: { children: React.ReactNode }) {
+export default async function SiteLayout({ children }: { children: React.ReactNode }) {
+  const session = await getMemberSession();
   return (
-    <>
-      <Header />
+    <div className="app">
+      <Header loggedIn={Boolean(session)} phone={session?.phone ?? null} />
       <main id="main">{children}</main>
       <Footer />
-      <Reveal />
-    </>
+      <TabBar loggedIn={Boolean(session)} />
+    </div>
   );
 }
