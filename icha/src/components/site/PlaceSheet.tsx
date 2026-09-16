@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import type { StoreId } from "@/lib/config";
 import { naverSearchUrl } from "@/lib/naver";
+import { StickerButton } from "./Kit";
 import { Piece, plateOf } from "./Poster";
 import styles from "./PlaceSheet.module.css";
 
@@ -37,7 +38,7 @@ export function PlaceSheet({ stores, open, onClose }: { stores: PlaceSheetStore[
               <Piece name={plateOf(s.id as StoreId)} rotate={i % 2 === 0 ? -2 : 2} className={styles.plate} sizes="200px" />
               <span className="sr-only">{s.course.n}차 {s.shortName}</span>
               <div className={styles.side}>
-                <a className="btn btn-naver btn-sm" href={s.booking} target="_blank" rel="noreferrer">예약하기<span className="sr-only"> — {s.shortName}</span></a>
+                <StickerButton kind="book" size="sm" href={s.booking}>예약하기<span className="sr-only"> — {s.shortName}</span></StickerButton>
                 <div className={styles.links}>
                   <a className="link" href={s.review} target="_blank" rel="noreferrer">리뷰</a>
                   <a className="link" href={s.directions} target="_blank" rel="noreferrer">길찾기</a>
@@ -48,7 +49,7 @@ export function PlaceSheet({ stores, open, onClose }: { stores: PlaceSheetStore[
         </ul>
         <div className={styles.foot}>
           <a className="link" href={naverSearchUrl(SEARCH_QUERY)} target="_blank" rel="noreferrer">네이버에서 ‘{SEARCH_QUERY}’ 검색</a>
-          <button type="button" className="btn btn-secondary btn-sm btn-r" onClick={onClose}>닫기</button>
+          <StickerButton kind="close" size="sm" tilt={1} secondary onClick={onClose}>닫기</StickerButton>
         </div>
       </div>
     </div>,

@@ -4,6 +4,8 @@
 .shot { object-fit: cover; }
 .plateWrap { position: relative; z-index: 2; margin: -46px var(--gutter) 0; }
 .plate { width: 80%; max-width: 320px; }
+/* 간판 아래 장식 선(키트 sign-<id>) — 가운데 60% */
+.sign { margin-top: 14px; }
 
 /* 사진 아래 — 손글씨 한 줄, 종이 한 장 */
 .facts { padding: 16px var(--gutter) 0; display: grid; gap: 14px; }

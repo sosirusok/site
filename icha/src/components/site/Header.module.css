@@ -5,4 +5,6 @@
 .brandHidden { opacity: 0; pointer-events: none; }
 .brandImg { width: auto; height: 26px; border-radius: 3px; box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.5); transform: rotate(-2deg); }
 .me { display: inline-flex; align-items: center; min-height: 44px; }
+/* 키트 btn-login.png — 36px 높이, 모양 따라가는 딱딱한 그림자 */
+.meImg { width: auto; height: 36px; filter: drop-shadow(2px 2px 0 #000); transform: rotate(2deg); }
 .meTag { display: inline-flex; align-items: center; min-height: 34px; padding: 0 12px; background: var(--cream); color: var(--ink); font-family: var(--font-display); font-size: 15px; line-height: 1; border: 2px solid #111; border-radius: 4px; box-shadow: 2px 2px 0 #000; transform: rotate(2deg); font-variant-numeric: tabular-nums; }

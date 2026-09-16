@@ -1,15 +1,17 @@
 "use client";
 import Link from "next/link";
 import { useEffect } from "react";
+import { KitCut } from "@/components/flow/kit";
 import styles from "./not-found.module.css";
 
-/** 화면이 깨졌을 때 — 간판 한 줄, 손글씨 한 줄, 홈으로(노란 스티커)·다시 시도(작은 글자). */
+/** 화면이 깨졌을 때 — 키트의 쓰러진 소주잔, 간판 한 줄, 손글씨 한 줄, 홈으로(노란 스티커)·다시 시도(작은 글자). */
 export default function SiteError({ error, retry }: { error: Error & { digest?: string }; retry: () => void }) {
   useEffect(() => {
     console.error(error);
   }, [error]);
   return (
     <div className={styles.wrap}>
+      <KitCut name="notfound" width={150} className={styles.cut} />
       <h1 className={`plate plate-red ${styles.h1}`}>잠깐 막혔어요</h1>
       <p className={`hand hand-w ${styles.sub}`}>한 번 더 열어 주세요. 계속 그러면 직원에게 보여 주세요.</p>
       <Link href="/" className={`btn ${styles.btn}`}>홈으로</Link>

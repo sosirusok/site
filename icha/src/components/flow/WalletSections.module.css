@@ -22,10 +22,14 @@
 .pastArrow { font-family: var(--font-sans); font-size: 18px; transition: transform 0.15s; }
 .past[open] .pastArrow { transform: rotate(180deg); }
 
-/* 빈 쿠폰함 */
+/* 빈 쿠폰함 — 메모 옆에 키트의 빈 영수증 꽂이(투명 PNG, 그림자 없음). 꽂이는 그림의 가운데 1/3 이라 메모와 살짝 겹쳐도 된다 */
 .empty { position: relative; display: grid; gap: 22px; padding: 10px 0 8px; }
-.emptyScrap { max-width: 84%; }
+.emptyRow { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 96px; gap: 6px; align-items: end; }
+.emptyScrap { max-width: 100%; z-index: 1; }
 .emptyTitle { font-size: 30px; }
 .emptyText { margin-top: 6px; font-size: 14px; line-height: 1.55; color: var(--ink-2); }
-.emptyNote { position: absolute; right: 0; top: -6px; width: 96px; }
+/* 꽂이 그림(360px)은 가운데 29% 만 물체라, 240px 로 키우고 물체 둘레(70x155)만 보이도록 상자로 자른다 — 그림자 없음 */
+.spikeBox { display: block; width: 92px; height: 164px; overflow: hidden; justify-self: end; margin-bottom: -6px; }
+.emptySpike { max-width: none; margin: -42px 0 0 -74px; }
+.emptyNote { width: 96px; margin: 0 0 40px 0; }
 .emptyBtn { margin-top: 6px; }

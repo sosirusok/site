@@ -1,11 +1,11 @@
 "use client";
 import Image from "next/image";
-import Link from "next/link";
 import { useId, useState, type CSSProperties } from "react";
 import { Piece, plateOf } from "@/components/site/Poster";
 import { formatWon } from "@/lib/config";
 import { fmtMD } from "./format";
-import { PaperTicket } from "./PaperTicket";
+import { StickerButton } from "./kit";
+import { Ticket } from "./Ticket";
 import type { ApiFail, IssueApiOk } from "./types";
 import styles from "./MenuPicker.module.css";
 
@@ -91,12 +91,12 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
     return (
       <div className={styles.issued} aria-live="polite" data-store={store.id}>
         <span className={`stamp stamp-green ${styles.issuedStamp}`}>발급 완료</span>
-        <PaperTicket t={{ storeId: store.id, storeName: store.shortName, menuName: coupon.menuName, code: coupon.code, expiresAt: coupon.expiresAt, image: item.image }} size="lg" rotate={-1.5} />
+        <Ticket t={{ storeId: store.id, storeName: store.shortName, menuName: coupon.menuName, code: coupon.code, expiresAt: coupon.expiresAt, image: item.image }} size="lg" rotate={-1.5} />
         <h2 className={`hand hand-w ${styles.issuedTitle}`}>쿠폰이 들어왔어요!</h2>
         <p className={`hand hand-w ${styles.issuedSub}`}>{store.shortName} · {coupon.menuName} · {fmtMD(coupon.expiresAt)}까지</p>
         <div className={styles.issuedBtns}>
-          <Link href={`/coupons/${coupon.id}`} className="btn btn-block">쿠폰 보기</Link>
-          {store.placeBooking && <a href={store.placeBooking} target="_blank" rel="noreferrer" className="btn btn-naver btn-block btn-r">{store.shortName} 예약하기</a>}
+          <StickerButton kind="wallet" href={`/coupons/${coupon.id}`} block>쿠폰 보기</StickerButton>
+          {store.placeBooking && <StickerButton kind="book" href={store.placeBooking} block rotate={1}>{store.shortName} 예약하기</StickerButton>}
         </div>
       </div>
     );
@@ -137,7 +137,7 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
                 </ul>
               )}
               {s.placeBooking && (
-                <a className={`btn btn-naver btn-sm ${styles.book}`} href={s.placeBooking} target="_blank" rel="noreferrer">예약하기<span className="sr-only"> — {s.shortName}</span></a>
+                <StickerButton kind="book" href={s.placeBooking} small className={styles.book}>예약하기<span className="sr-only"> — {s.shortName}</span></StickerButton>
               )}
             </div>
           );
@@ -148,9 +148,9 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
       {/* 하단 고정 스티커(탭 위) */}
       <div className={`fixed-col sticky-cta ${styles.sticky}`}>
         {error && <p id={`${id}-err`} className={`error ${styles.err}`} role="alert">{error}</p>}
-        <button type="button" className="btn btn-block" onClick={issue} disabled={busy} aria-describedby={error ? `${id}-err` : undefined}>
+        <StickerButton kind="get" block onClick={issue} disabled={busy}>
           {busy ? "받는 중" : selected ? `${selected.store.shortName}에서 받기` : "이 쿠폰 받기"}
-        </button>
+        </StickerButton>
       </div>
     </div>
   );

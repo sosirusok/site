@@ -1,10 +1,14 @@
 import Image from "next/image";
 import type { CSSProperties } from "react";
 import type { StoreId } from "@/lib/config";
+import { kitAlt, kitPiece } from "@/lib/kit";
 
 /**
  * 사장님 포스터(public/images/event/poster.jpg)에서 오려 낸 조각들.
  * 화면에는 이 조각을 그대로 붙인다 — 다시 그리지 않는다. 글자가 든 조각은 alt 에 그 글자를 그대로 적는다.
+ *
+ * 키트 우선: public/images/kit/ 에 같은 뜻의 그림이 있으면(npm run kit 으로 목록을 만든 뒤) 그 그림을 실제 크기로 쓰고,
+ * 없으면 아래 포스터 조각을 쓴다. 이름이 다른 것만 KIT_OF 에 적는다(hero-top → head-banner, mug → cut-beer).
  */
 export const PIECES = {
   "hero-top": { src: "/images/poster/hero-top.png", w: 1080, h: 320, alt: "알콜부시기 — 소주·맥주·막걸리, 서면 3가게 콜라보, 50m 안에서 즐기는 1차·2차·3차" },
@@ -30,6 +34,28 @@ export const PIECES = {
 
 export type PieceName = keyof typeof PIECES;
 
+/** 포스터 조각 이름 → 키트 파일 이름(다른 것만). 나머지는 이름이 같다 */
+const KIT_OF: Partial<Record<PieceName, string>> = {
+  "hero-top": "head-banner",
+  mug: "cut-beer",
+};
+
+export type ResolvedPiece = { src: string; w: number; h: number; alt: string; /** 키트 그림을 쓰는가 */ kit: boolean };
+
+/** 조각 하나를 키트 우선으로 고른다 — 키트에 있으면 그 파일(실제 크기, 키트 alt), 없으면 포스터 조각 */
+export function resolvePiece(name: PieceName): ResolvedPiece {
+  const kitName = KIT_OF[name] ?? name;
+  const k = kitPiece(kitName);
+  const p = PIECES[name];
+  if (k) return { src: k.src, w: k.w, h: k.h, alt: kitAlt(kitName) || p.alt, kit: true };
+  return { src: p.src, w: p.w, h: p.h, alt: p.alt, kit: false };
+}
+
+/** 조각의 실제 경로(키트 우선) — 메타·CSS 배경 등 <Piece> 를 못 쓰는 곳용 */
+export function pieceSrc(name: PieceName): string {
+  return resolvePiece(name).src;
+}
+
 export function plateOf(id: StoreId): PieceName {
   return `plate-${id}` as PieceName;
 }
@@ -51,12 +77,12 @@ type Props = {
   bare?: boolean;
 };
 
-/** 포스터 조각 한 장 — 기본은 스티커(모서리 6px, 딱딱한 그림자, 기울기) */
+/** 포스터 조각 한 장 — 기본은 스티커(모서리 6px, 딱딱한 그림자, 기울기). 키트에 같은 조각이 있으면 그 그림 */
 export function Piece({ name, decorative = false, rotate, className = "", sizes, priority = false, style, bare = false }: Props) {
-  const p = PIECES[name];
+  const p = resolvePiece(name);
   const st: CSSProperties = { ...(rotate != null ? ({ "--r": `${rotate}deg` } as CSSProperties) : {}), ...style };
   return (
-    <span className={`${bare ? "" : "stk"} ${className}`} style={st}>
+    <span className={`${bare ? "" : "stk"} ${p.kit ? "stk-kit" : ""} ${className}`} style={st} data-piece={name}>
       <Image src={p.src} alt={decorative ? "" : p.alt} aria-hidden={decorative || undefined} width={p.w} height={p.h} sizes={sizes ?? "(min-width: 480px) 480px, 100vw"} priority={priority} draggable={false} />
     </span>
   );

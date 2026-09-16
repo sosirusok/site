@@ -5,6 +5,7 @@
    진짜 사진(폴라로이드), 크림색 종이 메모, 스티커 버튼이 붙는다. 상자·테두리·네온 없음.
    글자: 제목·간판·버튼 = Do Hyeon(포스터 고딕), 손글씨 메모 = Nanum Pen Script, 본문 = Pretendard.
    초록 버튼은 가게마다 "예약하기" 하나뿐, 나머지 버튼은 노란 스티커.
+   키트(public/images/kit/, docs/kit.md): 파일이 있으면 배경(--kit-bg)·테이프(--kit-tape)·화살표(--kit-arrow)·버튼·제목·아이콘이 그 그림으로 바뀐다.
    ────────────────────────────────────────────────────────────── */
 :root {
   --yellow: #FFD400;
@@ -46,9 +47,11 @@ html { -webkit-text-size-adjust: 100%; background: #14101c; }
 html, body { margin: 0; padding: 0; }
 body { color: var(--fg); font-family: var(--font-sans); font-size: 15px; line-height: 1.5; letter-spacing: -0.01em; -webkit-font-smoothing: antialiased; word-break: keep-all; overflow-wrap: anywhere; min-height: 100dvh; }
 
-/* 손님 화면 한 단(480px) — 바탕은 화면 전체에 고정된 포스터 밤거리(살짝만 흐린 bokeh-soft), 그 위에 어두운 한 겹은 25%까지만 — 포스터의 색이 남아야 한다 */
+/* 손님 화면 한 단(480px) — 바탕은 화면 전체에 고정된 포스터 밤거리(살짝만 흐린 bokeh-soft), 그 위에 어두운 한 겹은 25%까지만 — 포스터의 색이 남아야 한다.
+   키트에 bg-night.jpg 가 있으면 (site) 레이아웃이 .app 에 --kit-bg 를 얹고(lib/kit.ts kitCssVars) 그 그림을 쓴다. 가로가 넓은 화면은 bg-night-wide */
 .app { position: relative; max-width: var(--app-max); min-height: 100dvh; margin: 0 auto; padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 16px); overflow-x: clip; }
-.app::before { content: ""; position: fixed; inset: -12px; z-index: -1; pointer-events: none; background: linear-gradient(rgba(12, 8, 20, 0.25), rgba(12, 8, 20, 0.25)), url("/images/poster/bokeh-soft.jpg") center / cover no-repeat #14101c; filter: blur(5px); }
+.app::before { content: ""; position: fixed; inset: -12px; z-index: -1; pointer-events: none; background: linear-gradient(rgba(12, 8, 20, 0.25), rgba(12, 8, 20, 0.25)), var(--kit-bg, url("/images/poster/bokeh-soft.jpg")) center / cover no-repeat #14101c; filter: blur(5px); }
+@media (min-aspect-ratio: 1 / 1) { .app::before { background-image: linear-gradient(rgba(12, 8, 20, 0.25), rgba(12, 8, 20, 0.25)), var(--kit-bg-wide, var(--kit-bg, url("/images/poster/bokeh-soft.jpg"))); } }
 .app:has(.sticky-cta) { padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 84px); }
 .fixed-col { position: fixed; left: 50%; transform: translateX(-50%); width: min(100%, var(--app-max)); }
 
@@ -90,8 +93,10 @@ details > summary::-webkit-details-marker { display: none; }
 /* ── 스티커: 포스터에서 오려 낸 조각 ── */
 .stk { display: block; position: relative; border-radius: 6px; box-shadow: var(--shadow-hard); transform: rotate(var(--r, 0deg)); }
 .stk > img { border-radius: inherit; width: 100%; height: auto; }
-/* 모서리 테이프 — 반투명 크림 종이 띠 */
-.tape::after, .tape-tl::after, .tape-tr::after { content: ""; position: absolute; z-index: 3; width: 68px; height: 20px; background: rgba(244, 233, 210, 0.74); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.28); pointer-events: none; border-radius: 1px; }
+/* 키트 그림(투명 PNG)은 모서리를 깎지 않고 그림자가 모양을 따라간다 */
+.stk.stk-kit { border-radius: 0; box-shadow: none; filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.45)); }
+/* 모서리 테이프 — 반투명 크림 종이 띠(키트 tape.png 가 있으면 그 그림: --kit-tape) */
+.tape::after, .tape-tl::after, .tape-tr::after { content: ""; position: absolute; z-index: 3; width: 68px; height: 20px; background-color: var(--kit-tape-fill, rgba(244, 233, 210, 0.74)); background-image: var(--kit-tape, none); background-size: 100% 100%; background-repeat: no-repeat; box-shadow: var(--kit-tape-shadow, 0 1px 2px rgba(0, 0, 0, 0.28)); pointer-events: none; border-radius: 1px; }
 .tape::after { left: 50%; top: -9px; margin-left: -34px; transform: rotate(-3deg); }
 .tape-tl::after { left: -18px; top: 6px; transform: rotate(-42deg); }
 .tape-tr::after { right: -18px; top: 6px; transform: rotate(42deg); }
@@ -183,7 +188,7 @@ summary.btn { list-style: none; }
 
 /* ── 지도(밝은 타일 그대로) — 테이프로 붙인 종이 조각 ── */
 .map-paper { position: relative; background: #fff; padding: 8px; box-shadow: var(--shadow-hard); transform: rotate(var(--r, 1deg)); }
-.map-paper::before, .map-paper::after { content: ""; position: absolute; z-index: 1000; width: 74px; height: 22px; background: rgba(244, 233, 210, 0.74); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.28); pointer-events: none; }
+.map-paper::before, .map-paper::after { content: ""; position: absolute; z-index: 1000; width: 74px; height: 22px; background-color: var(--kit-tape-fill, rgba(244, 233, 210, 0.74)); background-image: var(--kit-tape, none); background-size: 100% 100%; background-repeat: no-repeat; box-shadow: var(--kit-tape-shadow, 0 1px 2px rgba(0, 0, 0, 0.28)); pointer-events: none; }
 .map-paper::before { left: -20px; top: 10px; transform: rotate(-42deg); }
 .map-paper::after { right: -20px; bottom: 10px; transform: rotate(-42deg); }
 .leaflet-container.leaflet-container { background: #e9e2d4; font-family: var(--font-sans); }

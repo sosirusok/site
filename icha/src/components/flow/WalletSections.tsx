@@ -5,7 +5,8 @@ import type { PlaceSheetStore } from "@/components/site/PlaceSheet";
 import { Piece } from "@/components/site/Poster";
 import type { StoreId } from "@/lib/config";
 import { daysLeft, fmtMD, fmtMDHM } from "./format";
-import { PaperTicket } from "./PaperTicket";
+import { KitCut, StickerButton } from "./kit";
+import { Ticket } from "./Ticket";
 import styles from "./WalletSections.module.css";
 
 type StoreRef = { id: StoreId; shortName: string; name: string };
@@ -52,7 +53,7 @@ export function RelayCards({ relays }: { relays: WalletRelay[] }) {
           <li key={r.id} className={`paper ${styles.relay}`} data-store={r.store.id} style={{ "--r": `${i % 2 ? 1 : -1}deg` } as CSSProperties}>
             <p className={styles.relayHead}><span className="plate plate-store plate-sm">{r.store.shortName}</span><span className={`disp ${styles.relayTitle}`}>에서 받은 쿠폰</span></p>
             <p className={styles.relaySub}>{r.giftNames.join("·")} 중 한 곳에서 써요 · {fmtMD(r.deadline)}까지</p>
-            <Link href={`/pick/${r.id}`} className="btn btn-sm">어디서 쓸지 고르기</Link>
+            <StickerButton kind="pick" href={`/pick/${r.id}`} small>어디서 쓸지 고르기</StickerButton>
           </li>
         ))}
       </ul>
@@ -60,7 +61,7 @@ export function RelayCards({ relays }: { relays: WalletRelay[] }) {
   );
 }
 
-/* 쓸 수 있는 쿠폰 — 종이 쿠폰 더미(번갈아 기울여 쌓인다) */
+/* 쓸 수 있는 쿠폰 — 쿠폰 더미(번갈아 기울여 쌓인다). 종이인지 네온인지는 키트 파일이 정한다(Ticket) */
 export function ActiveCoupons({ coupons }: { coupons: WalletCoupon[] }) {
   const now = new Date();
   return (
@@ -70,7 +71,7 @@ export function ActiveCoupons({ coupons }: { coupons: WalletCoupon[] }) {
         return (
           <li key={c.id} className={styles.stackItem}>
             <Link href={`/coupons/${c.id}`} className={styles.ticketLink} aria-label={`${c.store?.shortName ?? "매장"} ${c.menuName} 쿠폰 보기`}>
-              <PaperTicket
+              <Ticket
                 t={{ storeId: c.store?.id ?? "joseon", storeName: c.store?.shortName ?? "매장", menuName: c.menuName, code: c.code, expiresAt: c.expiresAt, image: c.image, kindLabel: kindText(c) }}
                 rotate={i % 2 ? 1 : -1}
               />
@@ -92,7 +93,7 @@ export function PastCoupons({ coupons }: { coupons: WalletCoupon[] }) {
         {coupons.map((c, i) => (
           <li key={c.id} className={styles.stackItem}>
             <Link href={`/coupons/${c.id}`} className={styles.ticketLink} aria-label={`${c.store?.shortName ?? ""} ${c.menuName} — ${c.status === "used" ? "사용한 쿠폰" : c.status === "expired" ? "기간이 지난 쿠폰" : "취소된 쿠폰"}`}>
-              <PaperTicket
+              <Ticket
                 t={{ storeId: c.store?.id ?? "joseon", storeName: c.store?.shortName ?? "매장", menuName: c.menuName, code: c.code, expiresAt: c.expiresAt, image: c.image, kindLabel: kindText(c) }}
                 rotate={i % 2 ? 1 : -1}
                 dim
@@ -108,17 +109,21 @@ export function PastCoupons({ coupons }: { coupons: WalletCoupon[] }) {
   );
 }
 
-/* 아무것도 없을 때 — 종이 메모 한 장과 초록 스티커(예약하기) 하나 */
+/* 아무것도 없을 때 — 손글씨 메모 한 장, 옆에 키트의 빈 영수증 꽂이(오려 낸 그림, 그림자 없음 — 없으면 포스터 메모 조각), 초록 스티커(예약하기) 하나 */
 export function EmptyWallet({ stores }: { stores: PlaceSheetStore[] }) {
   return (
     <div className={styles.empty}>
-      <div className={`scrap ${styles.emptyScrap}`} style={{ "--r": "-1.5deg" } as CSSProperties}>
-        <div className="scrap-in">
-          <p className={`hand ${styles.emptyTitle}`}>아직 쿠폰이 없어요</p>
-          <p className={styles.emptyText}>한 매장에서 계산할 때 휴대폰 번호를 말해 주세요. 여기로 들어와요.</p>
+      <div className={styles.emptyRow}>
+        <div className={`scrap ${styles.emptyScrap}`} style={{ "--r": "-1.5deg" } as CSSProperties}>
+          <div className="scrap-in">
+            <p className={`hand ${styles.emptyTitle}`}>아직 쿠폰이 없어요</p>
+            <p className={styles.emptyText}>한 매장에서 계산할 때 휴대폰 번호를 말해 주세요. 여기로 들어와요.</p>
+          </div>
         </div>
+        <span className={styles.spikeBox}>
+          <KitCut name="empty-wallet" width={240} className={styles.emptySpike} fallback={<Piece name="note-good" rotate={6} sizes="100px" className={styles.emptyNote} />} />
+        </span>
       </div>
-      <Piece name="note-good" rotate={6} sizes="100px" className={styles.emptyNote} />
       <PlaceButton stores={stores} className={`btn btn-naver btn-block ${styles.emptyBtn}`}>예약하기</PlaceButton>
     </div>
   );

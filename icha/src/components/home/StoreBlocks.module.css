@@ -42,5 +42,8 @@
 .cta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; }
 .flip .cta { flex-direction: row-reverse; }
 
+/* 마지막(3차) 블록 아래 — 키트 장식 선(sign-wareureu), 가운데 60% */
+.sign { margin-top: 22px; }
+
 /* 블록 사이 — 다음 집 크림 메모(가로 여백은 .list 가 이미 준다) */
 .walk { padding: 26px 0 12px; }

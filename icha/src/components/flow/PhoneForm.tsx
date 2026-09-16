@@ -1,6 +1,7 @@
 "use client";
 import { useId, useState, type ChangeEvent, type FormEvent } from "react";
 import { formatPhone, normalizePhone } from "@/lib/config";
+import { StickerButton } from "./kit";
 import styles from "./PhoneForm.module.css";
 
 /** 입력 중인 숫자열을 자동 하이픈으로 보여 준다 (010-1234-5678) */
@@ -71,9 +72,9 @@ export function PhoneForm({ next, label = "쿠폰함 열기" }: { next: string; 
         />
         {error && <p id={`${id}-err`} className="error" role="alert">{error}</p>}
       </div>
-      <button type="submit" className="btn btn-block" disabled={busy}>
+      <StickerButton kind="wallet" type="submit" block disabled={busy}>
         {busy ? "잠시만요" : label}
-      </button>
+      </StickerButton>
     </form>
   );
 }

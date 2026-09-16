@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
+import { KitDivider, KitPiece, StickerButton } from "@/components/site/Kit";
 import { NextStop } from "@/components/site/NextStop";
 import { benefitOf, Piece, plateOf } from "@/components/site/Poster";
 import { nowText, openStatus } from "@/components/site/StoreHelpers";
@@ -29,10 +30,14 @@ const FAN_R = [
   [5, -3, 3],
 ] as const;
 
+/** 손글씨 옆에 붙는 오려 낸 술 — 1차는 포스터 맥주잔(키트 cut-beer 가 오면 그것), 2차·3차는 키트가 와야 보인다 */
+const CUT: Record<StoreId, string> = { tokyo: "cut-beer", joseon: "cut-makgeolli", wareureu: "cut-soju" };
+
 /**
  * 1차 · 2차 · 3차 — 가게마다 포스터 간판 조각(기울여 붙임, 누르면 가게 화면), 진짜 사진 세 장의 폴라로이드 부채,
  * 포스터 혜택 조각 + 손글씨 영업시간, 그 아래 노란 손글씨 한 줄(다른 집 쿠폰 보여 주면 ○○ 무료!), 초록 스티커 [예약하기] 하나.
  * 부채는 가운데 장이 위로 올라가 있고 양옆 장은 아래로 내려가 있어 손글씨 캡션이 전부 읽힌다. 블록 사이는 크림 메모(다음 집).
+ * 3차 블록 아래에는 키트의 와르르맨숀 장식 선(sign-wareureu, 민트 네온 한 줄)만 가늘게 — 글자·테두리에 네온은 없다.
  * gifts: 가게별 혜택 품목 이름(listMenu giftOnly).
  */
 export function StoreBlocks({ now, rules, gifts }: { now: Date; rules: Rules; gifts: Record<StoreId, string[]> }) {
@@ -77,7 +82,7 @@ export function StoreBlocks({ now, rules, gifts }: { now: Date; rules: Rules; gi
               </div>
               <div className={s.giftRow}>
                 <p className={`hand hand-w hand-y ${s.gift}`}>{giftLine(st, gifts[st.id] ?? [])}</p>
-                {i === 0 && <Piece name="mug" rotate={8} className={s.mug} sizes="72px" />}
+                {i === 0 ? <Piece name="mug" rotate={8} className={s.mug} sizes="72px" /> : <KitPiece name={CUT[st.id]} rotate={flip ? -8 : 8} className={s.mug} sizes="72px" />}
               </div>
               {notice && (
                 <div className={`scrap ${s.notice}`} style={{ "--r": "-1.5deg" } as CSSProperties}>
@@ -87,12 +92,13 @@ export function StoreBlocks({ now, rules, gifts }: { now: Date; rules: Rules; gi
 
               <div className={s.cta}>
                 {links ? (
-                  <a className="btn btn-naver" href={links.booking} target="_blank" rel="noreferrer">예약하기<span className="sr-only"> — {st.shortName}</span></a>
+                  <StickerButton kind="book" href={links.booking}>예약하기<span className="sr-only"> — {st.shortName}</span></StickerButton>
                 ) : (
                   <Link className="btn" href={`/stores/${st.id}`}>가게 보기</Link>
                 )}
                 <Link href={`/stores/${st.id}`} className="link link-w">사진·메뉴 더 보기</Link>
               </div>
+              {!next && <KitDivider name={`sign-${st.id}`} className={s.sign} />}
             </article>
 
             {next && <NextStop store={st} next={next} className={s.walk} rotate={flip ? 1.5 : -1.5} />}

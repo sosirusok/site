@@ -11,7 +11,7 @@
     "test": "node --import tsx --test src/**/*.test.ts",
     "seed": "tsx scripts/seed.ts",
     "admin:create": "tsx scripts/create-admin.ts",
-    "kit": "node scripts/kit-manifest.mjs"
+    "kit": "node scripts/kit-manifest.mjs && node scripts/kit-icons.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.126.0",

@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { SectionLabel, StickerButton } from "@/components/site/Kit";
 import { Piece } from "@/components/site/Poster";
 import { StoreMap, type MapStore } from "@/components/site/StoreMap";
 import { LOCATIONS } from "@/lib/locations";
@@ -32,7 +33,7 @@ export function Directions() {
   return (
     <section className={s.dir} aria-labelledby="map-title">
       <div className={s.dirHead}>
-        <h2 id="map-title" className="plate plate-blue">오시는 길</h2>
+        <SectionLabel kind="map" color="blue" id="map-title">오시는 길</SectionLabel>
         <p className={`hand hand-w ${s.dirLead}`}>세 집 모두 50m 안! {walkLine()}</p>
       </div>
       <div className={s.mapWrap}>
@@ -59,7 +60,7 @@ export function Directions() {
         </ul>
       </div>
       <div className={s.searchRow}>
-        <a className="btn" href={naverSearchUrl(SEARCH_QUERY)} target="_blank" rel="noreferrer">네이버에서 검색</a>
+        <StickerButton kind="search" href={naverSearchUrl(SEARCH_QUERY)}>네이버에서 검색</StickerButton>
         <span className={`hand hand-w ${s.searchHint}`}>‘{SEARCH_QUERY}’ 라고 쳐요</span>
       </div>
     </section>

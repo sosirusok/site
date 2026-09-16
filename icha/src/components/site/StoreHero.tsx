@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { Store } from "@/lib/stores";
+import { KitDivider } from "./Kit";
 import { Piece, plateOf } from "./Poster";
 import { heroImage, kstNow, nowText, openStatus, parseHours } from "./StoreHelpers";
 import { HERO_POS } from "./storePhotos";
@@ -9,6 +10,7 @@ import styles from "./StoreHero.module.css";
  * 가게 첫 화면 — 그 집 밤 외관 사진을 화면 폭 그대로, 아래 모서리에 포스터 간판 조각이 겹쳐 붙는다.
  * 보이는 이름은 간판 조각이고 읽히는 이름(h1)은 눈에 안 보이게 같이 둔다.
  * 사진 아래에는 손글씨 한 줄(지금 영업 중·오늘 시간·별점)과 종이 한 장(영업·주소·전화).
+ * 키트에 그 집 장식 선(sign-<id>.png, 지금은 와르르맨숀의 민트 네온 선)이 있으면 간판 조각 아래 가늘게 한 줄 — 글자·테두리에 네온은 없다.
  */
 export function StoreHero({ store }: { store: Store }) {
   const st = openStatus(store);
@@ -32,6 +34,7 @@ export function StoreHero({ store }: { store: Store }) {
         <div className={styles.plateWrap}>
           <Piece name={plateOf(store.id)} rotate={-2} priority sizes="320px" className={`tape ${styles.plate}`} />
         </div>
+        <KitDivider name={`sign-${store.id}`} className={styles.sign} />
       </header>
 
       <div className={styles.facts}>

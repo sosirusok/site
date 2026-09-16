@@ -34,6 +34,8 @@
 
 사장님 포스터(`public/images/event/poster.jpg`)가 화면 아래로 그대로 이어진다. 포스터의 밤거리 보케 한 장이 배경으로 고정되고, 그 위에 포스터에서 오려 낸 조각(간판·혜택·리본·순서·메모)이 기울어진 스티커로, 진짜 매장 사진은 폴라로이드로, 안내·쿠폰·입력은 크림색 종이로 붙는다. 글자는 제목·간판·버튼 Do Hyeon, 손글씨 메모 Nanum Pen Script, 본문 Pretendard — 앞의 두 글꼴은 `src/app/fonts.css` 에서 자체 호스팅한다. 버튼은 노란 스티커이고, **초록은 가게마다 네이버 예약하기 하나뿐**이다. 글은 해요체로 짧게, 터치 44px, 가로 스크롤 없음. 규칙은 `docs/design.md` 2절.
 
+**이미지 키트(`public/images/kit/`)**: 디자이너가 만드는 포스터풍 그림 55장(+먼저 받은 8장)은 파일 이름으로 자리가 정해져 있어, 파일을 이 폴더에 넣고 `npm run kit`(등록부 `src/lib/kit-manifest.json` 갱신 + 앱 아이콘 `src/app/icon.png`·`apple-icon.png` 생성)을 돌리면 코드 수정 없이 화면이 바뀐다. 파일이 없으면 지금의 포스터 조각·CSS 로 그린다. 먼저 받은 8장은 이렇게 쓴다 — `ticket-<매장>.png` 는 쿠폰 화면과 쿠폰함의 네온 쿠폰(`src/components/flow/NeonTicket.tsx`; 55장의 크림 `ticket.png` 가 오면 종이 쿠폰이 그 그림 위에 그려지며 우선한다 — `Ticket.tsx`), `empty-wallet.png` 는 빈 쿠폰함, `notfound.png` 는 404·오류 화면, `icon.png` 는 앱 아이콘(`icon.svg` 는 같은 표시를 벡터로), `share.jpg` 는 카톡·네이버·트위터 공유 미리보기(포스터가 두 번째), `sign-wareureu.png` 는 3차 와르르맨숀 아래 장식 선. 버튼(`btn-*`)·섹션 제목(`label-*`)·탭 아이콘(`icon-*`)은 `src/components/site/Kit.tsx` 의 `<StickerButton>`·`<SectionLabel>`·`<TabIcon>` 이 키트 유무에 따라 그림과 CSS 를 고른다. 파일 목록과 자리는 `docs/kit.md`.
+
 ## 한 번에 배포 (Vercel 버튼, 5분)
 
 이 폴더가 `main` 브랜치에 있으면(PR 머지 후) 아래 버튼 하나로 GitHub 계정에 새 저장소 `icha` 가 만들어지고, Vercel 프로젝트와 무료 Neon Postgres 가 같이 생긴다.

@@ -14,6 +14,7 @@
 .giftTop { position: relative; display: flex; align-items: flex-end; justify-content: space-between; }
 .benefit { width: 66%; max-width: 250px; z-index: 2; }
 .cutout { position: relative; z-index: 3; width: 76px; height: auto; margin: -6px 18px -30px 0; transform: rotate(6deg); filter: drop-shadow(4px 5px 0 rgba(0, 0, 0, 0.55)); }
+.cutout img { width: 100%; height: auto; }
 .giftScrap { margin: -14px 0 0 8%; }
 .giftIn { display: grid; gap: 10px; padding: 22px 18px 16px; }
 .gift { display: flex; align-items: center; gap: 12px; }
@@ -22,6 +23,9 @@
 .giftDesc { margin-top: 2px; font-size: 12.5px; line-height: 1.45; color: var(--ink-2); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
 .giftPrice { display: flex; align-items: center; gap: 12px; margin-top: 4px; font-size: 14px; }
 .giftFree { font-size: 20px; padding: 4px 8px 3px; }
+/* 키트 stamp-free.png — 도장 자리, 52px */
+.giftStamp { display: inline-block; width: 52px; transform: rotate(-8deg); }
+.giftStamp img { width: 100%; height: auto; }
 .giftEmpty { font-size: 22px; color: var(--ink-2); }
 .giftPick { font-size: 22px; color: var(--red); }
 .giftRule { font-size: 12.5px; line-height: 1.5; color: var(--ink-2); border-top: 1px dashed var(--paper-line); padding-top: 8px; }

@@ -3,5 +3,6 @@
 .step { display: flex; align-items: center; }
 .step:nth-child(odd) { justify-self: end; }
 .step:nth-child(even) { justify-self: start; }
-.step:nth-child(even)::before { content: ""; flex: none; width: 26px; height: 20px; margin: 0 4px 0 2px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 20'%3E%3Cpath d='M2 7h12V2l10 8-10 8v-5H2z' fill='%23D9332B' stroke='%23111' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat; }
+/* 빨간 화살표 — 키트 arrow.png 가 있으면 그 그림(--kit-arrow, .app 에서 내려옴) */
+.step:nth-child(even)::before { content: ""; flex: none; width: 26px; height: 20px; margin: 0 4px 0 2px; background: var(--kit-arrow, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 20'%3E%3Cpath d='M2 7h12V2l10 8-10 8v-5H2z' fill='%23D9332B' stroke='%23111' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E")) center / contain no-repeat; }
 .img > img { width: auto; height: 66px; }

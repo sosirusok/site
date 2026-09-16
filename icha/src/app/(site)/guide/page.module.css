@@ -1,7 +1,7 @@
 /* 이용 안내 — 간판 제목, 순서 조각, 종이 카드 */
 .page { padding-bottom: 8px; }
 .top { position: relative; display: grid; gap: 14px; justify-items: start; padding: 18px var(--gutter) 6px; }
-.h1 { font-size: 30px; padding: 12px 18px 10px; }
+.h1 { --r: -1.5deg; }
 .brand { font-size: 24px; }
 .note { position: absolute; right: var(--gutter); top: 8px; width: 104px; }
 
@@ -18,8 +18,10 @@
 .stepT { flex: 1; min-width: 0; font-size: 15px; line-height: 1.5; font-weight: 600; padding-top: 3px; }
 .rule { font-size: 12.5px; color: var(--ink-2); border-top: 1px dashed var(--paper-line); padding-top: 8px; }
 
-/* 답 속 예약 스티커 세 개 — 가게마다 하나씩 */
-.bookRow { display: flex; flex-wrap: wrap; gap: 12px 10px; margin-top: 12px; }
+/* 답 속 예약 스티커 세 개 — 가게마다 한 줄: 그 집 색 판(N차 이름) + 초록 [예약하기] */
+.bookRow { display: grid; gap: 12px; margin-top: 12px; }
+.bookItem { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.bookName { --r: -2deg; }
 /* 리뷰 이벤트 — 가게 이름은 그 집 색 판 */
 .revList { display: grid; gap: 10px; }
 .revList li { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; line-height: 1.5; }

@@ -25,3 +25,11 @@
 .stubText { display: grid; justify-items: center; gap: 2px; font-size: 19px; line-height: 1; color: var(--ink-2); }
 .stubText > span { display: block; }
 .lg .stubText { font-size: 23px; gap: 4px; }
+
+/* 키트의 종이 티켓 그림(ticket.png) 위에 얹을 때 — 종이·구멍·점선은 그림이 맡고, 글자와 반쪽만 절대 위치.
+   자리는 그림 기준 %: 파일이 오면 이 네 줄만 맞춘다 */
+.kit { position: relative; color: var(--ink); }
+.kitImg { display: block; width: 100%; height: auto; }
+.kitMain { position: absolute; left: 6%; top: 8%; bottom: 8%; width: 62%; padding: 0; align-content: center; }
+.lg .kitMain { padding: 0; }
+.kitStub { position: absolute; right: 4%; top: 12%; bottom: 12%; width: 22%; padding: 0; border-left: 0; background: none; }

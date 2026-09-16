@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { GuideFaq, type FaqItem } from "@/components/site/GuideFaq";
+import { SectionLabel, StickerButton } from "@/components/site/Kit";
 import { Piece } from "@/components/site/Poster";
 import { StepsStrip } from "@/components/site/StepsStrip";
 import { BRAND } from "@/lib/config";
@@ -31,7 +32,7 @@ function walkLine(): string {
   return `서면역 ${exits}번 출구에서 걸어서 ${lo === hi ? `${lo}분` : `${lo}~${hi}분`}`;
 }
 
-/** 이용 안내 — 간판 제목, 포스터 순서 조각 + 종이에 적은 순서 넷, 자주 묻는 질문은 종이 카드. 아래 고정 버튼 없음(탭에 플레이스). */
+/** 이용 안내 — 간판 제목, 포스터 순서 조각 + 종이에 적은 순서 넷, 자주 묻는 질문은 종이 카드. 아래 고정 버튼 없음(탭에 플레이스). 제목 셋은 키트 label-guide/howto/faq 가 오면 그 그림. */
 export default async function GuidePage() {
   const rules = await getRules();
   const days = rules.couponValidDays;
@@ -46,16 +47,17 @@ export default async function GuidePage() {
       a: (
         <>
           <p>네이버 예약으로 받아요.</p>
-          <p className={styles.bookRow}>
+          <ul className={styles.bookRow}>
             {ORDERED.map((s, i) => {
               const l = placeLinks(s);
               return l ? (
-                <a key={s.id} href={l.booking} target="_blank" rel="noopener noreferrer" className={`btn btn-naver btn-sm ${i % 2 ? "btn-r" : ""}`}>
-                  {s.course.n}차 {s.shortName} 예약하기
-                </a>
+                <li key={s.id} className={styles.bookItem} data-store={s.id}>
+                  <span className={`plate plate-store plate-sm ${styles.bookName}`}>{s.course.n}차 {s.shortName}</span>
+                  <StickerButton kind="book" size="sm" tilt={i % 2 ? 1 : -1} href={l.booking}>예약하기<span className="sr-only"> — {s.shortName}</span></StickerButton>
+                </li>
               ) : null;
             })}
-          </p>
+          </ul>
         </>
       ),
     },
@@ -85,14 +87,14 @@ export default async function GuidePage() {
   return (
     <div className={styles.page}>
       <header className={styles.top}>
-        <h1 className={`plate plate-red ${styles.h1}`}>이용 안내</h1>
+        <SectionLabel kind="guide" color="red" as="h1" big className={styles.h1}>이용 안내</SectionLabel>
         <p className={`hand hand-w ${styles.brand}`}>{BRAND.name} · {BRAND.eventTag}</p>
         <Piece name="note-again" rotate={6} sizes="110px" className={styles.note} />
       </header>
 
       <section className={styles.sec} aria-labelledby="steps-title">
         <div className="sec-h">
-          <h2 id="steps-title" className="plate plate-blue">순서</h2>
+          <SectionLabel kind="howto" color="blue" id="steps-title">순서</SectionLabel>
           <p className={`hand hand-w ${styles.lead}`}>{BRAND.course}</p>
         </div>
         <StepsStrip className={styles.strip} />
@@ -111,7 +113,7 @@ export default async function GuidePage() {
 
       <section className={styles.sec} aria-labelledby="faq-title">
         <div className="sec-h">
-          <h2 id="faq-title" className="plate plate-green">자주 묻는 질문</h2>
+          <SectionLabel kind="faq" color="green" id="faq-title">자주 묻는 질문</SectionLabel>
           <p className={`hand hand-w ${styles.lead}`}>궁금한 것</p>
         </div>
         <GuideFaq items={items} />
