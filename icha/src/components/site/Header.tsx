@@ -17,13 +17,11 @@ export async function Header() {
             <span className={styles.sub}>{BRAND.unionName}</span>
           </Link>
           <nav className={styles.nav} aria-label="주요 메뉴">
-            <Link href="/">홈</Link>
-            <Link href="/#stores">참여 매장</Link>
+            <Link href="/#stores">세 집</Link>
             <Link href="/#gifts">무료 한 잔</Link>
             <Link href="/#map">오시는 길</Link>
-            <Link href="/verify">영수증 인증</Link>
-            <Link href="/wallet">쿠폰함</Link>
             <Link href="/guide">이용 안내</Link>
+            <Link href="/wallet">쿠폰함</Link>
           </nav>
           <div className={styles.side}>
             {session ? (
