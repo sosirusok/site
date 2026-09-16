@@ -6,5 +6,5 @@
 .item { padding: 12px; border-radius: var(--radius-lg); background: var(--bg-3); display: grid; gap: 10px; }
 .head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .name { font-weight: 800; font-size: 16px; }
-.btns { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 8px; }
+.btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .close { margin-top: 4px; }

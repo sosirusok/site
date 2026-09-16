@@ -8,5 +8,5 @@ export function placeSheetStores(): PlaceSheetStore[] {
     .sort((a, b) => a.course.n - b.course.n)
     .map((s) => ({ s, l: placeLinks(s) }))
     .filter((x): x is { s: (typeof STORES)[number]; l: NonNullable<ReturnType<typeof placeLinks>> } => x.l != null)
-    .map(({ s, l }) => ({ id: s.id, shortName: s.shortName, course: s.course, home: l.home, review: l.review, directions: l.directions }));
+    .map(({ s, l }) => ({ id: s.id, shortName: s.shortName, course: s.course, home: l.home, review: l.review, directions: l.directions, booking: l.booking }));
 }

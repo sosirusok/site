@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import styles from "./PlaceSheet.module.css";
 
-export type PlaceSheetStore = { id: string; shortName: string; course: { n: number; line: string }; home: string; review: string; directions: string };
+export type PlaceSheetStore = { id: string; shortName: string; course: { n: number; line: string }; home: string; review: string; directions: string; booking: string };
 
 /**
  * 네이버 플레이스로 보내는 바닥 시트 — 하단 탭 "플레이스"와 고정 버튼에서 연다.
@@ -35,6 +35,7 @@ export function PlaceSheet({ stores, open, onClose }: { stores: PlaceSheetStore[
               </div>
               <div className={styles.btns}>
                 <a className="btn btn-naver btn-sm" href={s.home} target="_blank" rel="noreferrer">플레이스 열기</a>
+                <a className="btn btn-naver btn-sm" href={s.booking} target="_blank" rel="noreferrer">예약하기</a>
                 <a className="btn btn-secondary btn-sm" href={s.review} target="_blank" rel="noreferrer">리뷰</a>
                 <a className="btn btn-secondary btn-sm" href={s.directions} target="_blank" rel="noreferrer">길찾기</a>
               </div>

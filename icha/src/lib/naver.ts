@@ -4,7 +4,7 @@
  */
 import type { Store } from "./stores";
 
-export type PlaceLinks = { home: string; review: string; photo: string; menu: string; directions: string; save: string };
+export type PlaceLinks = { home: string; review: string; photo: string; menu: string; directions: string; save: string; booking: string };
 
 export function placeLinks(s: Pick<Store, "naverPlaceId" | "name" | "lat" | "lng">): PlaceLinks | null {
   if (!s.naverPlaceId) return null;
@@ -17,6 +17,8 @@ export function placeLinks(s: Pick<Store, "naverPlaceId" | "name" | "lat" | "lng
     menu: `${base}/menu/list`,
     directions: s.lat != null && s.lng != null ? `https://map.naver.com/p/directions/-/${s.lng},${s.lat},${q}/-/walk` : `${base}/location`,
     save: `${base}/home?entry=pll`,
+    /** 네이버 예약 탭 — 매장이 네이버 예약을 켜 두면 바로 예약, 아니면 플레이스 홈으로 */
+    booking: `${base}/booking`,
   };
 }
 
