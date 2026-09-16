@@ -29,7 +29,6 @@ export function StoreVisit({ store }: { store: Store }) {
   const loc = LOCATIONS[store.id];
   const naver = naverPlaceUrl(store);
   // 길 설명은 첫 문장만 (locations.ts 값 그대로)
-  const directions = loc.directions.split(/(?<=\.)\s+/)[0] ?? loc.directions;
   const mapStore: MapStore | null = store.lat != null && store.lng != null ? {
     id: store.id, name: store.name, shortName: store.shortName, drink: store.drink,
     lat: store.lat, lng: store.lng, address: store.address, naverPlaceId: store.naverPlaceId,
@@ -39,7 +38,6 @@ export function StoreVisit({ store }: { store: Store }) {
   return (
     <div className={styles.block}>
       <p className={styles.line}><b>{loc.subway}</b> · {loc.floor}</p>
-      <p className={styles.line}>{directions}</p>
       {mapStore && (
         <div className={styles.mapWrap}>
           <StoreMap stores={[mapStore]} focusId={store.id} compact height={220} />

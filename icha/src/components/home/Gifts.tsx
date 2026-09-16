@@ -12,7 +12,7 @@ export function Gifts({ gifts }: { gifts: Record<string, MenuItem[]> }) {
       <div className="wrap">
         <div className="sec-head">
           <Art name="icon-coupon" width={36} />
-          <h2 id="gifts-title" className="h2">무료로 드리는 것</h2>
+          <h2 id="gifts-title" className="h2">무료 한 잔</h2>
         </div>
         <ul className={styles.row}>
           {STORES.map((s) => (

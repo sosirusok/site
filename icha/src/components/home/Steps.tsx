@@ -1,11 +1,12 @@
 import { Art } from "@/components/art/Art";
 import type { Rules } from "@/lib/config";
+import { STEP_LINES, ruleLine } from "@/lib/copy";
 import styles from "./Steps.module.css";
 
 const STEPS = [
-  { art: "how-1", text: "영수증을 찍어 올려요" },
-  { art: "how-2", text: "옆집 두 곳 중 한 곳을 골라요" },
-  { art: "how-3", text: "직원에게 보여 주고 받아요" },
+  { art: "how-1", text: STEP_LINES[0] },
+  { art: "how-2", text: STEP_LINES[1] },
+  { art: "how-3", text: STEP_LINES[2] },
 ];
 
 /** 이용 방법: 그림 세 장을 가로로, 아래에 번호와 한 줄씩 */
@@ -29,7 +30,7 @@ export function Steps({ rules }: { rules: Rules }) {
           ))}
         </ol>
         <p className={styles.small}>
-          <span>계산하고 {rules.receiptValidHours}시간 안</span> · <span>하루 {rules.dailyLimitPerMember}장까지</span> · <span>쿠폰은 {rules.couponValidDays}일 동안</span>
+          {ruleLine(rules)}
         </p>
       </div>
     </section>

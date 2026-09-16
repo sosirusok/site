@@ -23,7 +23,7 @@ export function Stores() {
                   <Art name={`badge-${s.id}`} alt={s.shortName} width={130} />
                 </Link>
                 <p className={styles.line}>
-                  <span>{s.drink} · 서면역 {loc.exit}번 출구 {loc.walkMin}분</span>
+                  <span>{s.drink} · 걸어서 {loc.walkMin}분</span>
                   <span className={styles.sep}> · </span>
                   <span>{todayShort(openStatus(s))}</span>
                 </p>

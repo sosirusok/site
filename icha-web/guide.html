@@ -130,26 +130,20 @@ table { border-collapse: collapse; width: 100%; }
   .Header-module__Mg1eeW__sub { display: inline; }
   .Header-module__Mg1eeW__logo { width: 50px; }
 }
-.Footer-module__nctMiG__footer { border-top: 2px solid var(--outline); background: var(--panel-2); color: var(--fg-2); margin-top: 48px; padding: 40px 0px 28px; font-size: 15.5px; }
-.Footer-module__nctMiG__inner { gap: 32px; display: grid; }
-.Footer-module__nctMiG__logo { margin-bottom: 10px; }
-.Footer-module__nctMiG__brand { font-family: var(--font-display); color: var(--fg); font-size: 30px; line-height: 1; }
-.Footer-module__nctMiG__union { color: var(--fg); margin-top: 8px; font-weight: 700; }
-.Footer-module__nctMiG__rule { margin-top: 4px; }
-.Footer-module__nctMiG__links { color: var(--fg); flex-wrap: wrap; gap: 6px 18px; margin-top: 16px; font-weight: 700; display: flex; }
+.Footer-module__nctMiG__footer { border-top: 2px solid var(--outline); background: var(--panel-2); color: var(--fg-2); margin-top: 40px; padding: 28px 0px 24px; font-size: 15.5px; }
+.Footer-module__nctMiG__inner { gap: 14px; display: grid; }
+.Footer-module__nctMiG__brand { color: var(--fg); align-items: center; gap: 12px; display: flex; }
+.Footer-module__nctMiG__brand b { font-family: var(--font-display); font-size: 20px; font-weight: 400; }
+.Footer-module__nctMiG__stores { gap: 6px; display: grid; }
+.Footer-module__nctMiG__stores li { flex-wrap: wrap; align-items: baseline; gap: 4px 14px; display: flex; }
+.Footer-module__nctMiG__stores a { text-underline-offset: 3px; text-decoration: underline; }
+.Footer-module__nctMiG__storeName { color: var(--fg); font-weight: 700; text-decoration: none !important; }
+.Footer-module__nctMiG__links { color: var(--fg); gap: 16px; font-weight: 700; display: flex; }
 .Footer-module__nctMiG__links a { border-bottom: 2px solid var(--line); }
-.Footer-module__nctMiG__links a:hover { border-color: var(--fg); }
-.Footer-module__nctMiG__staff { color: var(--fg-3); }
-.Footer-module__nctMiG__stores { gap: 18px; display: grid; }
-.Footer-module__nctMiG__store { gap: 2px; display: grid; }
-.Footer-module__nctMiG__store img { margin-bottom: 4px; }
-.Footer-module__nctMiG__storeName { color: var(--fg); font-weight: 700; }
-.Footer-module__nctMiG__storeMeta { flex-wrap: wrap; gap: 4px 14px; display: flex; }
-.Footer-module__nctMiG__storeMeta a { text-underline-offset: 3px; color: var(--fg); font-weight: 700; text-decoration: underline; }
-.Footer-module__nctMiG__bottom { border-top: 1px solid var(--line); color: var(--fg-3); gap: 4px; margin-top: 28px; padding-top: 16px; font-size: 14.5px; display: grid; }
+.Footer-module__nctMiG__note { color: var(--fg-3); font-size: 15px; }
 @media (min-width: 760px) {
-  .Footer-module__nctMiG__inner { grid-template-columns: 1fr 1.5fr; gap: 56px; }
-  .Footer-module__nctMiG__stores { gap: 16px; }
+  .Footer-module__nctMiG__inner { grid-template-columns: auto 1fr auto; align-items: center; gap: 12px 40px; }
+  .Footer-module__nctMiG__note { grid-column: 1 / -1; }
 }
 .MemberCard-module__Ny7UsG__card { width: 100%; max-width: 440px; line-height: 1; position: relative; container-type: inline-size; }
 .MemberCard-module__Ny7UsG__card img { width: 100%; height: auto; display: block; }
@@ -170,122 +164,83 @@ table { border-collapse: collapse; width: 100%; }
 .ArtButton-module__XMfl7a__btn img { width: 100%; height: auto; }
 .ArtButton-module__XMfl7a__btn:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; }
 .ArtButton-module__XMfl7a__btn[aria-disabled="true"] { pointer-events: none; }
-.Counter-module__nAkF1W__hero { padding: 18px 0px 8px; }
-.Counter-module__nAkF1W__scene { height: clamp(190px, 34vw, 330px); margin-bottom: 8px; position: relative; }
+.Counter-module__nAkF1W__hero { padding: 18px 0px 6px; }
+.Counter-module__nAkF1W__scene { height: clamp(198px, 34vw, 290px); margin-bottom: 6px; position: relative; }
 .Counter-module__nAkF1W__scene img { width: 100%; height: auto; }
-.Counter-module__nAkF1W__artJoseon { width: 44%; max-width: 420px; position: absolute; bottom: 40px; left: 1%; }
-.Counter-module__nAkF1W__artTokyo { width: 38%; max-width: 360px; position: absolute; bottom: 44px; left: 38%; }
-.Counter-module__nAkF1W__artWareureu { width: 30%; max-width: 300px; position: absolute; bottom: 46px; right: 1%; }
+.Counter-module__nAkF1W__artJoseon { width: 44%; max-width: 360px; position: absolute; bottom: 40px; left: 1%; }
+.Counter-module__nAkF1W__artTokyo { width: 38%; max-width: 310px; position: absolute; bottom: 44px; left: 38%; }
+.Counter-module__nAkF1W__artWareureu { width: 30%; max-width: 250px; position: absolute; bottom: 46px; right: 1%; }
 .Counter-module__nAkF1W__counter { width: 104%; height: 60px; position: absolute; bottom: 0px; left: -2%; right: -2%; }
-.Counter-module__nAkF1W__intro { gap: 16px; padding-top: 18px; display: grid; }
-.Counter-module__nAkF1W__eyebrow { color: var(--fg-3); font-size: 15px; font-weight: 700; }
-.Counter-module__nAkF1W__para { color: var(--fg-2); max-width: 44em; font-size: 17px; line-height: 1.85; }
-.Counter-module__nAkF1W__note { color: var(--fg-2); max-width: 44em; font-size: 16px; line-height: 1.75; }
-.Counter-module__nAkF1W__badges { flex-wrap: wrap; gap: 8px 10px; margin-top: 2px; display: flex; }
-.Counter-module__nAkF1W__badges a { flex: 0 0 auto; }
-.Counter-module__nAkF1W__badges img { width: 148px; height: auto; transition: transform 0.15s; }
-.Counter-module__nAkF1W__badges a:hover img { transform: translateY(-2px); }
-.Counter-module__nAkF1W__actions { flex-wrap: wrap; align-items: center; gap: 12px 22px; margin-top: 4px; display: flex; }
-.Counter-module__nAkF1W__textLink { border-bottom: 2px solid var(--outline); padding-bottom: 2px; font-weight: 700; }
+.Counter-module__nAkF1W__intro { justify-items: start; gap: 14px; padding-top: 12px; display: grid; }
+.Counter-module__nAkF1W__para { color: var(--fg-2); max-width: 36em; font-size: 17px; line-height: 1.75; }
+.Counter-module__nAkF1W__note { color: var(--fg-3); font-size: 15px; }
 @media (min-width: 760px) {
-  .Counter-module__nAkF1W__hero { padding-top: 28px; }
-  .Counter-module__nAkF1W__intro { grid-template-columns: 1fr; max-width: 820px; }
-  .Counter-module__nAkF1W__badges img { width: 170px; }
+  .Counter-module__nAkF1W__hero { padding-top: 24px; }
+  .Counter-module__nAkF1W__intro { gap: 16px; padding-top: 16px; }
 }
-.Steps-module__RlIkeG__section { padding-top: 40px; }
-.Steps-module__RlIkeG__path { gap: 28px; display: grid; position: relative; }
-.Steps-module__RlIkeG__step { gap: 10px; display: grid; }
-.Steps-module__RlIkeG__art { width: min(60vw, 260px); }
-.Steps-module__RlIkeG__art img { width: 100%; height: auto; }
-.Steps-module__RlIkeG__text { gap: 6px; padding-left: 44px; display: grid; position: relative; }
-.Steps-module__RlIkeG__text p { color: var(--fg-2); font-size: 16.5px; line-height: 1.8; }
-.Steps-module__RlIkeG__no { background: var(--navy); color: rgb(255, 255, 255); width: 32px; height: 32px; font-family: var(--font-display); border-radius: 50%; place-items: center; font-size: 17px; display: grid; position: absolute; top: 2px; left: 0px; }
+.Steps-module__RlIkeG__section { padding: 32px 0px 24px; }
+.Steps-module__RlIkeG__row { justify-content: space-between; display: flex; }
+.Steps-module__RlIkeG__step { flex: 0 0 30%; align-content: start; justify-items: start; gap: 6px; display: grid; }
+.Steps-module__RlIkeG__artBox { aspect-ratio: 800 / 791; width: 100%; }
+.Steps-module__RlIkeG__art { object-fit: contain; object-position: center bottom; width: 100%; height: 100%; }
+.Steps-module__RlIkeG__no { background: var(--navy); color: rgb(255, 255, 255); width: 26px; height: 26px; font-family: var(--font-display); border-radius: 50%; place-items: center; font-size: 14px; display: grid; }
+.Steps-module__RlIkeG__text { color: var(--fg-2); font-size: 15.5px; line-height: 1.5; }
+.Steps-module__RlIkeG__small { color: var(--fg-3); margin-top: 16px; font-size: 15px; }
+.Steps-module__RlIkeG__small span { white-space: nowrap; }
 @media (min-width: 760px) {
-  .Steps-module__RlIkeG__path { grid-template-columns: repeat(3, 1fr); align-items: start; gap: 28px; }
-  .Steps-module__RlIkeG__path::before { content: ""; border-top: 3px dotted rgb(185, 177, 161); position: absolute; top: 118px; left: 12%; right: 12%; }
-  .Steps-module__RlIkeG__step { position: relative; }
-  .Steps-module__RlIkeG__step:nth-child(2) { margin-top: 48px; }
-  .Steps-module__RlIkeG__art { z-index: 1; background: var(--bg); width: 240px; margin: 0px auto; padding: 0px 10px; position: relative; }
-  .Steps-module__RlIkeG__text { padding-top: 6px; padding-left: 0px; }
-  .Steps-module__RlIkeG__no { margin-bottom: 4px; position: static; }
+  .Steps-module__RlIkeG__text { font-size: 16.5px; }
 }
-.Stores-module__tSlsLW__intro { color: var(--fg-2); margin-bottom: 22px; font-size: 17px; }
-.Stores-module__tSlsLW__grid { gap: 36px; display: grid; }
-.Stores-module__tSlsLW__item { gap: 14px; display: grid; }
-.Stores-module__tSlsLW__card { width: min(80vw, 300px); margin: 0px auto; position: relative; }
-.Stores-module__tSlsLW__card img { width: 100%; height: auto; }
-.Stores-module__tSlsLW__hit { border-radius: 12px; height: 9%; position: absolute; bottom: 5.5%; }
-.Stores-module__tSlsLW__hitMenu { width: 38%; left: 9%; }
-.Stores-module__tSlsLW__hitChoose { width: 38%; right: 9%; }
-.Stores-module__tSlsLW__hit:focus-visible { outline: 3px solid var(--navy); }
-.Stores-module__tSlsLW__info { gap: 4px; display: grid; }
-.Stores-module__tSlsLW__name { font-family: var(--font-display); margin-bottom: 4px; font-size: 19px; }
-.Stores-module__tSlsLW__line { color: var(--fg-2); font-size: 15.5px; }
-.Stores-module__tSlsLW__line b { min-width: 52px; color: var(--fg); display: inline-block; }
-.Stores-module__tSlsLW__photos { grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; display: grid; }
-.Stores-module__tSlsLW__photo { aspect-ratio: 1 / 1; object-fit: cover; border: 1.5px solid var(--outline); border-radius: 10px; width: 100%; height: auto; }
-.Stores-module__tSlsLW__links { flex-wrap: wrap; gap: 8px; margin-top: 10px; display: flex; }
-@media (min-width: 760px) {
-  .Stores-module__tSlsLW__grid { grid-template-columns: repeat(3, 1fr); align-items: start; gap: 28px; }
-  .Stores-module__tSlsLW__card { width: 100%; max-width: 300px; }
-}
-.StoreGallery-module__ogMdHa__root { gap: 14px; display: grid; }
-.StoreGallery-module__ogMdHa__note { color: var(--fg-2); max-width: 40em; font-size: 16.5px; line-height: 1.75; }
 .StoreGallery-module__ogMdHa__grid { grid-template-columns: repeat(2, 1fr); gap: 8px; display: grid; }
 .StoreGallery-module__ogMdHa__cell { aspect-ratio: 1 / 1; border-radius: var(--radius-sm); border: 1.5px solid var(--outline); background: var(--panel-2); position: relative; overflow: hidden; }
 .StoreGallery-module__ogMdHa__img { object-fit: cover; }
 @media (min-width: 760px) {
   .StoreGallery-module__ogMdHa__grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
 }
-.Gifts-module__CvS-Ha__section { background: var(--panel-2); border-top: 2px solid var(--outline); border-bottom: 2px solid var(--outline); }
-.Gifts-module__CvS-Ha__intro { color: var(--fg-2); max-width: 44em; margin-bottom: 24px; font-size: 17px; }
-.Gifts-module__CvS-Ha__list { gap: 32px; display: grid; }
-.Gifts-module__CvS-Ha__store { gap: 12px; display: grid; }
-.Gifts-module__CvS-Ha__ticket { width: min(88vw, 340px); display: block; }
-.Gifts-module__CvS-Ha__ticket img { width: 100%; height: auto; transition: transform 0.15s; }
-.Gifts-module__CvS-Ha__ticket:hover img { transform: rotate(-1.5deg); }
-.Gifts-module__CvS-Ha__menu { gap: 8px; display: grid; }
-.Gifts-module__CvS-Ha__row { flex-wrap: wrap; align-items: center; gap: 4px 10px; font-size: 16.5px; display: flex; }
-.Gifts-module__CvS-Ha__desc { color: var(--fg-2); flex-basis: 100%; font-size: 15.5px; }
-.Gifts-module__CvS-Ha__thumb { object-fit: cover; border: 1.5px solid var(--outline); border-radius: 8px; flex: 0 0 auto; width: 44px; height: 44px; }
-.Gifts-module__CvS-Ha__rowName { font-weight: 700; }
-.Gifts-module__CvS-Ha__dots { border-bottom: 2px dotted rgb(185, 177, 161); flex: 1 1 0%; min-width: 24px; transform: translateY(4px); }
-.Gifts-module__CvS-Ha__price { white-space: nowrap; }
-.Gifts-module__CvS-Ha__price s { color: var(--fg-3); margin-right: 6px; font-size: 15px; }
-.Gifts-module__CvS-Ha__price b { color: var(--red); font-family: var(--font-display); font-size: 18px; }
-.Gifts-module__CvS-Ha__empty { color: var(--fg-3); }
+.Stores-module__tSlsLW__section { padding: 24px 0px; }
+.Stores-module__tSlsLW__list { gap: 14px; display: grid; }
+.Stores-module__tSlsLW__item { align-items: center; gap: 12px; display: flex; }
+.Stores-module__tSlsLW__badge { flex: 0 0 auto; }
+.Stores-module__tSlsLW__badge img { transition: transform 0.15s; }
+.Stores-module__tSlsLW__badge:hover img { transform: translateY(-2px); }
+.Stores-module__tSlsLW__line { color: var(--fg-2); font-size: 15.5px; line-height: 1.6; }
+.Stores-module__tSlsLW__line span { white-space: nowrap; }
+.Stores-module__tSlsLW__sep { display: none; }
 @media (min-width: 760px) {
-  .Gifts-module__CvS-Ha__list { grid-template-columns: repeat(3, 1fr); align-items: start; gap: 28px; }
-  .Gifts-module__CvS-Ha__ticket { width: 100%; }
+  .Stores-module__tSlsLW__sep { display: inline; }
 }
-.StoreHero-module__7CqtnW__hero { gap: 8px; padding-top: 20px; display: grid; }
-.StoreHero-module__7CqtnW__badge { width: 170px; margin-bottom: 4px; }
+.StoreHero-module__7CqtnW__hero { gap: 5px; padding-top: 14px; display: grid; }
+.StoreHero-module__7CqtnW__badge { width: 140px; margin-bottom: 2px; }
 .StoreHero-module__7CqtnW__badge img { width: 100%; height: auto; }
-.StoreHero-module__7CqtnW__name { font-size: clamp(28px, 7.4vw, 40px); }
-.StoreHero-module__7CqtnW__headline { color: var(--fg-2); max-width: 40em; font-size: 17px; line-height: 1.75; }
-.StoreHero-module__7CqtnW__today { flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-top: 4px; font-size: 16.5px; font-weight: 700; display: flex; }
-.StoreHero-module__7CqtnW__lo { color: var(--fg-2); font-weight: 400; }
+.StoreHero-module__7CqtnW__name { font-size: clamp(26px, 7vw, 38px); }
+.StoreHero-module__7CqtnW__headline { color: var(--fg-2); font-size: 17px; line-height: 1.6; }
+.StoreHero-module__7CqtnW__today { flex-wrap: wrap; align-items: baseline; gap: 2px 6px; margin-top: 2px; font-size: 16.5px; font-weight: 700; display: flex; }
 .StoreHero-module__7CqtnW__open { color: var(--red); font-family: var(--font-display); font-weight: 700; }
 .StoreHero-module__7CqtnW__closed { color: var(--fg-2); font-family: var(--font-display); font-weight: 700; }
-.StoreHero-module__7CqtnW__facts { color: var(--fg-2); gap: 4px; font-size: 16px; display: grid; }
-.StoreHero-module__7CqtnW__facts li { align-items: baseline; gap: 12px; display: flex; }
-.StoreHero-module__7CqtnW__k { min-width: 52px; color: var(--fg); flex: 0 0 auto; font-weight: 700; }
+.StoreHero-module__7CqtnW__fact { color: var(--fg-2); align-items: baseline; gap: 10px; font-size: 16px; display: flex; }
+.StoreHero-module__7CqtnW__k { min-width: 36px; color: var(--fg); flex: 0 0 auto; font-weight: 700; }
 .StoreHero-module__7CqtnW__tel { border-bottom: 2px solid var(--outline); color: var(--fg); padding-bottom: 1px; }
-.StoreHero-module__7CqtnW__photo { aspect-ratio: 3 / 2; border-radius: var(--radius); border: 2px solid var(--outline); background: var(--panel-2); margin-top: 12px; position: relative; overflow: hidden; }
+.StoreHero-module__7CqtnW__photo { aspect-ratio: 2 / 1; border-radius: var(--radius); border: 2px solid var(--outline); background: var(--panel-2); margin-top: 8px; position: relative; overflow: hidden; }
 .StoreHero-module__7CqtnW__img { object-fit: cover; }
 @media (min-width: 760px) {
-  .StoreHero-module__7CqtnW__hero { gap: 12px; padding-top: 32px; }
-  .StoreHero-module__7CqtnW__photo { aspect-ratio: 16 / 9; margin-top: 20px; }
+  .StoreHero-module__7CqtnW__hero { gap: 10px; padding-top: 32px; }
+  .StoreHero-module__7CqtnW__photo { aspect-ratio: 16 / 9; margin-top: 16px; }
 }
-.StoreMenu-module__FiU2AG__root { gap: 22px; display: grid; }
+.Gifts-module__CvS-Ha__section { padding: 24px 0px; }
+.Gifts-module__CvS-Ha__row { scroll-snap-type: x mandatory; margin-inline: calc(-1 * var(--gutter)); padding: 4px var(--gutter) 6px; scroll-padding-inline: var(--gutter); scrollbar-width: none; gap: 14px; display: flex; overflow-x: auto; }
+.Gifts-module__CvS-Ha__row::-webkit-scrollbar { display: none; }
+.Gifts-module__CvS-Ha__item { scroll-snap-align: start; flex: 0 0 78%; gap: 4px; display: grid; }
+.Gifts-module__CvS-Ha__ticket { display: block; }
+.Gifts-module__CvS-Ha__ticket img { width: 100%; height: auto; transition: transform 0.15s; }
+.Gifts-module__CvS-Ha__ticket:hover img { transform: rotate(-1.5deg); }
+.Gifts-module__CvS-Ha__line { color: var(--fg-2); padding-left: 4px; font-size: 15.5px; }
+.Gifts-module__CvS-Ha__line b { color: var(--red); font-family: var(--font-display); }
+@media (min-width: 760px) {
+  .Gifts-module__CvS-Ha__row { margin-inline: 0px; padding-inline: 0px; }
+  .Gifts-module__CvS-Ha__item { flex-basis: calc(33.3333% - 9.33333px); }
+}
+.StoreMenu-module__FiU2AG__root { gap: 14px; display: grid; }
 .StoreMenu-module__FiU2AG__empty { color: var(--fg-2); font-size: 16.5px; }
 .StoreMenu-module__FiU2AG__link { border-bottom: 2px solid var(--outline); font-weight: 700; }
-.StoreMenu-module__FiU2AG__thumbs { grid-template-columns: repeat(3, 1fr); gap: 10px 8px; display: grid; }
-.StoreMenu-module__FiU2AG__thumb { gap: 4px; display: grid; }
-.StoreMenu-module__FiU2AG__thumbBox { aspect-ratio: 1 / 1; border-radius: var(--radius-sm); border: 1.5px solid var(--outline); background: var(--panel-2); position: relative; overflow: hidden; }
-.StoreMenu-module__FiU2AG__photo { object-fit: cover; width: 100%; height: 100%; position: absolute; inset: 0px; }
-.StoreMenu-module__FiU2AG__thumbName { font-size: 15px; font-weight: 700; line-height: 1.4; }
-.StoreMenu-module__FiU2AG__thumbPrice { color: var(--fg-2); font-variant-numeric: tabular-nums; font-size: 15px; }
 .StoreMenu-module__FiU2AG__list { gap: 9px; display: grid; }
 .StoreMenu-module__FiU2AG__row { align-items: baseline; gap: 8px; font-size: 16.5px; line-height: 1.6; display: flex; }
 .StoreMenu-module__FiU2AG__rowName { min-width: 0px; font-weight: 500; }
@@ -293,25 +248,21 @@ table { border-collapse: collapse; width: 100%; }
 .StoreMenu-module__FiU2AG__dots { border-bottom: 2px dotted rgb(185, 177, 161); flex: 1 1 0%; min-width: 20px; transform: translateY(-5px); }
 .StoreMenu-module__FiU2AG__price { white-space: nowrap; font-variant-numeric: tabular-nums; flex: 0 0 auto; align-items: baseline; gap: 6px; display: inline-flex; }
 .StoreMenu-module__FiU2AG__price s, .StoreMenu-module__FiU2AG__ask { color: var(--fg-3); font-size: 15px; }
-.StoreMenu-module__FiU2AG__more { gap: 10px; display: grid; }
+.StoreMenu-module__FiU2AG__more { gap: 12px; display: grid; }
 .StoreMenu-module__FiU2AG__moreBtn { border: 2px solid var(--outline); background: var(--panel); cursor: pointer; user-select: none; border-radius: 12px; justify-content: center; align-items: center; min-height: 48px; padding: 0px 20px; font-size: 16px; font-weight: 700; list-style: none; display: inline-flex; }
 .StoreMenu-module__FiU2AG__moreBtn::-webkit-details-marker { display: none; }
 .StoreMenu-module__FiU2AG__moreBtn::after { content: " ↓"; font-weight: 400; }
 .StoreMenu-module__FiU2AG__more[open] .StoreMenu-module__FiU2AG__moreBtn::after { content: " ↑"; }
-.StoreMenu-module__FiU2AG__note { color: var(--fg-2); max-width: 44em; font-size: 16px; line-height: 1.8; }
-.StoreMenu-module__FiU2AG__note .tag { vertical-align: 1px; }
 @media (min-width: 760px) {
-  .StoreMenu-module__FiU2AG__thumbs { gap: 12px; }
-  .StoreMenu-module__FiU2AG__list { grid-template-columns: 1fr 1fr; column-gap: 36px; }
-  .StoreMenu-module__FiU2AG__more .StoreMenu-module__FiU2AG__list { grid-template-columns: 1fr 1fr; }
+  .StoreMenu-module__FiU2AG__more .StoreMenu-module__FiU2AG__list { grid-template-columns: 1fr 1fr; column-gap: 36px; }
 }
-.StoreReviews-module__OyRYBq__root { gap: 4px; display: grid; }
-.StoreReviews-module__OyRYBq__rating { border-bottom: 2px solid var(--outline); flex-wrap: wrap; align-items: baseline; gap: 4px 10px; padding-bottom: 12px; font-size: 16.5px; font-weight: 700; display: flex; }
-.StoreReviews-module__OyRYBq__score { font-family: var(--font-display); color: var(--fg); font-size: 26px; }
-.StoreReviews-module__OyRYBq__count { color: var(--fg-2); font-size: 16px; font-weight: 400; }
+.StoreReviews-module__OyRYBq__root { display: grid; }
+.StoreReviews-module__OyRYBq__rating { border-bottom: 2px solid var(--outline); flex-wrap: wrap; align-items: baseline; gap: 4px 8px; padding-bottom: 10px; font-size: 16.5px; font-weight: 700; display: flex; }
+.StoreReviews-module__OyRYBq__score { font-family: var(--font-display); color: var(--fg); font-size: 24px; }
+.StoreReviews-module__OyRYBq__count { color: var(--fg-2); font-weight: 400; }
 .StoreReviews-module__OyRYBq__list { display: grid; }
-.StoreReviews-module__OyRYBq__item { border-bottom: 1px solid var(--line); gap: 6px; padding: 16px 0px; display: grid; }
-.StoreReviews-module__OyRYBq__text { color: var(--fg); font-size: 16.5px; line-height: 1.8; }
+.StoreReviews-module__OyRYBq__item { border-bottom: 1px solid var(--line); gap: 4px; padding: 12px 0px; display: grid; }
+.StoreReviews-module__OyRYBq__text { color: var(--fg); font-size: 16.5px; line-height: 1.7; }
 .StoreReviews-module__OyRYBq__meta { color: var(--fg-3); font-size: 15px; }
 .Fx-module__W8XaYW__box { vertical-align: middle; display: inline-block; position: relative; }
 .Fx-module__W8XaYW__img { object-fit: contain; width: 100%; height: 100%; position: absolute; inset: 0px; }
@@ -567,26 +518,24 @@ table { border-collapse: collapse; width: 100%; }
 .GuideFaq-module__BoU04G__list { border-top: 2px solid var(--outline); display: grid; }
 .GuideFaq-module__BoU04G__item { border-bottom: 1px solid var(--line); }
 .GuideFaq-module__BoU04G__details { display: block; }
-.GuideFaq-module__BoU04G__summary { cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; align-items: center; gap: 12px; min-height: 60px; padding: 12px 0px; list-style: none; display: flex; }
+.GuideFaq-module__BoU04G__summary { cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; align-items: center; gap: 12px; min-height: 54px; padding: 10px 0px; list-style: none; display: flex; }
 .GuideFaq-module__BoU04G__summary::-webkit-details-marker { display: none; }
 .GuideFaq-module__BoU04G__icon { flex: 0 0 auto; place-items: center; width: 34px; height: 34px; display: grid; }
 .GuideFaq-module__BoU04G__icon img { object-fit: contain; width: 30px; height: 30px; }
-.GuideFaq-module__BoU04G__q { font-family: var(--font-display); flex: 1 1 0%; font-size: 17.5px; font-weight: 700; line-height: 1.45; }
+.GuideFaq-module__BoU04G__q { font-family: var(--font-display); flex: 1 1 0%; font-size: 17px; font-weight: 700; line-height: 1.45; }
 .GuideFaq-module__BoU04G__plus { flex: 0 0 auto; width: 22px; height: 22px; position: relative; }
 .GuideFaq-module__BoU04G__plus::before, .GuideFaq-module__BoU04G__plus::after { content: ""; background: var(--fg); border-radius: 2px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 .GuideFaq-module__BoU04G__plus::before { width: 16px; height: 3px; }
 .GuideFaq-module__BoU04G__plus::after { width: 3px; height: 16px; }
 .GuideFaq-module__BoU04G__details[open] .GuideFaq-module__BoU04G__plus::after { display: none; }
-.GuideFaq-module__BoU04G__a { color: var(--fg-2); gap: 12px; padding: 2px 0px 22px 46px; font-size: 16.5px; line-height: 1.8; display: grid; }
+.GuideFaq-module__BoU04G__a { color: var(--fg-2); gap: 10px; padding: 0px 0px 16px 46px; font-size: 16.5px; line-height: 1.75; display: grid; }
 .GuideFaq-module__BoU04G__a p { max-width: 40em; }
 .GuideFaq-module__BoU04G__a a { color: var(--fg); border-bottom: 2px solid var(--outline); font-weight: 700; }
-.GuideFaq-module__BoU04G__a ul { gap: 6px; padding-left: 20px; list-style: outside; display: grid; }
-.GuideFaq-module__BoU04G__a table { max-width: 420px; }
 @media (max-width: 480px) {
   .GuideFaq-module__BoU04G__a { padding-left: 0px; }
 }
 @media (min-width: 760px) {
-  .GuideFaq-module__BoU04G__q { font-size: 18.5px; }
+  .GuideFaq-module__BoU04G__q { font-size: 18px; }
 }
 .coupon-module__ZDwNiq__page { gap: 14px; padding: 16px 0px 48px; display: grid; }
 .coupon-module__ZDwNiq__back { font-size: 16px; font-weight: 700; }
@@ -594,39 +543,33 @@ table { border-collapse: collapse; width: 100%; }
 @media (min-width: 760px) {
   .coupon-module__ZDwNiq__page { padding: 40px 0px 96px; }
 }
-.page-module__X2DzeG__page { max-width: 800px; padding: 20px 0px clamp(40px, 6vw, 72px); }
-.page-module__X2DzeG__section { padding-top: clamp(44px, 7vw, 64px); }
-.page-module__X2DzeG__h { margin-bottom: 18px; }
-.page-module__X2DzeG__hero { gap: 14px; display: grid; }
-.page-module__X2DzeG__heroArt { width: min(60vw, 420px); margin-left: -4px; }
+.page-module__X2DzeG__page { max-width: 800px; padding: 16px 0px 24px; }
+.page-module__X2DzeG__section { padding-top: 30px; }
+.page-module__X2DzeG__h { margin-bottom: 12px; }
+.page-module__X2DzeG__hero { gap: 10px; display: grid; }
+.page-module__X2DzeG__heroArt { width: 50%; max-width: 340px; margin-left: -4px; }
 .page-module__X2DzeG__heroArt img { width: 100%; height: auto; }
-.page-module__X2DzeG__heroText { gap: 14px; display: grid; }
-.page-module__X2DzeG__heroText p { color: var(--fg-2); max-width: 40em; font-size: 17px; line-height: 1.85; }
-.page-module__X2DzeG__heroAction { margin-top: 4px; }
-.page-module__X2DzeG__rules { color: var(--fg-2); border-top: 2px dotted rgb(185, 177, 161); max-width: 40em; margin-top: 22px; padding-top: 18px; font-size: 17px; line-height: 1.85; }
-.page-module__X2DzeG__steps { gap: 22px; display: grid; }
-.page-module__X2DzeG__step { grid-template-columns: 96px 1fr; align-items: start; gap: 14px; display: grid; }
-.page-module__X2DzeG__stepArt { width: 96px; }
-.page-module__X2DzeG__stepArt img { width: 100%; height: auto; }
-.page-module__X2DzeG__stepText { gap: 6px; display: grid; }
-.page-module__X2DzeG__stepText p { color: var(--fg-2); font-size: 16.5px; line-height: 1.8; }
-.page-module__X2DzeG__no { background: var(--navy); color: rgb(255, 255, 255); width: 30px; height: 30px; font-family: var(--font-display); border-radius: 50%; place-items: center; font-size: 16px; display: grid; }
-.page-module__X2DzeG__fails { grid-template-columns: repeat(3, 1fr); gap: 10px; display: grid; padding: 0px !important; list-style: none !important; }
-.page-module__X2DzeG__fails li { text-align: center; color: var(--fg); justify-items: center; gap: 4px; font-size: 15px; font-weight: 700; line-height: 1.4; display: grid; }
-.page-module__X2DzeG__fails img { width: 72px; height: auto; }
-.page-module__X2DzeG__tiers th { width: 92px; font-family: var(--font-display); color: var(--fg); font-weight: 700; }
-.page-module__X2DzeG__cta { background: var(--panel-2); border: 2px solid var(--outline); border-radius: var(--radius); justify-items: start; gap: 14px; margin-top: clamp(40px, 7vw, 64px); padding: 22px 18px 24px; display: grid; }
-.page-module__X2DzeG__cta p { color: var(--fg-2); font-size: 16.5px; line-height: 1.8; }
+.page-module__X2DzeG__heroText { justify-items: start; gap: 10px; display: grid; }
+.page-module__X2DzeG__heroText p { color: var(--fg-2); max-width: 40em; font-size: 17px; line-height: 1.75; }
+.page-module__X2DzeG__nowrap { white-space: nowrap; }
+.page-module__X2DzeG__rules { border-top: 2px dotted rgb(185, 177, 161); margin-top: 18px; padding-top: 14px; font-size: 16.5px; font-weight: 700; line-height: 1.7; }
+.page-module__X2DzeG__steps { gap: 10px; display: grid; }
+.page-module__X2DzeG__step { align-items: center; gap: 12px; font-size: 16.5px; font-weight: 500; display: flex; }
+.page-module__X2DzeG__stepArt { flex: 0 0 auto; width: 56px; position: relative; }
+.page-module__X2DzeG__stepArt img { width: 56px; height: auto; }
+.page-module__X2DzeG__no { background: var(--navy); color: rgb(255, 255, 255); width: 22px; height: 22px; font-family: var(--font-display); border-radius: 50%; place-items: center; font-size: 13px; display: grid; position: absolute; bottom: -2px; left: -4px; }
+.page-module__X2DzeG__fails { grid-template-columns: repeat(3, 1fr); gap: 8px; display: grid; padding: 0px !important; list-style: none !important; }
+.page-module__X2DzeG__fails li { text-align: center; color: var(--fg); justify-items: center; gap: 2px; font-size: 15px; font-weight: 700; line-height: 1.4; display: grid; }
+.page-module__X2DzeG__fails img { width: 56px; height: auto; }
+.page-module__X2DzeG__cta { border-top: 2px solid var(--outline); justify-items: start; margin-top: 30px; padding-top: 22px; display: grid; }
 @media (min-width: 760px) {
   .page-module__X2DzeG__page { padding-top: 36px; }
-  .page-module__X2DzeG__hero { grid-template-columns: 1fr 380px; align-items: center; gap: 32px; }
-  .page-module__X2DzeG__heroArt { order: 2; width: 380px; margin: 0px; }
+  .page-module__X2DzeG__section { padding-top: 40px; }
+  .page-module__X2DzeG__hero { grid-template-columns: 1fr 340px; align-items: center; gap: 32px; }
+  .page-module__X2DzeG__heroArt { order: 2; width: 340px; margin: 0px; }
   .page-module__X2DzeG__heroText { order: 1; }
-  .page-module__X2DzeG__step { grid-template-columns: 150px 1fr; gap: 24px; }
-  .page-module__X2DzeG__stepArt { width: 150px; }
-  .page-module__X2DzeG__step:nth-child(2) { grid-template-columns: 1fr 150px; }
-  .page-module__X2DzeG__step:nth-child(2) .page-module__X2DzeG__stepArt { order: 2; }
-  .page-module__X2DzeG__cta { grid-template-columns: 1fr auto; align-items: center; padding: 26px 28px; }
+  .page-module__X2DzeG__steps { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .page-module__X2DzeG__cta { justify-items: center; }
 }
 .login-module__oBo3cG__page { grid-template-areas: "art" "text" "form" "note"; gap: 18px; padding: 20px 0px 48px; display: grid; }
 .login-module__oBo3cG__art { grid-area: art; width: min(55%, 240px); }
@@ -698,5 +641,5 @@ table { border-collapse: collapse; width: 100%; }
 }
 </style>
 </head>
-<body><div hidden=""><!--$--><!--/$--></div><header class="Header-module__Mg1eeW__header"><div class="wrap Header-module__Mg1eeW__inner"><a class="Header-module__Mg1eeW__brand" aria-label="이차 홈" href="index.html"><img alt="" draggable="false" width="600" height="494" decoding="async" data-nimg="1" class="Header-module__Mg1eeW__logo" style="color:transparent"  src="assets/art/logo.webp"><span class="Header-module__Mg1eeW__mark">이차</span><span class="Header-module__Mg1eeW__sub">서면 2차 연합</span></a><nav class="Header-module__Mg1eeW__nav" aria-label="주요 메뉴"><a href="index.html">홈</a><a href="index.html#stores">참여 매장</a><a href="index.html#gifts">무료 한 잔</a><a href="index.html#map">오시는 길</a><a href="app.html">영수증 인증</a><a href="app.html">쿠폰함</a><a href="guide.html">이용 안내</a></nav><div class="Header-module__Mg1eeW__side"><a class="Header-module__Mg1eeW__cta" href="app.html">영수증 인증</a></div></div></header><nav class="TabBar-module__L0NbKq__bar" aria-label="하단 메뉴"><a class="TabBar-module__L0NbKq__item " href="index.html"><span class="TabBar-module__L0NbKq__icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M4 13.5 14 5l10 8.5"></path><path d="M6.5 12v11h5.5v-6.5h4V23h5.5V12"></path></svg></span><span class="TabBar-module__L0NbKq__label">홈</span></a><a class="TabBar-module__L0NbKq__item " href="app.html"><span class="TabBar-module__L0NbKq__icon" aria-hidden="true"><img alt="" loading="eager" width="256" height="265" decoding="async" data-nimg="1" style="color:transparent;width:28px;height:28px;object-fit:contain"  src="assets/art/icon-receipt.webp"></span><span class="TabBar-module__L0NbKq__label">영수증 인증</span></a><a class="TabBar-module__L0NbKq__item " href="app.html"><span class="TabBar-module__L0NbKq__icon" aria-hidden="true"><img alt="" loading="eager" width="256" height="160" decoding="async" data-nimg="1" style="color:transparent;width:28px;height:28px;object-fit:contain"  src="assets/art/icon-coupon.webp"></span><span class="TabBar-module__L0NbKq__label">쿠폰함</span></a><a class="TabBar-module__L0NbKq__item " href="login.html"><span class="TabBar-module__L0NbKq__icon" aria-hidden="true"><img alt="" loading="eager" width="256" height="154" decoding="async" data-nimg="1" style="color:transparent;width:28px;height:28px;object-fit:contain"  src="assets/art/icon-vip.webp"></span><span class="TabBar-module__L0NbKq__label">내 혜택</span></a></nav><main id="main"><div class="wrap page-module__X2DzeG__page"><header class="page-module__X2DzeG__hero"><div class="page-module__X2DzeG__heroArt"><img alt="" draggable="false" width="1148" height="1022" decoding="async" data-nimg="1" class="" style="color:transparent"  src="assets/art/hero-graphic.webp"></div><div class="page-module__X2DzeG__heroText"><h1 class="display">이렇게 이용해요</h1><p>세 집 중 어디서든 계산하고 받은 영수증을 사진으로 올리면, 나머지 두 집 가운데 한 곳에서 그 집 술 한 잔을 무료로 드려요.<!-- --> <!-- -->조선칼국수는 조선막걸리 1통, 도쿄스탠드는 산토리 크리미 생맥주, 와르르맨숀은 소주 1병<!-- -->이에요<!-- -->.</p><div class="page-module__X2DzeG__heroAction"><a class="ArtButton-module__XMfl7a__btn " aria-label="시작하기" aria-disabled="false" style="width:280px" href="app.html"><img alt="" draggable="false" loading="eager" width="640" height="124" decoding="async" data-nimg="1" style="color:transparent;width:280px;height:auto"  src="assets/art/btn-start-default.webp"></a></div></div></header><p class="page-module__X2DzeG__rules">영수증은 결제하고 <!-- -->24<!-- -->시간 안에 올려 주세요.<!-- --> 10,000원 이상 계산한 영수증이면 되고,<!-- --> 한 사람이 하루에 <!-- -->3<!-- -->장까지 받아요. 받은 쿠폰은 그날부터 <!-- -->30<!-- -->일 동안 쓸 수 있어요. 영수증을 받은 집에서는 쿠폰이 나오지 않으니까 옆집 두 곳 것만 골라요.</p><section class="page-module__X2DzeG__section" aria-labelledby="steps-title"><h2 id="steps-title" class="h2 page-module__X2DzeG__h">순서는 셋뿐이에요</h2><ol class="page-module__X2DzeG__steps"><li class="page-module__X2DzeG__step rise rise-d1 in" data-observed="1"><div class="page-module__X2DzeG__stepArt"><img alt="" draggable="false" loading="eager" width="800" height="700" decoding="async" data-nimg="1" class="" style="color:transparent"  src="assets/art/how-1.webp"></div><div class="page-module__X2DzeG__stepText"><span class="page-module__X2DzeG__no">1</span><h3 class="h3">계산하고 영수증을 찍어 올려요</h3><p>세 집 중 어디서든 좋아요. 영수증을 평평하게 놓고 위에서 아래까지 다 나오게 찍으면 자동으로 확인돼요. 흐리면 직원이 사진을 보고 확인해 줘요.</p></div></li><li class="page-module__X2DzeG__step rise rise-d2 in" data-observed="1"><div class="page-module__X2DzeG__stepArt"><img alt="" draggable="false" loading="eager" width="800" height="791" decoding="async" data-nimg="1" class="" style="color:transparent"  src="assets/art/how-2.webp"></div><div class="page-module__X2DzeG__stepText"><span class="page-module__X2DzeG__no">2</span><h3 class="h3">옆집 두 곳 중 한 곳을 골라요</h3><p>영수증을 받은 집을 뺀 두 집의 쿠폰이 보여요. 마시고 싶은 쪽을 고르면 쿠폰이 전화번호 쿠폰함에 들어가요.</p></div></li><li class="page-module__X2DzeG__step rise rise-d3 in" data-observed="1"><div class="page-module__X2DzeG__stepArt"><img alt="" draggable="false" loading="eager" width="800" height="670" decoding="async" data-nimg="1" class="" style="color:transparent"  src="assets/art/how-3.webp"></div><div class="page-module__X2DzeG__stepText"><span class="page-module__X2DzeG__no">3</span><h3 class="h3">그 집에서 직원에게 보여 주고 받아요</h3><p>주문할 때 쿠폰 화면을 보여 주세요. 직원이 확인하면 '사용하기'를 눌러 주면 끝이에요.</p></div></li></ol></section><section class="page-module__X2DzeG__section" aria-labelledby="faq-title"><h2 id="faq-title" class="h2 page-module__X2DzeG__h">궁금해하시는 것들</h2><ol class="GuideFaq-module__BoU04G__list"><li class="GuideFaq-module__BoU04G__item"><details class="GuideFaq-module__BoU04G__details" id="which-receipt" open=""><summary class="GuideFaq-module__BoU04G__summary"><span class="GuideFaq-module__BoU04G__icon" aria-hidden="true"><img alt="" draggable="false" loading="eager" width="256" height="265" decoding="async" data-nimg="1" class="" style="color:transparent;width:30px;height:auto"  src="assets/art/icon-receipt.webp"></span><span class="GuideFaq-module__BoU04G__q">어떤 영수증이 되나요?</span><span class="GuideFaq-module__BoU04G__plus" aria-hidden="true"></span></summary><div class="GuideFaq-module__BoU04G__a"><p>조선칼국수나 도쿄스탠드나 와르르맨숀<!-- -->에서 계산한 영수증이에요. 카드 매출전표든 현금영수증이든 괜찮아요. 결제하고 <!-- -->24<!-- -->시간 안에 올려 주세요.</p><ul><li>10,000원<!-- --> 이상 계산한 영수증</li><li>한 사람이 하루에 <!-- -->3<!-- -->장까지</li><li>영수증 한 장에 쿠폰 한 장</li></ul></div></details></li><li class="GuideFaq-module__BoU04G__item"><details class="GuideFaq-module__BoU04G__details" id="not-accepted"><summary class="GuideFaq-module__BoU04G__summary"><span class="GuideFaq-module__BoU04G__icon" aria-hidden="true"><img alt="" draggable="false" loading="eager" width="256" height="259" decoding="async" data-nimg="1" class="" style="color:transparent;width:30px;height:auto"  src="assets/art/icon-error.webp"></span><span class="GuideFaq-module__BoU04G__q">안 되는 경우도 있나요?</span><span class="GuideFaq-module__BoU04G__plus" aria-hidden="true"></span></summary><div class="GuideFaq-module__BoU04G__a"><ul class="page-module__X2DzeG__fails"><li><img alt="" draggable="false" loading="eager" width="480" height="506" decoding="async" data-nimg="1" class="" style="color:transparent;width:72px;height:auto"  src="assets/art/status-photo-fail.webp"><span>흐리거나 잘린 사진</span></li><li><img alt="" draggable="false" loading="eager" width="480" height="522" decoding="async" data-nimg="1" class="" style="color:transparent;width:72px;height:auto"  src="assets/art/status-wrong-store.webp"><span>세 집이 아닌 곳의 영수증</span></li><li><img alt="" draggable="false" loading="eager" width="480" height="574" decoding="async" data-nimg="1" class="" style="color:transparent;width:72px;height:auto"  src="assets/art/status-used.webp"><span>이미 올린 영수증</span></li></ul><p>주문서(빌지), 재출력본, 다른 화면을 다시 찍은 사진, 예약 확인 화면은 안 돼요. 결제하고 <!-- -->24<!-- -->시간이 지난 영수증도요.</p><p>글자가 흐리거나 잘려서 자동으로 못 읽으면 반려가 아니라 '직원 확인 대기'로 넘어가요. 매장에서 사진을 보고 승인해 줘요.</p></div></details></li><li class="GuideFaq-module__BoU04G__item"><details class="GuideFaq-module__BoU04G__details" id="review"><summary class="GuideFaq-module__BoU04G__summary"><span class="GuideFaq-module__BoU04G__icon" aria-hidden="true"><img alt="" draggable="false" loading="eager" width="480" height="477" decoding="async" data-nimg="1" class="" style="color:transparent;width:30px;height:auto"  src="assets/art/status-checking.webp"></span><span class="GuideFaq-module__BoU04G__q">'직원 확인 대기'는 뭐예요?</span><span class="GuideFaq-module__BoU04G__plus" aria-hidden="true"></span></summary><div class="GuideFaq-module__BoU04G__a"><p>자동으로 읽기 어려운 영수증은 직원이 직접 봐요. 보통 영업 중에 몇 분 안에 처리되고, 새벽에는 조금 늦어질 수 있어요. 결과는 <a href="app.html">쿠폰함</a>에서 볼 수 있고, 승인되면 그 자리에서 바로 고를 수 있어요.</p></div></details></li><li class="GuideFaq-module__BoU04G__item"><details class="GuideFaq-module__BoU04G__details" id="coupon-valid"><summary class="GuideFaq-module__BoU04G__summary"><span class="GuideFaq-module__BoU04G__icon" aria-hidden="true"><img alt="" draggable="false" loading="eager" width="256" height="160" decoding="async" data-nimg="1" class="" style="color:transparent;width:30px;height:auto"  src="assets/art/icon-coupon.webp"></span><span class="GuideFaq-module__BoU04G__q">쿠폰은 언제까지 쓸 수 있어요?</span><span class="GuideFaq-module__BoU04G__plus" aria-hidden="true"></span></summary><div class="GuideFaq-module__BoU04G__a"><p>받은 날부터 <!-- -->30<!-- -->일이에요. 만료일은 쿠폰마다 적혀 있어요. 한 번 쓰면 끝이고, 지난 쿠폰은 쿠폰함 아래쪽에 기록만 남아요.</p></div></details></li><li class="GuideFaq-module__BoU04G__item"><details class="GuideFaq-module__BoU04G__details" id="how-to-use"><summary class="GuideFaq-module__BoU04G__summary"><span class="GuideFaq-module__BoU04G__icon" aria-hidden="true"><img alt="" draggable="false" loading="eager" width="256" height="255" decoding="async" data-nimg="1" class="" style="color:transparent;width:30px;height:auto"  src="assets/art/icon-ok.webp"></span><span class="GuideFaq-module__BoU04G__q">직원에게 어떻게 보여 주나요?</span><span class="GuideFaq-module__BoU04G__plus" aria-hidden="true"></span></summary><div class="GuideFaq-module__BoU04G__a"><p>주문할 때 쿠폰 화면을 열어서 보여 주세요. 직원이 확인하면 '사용하기'를 길게 눌러요. 화면이 '사용 완료'로 바뀌고 시계가 초 단위로 흐르면 끝이에요.</p><p>미리 눌러 두면 못 쓰니까 꼭 직원 앞에서 눌러 주세요. 직원은 쿠폰의 여섯 자리 코드로도 확인할 수 있어요.</p></div></details></li><li class="GuideFaq-module__BoU04G__item"><details class="GuideFaq-module__BoU04G__details" id="phone-login"><summary class="GuideFaq-module__BoU04G__summary"><span class="GuideFaq-module__BoU04G__icon" aria-hidden="true"><img alt="" draggable="false" loading="eager" width="256" height="288" decoding="async" data-nimg="1" class="" style="color:transparent;width:30px;height:auto"  src="assets/art/icon-phone.webp"></span><span class="GuideFaq-module__BoU04G__q">왜 전화번호만 받나요?</span><span class="GuideFaq-module__BoU04G__plus" aria-hidden="true"></span></summary><div class="GuideFaq-module__BoU04G__a"><p>테이블에서 인증 문자를 기다리지 않게, 번호만 넣으면 바로 시작되게 했어요. 쿠폰은 그 번호에 보관되니까 번호를 잘못 넣으면 나중에 찾기 어려워요. 넣고 나서 한 번 더 봐 주세요.</p><p>다른 휴대폰에서 같은 번호로 들어와도 같은 쿠폰함이 보여요.</p></div></details></li><li class="GuideFaq-module__BoU04G__item"><details class="GuideFaq-module__BoU04G__details" id="photos"><summary class="GuideFaq-module__BoU04G__summary"><span class="GuideFaq-module__BoU04G__icon" aria-hidden="true"><img alt="" draggable="false" loading="eager" width="256" height="253" decoding="async" data-nimg="1" class="" style="color:transparent;width:30px;height:auto"  src="assets/art/icon-history.webp"></span><span class="GuideFaq-module__BoU04G__q">영수증 사진은 어떻게 보관되나요?</span><span class="GuideFaq-module__BoU04G__plus" aria-hidden="true"></span></summary><div class="GuideFaq-module__BoU04G__a"><p>같은 영수증을 두 번 쓰는지 확인하는 데만 써요. 반려된 사진은 7일, 나머지는 90일 뒤에 지워지고, 매장 관리자 말고는 아무도 볼 수 없어요.</p><p>받는 건 전화번호, 영수증 사진, 인증과 쿠폰 기록뿐이고 밖으로 내보내지 않아요. 지우고 싶으면 세 집 어디에든 말씀해 주세요. 번호 기준으로 지워 드려요.</p></div></details></li><li class="GuideFaq-module__BoU04G__item"><details class="GuideFaq-module__BoU04G__details" id="tiers"><summary class="GuideFaq-module__BoU04G__summary"><span class="GuideFaq-module__BoU04G__icon" aria-hidden="true"><img alt="" draggable="false" loading="eager" width="256" height="154" decoding="async" data-nimg="1" class="" style="color:transparent;width:30px;height:auto"  src="assets/art/icon-vip.webp"></span><span class="GuideFaq-module__BoU04G__q">자주 오면 뭐가 달라지나요?</span><span class="GuideFaq-module__BoU04G__plus" aria-hidden="true"></span></summary><div class="GuideFaq-module__BoU04G__a"><p>인증한 영수증의 결제 금액이 번호에 쌓여요. 세 집 어디서 쓰든 합산되고, 기준을 넘으면 등급이 올라가요.</p><table class="table page-module__X2DzeG__tiers"><tbody><tr><th scope="row">단골</th><td>누적 <!-- -->100,000원<!-- -->부터</td></tr><tr><th scope="row">VIP</th><td>누적 <!-- -->300,000원<!-- -->부터</td></tr><tr><th scope="row">VVIP</th><td>누적 <!-- -->700,000원<!-- -->부터</td></tr></tbody></table><p>등급이 오르면 사장님들이 정한 때에 쿠폰이 따로 들어가요. 신청할 건 없어요. 내 누적 금액은 <a href="app.html">쿠폰함</a> 위쪽에 있어요.</p></div></details></li><li class="GuideFaq-module__BoU04G__item"><details class="GuideFaq-module__BoU04G__details" id="event-period"><summary class="GuideFaq-module__BoU04G__summary"><span class="GuideFaq-module__BoU04G__icon" aria-hidden="true"><img alt="" draggable="false" loading="eager" width="256" height="218" decoding="async" data-nimg="1" class="" style="color:transparent;width:30px;height:auto"  src="assets/art/icon-store.webp"></span><span class="GuideFaq-module__BoU04G__q">이벤트가 끝나면요?</span><span class="GuideFaq-module__BoU04G__plus" aria-hidden="true"></span></summary><div class="GuideFaq-module__BoU04G__a"><p>지금은 진행 중이에요. 끝나는 날이 정해지면 홈 위쪽에 알려 드릴게요. 이미 받은 쿠폰은 이벤트가 끝나도 만료일까지 쓸 수 있어요.</p></div></details></li></ol></section><div class="page-module__X2DzeG__cta"><p>영수증이 손에 있으면 지금 바로 해도 돼요. 전화번호만 있으면 돼요.</p><a class="ArtButton-module__XMfl7a__btn " aria-label="시작하기" aria-disabled="false" style="width:300px" href="app.html"><img alt="" draggable="false" loading="eager" width="640" height="124" decoding="async" data-nimg="1" style="color:transparent;width:300px;height:auto"  src="assets/art/btn-start-default.webp"></a></div></div><!--$--><!--/$--></main><footer class="Footer-module__nctMiG__footer"><div class="wrap Footer-module__nctMiG__inner"><div><img alt="" draggable="false" loading="eager" width="600" height="494" decoding="async" data-nimg="1" class="Footer-module__nctMiG__logo" style="color:transparent;width:92px;height:auto"  src="assets/art/logo.webp"><p class="Footer-module__nctMiG__brand">이차</p><p class="Footer-module__nctMiG__union">서면 2차 연합</p><p class="Footer-module__nctMiG__rule">세 매장 중 한 곳의 영수증으로 나머지 두 곳에서 막걸리·맥주·소주 중 하나가 무료예요.</p><ul class="Footer-module__nctMiG__links"><li><a href="index.html#stores">참여 매장</a></li><li><a href="index.html#map">오시는 길</a></li><li><a href="guide.html">이용 안내</a></li><li><a href="login.html">전화번호로 시작</a></li><li><a class="Footer-module__nctMiG__staff" href="app.html">직원 페이지</a></li></ul></div><ul class="Footer-module__nctMiG__stores"><li class="Footer-module__nctMiG__store"><img alt="조선칼국수" draggable="false" loading="eager" width="720" height="199" decoding="async" data-nimg="1" class="" style="color:transparent;width:150px;height:auto"  src="assets/art/badge-joseon.webp"><p class="Footer-module__nctMiG__storeName">조선칼국수와통막걸리 서면밀레오레본점</p><p>부산 부산진구 동천로85번길 14 1,2층</p><p class="Footer-module__nctMiG__storeMeta"><span>전화 <!-- -->0507-1426-6681</span><a href="https://map.naver.com/p/entry/place/32874065" target="_blank" rel="noreferrer">네이버 플레이스</a></p></li><li class="Footer-module__nctMiG__store"><img alt="도쿄스탠드" draggable="false" loading="eager" width="720" height="203" decoding="async" data-nimg="1" class="" style="color:transparent;width:150px;height:auto"  src="assets/art/badge-tokyo.webp"><p class="Footer-module__nctMiG__storeName">도쿄스탠드 서면점</p><p>부산 부산진구 서전로10번길 31-5 1층</p><p class="Footer-module__nctMiG__storeMeta"><span>전화 <!-- -->0507-1393-8977</span><span>사업자등록번호 <!-- -->307-18-15409</span><a href="https://map.naver.com/p/entry/place/2071490466" target="_blank" rel="noreferrer">네이버 플레이스</a></p></li><li class="Footer-module__nctMiG__store"><img alt="와르르맨숀" draggable="false" loading="eager" width="720" height="202" decoding="async" data-nimg="1" class="" style="color:transparent;width:150px;height:auto"  src="assets/art/badge-wareureu.webp"><p class="Footer-module__nctMiG__storeName">와르르맨숀 서면점</p><p>부산 부산진구 중앙대로680번가길 72 2층</p><p class="Footer-module__nctMiG__storeMeta"><span>전화 <!-- -->0507-1475-1712</span><a href="https://map.naver.com/p/entry/place/2013923953" target="_blank" rel="noreferrer">네이버 플레이스</a></p></li></ul></div><div class="wrap Footer-module__nctMiG__bottom"><p>© <!-- -->2026<!-- --> <!-- -->서면 2차 연합<!-- -->. 매장 사진과 정보는 각 매장이 제공했어요.</p><p>영수증 사진은 부정 사용 확인에만 쓰고(반려 건 7일, 그 외 90일 뒤 삭제) 매장 관리자 외에는 볼 수 없어요.</p></div></footer></body>
+<body><div hidden=""><!--$--><!--/$--></div><header class="Header-module__Mg1eeW__header"><div class="wrap Header-module__Mg1eeW__inner"><a class="Header-module__Mg1eeW__brand" aria-label="이차 홈" href="index.html"><img alt="" draggable="false" width="600" height="494" decoding="async" data-nimg="1" class="Header-module__Mg1eeW__logo" style="color:transparent"  src="assets/art/logo.webp"><span class="Header-module__Mg1eeW__mark">이차</span><span class="Header-module__Mg1eeW__sub">서면 2차 연합</span></a><nav class="Header-module__Mg1eeW__nav" aria-label="주요 메뉴"><a href="index.html#stores">세 집</a><a href="index.html#gifts">무료 한 잔</a><a href="index.html#map">오시는 길</a><a href="guide.html">이용 안내</a><a href="app.html">쿠폰함</a></nav><div class="Header-module__Mg1eeW__side"><a class="Header-module__Mg1eeW__cta" href="app.html">영수증 인증</a></div></div></header><nav class="TabBar-module__L0NbKq__bar" aria-label="하단 메뉴"><a class="TabBar-module__L0NbKq__item " href="index.html"><span class="TabBar-module__L0NbKq__icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M4 13.5 14 5l10 8.5"></path><path d="M6.5 12v11h5.5v-6.5h4V23h5.5V12"></path></svg></span><span class="TabBar-module__L0NbKq__label">홈</span></a><a class="TabBar-module__L0NbKq__item " href="app.html"><span class="TabBar-module__L0NbKq__icon" aria-hidden="true"><img alt="" loading="eager" width="256" height="265" decoding="async" data-nimg="1" style="color:transparent;width:28px;height:28px;object-fit:contain"  src="assets/art/icon-receipt.webp"></span><span class="TabBar-module__L0NbKq__label">영수증 인증</span></a><a class="TabBar-module__L0NbKq__item " href="app.html"><span class="TabBar-module__L0NbKq__icon" aria-hidden="true"><img alt="" loading="eager" width="256" height="160" decoding="async" data-nimg="1" style="color:transparent;width:28px;height:28px;object-fit:contain"  src="assets/art/icon-coupon.webp"></span><span class="TabBar-module__L0NbKq__label">쿠폰함</span></a><a class="TabBar-module__L0NbKq__item " href="login.html"><span class="TabBar-module__L0NbKq__icon" aria-hidden="true"><img alt="" loading="eager" width="256" height="154" decoding="async" data-nimg="1" style="color:transparent;width:28px;height:28px;object-fit:contain"  src="assets/art/icon-vip.webp"></span><span class="TabBar-module__L0NbKq__label">내 혜택</span></a></nav><main id="main"><div class="wrap page-module__X2DzeG__page"><header class="page-module__X2DzeG__hero"><div class="page-module__X2DzeG__heroArt"><img alt="" draggable="false" width="1148" height="1022" decoding="async" data-nimg="1" class="" style="color:transparent"  src="assets/art/hero-graphic.webp"></div><div class="page-module__X2DzeG__heroText"><h1 class="display">이용 안내</h1><p>한 집 영수증으로 다른 두 집에서 <span class="page-module__X2DzeG__nowrap">막걸리·맥주·소주</span> 중 한 잔을 드려요.</p><a class="ArtButton-module__XMfl7a__btn " aria-label="시작하기" aria-disabled="false" style="width:280px" href="app.html"><img alt="" draggable="false" loading="eager" width="640" height="124" decoding="async" data-nimg="1" style="color:transparent;width:280px;height:auto"  src="assets/art/btn-start-default.webp"></a></div></header><p class="page-module__X2DzeG__rules">계산하고 24시간 안 · 10,000원 이상 · 하루 3장 · 쿠폰 30일</p><section class="page-module__X2DzeG__section" aria-labelledby="steps-title"><h2 id="steps-title" class="h2 page-module__X2DzeG__h">순서</h2><ol class="page-module__X2DzeG__steps"><li class="page-module__X2DzeG__step"><span class="page-module__X2DzeG__stepArt"><img alt="" draggable="false" loading="eager" width="800" height="700" decoding="async" data-nimg="1" class="" style="color:transparent"  src="assets/art/how-1.webp"><span class="page-module__X2DzeG__no">1</span></span><span>영수증을 찍어 올려요</span></li><li class="page-module__X2DzeG__step"><span class="page-module__X2DzeG__stepArt"><img alt="" draggable="false" loading="eager" width="800" height="791" decoding="async" data-nimg="1" class="" style="color:transparent"  src="assets/art/how-2.webp"><span class="page-module__X2DzeG__no">2</span></span><span>옆집 두 곳 중 한 곳을 골라요</span></li><li class="page-module__X2DzeG__step"><span class="page-module__X2DzeG__stepArt"><img alt="" draggable="false" loading="eager" width="800" height="670" decoding="async" data-nimg="1" class="" style="color:transparent"  src="assets/art/how-3.webp"><span class="page-module__X2DzeG__no">3</span></span><span>직원에게 보여 주고 받아요</span></li></ol></section><section class="page-module__X2DzeG__section" aria-labelledby="faq-title"><h2 id="faq-title" class="h2 page-module__X2DzeG__h">궁금한 것</h2><ol class="GuideFaq-module__BoU04G__list"><li class="GuideFaq-module__BoU04G__item"><details class="GuideFaq-module__BoU04G__details" id="which-receipt" open=""><summary class="GuideFaq-module__BoU04G__summary"><span class="GuideFaq-module__BoU04G__icon" aria-hidden="true"><img alt="" draggable="false" loading="eager" width="256" height="265" decoding="async" data-nimg="1" class="" style="color:transparent;width:30px;height:auto"  src="assets/art/icon-receipt.webp"></span><span class="GuideFaq-module__BoU04G__q">어떤 영수증이 되나요?</span><span class="GuideFaq-module__BoU04G__plus" aria-hidden="true"></span></summary><div class="GuideFaq-module__BoU04G__a"><p>세 집 중 어디서 계산했든 돼요. 카드 전표든 현금영수증이든 괜찮아요.</p></div></details></li><li class="GuideFaq-module__BoU04G__item"><details class="GuideFaq-module__BoU04G__details" id="not-accepted"><summary class="GuideFaq-module__BoU04G__summary"><span class="GuideFaq-module__BoU04G__icon" aria-hidden="true"><img alt="" draggable="false" loading="eager" width="256" height="259" decoding="async" data-nimg="1" class="" style="color:transparent;width:30px;height:auto"  src="assets/art/icon-error.webp"></span><span class="GuideFaq-module__BoU04G__q">안 되는 경우는요?</span><span class="GuideFaq-module__BoU04G__plus" aria-hidden="true"></span></summary><div class="GuideFaq-module__BoU04G__a"><ul class="page-module__X2DzeG__fails"><li><img alt="" draggable="false" loading="eager" width="480" height="506" decoding="async" data-nimg="1" class="" style="color:transparent;width:56px;height:auto"  src="assets/art/status-photo-fail.webp"><span>흐리거나 잘린 사진</span></li><li><img alt="" draggable="false" loading="eager" width="480" height="522" decoding="async" data-nimg="1" class="" style="color:transparent;width:56px;height:auto"  src="assets/art/status-wrong-store.webp"><span>다른 가게 영수증</span></li><li><img alt="" draggable="false" loading="eager" width="480" height="574" decoding="async" data-nimg="1" class="" style="color:transparent;width:56px;height:auto"  src="assets/art/status-used.webp"><span>이미 올린 영수증</span></li></ul><p>주문서(빌지)·재출력본·화면을 다시 찍은 사진도 안 돼요.</p></div></details></li><li class="GuideFaq-module__BoU04G__item"><details class="GuideFaq-module__BoU04G__details" id="review"><summary class="GuideFaq-module__BoU04G__summary"><span class="GuideFaq-module__BoU04G__icon" aria-hidden="true"><img alt="" draggable="false" loading="eager" width="480" height="477" decoding="async" data-nimg="1" class="" style="color:transparent;width:30px;height:auto"  src="assets/art/status-checking.webp"></span><span class="GuideFaq-module__BoU04G__q">'직원 확인 대기'는 뭐예요?</span><span class="GuideFaq-module__BoU04G__plus" aria-hidden="true"></span></summary><div class="GuideFaq-module__BoU04G__a"><p>글자가 흐려 자동으로 못 읽으면 직원이 사진을 직접 봐요. 결과는 <a href="app.html">쿠폰함</a>에서 볼 수 있어요.</p></div></details></li><li class="GuideFaq-module__BoU04G__item"><details class="GuideFaq-module__BoU04G__details" id="how-to-use"><summary class="GuideFaq-module__BoU04G__summary"><span class="GuideFaq-module__BoU04G__icon" aria-hidden="true"><img alt="" draggable="false" loading="eager" width="256" height="255" decoding="async" data-nimg="1" class="" style="color:transparent;width:30px;height:auto"  src="assets/art/icon-ok.webp"></span><span class="GuideFaq-module__BoU04G__q">쿠폰은 어떻게 쓰나요?</span><span class="GuideFaq-module__BoU04G__plus" aria-hidden="true"></span></summary><div class="GuideFaq-module__BoU04G__a"><p>주문할 때 쿠폰 화면을 보여 주고, 직원이 확인하면 '사용하기'를 눌러요.</p></div></details></li><li class="GuideFaq-module__BoU04G__item"><details class="GuideFaq-module__BoU04G__details" id="phone-login"><summary class="GuideFaq-module__BoU04G__summary"><span class="GuideFaq-module__BoU04G__icon" aria-hidden="true"><img alt="" draggable="false" loading="eager" width="256" height="288" decoding="async" data-nimg="1" class="" style="color:transparent;width:30px;height:auto"  src="assets/art/icon-phone.webp"></span><span class="GuideFaq-module__BoU04G__q">왜 전화번호만 받나요?</span><span class="GuideFaq-module__BoU04G__plus" aria-hidden="true"></span></summary><div class="GuideFaq-module__BoU04G__a"><p>인증 문자 없이 바로 시작하려고요. 쿠폰은 그 번호에 보관되니 잘못 넣지 않게 한 번 더 봐 주세요.</p></div></details></li><li class="GuideFaq-module__BoU04G__item"><details class="GuideFaq-module__BoU04G__details" id="photos"><summary class="GuideFaq-module__BoU04G__summary"><span class="GuideFaq-module__BoU04G__icon" aria-hidden="true"><img alt="" draggable="false" loading="eager" width="256" height="253" decoding="async" data-nimg="1" class="" style="color:transparent;width:30px;height:auto"  src="assets/art/icon-history.webp"></span><span class="GuideFaq-module__BoU04G__q">사진은 어떻게 보관되나요?</span><span class="GuideFaq-module__BoU04G__plus" aria-hidden="true"></span></summary><div class="GuideFaq-module__BoU04G__a"><p>같은 영수증을 두 번 쓰는지 확인하는 데만 쓰고 90일 뒤에 지워요. 매장 관리자 말고는 볼 수 없어요.</p></div></details></li></ol></section></div><!--$--><!--/$--></main><footer class="Footer-module__nctMiG__footer"><div class="wrap Footer-module__nctMiG__inner"><div class="Footer-module__nctMiG__brand"><img alt="" draggable="false" loading="eager" width="600" height="494" decoding="async" data-nimg="1" class="" style="color:transparent;width:56px;height:auto"  src="assets/art/logo.webp"><p><b>이차</b> · <!-- -->서면 2차 연합</p></div><ul class="Footer-module__nctMiG__stores"><li><a class="Footer-module__nctMiG__storeName" href="stores/joseon.html">조선칼국수</a><a href="tel:050714266681">0507-1426-6681</a><a href="https://map.naver.com/p/entry/place/32874065" target="_blank" rel="noreferrer">네이버 플레이스</a></li><li><a class="Footer-module__nctMiG__storeName" href="stores/tokyo.html">도쿄스탠드</a><a href="tel:050713938977">0507-1393-8977</a><a href="https://map.naver.com/p/entry/place/2071490466" target="_blank" rel="noreferrer">네이버 플레이스</a></li><li><a class="Footer-module__nctMiG__storeName" href="stores/wareureu.html">와르르맨숀</a><a href="tel:050714751712">0507-1475-1712</a><a href="https://map.naver.com/p/entry/place/2013923953" target="_blank" rel="noreferrer">네이버 플레이스</a></li></ul><p class="Footer-module__nctMiG__links"><a href="guide.html">이용 안내</a><a href="app.html">직원 페이지</a></p><p class="Footer-module__nctMiG__note">영수증 사진은 부정 사용 확인에만 쓰고, 보관 기간이 지나면 지워요.</p></div></footer></body>
 </html>

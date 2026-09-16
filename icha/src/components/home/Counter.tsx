@@ -1,11 +1,9 @@
 import { Art } from "@/components/art/Art";
 import { ArtButton } from "@/components/art/ArtButton";
-import { STORES } from "@/lib/stores";
 import styles from "./Counter.module.css";
 
 /** 첫 화면: 카운터 위에 놓인 세 집 그림 + 제목 + 한 문장 + 시작하기 */
 export function Counter() {
-  const names = STORES.map((s) => s.shortName).join("·");
   return (
     <section className={styles.hero} aria-labelledby="hero-title">
       <div className={`wrap ${styles.scene}`} aria-hidden="true">
@@ -24,7 +22,7 @@ export function Counter() {
           한 집 영수증으로,<br />
           옆집에서 한 잔 더.
         </h1>
-        <p className={styles.para}>{names} 중 한 곳에서 계산한 영수증을 올리면, 나머지 두 곳에서 그 집 술 한 잔이 무료예요.</p>
+        <p className={styles.para}>한 곳에서 계산한 영수증을 올리면, 나머지 두 곳에서 그 집 술 한 잔이 무료예요.</p>
         <ArtButton kind="start" href="/verify" width={300} />
         <p className={styles.note}>가입 없이 휴대폰 번호만 넣으면 돼요.</p>
       </div>

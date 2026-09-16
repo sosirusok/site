@@ -98,7 +98,7 @@ export default async function StorePage({ params }: Props) {
       {(store.quotes.length > 0 || store.naverRating) && (
         <section className={styles.section} aria-labelledby="reviews-title">
           <h2 id="reviews-title" className={`h2 ${styles.h}`}>리뷰</h2>
-          <StoreReviews store={store} limit={2} />
+          <StoreReviews store={store} limit={1} />
         </section>
       )}
 

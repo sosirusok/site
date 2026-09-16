@@ -5,6 +5,7 @@ import { ArtButton } from "@/components/art/ArtButton";
 import { GuideFaq, type FaqItem } from "@/components/site/GuideFaq";
 import { formatWon } from "@/lib/config";
 import { getRules } from "@/lib/settings";
+import { STEP_LINES, ruleLine } from "@/lib/copy";
 import { STORES } from "@/lib/stores";
 import styles from "./page.module.css";
 
@@ -20,14 +21,8 @@ export default async function GuidePage() {
   const drinks = STORES.map((s) => s.drink).join("·");
   const h = rules.receiptValidHours;
   const days = rules.couponValidDays;
-  const ruleLine = [
-    `계산 후 ${h}시간 안`,
-    rules.minAmount > 0 ? `${formatWon(rules.minAmount)} 이상` : null,
-    `하루 ${rules.dailyLimitPerMember}장`,
-    `쿠폰 ${days}일`,
-  ].filter(Boolean);
 
-  const steps = ["계산하고 영수증을 찍어 올려요", "나머지 두 집 중 한 곳을 골라요", "그 집 직원에게 보여 주고 받아요"];
+  const steps = STEP_LINES;
 
   const faq: FaqItem[] = [
     {
@@ -61,19 +56,7 @@ export default async function GuidePage() {
       id: "how-to-use",
       icon: "icon-ok",
       q: "쿠폰은 어떻게 쓰나요?",
-      a: <p>주문할 때 쿠폰 화면을 보여 주고, 직원이 확인하면 '사용하기'를 길게 눌러요. 미리 누르면 못 쓰니 꼭 직원 앞에서요.</p>,
-    },
-    {
-      id: "phone-login",
-      icon: "icon-phone",
-      q: "왜 전화번호만 받나요?",
-      a: <p>인증 문자 없이 바로 시작하려고요. 쿠폰은 그 번호에 보관되니 잘못 넣지 않게 한 번 더 봐 주세요.</p>,
-    },
-    {
-      id: "photos",
-      icon: "icon-history",
-      q: "사진은 어떻게 보관되나요?",
-      a: <p>같은 영수증을 두 번 쓰는지 확인하는 데만 쓰고 90일 뒤에 지워요. 매장 관리자 말고는 볼 수 없어요.</p>,
+      a: <p>주문할 때 쿠폰 화면을 보여 주고, 직원이 확인하면 '사용하기'를 눌러요.</p>,
     },
   ];
 
@@ -85,11 +68,11 @@ export default async function GuidePage() {
         </div>
         <div className={styles.heroText}>
           <h1 className="display">이용 안내</h1>
-          <p>한 집 영수증으로 다른 두 집에서 한 잔을 드려요. <span className={styles.nowrap}>{drinks}</span> 중 하나예요.</p>
+          <p>한 집 영수증으로 다른 두 집에서 <span className={styles.nowrap}>{drinks}</span> 중 한 잔을 드려요.</p>
           <ArtButton kind="start" href="/verify" width={280} />
         </div>
       </header>
-      <p className={styles.rules}>{ruleLine.join(" · ")}</p>
+      <p className={styles.rules}>{ruleLine(rules)}</p>
 
       <section className={styles.section} aria-labelledby="steps-title">
         <h2 id="steps-title" className={`h2 ${styles.h}`}>순서</h2>
@@ -111,9 +94,6 @@ export default async function GuidePage() {
         <GuideFaq items={faq} />
       </section>
 
-      <div className={styles.cta}>
-        <ArtButton kind="start" href="/verify" width={300} />
-      </div>
     </div>
   );
 }

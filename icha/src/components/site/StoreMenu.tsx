@@ -37,16 +37,10 @@ export function StoreMenu({ store, items, naverUrl }: { store: Store; items: Men
       </p>
     );
   }
-  const gifts = items.filter((m) => m.isGift);
   const rest = items.filter((m) => !m.isGift);
 
   return (
     <div className={styles.root}>
-      {gifts.length > 0 && (
-        <ol className={styles.list}>
-          {gifts.map((m) => <Row key={m.id} m={m} />)}
-        </ol>
-      )}
       {rest.length > 0 && (
         <details className={styles.more}>
           <summary className={styles.moreBtn}>메뉴 전체 보기 · {rest.length}개</summary>

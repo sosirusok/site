@@ -5,11 +5,6 @@ import { STORES } from "@/lib/stores";
 import styles from "./MapSection.module.css";
 
 /** "부산 부산진구 동천로85번길 14 1,2층" → "동천로85번길 14 1,2층" */
-function streetOnly(address: string): string {
-  const t = address.split(" ");
-  const i = t.findIndex((x) => /(로|길)$/.test(x));
-  return i > 0 ? t.slice(i).join(" ") : address;
-}
 
 export function MapSection() {
   const mapStores: MapStore[] = STORES.filter((s) => s.lat != null && s.lng != null).map((s) => ({
@@ -31,11 +26,6 @@ export function MapSection() {
         <div className={styles.map}>
           <StoreMap stores={mapStores} compact hidePanel height={240} />
         </div>
-        <ul className={styles.addr}>
-          {STORES.map((s) => (
-            <li key={s.id} data-store={s.id}><b>{s.shortName}</b> — {streetOnly(s.address)}</li>
-          ))}
-        </ul>
       </div>
     </section>
   );

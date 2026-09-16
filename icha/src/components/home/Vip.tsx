@@ -11,11 +11,11 @@ export function Vip({ rules }: { rules: Rules }) {
       <div className="wrap">
         <div className="sec-head">
           <Art name="icon-vip" width={36} />
-          <h2 id="vip-title" className="h2">자주 오면 VIP</h2>
+          <h2 id="vip-title" className="h2">단골 혜택</h2>
         </div>
         <div className={styles.body}>
           <Art name="vip-symbol" alt="" width={64} className={styles.symbol} />
-          <p className={styles.text}>세 집 합쳐 {tiers}. 등급이 오르면 쿠폰이 따로 들어가요.</p>
+          <p className={styles.text}>세 집 합쳐 {tiers}.</p>
         </div>
       </div>
     </section>
