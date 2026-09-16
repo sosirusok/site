@@ -130,7 +130,7 @@ export function EmptyWallet({ stores }: { stores: PlaceSheetStore[] }) {
       <Art name="empty-pocket" width={120} />
       <p className={`h2-event ${styles.emptyTitle}`}>아직 쿠폰이 없어요</p>
       <p className="cap">한 매장에서 계산할 때 휴대폰 번호를 말해 주세요. 여기로 들어와요.</p>
-      <PlaceButton stores={stores} className={`btn btn-naver btn-block ${styles.emptyBtn}`}>네이버 플레이스에서 매장 보기</PlaceButton>
+      <PlaceButton stores={stores} className={`btn btn-naver btn-block ${styles.emptyBtn}`}>예약하기</PlaceButton>
     </div>
   );
 }

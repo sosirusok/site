@@ -1,3 +1,11 @@
+/* 번호 하나로 시작 — 위에는 밤 사진 한 띠, 아래는 입력 하나 */
+.top { display: block; min-height: 34svh; }
+.shot { object-fit: cover; object-position: 50% 52%; }
+.layer { position: absolute; inset: 0; z-index: 1; }
+.topBody { position: relative; z-index: 2; display: grid; gap: 6px; align-content: end; min-height: 34svh; padding: calc(var(--header-h) + 22px) var(--gutter) 18px; }
+.h1 { font-family: var(--font-display); font-weight: 400; font-size: 32px; line-height: 1.1; }
+.sub { font-size: 13.5px; color: var(--fg-2); }
+
 /* 화면을 채워서 푸터가 첫 화면 가운데로 올라오지 않게 한다 */
-.page { padding-block: 28px 40px; display: grid; gap: 22px; align-content: start; min-height: calc(100dvh - var(--header-h) - var(--tabbar-h)); }
-.head { display: grid; gap: 8px; }
+.page { padding-block: 22px 40px; display: grid; gap: 20px; align-content: start; min-height: calc(100dvh - var(--header-h) - var(--tabbar-h) - 34svh); }
+.note { font-size: 12.5px; color: var(--fg-3); }

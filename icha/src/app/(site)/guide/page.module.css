@@ -1,11 +1,30 @@
+/* 이용 안내 — 사진 한 장으로 문을 열고, 아래는 가는 선과 글자만 */
 .page { padding-bottom: 8px; }
-.brand { margin-top: 4px; font-weight: 600; }
-/* 번호 원 — 노랑 바탕, 검정 숫자 */
-.num { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--yellow); color: #14120a; font-size: 13px; font-weight: 700; }
-.rule { margin-top: 12px; }
-/* 답 속 예약 버튼 세 개 — 좁은 화면에서는 줄바꿈 */
+
+.top { display: block; min-height: 38svh; }
+.topShot { object-fit: cover; object-position: 50% 55%; }
+.topLayer { position: absolute; inset: 0; z-index: 1; }
+.topBody { position: relative; z-index: 2; display: grid; gap: 6px; align-content: end; min-height: 38svh; padding: calc(var(--header-h) + 22px) var(--gutter) 20px; }
+.h1 { font-family: var(--font-display); font-weight: 400; font-size: 34px; line-height: 1.1; }
+.brand { font-size: 13px; font-weight: 700; color: var(--fg-2); }
+
+.sec { padding-block: 24px 20px; }
+.head { display: grid; gap: 6px; margin-bottom: 12px; }
+.kick { display: flex; align-items: center; gap: 9px; }
+.kick::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, var(--line-2), transparent); }
+.title { font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: 1.15; }
+
+/* 순서 넷 — 번호는 속 빈 글자 */
+.steps { display: grid; }
+.step { display: flex; align-items: flex-start; gap: 14px; padding-block: 13px; border-top: 1px solid var(--line); }
+.step:last-child { border-bottom: 1px solid var(--line); }
+.num { flex: none; width: 34px; font-family: var(--font-display); font-weight: 400; font-size: 22px; line-height: 1.2; color: transparent; -webkit-text-stroke: 1px var(--yellow); text-shadow: 0 0 16px rgba(255, 210, 63, 0.45); }
+.stepT { flex: 1; min-width: 0; font-size: 14.5px; line-height: 1.5; font-weight: 600; }
+.rule { margin-top: 12px; font-size: 12.5px; color: var(--fg-3); }
+
+/* 답 속 예약 버튼 세 개 — 가게마다 하나씩, 좁은 화면에서는 줄바꿈 */
 .bookRow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-/* 리뷰 이벤트 — 매장 이름은 그 집 네온색 */
-.revList { display: grid; gap: 6px; }
+/* 리뷰 이벤트 — 가게 이름은 그 집 네온색 */
+.revList { display: grid; gap: 8px; }
 .revList li { line-height: 1.5; }
-.revList b { font-weight: 700; margin-right: 6px; }
+.revList b { font-weight: 800; margin-right: 6px; }

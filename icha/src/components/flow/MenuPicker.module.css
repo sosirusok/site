@@ -8,7 +8,8 @@
 .cardName { min-width: 0; }
 .cardLine { margin-top: -6px; }
 /* 매장 이름 옆 작은 초록 링크 — 네이버 예약 */
-.book { margin-left: auto; display: inline-flex; align-items: center; min-height: 44px; padding-inline: 8px; margin-right: -8px; color: var(--naver); font-size: 14px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+/* 가게마다 초록 버튼은 예약하기 하나 */
+.book { margin-top: 10px; }
 .none { padding-bottom: 12px; }
 
 /* 품목 행 — 라디오 */

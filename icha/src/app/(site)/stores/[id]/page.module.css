@@ -1,18 +1,30 @@
+/* 가게 화면 — 사진과 가는 선. 상자는 쓰지 않는다. */
 .page { padding-bottom: 8px; }
-.top { display: grid; gap: 14px; padding-block: 12px 20px; }
+
+/* 오늘 소식 한 줄 */
+.notice { display: flex; align-items: baseline; gap: 8px; padding: 12px var(--gutter); background: #000; border-block: 1px solid var(--line); font-size: 13.5px; line-height: 1.5; color: var(--fg-2); }
+.noticeDay { flex: none; font-weight: 800; color: var(--yellow); }
+
+/* 섹션 공통 */
+.sec { padding-block: 26px 20px; }
+.secTight { padding-block: 22px 12px; }
+.head { display: grid; gap: 6px; margin-bottom: 14px; }
+.kick { display: flex; align-items: center; gap: 9px; }
+.kick::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, var(--line-2), transparent); }
+.title { font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: 1.15; }
 .anchor { scroll-margin-top: calc(var(--header-h) + 8px); }
 
-/* 오늘 소식 한 줄 — 관리자가 적은 매장 공지(비면 숨김) */
-.notice { display: flex; align-items: center; gap: 8px; padding: 11px var(--gutter); background: var(--bg-2); border-block: 1px solid var(--line); font-size: 14px; color: var(--fg-2); }
-.noticeDay { flex: none; font-weight: 700; color: var(--yellow); }
-
-/* 특별 혜택 — 매장색 네온 카드: 증정 품목 행(이름·원래 값·무료·사진) + 조건 두 줄 */
-.giftCard { display: grid; gap: 4px; padding-block: 4px 14px; }
-.giftRow { border-bottom: 0; }
-/* 혜택 설명도 두 줄까지 — 이 줄이 손님이 받는 것을 설명한다 */
-.giftDesc { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
-.giftPrice { display: inline-flex; flex-direction: column; align-items: flex-end; gap: 4px; flex: none; font-size: 13px; }
-.giftEmpty { padding: 12px 0 8px; }
-.giftPick { color: var(--fg-2); font-weight: 600; }
-/* 조건은 한 줄에 하나씩 — 390px 에서 어중간하게 접히지 않게 */
-.giftRule { display: grid; gap: 2px; margin-top: 4px; padding-top: 10px; border-top: 1px solid var(--line); }
+/* 특별 혜택 — 그 집 색 가는 선 위에 품목 줄 */
+.gifts { display: grid; }
+.giftRow { display: flex; align-items: center; gap: 12px; padding-block: 12px; border-top: 1px solid var(--line); }
+.giftRow:last-child { border-bottom: 1px solid var(--line); }
+/* 메뉴 사진은 정사각 56px — 전역 .thumb 크기는 목록 행 안에서만 걸린다 */
+.giftRow :global(.thumb) { flex: none; width: 56px; height: 56px; object-fit: cover; background: #08070f; }
+.giftBody { flex: 1; min-width: 0; }
+.giftName { font-size: 15px; font-weight: 700; }
+.giftDesc { margin-top: 3px; font-size: 12.5px; line-height: 1.5; color: var(--fg-3); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+.giftPrice { flex: none; display: inline-flex; flex-direction: column; align-items: flex-end; gap: 3px; font-size: 12.5px; }
+.giftFree { font-weight: 800; color: var(--accent); }
+.giftEmpty { font-size: 14px; color: var(--fg-3); padding-block: 10px; }
+.giftRule { margin-top: 12px; display: grid; gap: 3px; font-size: 12.5px; line-height: 1.5; color: var(--fg-3); }
+.giftPick { margin-top: 10px; font-size: 13px; font-weight: 700; color: var(--yellow); }

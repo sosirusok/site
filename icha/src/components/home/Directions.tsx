@@ -21,39 +21,38 @@ function shortAddress(a: string): string {
 /** 네이버 검색창에 그대로 넣는 말 */
 const SEARCH_QUERY = "서면 알콜부시기";
 
-/** 오시는 길 — 한 줄, 지도(매장색 핀), 매장별 주소 행과 길찾기 버튼, 네이버 검색 */
+/** 오시는 길 — 지도(매장색 핀)와 주소 세 줄, 길찾기는 작은 글자 링크. */
 export function Directions() {
   const ordered = [...STORES].sort((a, b) => a.course.n - b.course.n);
   const mapStores: MapStore[] = ordered.filter((st) => st.lat != null && st.lng != null).map((st) => ({
     id: st.id, name: st.name, shortName: st.shortName, drink: st.drink, lat: st.lat!, lng: st.lng!, address: st.address, naverPlaceId: st.naverPlaceId,
   }));
   return (
-    <section className={`section ${s.sec}`} aria-labelledby="map-title">
-      <div className="wrap">
-        <div className="section-h">
-          <h2 id="map-title" className="h2-event">오시는 길</h2>
-        </div>
-        <p className="cap">세 집 모두 50m 안 · {walkLine()}</p>
-        <div className={s.mapBox}>
-          <StoreMap stores={mapStores} compact hidePanel height={156} />
-        </div>
-        <ul className={s.addrs}>
-          {ordered.map((st) => {
-            const links = placeLinks(st);
-            return (
-              <li key={st.id} className="row" data-store={st.id}>
-                <span className="dot" aria-hidden="true" />
-                <div className="body">
-                  <p className="title">{st.shortName}</p>
-                  <p className="sub">{shortAddress(st.address)}</p>
-                </div>
-                {links && <a className="btn btn-secondary btn-sm" href={links.directions} target="_blank" rel="noreferrer">길찾기</a>}
-              </li>
-            );
-          })}
-        </ul>
-        <a className={`btn btn-secondary btn-block ${s.search}`} href={naverSearchUrl(SEARCH_QUERY)} target="_blank" rel="noreferrer">네이버에서 ‘{SEARCH_QUERY}’ 검색</a>
+    <section className={`wrap ${s.sec}`} aria-labelledby="map-title">
+      <div className={s.head}>
+        <p className={`kicker ${s.kick}`}>세 집 모두 50m 안</p>
+        <h2 id="map-title" className={`tube ${s.title}`}>오시는 길</h2>
+        <p className={s.lead}>{walkLine()}. 한 골목에서 1차·2차·3차가 끝나요.</p>
       </div>
+      <div className={s.mapBox}>
+        <StoreMap stores={mapStores} compact hidePanel height={168} />
+      </div>
+      <ul className={s.addrs}>
+        {ordered.map((st) => {
+          const links = placeLinks(st);
+          return (
+            <li key={st.id} className={s.addrRow} data-store={st.id}>
+              <span className={s.addrDot} aria-hidden="true" />
+              <div className={s.addrBody}>
+                <p className={s.addrName}>{st.course.n}차 {st.shortName}</p>
+                <p className={s.addrSub}>{shortAddress(st.address)}</p>
+              </div>
+              {links && <a className={s.addrLink} href={links.directions} target="_blank" rel="noreferrer">길찾기</a>}
+            </li>
+          );
+        })}
+      </ul>
+      <a className={`btn btn-secondary btn-block ${s.search}`} href={naverSearchUrl(SEARCH_QUERY)} target="_blank" rel="noreferrer">네이버에서 ‘{SEARCH_QUERY}’ 검색</a>
     </section>
   );
 }

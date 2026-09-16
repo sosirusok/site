@@ -1,51 +1,44 @@
-/* 홈 전용 — 전역 .row/.card-neon/.btn 위에 얹는 보정만. 그림자·그라데이션 없음(네온 글로우는 globals 가 준다) */
+/* 홈 — 사진과 가는 선으로만 나눈다. 카드·둥근 상자 없음. */
 
-/* 1) 포스터 — 폭 100%, 모서리 0 */
-.poster { background: #000; }
-.posterImg { width: 100%; height: auto; display: block; }
+/* 섹션 공통: 위에 작은 머리글, 아래에 큰 제목 */
+.sec { padding-block: 26px 22px; }
+.head { display: grid; gap: 6px; margin-bottom: 14px; }
+.kick { display: flex; align-items: center; gap: 9px; }
+.kick::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, var(--line-2), transparent); }
+.title { font-family: var(--font-display); font-weight: 400; font-size: 27px; line-height: 1.15; }
+.lead { font-size: 14px; line-height: 1.55; color: var(--fg-2); }
 
-/* 2) 이벤트 카드(노랑 네온) — 제목 하나, 사실 세 줄 */
-.event { padding-block: 12px 14px; }
-.eventCard { display: grid; gap: 6px; }
-.h1 { margin-top: 2px; }
-.course { font-size: 15px; font-weight: 700; }
-.rule { font-size: 14px; line-height: 1.5; color: var(--fg-2); }
+/* ── 이렇게 받아요 — 어두운 가게 안 사진 위에 번호 네 줄 ── */
+.how { position: relative; padding-block: 28px 26px; }
+.howBg { object-fit: cover; opacity: 0.3; }
+.howLayer { position: absolute; inset: 0; z-index: 1; }
+.howBody { position: relative; z-index: 2; }
+.steps { margin-top: 4px; }
+.step { display: flex; align-items: flex-start; gap: 14px; padding-block: 13px; border-top: 1px solid var(--line); }
+.step:last-child { border-bottom: 1px solid var(--line); }
+.stepN { flex: none; width: 34px; font-family: var(--font-display); font-weight: 400; font-size: 22px; line-height: 1.2; color: transparent; -webkit-text-stroke: 1px var(--yellow); text-shadow: 0 0 16px rgba(255, 210, 63, 0.45); }
+.stepT { flex: 1; min-width: 0; font-size: 14.5px; line-height: 1.5; font-weight: 600; color: var(--fg); }
+.ruleCap { margin-top: 12px; font-size: 12.5px; letter-spacing: 0.06em; color: var(--fg-3); }
 
-/* 홈 섹션은 전역 .section(24px)보다 조금 촘촘하게 */
-.sec { padding-block: 10px; }
-.sec :global(.section-h) { margin-bottom: 8px; }
-
-/* 3) 1차·2차·3차 — 매장색 네온 카드: 왼쪽 사진, 오른쪽 이름·오늘, 아래 쿠폰 혜택과 버튼 둘 */
-.cards { display: grid; gap: 8px; }
-.card { padding: 12px; display: grid; gap: 6px; }
-.head { display: flex; align-items: flex-start; gap: 10px; }
-.photo { display: block; position: relative; width: 124px; aspect-ratio: 3 / 2; border-radius: 10px; overflow: hidden; flex: none; background: var(--bg-3); }
-.photoImg { object-fit: cover; }
-.info { flex: 1; min-width: 0; display: grid; gap: 2px; align-content: start; }
-.name { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; font-weight: 400; }
-.courseLine { font-size: 13px; font-weight: 700; color: var(--fg-2); }
-/* 세 카드가 같은 높이가 되게 — 술·오늘 영업시간은 한 줄 */
-.hours { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.notice { font-size: 13px; line-height: 1.5; color: var(--yellow); }
-.gift { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 10px; background: var(--bg-3); font-size: 13px; }
-.giftThumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; flex: none; background: var(--bg-2); border: 1px solid var(--line); }
-.giftName { flex: 1; min-width: 0; font-weight: 600; color: var(--fg-2); }
-.gift :global(.strike), .gift :global(.tag) { flex: none; }
-.btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-
-/* 4) 이렇게 받아요 — 노란 번호 원 */
-.step { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--yellow); color: #14120a; font-size: 13px; font-weight: 700; }
-.stepRow { min-height: 44px; padding-block: 8px; }
-.ruleCap { margin-top: 8px; }
-
-/* 5) 다녀온 뒤에 — 매장 이름과 리뷰 버튼 */
+/* ── 다녀온 뒤에 — 가게 이름과 작은 리뷰 링크 ── */
 .reviews { margin-top: 2px; }
-.reviews :global(.row) { min-height: 52px; padding-block: 6px; }
+.revRow { display: flex; align-items: center; gap: 12px; min-height: 56px; padding-block: 10px; border-top: 1px solid var(--line); }
+.revRow:last-child { border-bottom: 1px solid var(--line); }
+.revName { flex: none; font-size: 15px; font-weight: 800; }
+.revBenefit { flex: 1; min-width: 0; font-size: 13px; color: var(--fg-2); }
+.revLink { flex: none; margin-left: auto; display: inline-flex; align-items: center; min-height: 44px; font-size: 13px; font-weight: 700; color: var(--store); text-decoration: underline; text-underline-offset: 4px; }
 
-/* 6) 오시는 길 — 지도 상자, 매장 행, 네이버 검색 */
-.mapBox { margin-top: 10px; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--line-2); }
+/* ── 오시는 길 ── */
+.mapBox { margin-top: 12px; overflow: hidden; border: 1px solid var(--line); }
 .mapBox :global(.leaflet-control-zoom) { display: none; }
-.addrs { margin-top: 2px; }
-.addrs :global(.row) { min-height: 52px; padding-block: 6px; }
-.addrs .dot { flex: none; margin-inline: 4px; }
-.search { margin-top: 10px; }
+.addrs { margin-top: 14px; }
+.addrRow { display: flex; align-items: center; gap: 12px; min-height: 56px; padding-block: 10px; border-top: 1px solid var(--line); }
+.addrRow:last-child { border-bottom: 1px solid var(--line); }
+.addrDot { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--store); box-shadow: 0 0 10px var(--store); }
+.addrBody { flex: 1; min-width: 0; }
+.addrName { font-size: 14.5px; font-weight: 700; }
+.addrSub { margin-top: 2px; font-size: 12.5px; color: var(--fg-3); }
+.addrLink { flex: none; display: inline-flex; align-items: center; min-height: 44px; font-size: 13px; font-weight: 700; color: var(--fg-2); text-decoration: underline; text-underline-offset: 4px; }
+/* 네이버 검색 — 둥근 상자 대신 납작한 테두리 한 줄 */
+.search { margin-top: 16px; border-radius: 0; background: transparent; box-shadow: inset 0 0 0 1px var(--line-2); color: var(--fg); font-size: 14px; letter-spacing: 0.01em; }
+.search:active { background: #0f0d1a; }

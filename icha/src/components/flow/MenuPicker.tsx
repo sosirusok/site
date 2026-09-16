@@ -38,7 +38,7 @@ function Thumb({ item }: { item: PickItem }) {
   return <Image src={item.image.src} alt="" width={56} height={56} sizes="56px" className="thumb" unoptimized={!item.image.local} />;
 }
 
-/** 어디서 받을지 고르기 — 매장 네온 카드 두 장, 품목 라디오 행, 아래 고정 버튼. 받고 나면 티켓과 플레이스 버튼. */
+/** 어디서 받을지 고르기 — 매장 네온 카드 두 장, 품목 라디오 행, 아래 고정 버튼. 받고 나면 티켓과 예약 버튼. */
 export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: string; stores: PickStore[]; couponValidDays: number }) {
   const id = useId();
   const [selected, setSelected] = useState<Selected | null>(null);
@@ -83,7 +83,7 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
     }
   }
 
-  /* 발급 완료 — 티켓 한 장, 제목 하나, 쿠폰 보기 + 그 매장 플레이스 */
+  /* 발급 완료 — 티켓 한 장, 제목 하나, 쿠폰 보기 + 그 매장 예약하기 */
   if (issued) {
     const { store, coupon } = issued;
     return (
@@ -93,7 +93,7 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
         <p className="cap">{store.shortName} · {coupon.menuName} · {fmtMD(coupon.expiresAt)}까지</p>
         <div className={styles.issuedBtns}>
           <Link href={`/coupons/${coupon.id}`} className="btn btn-block">쿠폰 보기</Link>
-          {store.placeHome && <a href={store.placeHome} target="_blank" rel="noreferrer" className="btn btn-naver btn-block">{store.shortName} 플레이스 보기</a>}
+          {store.placeBooking && <a href={store.placeBooking} target="_blank" rel="noreferrer" className="btn btn-naver btn-block">{store.shortName} 예약하기</a>}
         </div>
       </div>
     );
@@ -110,9 +110,6 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
               <div className={styles.cardHead}>
                 <span className="tag tag-neon">{s.course.n}차</span>
                 <p className={`h2-event neon ${styles.cardName}`}>{s.shortName}</p>
-                {s.placeBooking && (
-                  <a className={styles.book} href={s.placeBooking} target="_blank" rel="noreferrer">예약</a>
-                )}
               </div>
               <p className={`cap ${styles.cardLine}`}>{s.course.line}</p>
               {none ? (
@@ -136,6 +133,9 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
                     );
                   })}
                 </ul>
+              )}
+              {s.placeBooking && (
+                <a className={`btn btn-naver btn-sm btn-block ${styles.book}`} href={s.placeBooking} target="_blank" rel="noreferrer">예약하기<span className="sr-only"> — {s.shortName}</span></a>
               )}
             </div>
           );

@@ -113,7 +113,7 @@ export default async function WalletPage() {
 
       <div className="band" />
       <footer className={`wrap ${styles.sec} ${styles.foot}`}>
-        {!nothing && <PlaceButton stores={places} className="btn btn-naver btn-block">네이버 플레이스에서 매장 보기</PlaceButton>}
+        {!nothing && <PlaceButton stores={places} className="btn btn-naver btn-block">예약하기</PlaceButton>}
         <p className="cap">{ruleLine(rules)} · {BRAND.condition}</p>
         <LogoutButton className="btn btn-secondary btn-sm" />
       </footer>

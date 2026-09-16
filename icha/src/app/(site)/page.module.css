@@ -1,8 +1,12 @@
-/* 홈 — 공지 한 줄, 맨 아래 두 줄(이용 안내·보내기)만. 나머지는 components/home/home.module.css */
-.notice { background: var(--bg-2); color: var(--fg-2); font-size: 13px; padding: 10px var(--gutter); }
+/* 홈 — 공지 한 줄과 맨 아래 두 줄. 나머지는 components/home/*.module.css */
+.notice { position: relative; z-index: 3; background: #000; color: var(--yellow); font-size: 13px; font-weight: 600; padding: 9px var(--gutter); border-bottom: 1px solid var(--line); }
 
-/* 맨 아래 목록 행 두 개 — 전역 .row 를 그대로 쓰고 위에 선만 얹는다 */
-.tail { border-top: 1px solid var(--line); }
-.tail :global(.row) { width: 100%; text-align: left; }
-.tail :global(.row):active { background: var(--bg-2); }
-.tail :global(.row) :global(.title) { display: block; }
+/* 맨 아래 목록 행 두 개 — 가는 선만 두른다 */
+.tail { padding-block: 6px 18px; }
+.tail :global(.row) { width: 100%; text-align: left; min-height: 60px; border-bottom: 1px solid var(--line); }
+.tail :global(.row):first-child { border-top: 1px solid var(--line); }
+.tail :global(.row):active { background: #08070f; }
+.tail :global(.row) :global(.title) { display: block; font-weight: 700; }
+
+/* 사진과 사진 사이를 잇는 한 줄 — 포스터 표어 */
+.slogan { padding: 24px var(--gutter) 8px; font-size: 11px; letter-spacing: 0.06em; color: var(--fg-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

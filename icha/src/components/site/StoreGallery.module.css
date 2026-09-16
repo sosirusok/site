@@ -1,7 +1,8 @@
-.strip { padding-bottom: 2px; }
-.cell { position: relative; width: 88%; max-width: 420px; height: 220px; border-radius: var(--radius-lg); overflow: hidden; background: var(--bg-2); }
+/* 사진 띠 — 모서리 없는 사각 사진이 옆으로 흘러간다. 맨 끝은 네이버 사진으로 가는 칸. */
+.strip { gap: 6px; padding-bottom: 2px; }
+.cell { position: relative; width: 74%; max-width: 340px; height: 232px; overflow: hidden; background: #08070f; }
 .img { object-fit: cover; }
-/* 맨 끝 칸 — 네이버 사진으로 */
-.more { display: grid; place-items: center; height: 100%; border: 1px solid var(--naver); border-radius: var(--radius-lg); background: color-mix(in srgb, var(--naver) 10%, var(--bg-2)); }
-.more:active { background: color-mix(in srgb, var(--naver) 18%, var(--bg-2)); }
-.moreText { color: var(--naver); font-size: 16px; font-weight: 700; text-align: center; line-height: 1.4; }
+.shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(6, 5, 12, 0.5), transparent 46%); pointer-events: none; }
+.more { display: grid; place-items: center; height: 100%; border: 1px solid color-mix(in srgb, var(--store, var(--yellow)) 55%, transparent); background: color-mix(in srgb, var(--store, var(--yellow)) 7%, #08070f); }
+.more:active { background: color-mix(in srgb, var(--store, var(--yellow)) 14%, #08070f); }
+.moreText { color: var(--store, var(--yellow)); font-size: 14px; font-weight: 700; text-align: center; line-height: 1.5; text-decoration: underline; text-underline-offset: 4px; }

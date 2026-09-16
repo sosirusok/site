@@ -1,27 +1,29 @@
+import Image from "next/image";
 import { STEP_LINES, ruleLine } from "@/lib/copy";
 import type { Rules } from "@/lib/config";
 import s from "./home.module.css";
 
-/** 이렇게 받아요 — 번호 원 + 순서 네 줄, 아래에 규칙·조건 한 줄 */
+/** 이렇게 받아요 — 어두운 가게 안 사진 위에 번호 네 줄. 상자 없이 가는 선으로만 나눈다. */
 export function HowTo({ rules }: { rules: Rules }) {
   return (
-    <section className={`section ${s.sec}`} aria-labelledby="how-title">
-      <div className="wrap">
-        <div className="section-h">
-          <h2 id="how-title" className="h2-event">이렇게 받아요</h2>
+    <section className={`frame ${s.how}`} aria-labelledby="how-title">
+      <Image src="/images/stores/tokyo/interior-counter.jpg" alt="" aria-hidden="true" fill sizes="(min-width: 480px) 480px, 100vw" className={s.howBg} />
+      <span className={`vignette ${s.howLayer}`} aria-hidden="true" />
+      <span className={`grain ${s.howLayer}`} aria-hidden="true" />
+      <div className={`wrap ${s.howBody}`}>
+        <div className={s.head}>
+          <p className={`kicker ${s.kick}`}>영수증 릴레이</p>
+          <h2 id="how-title" className={`tube ${s.title}`}>이렇게 받아요</h2>
         </div>
-        <ol>
+        <ol className={s.steps}>
           {STEP_LINES.map((line, i) => (
-            <li key={line} className={`row ${s.stepRow}`}>
-              <span className={`num ${s.step}`} aria-hidden="true">{i + 1}</span>
-              <div className="body">
-                <p className="title"><span className="sr-only">{i + 1}. </span>{line}</p>
-              </div>
+            <li key={line} className={s.step}>
+              <span className={s.stepN} aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+              <p className={s.stepT}><span className="sr-only">{i + 1}. </span>{line}</p>
             </li>
           ))}
         </ol>
-        {/* 조건(BRAND.condition)은 맨 위 이벤트 카드에 이미 있다 — 여기서는 장수·기간만 */}
-        <p className={`cap ${s.ruleCap}`}>{ruleLine(rules)}</p>
+        <p className={s.ruleCap}>{ruleLine(rules)}</p>
       </div>
     </section>
   );

@@ -8,8 +8,9 @@
 .ask { font-weight: 400; color: var(--fg-3); }
 .more { display: block; }
 /* summary 는 브라우저 기본이 list-item 이라 버튼 모양·높이(48px)를 직접 준다 */
-.moreBtn { display: flex; height: 48px; min-height: 48px; margin-top: 12px; list-style: none; cursor: pointer; font-size: 15px; }
+.moreBtn { display: flex; height: 48px; min-height: 48px; margin-top: 12px; list-style: none; cursor: pointer; font-size: 14px; background: #100e1c; box-shadow: inset 0 0 0 1px var(--line); }
 .moreBtn::-webkit-details-marker { display: none; }
 .moreBtn::marker { content: ""; }
 .more[open] > .moreBtn { display: none; }
-.naver { margin-top: 12px; }
+/* 네이버 메뉴판 — 초록 버튼이 아니라 작은 글자 링크 */
+.naver { display: inline-flex; align-items: center; min-height: 48px; margin-top: 10px; font-size: 13px; font-weight: 700; color: var(--naver); text-decoration: underline; text-underline-offset: 4px; }

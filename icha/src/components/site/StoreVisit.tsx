@@ -4,7 +4,7 @@ import type { Store } from "@/lib/stores";
 import { StoreMap, type MapStore } from "./StoreMap";
 import styles from "./StoreVisit.module.css";
 
-/** 위치 — 그 매장만 찍은 지도, 지하철·층·주차·오는 길, 길찾기 버튼. 문구는 lib/locations.ts 값 그대로. */
+/** 위치 — 그 매장만 찍은 지도, 지하철·층·주차·오는 길, 길찾기는 작은 글자 링크. 문구는 lib/locations.ts 값 그대로. */
 export function StoreVisit({ store }: { store: Store }) {
   const loc = LOCATIONS[store.id];
   const links = placeLinks(store);
@@ -34,7 +34,7 @@ export function StoreVisit({ store }: { store: Store }) {
         <dt>오는 길</dt>
         <dd>{way}</dd>
       </dl>
-      {links && <a href={links.directions} target="_blank" rel="noreferrer" className="btn btn-naver btn-sm btn-block">네이버 지도로 길찾기</a>}
+      {links && <a href={links.directions} target="_blank" rel="noreferrer" className={styles.way}>네이버 지도로 길찾기</a>}
     </div>
   );
 }

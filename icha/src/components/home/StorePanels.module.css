@@ -1,0 +1,46 @@
+/* 1차·2차·3차 — 가게마다 세로로 긴 사진 한 장, 아래 왼쪽에 네온 간판이 켜진다.
+   카드·테두리 없음. 사진 아래가 바탕색으로 잠기면서 다음 글로 이어진다. */
+.list { display: block; }
+.panel { position: relative; display: block; }
+
+/* 사진(누르면 가게 화면) */
+.shot { display: block; position: relative; width: 100%; aspect-ratio: 4 / 5; overflow: hidden; background: #05040a; }
+.img { object-fit: cover; }
+.layer { position: absolute; inset: 0; z-index: 1; }
+
+/* 왼쪽 위 큰 차수 — 속 빈 글자에 그 집 색 윤곽 */
+.no { position: absolute; z-index: 2; left: var(--gutter); top: 22px; display: flex; align-items: baseline; gap: 4px; font-family: var(--font-display); font-weight: 400; line-height: 1; color: transparent; -webkit-text-stroke: 1.8px var(--store); text-shadow: 0 0 22px color-mix(in srgb, var(--store) 55%, transparent), 0 2px 10px rgba(0, 0, 0, 0.7); }
+.noN { font-size: 54px; }
+.noCha { font-size: 22px; -webkit-text-stroke-width: 1px; }
+/* 차수 아래로 내려오는 가는 빛줄기 */
+.noRule { position: absolute; z-index: 2; left: calc(var(--gutter) + 2px); top: 92px; width: 1px; height: 54px; background: linear-gradient(to bottom, var(--store), transparent); opacity: 0.8; }
+
+/* 사진 아래쪽에 켜지는 네온 간판(= 가게 이름) */
+.signWrap { position: absolute; z-index: 2; left: var(--gutter); right: var(--gutter); bottom: 16px; }
+.sign { width: 78%; max-width: 330px; height: auto; filter: drop-shadow(0 0 16px color-mix(in srgb, var(--store) 45%, transparent)) drop-shadow(0 6px 14px rgba(0, 0, 0, 0.6)); }
+.drink { display: block; margin-top: 9px; font-size: 13px; font-weight: 700; letter-spacing: 0.01em; color: var(--fg-2); text-shadow: 0 1px 10px rgba(0,0,0,0.9); }
+
+/* 사진 아래 — 바탕 위에 글 몇 줄과 초록 버튼 하나 */
+.under { display: grid; gap: 10px; padding: 12px var(--gutter) 4px; }
+.line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; font-size: 14px; color: var(--fg-2); }
+.lineB { font-weight: 700; color: var(--fg); }
+.open { font-weight: 700; color: var(--green); }
+.closed { font-weight: 700; color: var(--fg-3); }
+.notice { font-size: 13.5px; line-height: 1.5; color: var(--yellow); }
+
+/* 이 집에서 받는 혜택 한 줄 — 위에 그 집 색 가는 선 */
+.gift { display: flex; align-items: center; gap: 8px; padding-top: 10px; font-size: 13.5px; }
+.giftRule { margin-top: 2px; }
+.giftName { flex: 1; min-width: 0; font-weight: 700; color: var(--fg); }
+.giftFree { flex: none; font-weight: 800; color: var(--accent); }
+
+.cta { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 4px; }
+.cta :global(.btn) { flex: 0 0 auto; min-width: 180px; }
+/* 가게 화면으로 가는 작은 글자 링크 — 초록 버튼은 하나뿐이다 */
+.more { flex: 1 1 auto; display: inline-flex; align-items: center; justify-content: flex-end; min-height: 44px; font-size: 12.5px; font-weight: 600; line-height: 1.35; color: var(--fg-3); text-align: right; }
+.more:active { color: var(--fg-2); }
+.more span { text-decoration: underline; text-underline-offset: 3px; }
+
+/* 가게와 가게 사이 — 걸어서 몇 분인지 한 줄 */
+.walk { display: flex; align-items: center; gap: 12px; padding: 20px var(--gutter); font-size: 12px; letter-spacing: 0.02em; color: var(--fg-3); }
+.walk::before { content: ""; width: 1px; height: 28px; background: linear-gradient(to bottom, transparent, var(--line-2), transparent); }

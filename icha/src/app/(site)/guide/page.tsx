@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { GuideFaq, type FaqItem } from "@/components/site/GuideFaq";
 import { PlaceButton } from "@/components/site/PlaceButton";
@@ -71,7 +72,7 @@ export default async function GuidePage() {
             <ul className={styles.revList}>
               {reviews.map(({ s, text }) => (
                 <li key={s.id} data-store={s.id}>
-                  <b className="neon">{s.shortName}</b> {text}
+                  <b className="tube-store">{s.shortName}</b> {text}
                 </li>
               ))}
             </ul>
@@ -85,38 +86,43 @@ export default async function GuidePage() {
 
   return (
     <div className={styles.page}>
-      <section className="section"><div className="wrap">
-        <h1 className="h1-event">이용 안내</h1>
-        <p className={`cap ${styles.brand}`}>{BRAND.name} · {BRAND.eventTag}</p>
-      </div></section>
-
-      <div className="band" />
-      <section className="section" aria-labelledby="steps-title"><div className="wrap">
-        <div className="section-h">
-          <h2 id="steps-title" className="h2-event">순서</h2>
-          <span className="more">{BRAND.course}</span>
+      <header className={`frame bleed-top ${styles.top}`}>
+        <Image src="/images/stores/joseon/entrance-garden.jpg" alt="" aria-hidden="true" fill priority sizes="(min-width: 480px) 480px, 100vw" className={styles.topShot} />
+        <span className={`vignette ${styles.topLayer}`} aria-hidden="true" />
+        <span className={`scrim ${styles.topLayer}`} aria-hidden="true" />
+        <span className={`grain ${styles.topLayer}`} aria-hidden="true" />
+        <div className={styles.topBody}>
+          <p className={`kicker on-photo ${styles.brand}`}>{BRAND.name} · {BRAND.eventTag}</p>
+          <h1 className={`tube ${styles.h1}`}>이용 안내</h1>
         </div>
-        <ol>
+      </header>
+
+      <section className={`wrap ${styles.sec}`} aria-labelledby="steps-title">
+        <div className={styles.head}>
+          <p className={`kicker ${styles.kick}`}>{BRAND.course}</p>
+          <h2 id="steps-title" className={`tube ${styles.title}`}>순서</h2>
+        </div>
+        <ol className={styles.steps}>
           {STEP_LINES.map((text, i) => (
-            <li key={text} className="row">
-              <span className={`num ${styles.num}`} aria-hidden="true">{i + 1}</span>
-              <div className="body">
-                <p className="title"><span className="sr-only">{i + 1}. </span>{text}</p>
-              </div>
+            <li key={text} className={styles.step}>
+              <span className={styles.num} aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+              <p className={styles.stepT}><span className="sr-only">{i + 1}. </span>{text}</p>
             </li>
           ))}
         </ol>
-        <p className={`cap ${styles.rule}`}>{ruleLine(rules)} · {BRAND.condition}</p>
-      </div></section>
+        <p className={styles.rule}>{ruleLine(rules)} · {BRAND.condition}</p>
+      </section>
 
-      <div className="band" />
-      <section className="section" aria-labelledby="faq-title"><div className="wrap">
-        <div className="section-h"><h2 id="faq-title" className="h2-event">자주 묻는 질문</h2></div>
+      <section className={`wrap ${styles.sec}`} aria-labelledby="faq-title">
+        <div className={styles.head}>
+          <p className={`kicker ${styles.kick}`}>궁금한 것</p>
+          <h2 id="faq-title" className={`tube ${styles.title}`}>자주 묻는 질문</h2>
+        </div>
         <GuideFaq items={items} />
-      </div></section>
+      </section>
 
       <StickyCta>
-        <PlaceButton stores={placeSheetStores()} className="btn btn-naver btn-block">네이버 플레이스에서 보기</PlaceButton>
+        <PlaceButton stores={placeSheetStores()} className="btn btn-naver btn-block">예약하기</PlaceButton>
       </StickyCta>
     </div>
   );

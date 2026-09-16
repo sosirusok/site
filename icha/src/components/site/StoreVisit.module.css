@@ -1,4 +1,5 @@
 .block { display: grid; gap: 14px; }
-.map { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--line-2); }
+.way { display: inline-flex; align-items: center; min-height: 48px; font-size: 13px; font-weight: 700; color: var(--naver); text-decoration: underline; text-underline-offset: 4px; }
+.map { overflow: hidden; border: 1px solid var(--line); }
 .map :global(.leaflet-container) { background: var(--bg-2); }
 .map :global(.leaflet-control-zoom) { display: none; }

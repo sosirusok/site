@@ -1,8 +1,10 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Chevron } from "@/components/ui/Chevron";
 import { distanceM, walkMinutes } from "@/lib/geo";
 import { placeLinks } from "@/lib/naver";
 import { nextStore, type Store } from "@/lib/stores";
+import { StoreSign } from "./StoreSign";
+import { NIGHT_PHOTO } from "./storePhotos";
 import styles from "./NextStop.module.css";
 
 /** 두 매장 사이 걸어서 몇 분 — 좌표가 없으면 "50m 안" */
@@ -12,29 +14,44 @@ function walkText(a: Store, b: Store): string {
 }
 
 /**
- * 다음 집 — 코스의 다음 매장(1차→2차→3차)을 그 매장색 네온 카드로. 3차 뒤에는 처음(1차)으로 돌아간다.
- * 버튼은 초록 예약하기(네이버 예약)와 길찾기.
+ * 다음 집 — 코스의 다음 매장(1차→2차→3차)을 사진 한 장으로. 3차 뒤에는 처음(1차)으로 돌아간다.
+ * 사진을 누르면 그 가게 화면, 초록 버튼은 예약하기 하나뿐이고 길찾기는 작은 글자다.
  */
 export function NextStop({ store }: { store: Store }) {
   const next = nextStore(store.id);
   if (next.id === store.id) return null;
   const last = store.course.n === 3;
   const links = placeLinks(next);
+  const photo = NIGHT_PHOTO[next.id];
+  const alt = next.images.find((im) => im.src === photo.src)?.alt ?? `${next.shortName} 밤 외관`;
   return (
-    <div className={`card-neon ${styles.card}`} data-store={next.id}>
-      <Link href={`/stores/${next.id}`} className={styles.head}>
-        <span className={styles.text}>
-          <span className={`h2-event neon ${styles.title}`}>{last ? "오늘 코스 끝 · 처음부터 다시" : `다음은 ${next.course.n}차 ${next.shortName}`}</span>
-          <span className={`cap ${styles.sub}`}>{last ? `1차 ${next.shortName} · ` : ""}{next.drink} · {walkText(store, next)}</span>
+    <section className={styles.sec} data-store={next.id} aria-labelledby="next-title">
+      <div className={`wrap ${styles.head}`}>
+        <p className={`kicker ${styles.kick}`}>{last ? "코스 한 바퀴" : `${next.course.n}차로 이어서`}</p>
+        <h2 id="next-title" className={`tube ${styles.title}`}>{last ? "처음부터 다시" : "다음 집"}</h2>
+      </div>
+      <Link href={`/stores/${next.id}`} className={`frame ${styles.shot}`}>
+        <Image src={photo.src} alt={alt} fill sizes="(min-width: 480px) 480px, 100vw" style={{ objectPosition: photo.pos }} className={styles.img} />
+        <span className={`vignette ${styles.layer}`} aria-hidden="true" />
+        <span className={`scrim ${styles.layer}`} aria-hidden="true" />
+        <span className={`grain ${styles.layer}`} aria-hidden="true" />
+        <span className={styles.signWrap}>
+          <StoreSign id={next.id} className={styles.sign} sizes="(min-width: 480px) 320px, 72vw" />
         </span>
-        <Chevron />
+        <span className="sr-only">{next.course.n}차 {next.name} — 가게 보기</span>
       </Link>
+      <div className={styles.under}>
+        <p className={styles.line}>
+          <b className={styles.lineB}>{next.course.n}차 {next.shortName}</b>
+          {next.drink} · {walkText(store, next)}
+        </p>
+      </div>
       {links && (
-        <div className={styles.btns}>
-          <a className="btn btn-naver btn-sm" href={links.booking} target="_blank" rel="noreferrer">예약하기</a>
-          <a className="btn btn-secondary btn-sm" href={links.directions} target="_blank" rel="noreferrer">길찾기</a>
+        <div className={styles.cta}>
+          <a className="btn btn-naver" href={links.booking} target="_blank" rel="noreferrer">예약하기<span className="sr-only"> — {next.shortName}</span></a>
+          <a className={styles.way} href={links.directions} target="_blank" rel="noreferrer">길찾기</a>
         </div>
       )}
-    </div>
+    </section>
   );
 }

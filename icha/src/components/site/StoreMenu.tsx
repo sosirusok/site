@@ -31,7 +31,7 @@ function Row({ m }: { m: MenuItem }) {
   );
 }
 
-/** 메뉴 — 목록 행. 혜택 품목이 맨 위, 8개까지 보인 뒤 나머지는 접힘. 맨 아래 초록 버튼은 네이버 메뉴판. 값은 DB(listMenu). */
+/** 메뉴 — 목록 행. 혜택 품목이 맨 위, 8개까지 보인 뒤 나머지는 접힘. 맨 아래는 네이버 메뉴판으로 가는 작은 글자 링크. 값은 DB(listMenu). */
 export function StoreMenu({ store, items, menuUrl }: { store: Store; items: MenuItem[]; menuUrl: string | null }) {
   const sorted = [...items.filter((m) => m.isGift), ...items.filter((m) => !m.isGift)];
   const head = sorted.slice(0, VISIBLE);
@@ -51,7 +51,7 @@ export function StoreMenu({ store, items, menuUrl }: { store: Store; items: Menu
           )}
         </>
       )}
-      {menuUrl && <a className={`btn btn-naver btn-sm btn-block ${styles.naver}`} href={menuUrl} target="_blank" rel="noreferrer">네이버에서 메뉴 전체 보기</a>}
+      {menuUrl && <a className={styles.naver} href={menuUrl} target="_blank" rel="noreferrer">네이버에서 메뉴 전체 보기</a>}
     </div>
   );
 }

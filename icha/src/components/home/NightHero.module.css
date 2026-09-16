@@ -1,0 +1,40 @@
+/* 첫 장면 — 밤 사진 한 장 위에 포스터 글자. 카드도 테두리도 없다. */
+.hero { display: block; min-height: 82svh; }
+.shot { object-fit: cover; object-position: 58% 40%; z-index: 0; }
+.shot, .layer { position: absolute; inset: 0; }
+.layer { z-index: 1; }
+/* 글자가 앉는 쪽을 한 겹 더 눌러 준다 */
+.tint { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(105deg, rgba(3,2,8,0.82) 0%, rgba(3,2,8,0.5) 44%, rgba(3,2,8,0.08) 78%); }
+
+.body { position: relative; z-index: 2; display: grid; gap: 10px; padding: calc(var(--header-h) + 26px) var(--gutter) 22px; min-height: 82svh; align-content: end; }
+
+.kicker { display: flex; align-items: center; gap: 9px; letter-spacing: 0.1em; color: var(--fg-2); }
+.kicker::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, color-mix(in srgb, var(--fg-3) 70%, transparent), transparent); }
+
+/* 이벤트 이름 — 유리관 노랑, 아주 가끔 깜빡인다 */
+.title { font-family: var(--font-display); font-weight: 400; font-size: clamp(60px, 18vw, 86px); line-height: 0.98; letter-spacing: -0.01em; margin-block: 2px -2px; filter: drop-shadow(0 0 26px rgba(255, 196, 40, 0.5)) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.7)); }
+
+/* 1차·2차·3차 세 색이 이어지는 짧은 줄 */
+.course3 { display: flex; gap: 6px; margin-block: 8px 2px; }
+.course3 span { height: 2px; flex: 1 1 0; border-radius: 1px; }
+.course3 span:nth-child(1) { background: var(--tokyo); box-shadow: 0 0 10px var(--tokyo); }
+.course3 span:nth-child(2) { background: var(--joseon); box-shadow: 0 0 10px var(--joseon); }
+.course3 span:nth-child(3) { background: var(--wareureu); box-shadow: 0 0 10px var(--wareureu); }
+
+.tag { font-size: 17px; font-weight: 800; letter-spacing: 0.04em; color: #fff; }
+.course { font-size: 15px; font-weight: 700; color: var(--yellow); }
+
+/* 아래 줄: 왼쪽에 조건 한 줄, 오른쪽에 가게 앞에 붙은 진짜 포스터 */
+.foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-top: 10px; }
+.cond { flex: 1 1 auto; max-width: 58%; font-size: 12.5px; line-height: 1.5; color: var(--fg-2); }
+.condLead { display: block; color: var(--fg); font-weight: 700; }
+
+/* 벽에 비스듬히 붙인 인쇄물 — 테이프 한 조각까지 */
+.poster { position: relative; flex: 0 0 auto; width: 42%; max-width: 190px; margin-right: -6px; transform: rotate(-3.2deg); box-shadow: 0 16px 34px rgba(0, 0, 0, 0.62), 0 0 0 1px rgba(255, 255, 255, 0.12); }
+.posterImg { display: block; width: 100%; height: auto; }
+.poster::after { content: ""; position: absolute; top: -9px; left: 50%; width: 52px; height: 17px; transform: translateX(-50%) rotate(2deg); background: rgba(255, 244, 214, 0.22); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14); }
+.posterCap { position: absolute; left: 0; bottom: -20px; width: 100%; text-align: center; font-size: 11px; color: var(--fg-3); }
+
+/* 맨 아래 — 다음 장면으로 내려가라는 아주 작은 표시 */
+.scrollHint { display: flex; align-items: center; gap: 10px; margin-top: 16px; font-size: 11px; letter-spacing: 0.04em; color: var(--fg-3); }
+.scrollHint::after { content: ""; flex: 0 0 34px; height: 1px; background: var(--fg-3); }

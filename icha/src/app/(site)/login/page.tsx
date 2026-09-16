@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { PhoneForm } from "@/components/flow/PhoneForm";
 import { safeNext } from "@/components/flow/format";
@@ -15,13 +16,22 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   if (session) redirect(next);
 
   return (
-    <section className={`wrap ${styles.page}`} aria-labelledby="login-title">
-      <div className={styles.head}>
-        <h1 id="login-title" className="h1-event">번호로 시작</h1>
-        <p className="cap">계산할 때 말한 번호 그대로 넣으면 쿠폰이 보여요.</p>
-      </div>
-      <PhoneForm next={next} />
-      <p className="cap">문자는 보내지 않아요. 번호는 쿠폰을 찾는 데만 써요.</p>
-    </section>
+    <>
+      <header className={`frame bleed-top ${styles.top}`} aria-labelledby="login-title">
+        <Image src="/images/stores/wareureu/interior-stained-glass.jpg" alt="" aria-hidden="true" fill priority sizes="(min-width: 480px) 480px, 100vw" className={styles.shot} />
+        <span className={`vignette ${styles.layer}`} aria-hidden="true" />
+        <span className={`scrim ${styles.layer}`} aria-hidden="true" />
+        <span className={`grain ${styles.layer}`} aria-hidden="true" />
+        <div className={styles.topBody}>
+          <p className="kicker on-photo">쿠폰함</p>
+          <h1 id="login-title" className={`tube ${styles.h1}`}>번호로 시작</h1>
+          <p className={`on-photo ${styles.sub}`}>계산할 때 말한 번호 그대로 넣으면 쿠폰이 보여요.</p>
+        </div>
+      </header>
+      <section className={`wrap ${styles.page}`}>
+        <PhoneForm next={next} />
+        <p className={styles.note}>문자는 보내지 않아요. 번호는 쿠폰을 찾는 데만 써요.</p>
+      </section>
+    </>
   );
 }

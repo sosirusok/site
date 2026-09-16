@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-/** 매장 상세 — 사진 띠·이름·예약 버튼, 오늘 소식, 특별 혜택, 다음 집, 메뉴, 위치, 리뷰. 아래 고정 버튼은 네이버 플레이스. */
+/** 가게 화면 — 밤 사진과 네온 간판, 오늘 소식, 특별 혜택, 사진, 메뉴, 위치, 리뷰, 다음 집. 초록 버튼은 아래 고정 예약하기 하나. */
 export default async function StorePage({ params }: Props) {
   const { id } = await params;
   const store = getStore(id);
@@ -44,10 +44,7 @@ export default async function StorePage({ params }: Props) {
 
   return (
     <article className={styles.page} data-store={store.id}>
-      <div className={`wrap ${styles.top}`}>
-        <StoreGallery store={store} photoUrl={links?.photo ?? null} />
-        <StoreHero store={store} />
-      </div>
+      <StoreHero store={store} />
 
       {notice && (
         <p className={styles.notice}>
@@ -56,73 +53,76 @@ export default async function StorePage({ params }: Props) {
         </p>
       )}
 
-      <div className="band" />
-      <section className="section" aria-labelledby="gift-title"><div className="wrap">
-        <div className="section-h">
-          <h2 id="gift-title" className="h2-event">특별 혜택</h2>
+      <section className={`wrap ${styles.sec}`} aria-labelledby="gift-title">
+        <div className={styles.head}>
+          <p className={`kicker ${styles.kick}`}>다른 집 쿠폰으로</p>
+          <h2 id="gift-title" className={`tube ${styles.title}`}>여기서 받는 것</h2>
         </div>
-        <div className={`card-neon ${styles.giftCard}`}>
-          {gifts.length === 0 ? (
-            <p className={`cap ${styles.giftEmpty}`}>어떤 혜택을 드릴지 정하고 있어요.</p>
-          ) : (
-            <ul>
-              {gifts.map((g) => (
-                <li key={g.id} className={`row ${styles.giftRow}`}>
-                  <div className="body">
-                    <p className="title">{g.name}</p>
-                    {g.description && <p className={`sub ${styles.giftDesc}`}>{g.description}</p>}
-                  </div>
-                  <span className={`num ${styles.giftPrice}`}>
-                    {g.price != null && <s className="strike">{formatWon(g.price)}</s>}
-                    <span className="tag tag-free">무료</span>
-                  </span>
-                  <MenuThumb m={g} />
-                </li>
-              ))}
-            </ul>
-          )}
-          {gifts.length > 1 && <p className={`cap ${styles.giftPick}`}>둘 중 하나를 골라요.</p>}
-          <div className={styles.giftRule}>
-            <p className="cap">다른 매장에서 받은 쿠폰으로 받아요</p>
-            <p className="cap">{BRAND.condition}</p>
+        {gifts.length === 0 ? (
+          <p className={styles.giftEmpty}>어떤 혜택을 드릴지 정하고 있어요.</p>
+        ) : (
+          <div className={styles.gifts}>
+            {gifts.map((g) => (
+              <div key={g.id} className={styles.giftRow}>
+                <div className={styles.giftBody}>
+                  <p className={styles.giftName}>{g.name}</p>
+                  {g.description && <p className={styles.giftDesc}>{g.description}</p>}
+                </div>
+                <span className={`num ${styles.giftPrice}`}>
+                  {g.price != null && <s className="strike">{formatWon(g.price)}</s>}
+                  <span className={styles.giftFree}>무료</span>
+                </span>
+                <MenuThumb m={g} />
+              </div>
+            ))}
           </div>
+        )}
+        {gifts.length > 1 && <p className={styles.giftPick}>둘 중 하나를 골라요.</p>}
+        <div className={styles.giftRule}>
+          <p>다른 매장에서 받은 쿠폰으로 받아요</p>
+          <p>{BRAND.condition}</p>
         </div>
-      </div></section>
+      </section>
 
-      <div className="band" />
-      <section className="section" aria-labelledby="next-title"><div className="wrap">
-        <div className="section-h"><h2 id="next-title" className="h2-event">다음 집</h2></div>
-        <NextStop store={store} />
-      </div></section>
+      <section className={styles.secTight} aria-labelledby="photo-title">
+        <div className={`wrap ${styles.head}`}>
+          <p className={`kicker ${styles.kick}`}>{store.shortName}의 밤</p>
+          <h2 id="photo-title" className={`tube ${styles.title}`}>사진</h2>
+        </div>
+        <StoreGallery store={store} photoUrl={links?.photo ?? null} />
+      </section>
 
-      <div className="band" />
-      <section className={`section ${styles.anchor}`} id="menu" aria-labelledby="menu-title"><div className="wrap">
-        <div className="section-h">
-          <h2 id="menu-title" className="h2-event">메뉴</h2>
-          {menu.length > 0 && <span className="more num">{menu.length}개</span>}
+      <section className={`wrap ${styles.sec} ${styles.anchor}`} id="menu" aria-labelledby="menu-title">
+        <div className={styles.head}>
+          <p className={`kicker ${styles.kick}`}>{menu.length > 0 ? `${menu.length}가지` : "정리 중"}</p>
+          <h2 id="menu-title" className={`tube ${styles.title}`}>메뉴</h2>
         </div>
         <StoreMenu store={store} items={menu} menuUrl={links?.menu ?? null} />
-      </div></section>
+      </section>
 
-      <div className="band" />
-      <section className={`section ${styles.anchor}`} id="visit" aria-labelledby="visit-title"><div className="wrap">
-        <div className="section-h"><h2 id="visit-title" className="h2-event">위치</h2></div>
+      <section className={`wrap ${styles.sec} ${styles.anchor}`} id="visit" aria-labelledby="visit-title">
+        <div className={styles.head}>
+          <p className={`kicker ${styles.kick}`}>서면 50m 안</p>
+          <h2 id="visit-title" className={`tube ${styles.title}`}>오시는 길</h2>
+        </div>
         <StoreVisit store={store} />
-      </div></section>
+      </section>
 
       {(store.quotes.length > 0 || store.naverRating) && (
-        <>
-          <div className="band" />
-          <section className="section" aria-labelledby="reviews-title"><div className="wrap">
-            <div className="section-h"><h2 id="reviews-title" className="h2-event">리뷰</h2></div>
-            <StoreReviews store={store} limit={2} reviewUrl={links?.review ?? null} benefit={reviewBenefit || null} />
-          </div></section>
-        </>
+        <section className={`wrap ${styles.sec}`} aria-labelledby="reviews-title">
+          <div className={styles.head}>
+            <p className={`kicker ${styles.kick}`}>다녀온 사람들</p>
+            <h2 id="reviews-title" className={`tube ${styles.title}`}>리뷰</h2>
+          </div>
+          <StoreReviews store={store} limit={2} reviewUrl={links?.review ?? null} benefit={reviewBenefit || null} />
+        </section>
       )}
+
+      <NextStop store={store} />
 
       {links && (
         <div className="fixed-col sticky-cta">
-          <a className="btn btn-naver btn-block" href={links.home} target="_blank" rel="noreferrer">네이버 플레이스에서 보기</a>
+          <a className="btn btn-naver btn-block" href={links.booking} target="_blank" rel="noreferrer">예약하기<span className="sr-only"> — {store.shortName}</span></a>
         </div>
       )}
     </article>
