@@ -55,9 +55,8 @@
   gap: 12px;
   min-width: 0;
 }
-.brand { display: inline-flex; flex: none; white-space: nowrap; align-items: center; gap: 8px; color: var(--a-bar-ink); font-weight: 700; font-size: 16px; }
-.brand .brandLogo { height: 28px; width: auto; display: block; }
-.brand .brandSub { font-weight: 500; font-size: 14px; opacity: 0.72; }
+.brand { display: inline-flex; flex: none; white-space: nowrap; align-items: baseline; gap: 8px; color: var(--a-bar-ink); font-family: var(--font-display); font-weight: 400; font-size: 20px; letter-spacing: 0; }
+.brand .brandSub { font-family: var(--font-sans); font-weight: 500; font-size: 14px; opacity: 0.72; }
 .topbarSpacer { flex: 1; }
 .who { display: inline-flex; flex: none; white-space: nowrap; align-items: center; gap: 8px; font-size: 14px; color: var(--a-bar-ink); }
 .who .whoRole { font-size: 13px; padding: 2px 8px; border-radius: 999px; background: rgba(243, 238, 228, 0.16); }
@@ -141,13 +140,14 @@
 .crumb a { color: var(--a-ink-2); text-decoration: underline; text-underline-offset: 3px; }
 
 .sectionTitle { font-size: 16px; font-weight: 700; margin: 0 0 8px; }
-.grid2 { display: grid; gap: 16px; grid-template-columns: 1fr; }
-.grid3 { display: grid; gap: 16px; grid-template-columns: 1fr; }
+/* 표(nowrap 셀)가 든 패널이 열 너비를 밀어내지 않도록 모든 열은 minmax(0, 1fr) */
+.grid2 { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
+.grid3 { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 900px) {
-  .grid2 { grid-template-columns: 1fr 1fr; }
-  .grid3 { grid-template-columns: repeat(3, 1fr); }
+  .grid2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
-.stack { display: grid; gap: 16px; }
+.stack { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
 
 /* ── 패널 ── */
 .panel {
@@ -298,7 +298,8 @@
 
 @media print {
   .topbar, .navbar { display: none !important; }
-  .root { background: #fff; min-height: 0; }
+  /* 손님 사이트용 탭바 여백(--tabbar-h)이 인쇄 쪽수를 2장으로 늘리지 않게 0으로 */
+  .root { background: #fff; min-height: 0; margin-bottom: 0; padding-bottom: 0; }
   .main { width: auto; padding: 0; margin: 0; }
 }
 

@@ -1,10 +1,7 @@
 .head { display: grid; gap: 16px; grid-template-columns: 1fr; }
 @media (min-width: 900px) { .head { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
 .bigPhone { font-family: var(--font-mono); font-size: 26px; font-weight: 600; letter-spacing: 0.02em; }
-.facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
-@media (min-width: 600px) { .facts { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
 .fact { border: 1px solid var(--a-line-2); border-radius: 4px; padding: 8px 10px; display: grid; gap: 2px; }
 .factLabel { font-size: 14px; color: var(--a-ink-3); }
 .factValue { font-family: var(--font-mono); font-size: 18px; font-weight: 600; }
-.tierBar { height: 8px; background: var(--a-muted-bg); border-radius: 2px; overflow: hidden; margin-top: 4px; }
-.tierFill { height: 100%; background: var(--a-ink); }

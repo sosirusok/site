@@ -149,7 +149,7 @@ export function StaffCreateForm({ stores }: { stores: { id: string; shortName: s
               </option>
             ))}
           </select>
-          <span className={ui.help}>{role === "owner" ? "총괄은 모든 화면을 볼 수 있고 매장에 매이지 않습니다." : "직원은 영수증 확인과 자기 매장 쿠폰 사용 처리만 할 수 있습니다."}</span>
+          <span className={ui.help}>{role === "owner" ? "총괄은 모든 화면을 볼 수 있고 매장에 매이지 않습니다." : "직원은 카운터와 자기 매장 쿠폰 사용 처리만 할 수 있습니다."}</span>
         </div>
       </div>
       <div className={ui.field}>

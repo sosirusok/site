@@ -4,7 +4,7 @@
 .details { display: block; }
 .summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 56px; padding: 14px 0; user-select: none; -webkit-tap-highlight-color: transparent; }
 .q { font-size: 15px; font-weight: 700; line-height: 1.4; }
-.chev { flex: none; color: #b0b8c1; transform: rotate(90deg); transition: transform 0.15s; }
+.chev { flex: none; color: var(--fg-3); transform: rotate(90deg); transition: transform 0.15s; }
 .details[open] .chev { transform: rotate(-90deg); }
 .a { padding: 0 0 16px; font-size: 14px; line-height: 1.55; color: var(--fg-2); }
 /* 답 속 링크 — 글줄은 그대로, 터치 영역만 44px */

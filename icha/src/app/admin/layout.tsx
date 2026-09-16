@@ -1,9 +1,10 @@
 import "./admin-globals.css";
 import type { Metadata, Viewport } from "next";
+import { BRAND } from "@/lib/config";
 import ui from "./admin.module.css";
 
 export const metadata: Metadata = {
-  title: { default: "관리자 — 이차", template: "%s — 이차 관리자" },
+  title: { default: `관리자 — ${BRAND.name}`, template: `%s — ${BRAND.name} 관리자` },
   robots: { index: false, follow: false },
 };
 

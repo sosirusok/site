@@ -1,14 +1,14 @@
-.hero { display: grid; gap: 6px; }
-/* "1차 · 맥주로 시작!" — 매장색 칩 + 포스터 한 마디 */
-.course { display: flex; align-items: center; gap: 6px; margin-top: -2px; }
-.courseLine { font-size: 14px; font-weight: 700; color: var(--store, var(--fg)); }
-.courseLine::before { content: "· "; color: var(--fg-3); font-weight: 400; }
-.line { font-size: 15px; line-height: 1.5; color: var(--fg-2); }
-.meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
-.drink { display: inline-flex; align-items: center; gap: 6px; }
-.kv { margin-top: 10px; padding-top: 14px; border-top: 1px solid var(--line); }
+.hero { display: grid; gap: 8px; }
+/* "1차 · 맥주로 시작! · ★ 4.52 (729)" — 매장색 네온 칩 + 포스터 한 마디 + 평점 */
+.course { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; margin-top: -2px; }
+.courseLine { font-size: 14px; font-weight: 700; color: var(--fg-2); }
+.rating { font-size: 14px; font-weight: 700; color: var(--yellow); }
+.kv { margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--line); }
 .open { color: var(--green); font-weight: 700; }
 .closed { color: var(--fg-3); font-weight: 700; }
 .sub { display: block; margin-top: 2px; }
 /* 전화 링크 — 글줄은 그대로, 터치 영역만 44px */
 .tel { display: inline-flex; align-items: center; min-height: 44px; margin-block: -12px; text-decoration: underline; text-underline-offset: 3px; }
+/* 큰 플레이스 버튼 + 작은 버튼 셋 */
+.naver { display: grid; gap: 8px; margin-top: 8px; }
+.small { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }

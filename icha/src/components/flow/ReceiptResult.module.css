@@ -1,9 +1,0 @@
-.result { display: grid; gap: 16px; }
-.head { display: grid; gap: 6px; justify-items: center; text-align: center; padding-top: 8px; }
-.head img { margin-bottom: 6px; }
-.actions { display: grid; gap: 8px; justify-items: center; }
-.actions .btn-block { justify-self: stretch; }
-.later { padding: 6px 0; }
-.reasons { display: grid; gap: 4px; font-size: 14px; color: var(--fg-2); padding: 12px 14px; border-radius: var(--radius); background: var(--bg-2); }
-.reasons li { padding-left: 12px; position: relative; }
-.reasons li::before { content: "·"; position: absolute; left: 2px; }

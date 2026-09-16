@@ -19,3 +19,8 @@ export function placeLinks(s: Pick<Store, "naverPlaceId" | "name" | "lat" | "lng
     save: `${base}/home?entry=pll`,
   };
 }
+
+/** 네이버 검색으로 보내기 — 브랜드/매장 이름을 검색해서 플레이스로 들어가게 한다(검색 유입) */
+export function naverSearchUrl(query: string): string {
+  return `https://m.search.naver.com/search.naver?query=${encodeURIComponent(query)}`;
+}

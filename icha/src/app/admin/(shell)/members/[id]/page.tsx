@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { formatPhone, reasonText } from "@/lib/config";
+import { formatPhone } from "@/lib/config";
+import { isPickExpired } from "@/lib/coupons";
 import { getMember, listCouponsForMember, listMenu, listReceiptsForMember } from "@/lib/db/queries";
-import { getRules, tierFor } from "@/lib/settings";
+import { getRules } from "@/lib/settings";
 import { STORES } from "@/lib/stores";
 import { requireAdminPage } from "@/components/admin/guard";
 import { Forbidden } from "@/components/admin/Forbidden";
 import { COUPON_KIND, fmtDateTime, fmtShort, won } from "@/components/admin/format";
-import { CouponBadge, ReceiptBadge } from "@/components/admin/Badge";
+import { Badge, CouponBadge } from "@/components/admin/Badge";
 import { StoreTag } from "@/components/admin/StoreTag";
 import { MemberMemoForm } from "@/components/admin/MemberMemoForm";
 import { IssueCouponForm } from "@/components/admin/IssueCouponForm";
@@ -24,12 +25,11 @@ export default async function MemberDetailPage({ params }: { params: Promise<{ i
   const m = await getMember(id);
   if (!m) notFound();
   const [rules, receipts, coupons] = await Promise.all([getRules(), listReceiptsForMember(m.id, 100), listCouponsForMember(m.id)]);
-  const tier = tierFor(m.totalSpend, rules);
   const now = new Date();
-  const nextTier = tier.next;
-  const prevMin = rules.tiers.find((t) => t.key === tier.key)?.minSpend ?? 0;
-  const progress = nextTier ? Math.min(100, Math.round(((m.totalSpend - prevMin) / Math.max(1, prevMin + nextTier.remaining - prevMin)) * 100)) : 100;
   const gifts = Object.fromEntries(await Promise.all(STORES.map(async (st) => [st.id, (await listMenu(st.id, { giftOnly: true })).map((g) => ({ id: g.id, name: g.name, price: g.price }))])));
+  const couponByReceipt = new Map(coupons.filter((c) => c.receiptId).map((c) => [c.receiptId!, c]));
+  // 사진 인증 시절 데이터가 남아 있어도 릴레이 표에는 승인 건만 보인다
+  const relays = receipts.filter((r) => r.status === "approved");
 
   return (
     <>
@@ -44,28 +44,23 @@ export default async function MemberDetailPage({ params }: { params: Promise<{ i
           </p>
           <div className={s.facts}>
             <div className={s.fact}>
-              <span className={s.factLabel}>등급</span>
-              <span className={s.factValue} style={{ fontFamily: "inherit" }}>
-                {tier.name}
-              </span>
-              {m.tier !== tier.key ? <span className={`${ui.help}`}>저장된 등급({m.tier})과 다름 — 설정에서 재계산</span> : null}
-            </div>
-            <div className={s.fact}>
-              <span className={s.factLabel}>누적 결제</span>
-              <span className={s.factValue}>{won(m.totalSpend)}</span>
-            </div>
-            <div className={s.fact}>
-              <span className={s.factLabel}>방문(승인)</span>
+              <span className={s.factLabel}>릴레이</span>
               <span className={s.factValue}>{m.visitCount}회</span>
             </div>
             <div className={s.fact}>
-              <span className={s.factLabel}>{nextTier ? `${nextTier.name}까지` : "최고 등급"}</span>
-              <span className={s.factValue}>{nextTier ? won(nextTier.remaining) : "—"}</span>
-              <div className={s.tierBar}>
-                <div className={s.tierFill} style={{ width: `${progress}%` }} />
-              </div>
+              <span className={s.factLabel}>쿠폰</span>
+              <span className={s.factValue}>{coupons.length}장</span>
+            </div>
+            <div className={s.fact}>
+              <span className={s.factLabel}>누적 금액 (입력분)</span>
+              <span className={s.factValue}>{m.totalSpend > 0 ? won(m.totalSpend) : "-"}</span>
             </div>
           </div>
+          <p style={{ marginTop: 12 }}>
+            <Link href={`/admin/counter?phone=${m.phone}`} className={`${ui.button} ${ui.buttonGhost}`}>
+              카운터에서 열기
+            </Link>
+          </p>
         </section>
         <section className={`${ui.panel} ${ui.panelBody}`}>
           <MemberMemoForm memberId={m.id} memo={m.memo} />
@@ -75,44 +70,55 @@ export default async function MemberDetailPage({ params }: { params: Promise<{ i
       <div className={ui.grid2} style={{ marginTop: 16 }}>
         <section className={ui.panel}>
           <div className={ui.panelHead}>
-            <h2 className={ui.panelTitle}>영수증 {receipts.length}건</h2>
+            <h2 className={ui.panelTitle}>릴레이 {relays.length}건</h2>
+            <span className={ui.panelNote}>계산한 매장에서 번호로 넣은 것</span>
           </div>
           <div className={ui.tableWrap}>
             <table className={ui.table}>
               <thead>
                 <tr>
-                  <th>접수</th>
-                  <th>상태</th>
+                  <th>받은 시각</th>
                   <th>매장</th>
+                  <th>담당</th>
+                  <th>어디서 썼나</th>
                   <th className={ui.right}>금액</th>
-                  <th>사유</th>
                 </tr>
               </thead>
               <tbody>
-                {receipts.length === 0 ? (
+                {relays.length === 0 ? (
                   <tr>
                     <td colSpan={5} className={ui.empty}>
-                      아직 올린 영수증이 없습니다.
+                      아직 받은 릴레이가 없습니다.
                     </td>
                   </tr>
                 ) : (
-                  receipts.map((r) => (
-                    <tr key={r.id}>
-                      <td className={ui.nowrap}>
-                        <Link href={`/admin/receipts/${r.id}`} className={`${ui.rowLink} ${ui.mono}`}>
-                          {fmtShort(r.createdAt, now)}
-                        </Link>
-                      </td>
-                      <td>
-                        <ReceiptBadge status={r.status} />
-                      </td>
-                      <td>
-                        <StoreTag id={r.storeId} />
-                      </td>
-                      <td className={ui.num}>{won(r.amount)}</td>
-                      <td className={ui.dim}>{r.reasons.slice(0, 1).map(reasonText).join("") || "-"}</td>
-                    </tr>
-                  ))
+                  relays.map((r) => {
+                    const c = r.couponId ? couponByReceipt.get(r.id) : null;
+                    return (
+                      <tr key={r.id}>
+                        <td className={`${ui.mono} ${ui.nowrap}`}>{fmtShort(r.createdAt, now)}</td>
+                        <td>
+                          <StoreTag id={r.storeId} />
+                        </td>
+                        <td className={`${ui.mono} ${ui.dim}`}>{r.reviewedBy ?? "-"}</td>
+                        <td>
+                          {c ? (
+                            <>
+                              <StoreTag id={c.useStoreId} /> {c.menuName}{" "}
+                              <Link href={`/admin/coupons?code=${c.code}`} className={`${ui.rowLink} ${ui.mono}`}>
+                                {c.code}
+                              </Link>
+                            </>
+                          ) : isPickExpired(r, rules, now) ? (
+                            <Badge tone="muted">기간 지남</Badge>
+                          ) : (
+                            <Badge tone="warn">아직 안 고름</Badge>
+                          )}
+                        </td>
+                        <td className={ui.num}>{r.amount != null ? won(r.amount) : "-"}</td>
+                      </tr>
+                    );
+                  })
                 )}
               </tbody>
             </table>
@@ -128,7 +134,7 @@ export default async function MemberDetailPage({ params }: { params: Promise<{ i
                 <tr>
                   <th>코드</th>
                   <th>상태</th>
-                  <th>매장 · 메뉴</th>
+                  <th>매장 · 혜택</th>
                   <th>종류</th>
                   <th>만료</th>
                 </tr>
@@ -137,7 +143,7 @@ export default async function MemberDetailPage({ params }: { params: Promise<{ i
                 {coupons.length === 0 ? (
                   <tr>
                     <td colSpan={5} className={ui.empty}>
-                      발급된 쿠폰이 없습니다.
+                      아직 쿠폰이 없습니다.
                     </td>
                   </tr>
                 ) : (
@@ -167,8 +173,8 @@ export default async function MemberDetailPage({ params }: { params: Promise<{ i
 
       <section className={ui.panel} style={{ marginTop: 16 }}>
         <div className={ui.panelHead}>
-          <h2 className={ui.panelTitle}>이 회원에게 쿠폰 발급</h2>
-          <span className={ui.panelNote}>사과·감사·이벤트 등 이유는 메모에</span>
+          <h2 className={ui.panelTitle}>이 회원에게 쿠폰 주기</h2>
+          <span className={ui.panelNote}>릴레이와 별개로 매장이 직접 주는 쿠폰 · 이유는 메모에</span>
         </div>
         <div className={ui.panelBody}>
           <IssueCouponForm mode="member" memberId={m.id} stores={STORES.map((st) => ({ id: st.id, shortName: st.shortName }))} gifts={gifts} tiers={rules.tiers} defaultDays={rules.couponValidDays} />

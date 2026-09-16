@@ -1,4 +1,4 @@
-/* 관리자 화면에서 매장을 빠르게 구분하기 위한 점 색 (손님 사이트에는 쓰지 않음) */
-[data-store="joseon"] { --store: #c8553d; }
-[data-store="tokyo"] { --store: #d99a2b; }
-[data-store="wareureu"] { --store: #2f6b4f; }
+/* 관리자 화면에서 매장을 빠르게 구분하기 위한 점 색 — 사장님 포스터와 같은 배색(1차 도쿄 파랑·2차 조선 빨강·3차 와르르 초록)을 밝은 바탕용으로 어둡게 */
+[data-store="joseon"] { --store: #d43d2e; }
+[data-store="tokyo"] { --store: #2f6fd6; }
+[data-store="wareureu"] { --store: #1f9d6a; }

@@ -1,10 +1,8 @@
 import Link from "next/link";
-import { SITE_URL } from "@/lib/config";
-import { getRules } from "@/lib/settings";
-import { listMenu } from "@/lib/db/queries";
+import { BRAND, SITE_URL } from "@/lib/config";
 import { STORES } from "@/lib/stores";
 import { requireAdminPage } from "@/components/admin/guard";
-import { PosterSheet, isPlaceholderSiteUrl, type GiftNames } from "@/components/admin/PosterSheet";
+import { PosterSheet, isPlaceholderSiteUrl, placeQrUrl } from "@/components/admin/PosterSheet";
 import { TentSheet } from "@/components/admin/TentSheet";
 import { PosterPreview, PrintButton } from "@/components/admin/PosterPreview";
 import ui from "@/app/admin/admin.module.css";
@@ -24,20 +22,19 @@ export default async function PosterPage({ searchParams }: { searchParams: Promi
   const preferred = session.storeId ?? sp.store;
   const store = STORES.find((x) => x.id === (sp.store ?? preferred)) ?? STORES[0]!;
   const type: PrintType = sp.type === "tent" ? "tent" : "poster";
-  const [rules, giftRows] = await Promise.all([getRules(), Promise.all(STORES.map(async (st) => [st.id, (await listMenu(st.id, { giftOnly: true })).map((m) => m.name)] as const))]);
-  const gifts: GiftNames = Object.fromEntries(giftRows);
   const placeholder = isPlaceholderSiteUrl();
+  const placeUrl = placeQrUrl(store);
   const href = (t: PrintType, id: string) => `/admin/poster?type=${t}&store=${id}`;
 
   return (
     <>
       <div className={`${ui.pageHead} ${s.noPrint}`}>
         <div>
-          <h1 className={ui.pageTitle}>매장 인쇄물</h1>
-          <p className={ui.pageDesc}>매장에 붙이거나 테이블에 세우는 인쇄물입니다 (손님 사이트에는 표시되지 않습니다). 흰 종이에 선만 써서 흑백 프린터로도 됩니다.</p>
+          <h1 className={ui.pageTitle}>인쇄물</h1>
+          <p className={ui.pageDesc}>QR 은 네이버 플레이스 하나만 갑니다. 흰 종이에 검정 글자라 흑백 프린터로도 됩니다.</p>
         </div>
         <div className={ui.pageActions}>
-          <PrintButton className={ui.button} warn={placeholder ? `사이트 주소가 배포 주소가 아닙니다 (${SITE_URL}). QR 이 로컬을 가리키는 인쇄물을 인쇄할까요?` : null} />
+          <PrintButton className={ui.button} warn={placeholder ? `홈페이지 주소가 아직 배포 주소가 아닙니다 (${SITE_URL}). 시트 아래 작은 주소가 이대로 인쇄됩니다. 인쇄할까요?` : null} />
         </div>
       </div>
       <div className={`${s.typeTabs} ${s.noPrint}`} role="tablist" aria-label="인쇄물 종류">
@@ -48,13 +45,8 @@ export default async function PosterPage({ searchParams }: { searchParams: Promi
           </Link>
         ))}
       </div>
-      {placeholder ? (
-        <p className={`${ui.notice} ${ui.noticeWarn} ${s.noPrint}`} style={{ marginBottom: 12 }}>
-          NEXT_PUBLIC_SITE_URL 이 배포 주소가 아니라 QR 이 <span className={ui.mono}>{SITE_URL}</span> 을 가리킵니다. 배포 후 다시 인쇄하세요. 시트 위에도 같은 경고가 인쇄됩니다.
-        </p>
-      ) : null}
       <div className={s.layout}>
-        <PosterPreview>{type === "tent" ? <TentSheet store={store} rules={rules} gifts={gifts} /> : <PosterSheet store={store} rules={rules} gifts={gifts} />}</PosterPreview>
+        <PosterPreview>{type === "tent" ? <TentSheet store={store} /> : <PosterSheet store={store} />}</PosterPreview>
         <aside className={`${s.side} ${s.noPrint}`}>
           <div className={`${ui.panel} ${ui.panelBody}`}>
             <h2 className={ui.sectionTitle}>매장</h2>
@@ -71,35 +63,36 @@ export default async function PosterPage({ searchParams }: { searchParams: Promi
             <h2 className={ui.sectionTitle}>인쇄</h2>
             <p className={ui.small}>
               {type === "tent"
-                ? "A4 한 장에 같은 카드 4장이 나옵니다. 점선을 따라 자르면 A6(엽서 크기) 4장이 됩니다. 인쇄 대화상자에서 용지 A4, 여백 \"없음\", 배경 그래픽 켜기."
-                : "인쇄 대화상자에서 용지 A4, 여백 \"없음\", 배경 그래픽 켜기. 테이블·계산대·화장실 문 안쪽에 붙입니다."}
+                ? "A4 한 장에 같은 카드 4장이 나옵니다. 점선을 따라 자르면 A6(엽서 크기) 4장. 인쇄 대화상자에서 용지 A4, 여백 \"없음\", 배경 그래픽 켜기."
+                : "인쇄 대화상자에서 용지 A4, 여백 \"없음\", 배경 그래픽 켜기. 계산대 옆·입구·화장실 문 안쪽에 붙입니다."}
             </p>
           </div>
           <div className={`${ui.panel} ${ui.panelBody}`}>
             <h2 className={ui.sectionTitle}>QR 주소</h2>
             <dl className={ui.kv}>
-              <dt>인증</dt>
+              <dt>플레이스</dt>
               <dd className={ui.mono} style={{ wordBreak: "break-all" }}>
-                {SITE_URL}/verify?from={store.id}
+                {placeUrl ? placeUrl.replace(/^https?:\/\//, "") : "미등록 — stores.ts 의 naverPlaceId"}
               </dd>
-              {type === "poster" ? (
-                <>
-                  <dt>플레이스</dt>
-                  <dd className={ui.mono} style={{ wordBreak: "break-all" }}>
-                    {store.naverPlaceId ? `map.naver.com/p/entry/place/${store.naverPlaceId}` : "미등록 — stores.ts 의 naverPlaceId"}
-                  </dd>
-                </>
-              ) : null}
+              <dt>홈페이지</dt>
+              <dd className={ui.mono} style={{ wordBreak: "break-all" }}>
+                {SITE_URL.replace(/^https?:\/\//, "")}
+              </dd>
             </dl>
-            <p className={ui.help} style={{ marginTop: 10 }}>
-              사이트 주소는 NEXT_PUBLIC_SITE_URL 환경변수를 따릅니다.
-            </p>
+            {placeholder ? (
+              <p className={`${ui.notice} ${ui.noticeWarn}`} style={{ marginTop: 10 }}>
+                홈페이지 주소가 배포 주소가 아닙니다. NEXT_PUBLIC_SITE_URL 을 정한 뒤 인쇄하세요.
+              </p>
+            ) : (
+              <p className={ui.help} style={{ marginTop: 10 }}>
+                홈페이지 주소는 시트 아래에 작게만 들어갑니다.
+              </p>
+            )}
           </div>
           <div className={`${ui.panel} ${ui.panelBody}`}>
-            <h2 className={ui.sectionTitle}>문구에 쓰인 값</h2>
+            <h2 className={ui.sectionTitle}>문구</h2>
             <p className={ui.small}>
-              인정 {rules.receiptValidHours}시간 · 최소 {rules.minAmount.toLocaleString("ko-KR")}원 · 하루 {rules.dailyLimitPerMember}장 · 쿠폰 {rules.couponValidDays}일 — <Link href="/admin/settings" style={{ textDecoration: "underline" }}>설정</Link>에서 바꿉니다. 증정 품목 이름은{" "}
-              <Link href="/admin/menus" style={{ textDecoration: "underline" }}>메뉴</Link>의 "무료 증정" 항목을 그대로 씁니다.
+              "{BRAND.eventTag}" · "당일 영수증 한정 · {BRAND.condition}" 는 사장님 포스터 그대로입니다. 매장별 혜택 문구({STORES.map((st) => st.benefitLabel).join(" / ")})는 매장 데이터를 따릅니다.
             </p>
           </div>
         </aside>

@@ -24,6 +24,8 @@ export type PickStore = {
   drink: "막걸리" | "맥주" | "소주";
   /** 포스터 순서(1차·2차·3차)와 한 마디 */
   course: { n: 1 | 2 | 3; line: string };
+  /** 네이버 플레이스 홈(없으면 null) */
+  placeHome: string | null;
   items: PickItem[];
 };
 
@@ -34,6 +36,7 @@ function Thumb({ item }: { item: PickItem }) {
   return <Image src={item.image.src} alt="" width={56} height={56} sizes="56px" className="thumb" unoptimized={!item.image.local} />;
 }
 
+/** 어디서 받을지 고르기 — 매장 네온 카드 두 장, 품목 라디오 행, 아래 고정 버튼. 받고 나면 티켓과 플레이스 버튼. */
 export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: string; stores: PickStore[]; couponValidDays: number }) {
   const id = useId();
   const [selected, setSelected] = useState<Selected | null>(null);
@@ -74,37 +77,37 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
     }
   }
 
-  /* 발급 완료 */
+  /* 발급 완료 — 티켓 한 장, 제목 하나, 쿠폰 보기 + 그 매장 플레이스 */
   if (issued) {
     const { store, coupon } = issued;
     return (
-      <div className={styles.issued} aria-live="polite">
-        <Art name={`coupon-${store.id}`} alt={`${store.shortName} ${store.drink} 무료 쿠폰`} sizes="(min-width: 480px) 440px, 92vw" className={styles.issuedTicket} />
-        <p className="h2">쿠폰이 들어왔어요</p>
+      <div className={styles.issued} aria-live="polite" data-store={store.id}>
+        <Art name={`coupon-${store.id}`} alt={`${store.shortName} ${coupon.menuName} 쿠폰`} sizes="(min-width: 480px) 440px, 92vw" className={styles.issuedTicket} />
+        <h2 className="h1-event">쿠폰이 들어왔어요</h2>
         <p className="cap">{store.shortName} · {coupon.menuName} · {fmtMD(coupon.expiresAt)}까지</p>
-        <Link href={`/coupons/${coupon.id}`} className="btn btn-block">쿠폰 보기</Link>
+        <div className={styles.issuedBtns}>
+          <Link href={`/coupons/${coupon.id}`} className="btn btn-block">쿠폰 보기</Link>
+          {store.placeHome && <a href={store.placeHome} target="_blank" rel="noreferrer" className="btn btn-naver btn-block">{store.shortName} 플레이스 보기</a>}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className={`has-sticky ${styles.root}`}>
-      <div className={styles.cards} role="radiogroup" aria-label="쿠폰을 받을 집">
+    <div className={styles.root}>
+      <div className={styles.cards} role="radiogroup" aria-label="쿠폰을 받을 매장">
         {stores.map((s) => {
           const on = selected?.store.id === s.id;
           const none = s.items.length === 0;
           return (
-            <div key={s.id} className={`card ${styles.card}`} data-on={on || undefined} data-store={s.id}>
+            <div key={s.id} className={`card-neon ${styles.card}`} data-on={on || undefined} data-store={s.id}>
               <div className={styles.cardHead}>
-                <span className="tag tag-store">{s.course.n}차</span>
-                <p className={`h2-event ${styles.cardName}`}>{s.shortName}</p>
+                <span className="tag tag-neon">{s.course.n}차</span>
+                <p className={`h2-event neon ${styles.cardName}`}>{s.shortName}</p>
                 <span className={`cap ${styles.cardLine}`}>{s.course.line}</span>
               </div>
-              {s.items.length === 1 && s.items[0]!.name.includes(s.drink) && (
-                <Art name={`coupon-${s.id}`} alt="" sizes="(min-width: 480px) 400px, 84vw" className={styles.ticket} />
-              )}
               {none ? (
-                <p className="cap">받을 수 있는 품목을 정하는 중이에요. 다른 집을 골라 주세요.</p>
+                <p className={`cap ${styles.none}`}>어떤 혜택을 드릴지 정하고 있어요. 다른 매장을 골라 주세요.</p>
               ) : (
                 <ul className={styles.items}>
                   {s.items.map((it) => {
@@ -129,13 +132,13 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
           );
         })}
       </div>
-      <p className="cap">영수증 한 장에 쿠폰 한 장이에요. 받은 뒤에는 바꿀 수 없고, {couponValidDays}일 동안 써요.</p>
+      <p className="cap">쿠폰 하나에 한 곳이에요. 받은 뒤에는 바꿀 수 없고, {couponValidDays}일 동안 써요.</p>
 
       {/* 하단 고정 버튼(탭 위) */}
       <div className={`fixed-col sticky-cta ${styles.sticky}`}>
         {error && <p id={`${id}-err`} className="error" role="alert">{error}</p>}
         <button type="button" className="btn btn-block" onClick={issue} disabled={!selected || busy} aria-describedby={error ? `${id}-err` : undefined}>
-          {busy ? "받는 중" : "이 쿠폰 받기"}
+          {busy ? "받는 중" : selected ? `${selected.store.shortName}에서 받기` : "이 쿠폰 받기"}
         </button>
       </div>
     </div>

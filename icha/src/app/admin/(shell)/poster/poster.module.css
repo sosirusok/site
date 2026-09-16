@@ -4,7 +4,7 @@
 .side { display: grid; gap: 12px; }
 .typeTabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
 .typeTab {
-  display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px; border-radius: 4px;
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 4px;
   border: 1px solid var(--a-line); background: var(--a-panel); font-size: 15px; font-weight: 500; color: var(--a-ink-2);
 }
 .typeTab:hover { border-color: #b9bfc6; }
@@ -22,15 +22,13 @@
 .previewOuter { overflow: hidden; }
 .previewInner { transform-origin: top left; width: 794px; }
 
-/* ── A4 시트 공통: 흰 종이, 목탄 글자, 남색 강조, 14px 둥근 모서리. 통색 띠 없이 선만 (잉크 절약) ── */
+/* ── A4 시트 공통: 흰 종이, 검정 글자, 매장색은 점과 테두리에만. 그림자·그라데이션 없음 ── */
 .sheet {
-  --p-ink: #24211d;
-  --p-ink-2: #3f3a34;
-  --p-ink-3: #5a544c;
-  --p-navy: #1f2d40;
-  --p-line: #2b2823;
-  --p-red: #b8362a;
-  --p-r: 14px;
+  --p-ink: #111111;
+  --p-ink-2: #3a3a3a;
+  --p-ink-3: #6a6a6a;
+  --p-line: #1a1a1a;
+  --p-r: 6mm;
   width: 210mm;
   height: 297mm;
   background: #ffffff;
@@ -44,70 +42,50 @@
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
-.sheet img { display: block; }
-.warn {
-  position: absolute; left: 14mm; right: 14mm; top: 3mm; z-index: 2;
-  border: 0.5mm solid var(--p-red); border-radius: var(--p-r); color: var(--p-red);
-  font-weight: 800; font-size: 10pt; text-align: center; padding: 1.5mm 4mm; margin: 0; background: #fff;
-}
-.warnTent { left: 10mm; right: 10mm; }
+.sheet p, .sheet ol, .sheet ul, .sheet h1 { margin: 0; }
+.dot { display: inline-block; width: 4mm; height: 4mm; border-radius: 50%; background: var(--store, #999); flex: none; }
+.headStore { display: inline-flex; align-items: center; gap: 2.5mm; font-weight: 800; font-size: 13pt; }
+.headStore small { font-weight: 500; font-size: 10.5pt; color: var(--p-ink-3); }
 
 /* ── 포스터 (A4 세로 1쪽) ── */
 .poster {
-  padding: 11mm 14mm 10mm;
+  padding: 12mm 16mm 10mm;
   display: grid;
-  grid-template-rows: auto auto auto auto auto auto auto auto;
+  grid-template-rows: auto auto auto auto auto;
   align-content: space-between;
-  row-gap: 3mm;
+  row-gap: 4mm;
 }
-.head {
-  display: flex; align-items: center; gap: 4mm;
-  padding-bottom: 3mm; border-bottom: 0.6mm solid var(--p-navy);
-}
-.headBadge { width: 56mm; height: auto; flex: none; }
-.headHere { flex: 1; text-align: center; font-family: var(--font-display); font-size: 13pt; color: var(--p-navy); }
-.headLogo { width: 17mm; height: auto; flex: none; }
+.head { display: flex; align-items: center; justify-content: space-between; gap: 4mm; padding-bottom: 3mm; border-bottom: 0.8mm solid var(--store, var(--p-line)); }
+.headTag { font-family: var(--font-display); font-size: 12pt; line-height: 1; padding: 2.2mm 4mm; border: 0.5mm solid var(--p-line); border-radius: 999px; white-space: nowrap; }
 
-.artWrap { display: flex; justify-content: center; }
-.art { max-width: 80%; width: auto; height: auto; max-height: 70mm; object-fit: contain; }
+.titleBlock { text-align: center; display: grid; gap: 1.5mm; }
+.title { font-family: var(--font-display); font-weight: 400; font-size: 64pt; line-height: 1; letter-spacing: 0; }
+.titleSub { font-family: var(--font-display); font-size: 17pt; line-height: 1.2; color: var(--p-ink-2); }
+.titleCourse { font-size: 11pt; color: var(--p-ink-3); }
 
-.title { font-family: var(--font-display); font-weight: 700; font-size: 28pt; line-height: 1.28; margin: 0; text-align: center; }
-.title em { font-style: normal; color: var(--p-navy); }
-.sub { font-size: 12.5pt; line-height: 1.6; color: var(--p-ink-2); margin: 0; text-align: center; padding: 0 6mm; text-wrap: balance; }
+.qrBlock { display: grid; justify-items: center; gap: 3mm; }
+.qrFrame { padding: 5mm; border: 1.2mm solid var(--store, var(--p-line)); border-radius: var(--p-r); background: #fff; }
+.qrImg svg { width: 84mm; height: 84mm; display: block; }
+.qrMissing { width: 84mm; height: 84mm; border: 0.4mm dashed var(--p-ink-3); border-radius: 3mm; display: grid; place-items: center; text-align: center; font-size: 11pt; color: var(--p-ink-3); padding: 4mm; }
+.qrLabel { font-family: var(--font-display); font-size: 24pt; line-height: 1.15; text-align: center; }
+.qrHint { font-size: 10.5pt; color: var(--p-ink-2); text-align: center; line-height: 1.45; }
 
-.ruleLine {
-  margin: 0 auto; font-size: 10.5pt; line-height: 1.5; text-align: center; color: var(--p-ink-2);
-  border: 0.4mm solid var(--p-navy); border-radius: var(--p-r); padding: 2.2mm 5mm; max-width: 100%;
-}
-.ruleLine b { color: var(--p-navy); font-weight: 800; }
+.rules { display: grid; gap: 3mm; border: 0.5mm solid var(--p-line); border-radius: var(--p-r); padding: 4.5mm 5mm; }
+.rulesTitle { font-family: var(--font-display); font-size: 17pt; line-height: 1.1; text-align: center; }
+.steps { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.5mm; }
+.step { display: grid; justify-items: center; gap: 1.5mm; text-align: center; }
+.stepNo { width: 8mm; height: 8mm; border-radius: 50%; background: var(--p-ink); color: #fff; display: grid; place-items: center; font-family: var(--font-display); font-size: 11pt; line-height: 1; }
+.stepText { font-size: 10pt; font-weight: 700; line-height: 1.3; }
+.benefits { list-style: none; padding: 0; display: grid; gap: 1.5mm; border-top: 0.3mm solid #cfcfcf; padding-top: 3mm; }
+.benefit { display: grid; grid-template-columns: 4mm 30mm 1fr; align-items: center; gap: 3mm; font-size: 11pt; line-height: 1.3; }
+.benefitStore { font-weight: 700; }
+.benefitWhat { color: var(--p-ink-2); }
+.benefitHere .benefitWhat { color: var(--p-ink); font-weight: 800; }
+.condition { text-align: center; font-size: 10.5pt; font-weight: 700; line-height: 1.4; border-top: 0.3mm solid #cfcfcf; padding-top: 2.5mm; }
 
-.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; align-items: start; }
-.step { display: grid; grid-template-columns: 8mm 1fr; grid-template-rows: auto auto; column-gap: 2.5mm; row-gap: 2mm; align-items: center; }
-.stepArt { grid-column: 1 / -1; justify-self: center; width: auto; height: 26mm; max-width: 100%; object-fit: contain; }
-.stepNo {
-  width: 8mm; height: 8mm; border-radius: 50%; background: var(--p-navy); color: #fff;
-  display: grid; place-items: center; font-family: var(--font-display); font-size: 11pt; line-height: 1;
-}
-.stepText { font-size: 11pt; font-weight: 700; line-height: 1.35; }
-
-.qrs { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
-.qrBox {
-  display: grid; grid-template-columns: 34mm 1fr; gap: 4mm; align-items: center;
-  border: 0.4mm solid var(--p-line); border-radius: var(--p-r); padding: 4mm;
-}
-.qrBoxMain { border-color: var(--p-navy); border-width: 0.7mm; }
-.qrImg svg { width: 34mm; height: 34mm; display: block; }
-.qrMissing { width: 34mm; height: 34mm; border: 0.35mm dashed var(--p-ink-3); border-radius: 3mm; display: grid; place-items: center; text-align: center; font-size: 9.5pt; color: var(--p-ink-3); padding: 3mm; }
-.qrText { min-width: 0; }
-.qrLabel { font-family: var(--font-display); font-size: 14pt; line-height: 1.25; margin: 0; color: var(--p-navy); }
-.qrHint { font-size: 10.5pt; color: var(--p-ink-2); margin: 1.5mm 0 0; line-height: 1.45; }
-.qrUrl { font-family: var(--font-mono); font-size: 8pt; color: var(--p-ink-3); margin: 1.5mm 0 0; overflow-wrap: anywhere; line-height: 1.3; }
-
-.foot { border-top: 0.4mm solid var(--p-line); padding-top: 3mm; display: grid; gap: 2.5mm; }
-.footRule { margin: 0; font-size: 10.5pt; line-height: 1.5; color: var(--p-ink-2); text-align: center; text-wrap: balance; }
-.footStores { list-style: none; margin: 0; padding: 0; display: flex; justify-content: center; gap: 8mm; flex-wrap: wrap; }
-.footStores li { display: flex; align-items: center; gap: 2.5mm; font-size: 9.5pt; color: var(--p-ink-2); line-height: 1.3; }
-.footBadge { width: 30mm; height: auto; }
+.foot { display: flex; align-items: baseline; justify-content: space-between; gap: 4mm; border-top: 0.4mm solid var(--p-line); padding-top: 2.5mm; }
+.footUrl { font-family: var(--font-mono); font-size: 9pt; color: var(--p-ink-2); overflow-wrap: anywhere; }
+.footSlogan { font-size: 7.5pt; letter-spacing: 0.12em; color: var(--p-ink-3); white-space: nowrap; }
 
 /* ── 테이블·계산대 안내물: A6 4장 (2×2) ── */
 .tentSheet { padding: 0; }
@@ -118,25 +96,22 @@
 .tentCell:nth-child(3) { border-right: 0.3mm dashed var(--p-ink-3); }
 .tent {
   flex: 1; min-width: 0;
-  display: grid; grid-template-rows: auto auto auto auto auto; align-content: space-between; row-gap: 2.5mm;
+  display: grid; grid-template-rows: auto auto auto auto auto auto; align-content: space-between; row-gap: 2mm;
   text-align: center;
 }
-.tentTop { display: flex; align-items: center; justify-content: space-between; gap: 3mm; }
-.tentBadge { width: 38mm; height: auto; }
-.tentLogo { width: 12mm; height: auto; }
-.tentArtWrap { display: flex; justify-content: center; }
-.tentArt { width: auto; height: auto; max-width: 78%; max-height: 44mm; object-fit: contain; }
-.tentLine { font-family: var(--font-display); font-size: 14.5pt; line-height: 1.3; margin: 0; }
-.tentLine em { font-style: normal; color: var(--p-navy); }
-.tentSub { font-size: 9.5pt; line-height: 1.45; color: var(--p-ink-2); margin: 0; text-wrap: balance; }
-.tentQr {
-  display: grid; grid-template-columns: 27mm 1fr; gap: 3mm; align-items: center; text-align: left;
-  border: 0.5mm solid var(--p-navy); border-radius: var(--p-r); padding: 3mm;
-}
-.tentQrImg svg { width: 27mm; height: 27mm; display: block; }
-.tentQrLabel { font-family: var(--font-display); font-size: 11.5pt; color: var(--p-navy); margin: 0; line-height: 1.25; }
-.tentQrHint { font-size: 9pt; color: var(--p-ink-2); margin: 1mm 0 0; line-height: 1.4; }
-.tentQrUrl { font-family: var(--font-mono); font-size: 6.8pt; color: var(--p-ink-3); margin: 1mm 0 0; overflow-wrap: anywhere; line-height: 1.3; }
+.tentTop { display: flex; align-items: center; justify-content: space-between; gap: 2mm; padding-bottom: 2mm; border-bottom: 0.6mm solid var(--store, var(--p-line)); }
+.tentTop .headStore { font-size: 10.5pt; }
+.tentTag { font-family: var(--font-display); font-size: 8.5pt; line-height: 1; padding: 1.6mm 2.8mm; border: 0.4mm solid var(--p-line); border-radius: 999px; white-space: nowrap; }
+.tentTitle { font-family: var(--font-display); font-size: 30pt; line-height: 1; }
+.tentQrWrap { display: grid; justify-items: center; gap: 1.8mm; }
+.tentQrFrame { padding: 3mm; border: 0.8mm solid var(--store, var(--p-line)); border-radius: 4mm; }
+.tentQrImg svg { width: 42mm; height: 42mm; display: block; }
+.tentQrLabel { font-family: var(--font-display); font-size: 13pt; line-height: 1.15; }
+.tentQrHint { font-size: 8.5pt; color: var(--p-ink-2); line-height: 1.4; }
+.tentBenefit { font-size: 9.5pt; line-height: 1.4; color: var(--p-ink-2); }
+.tentBenefit b { color: var(--p-ink); }
+.tentCondition { font-size: 8.5pt; font-weight: 700; line-height: 1.4; }
+.tentUrl { font-family: var(--font-mono); font-size: 7pt; color: var(--p-ink-3); overflow-wrap: anywhere; }
 
 @page { size: A4; margin: 0; }
 @media print {

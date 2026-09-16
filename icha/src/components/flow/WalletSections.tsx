@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Art } from "@/components/art/Art";
+import { PlaceButton } from "@/components/site/PlaceButton";
+import type { PlaceSheetStore } from "@/components/site/PlaceSheet";
 import { Chevron } from "@/components/ui/Chevron";
 import type { StoreId } from "@/lib/config";
-import { formatWon } from "@/lib/config";
 import { daysLeft, fmtMD, fmtMDHM } from "./format";
 import styles from "./WalletSections.module.css";
 
@@ -22,67 +23,41 @@ export type WalletCoupon = {
   image: { src: string; local: boolean } | null;
 };
 
-export type WalletReceipt = {
+/** 계산할 때 받은 릴레이 쿠폰 — 아직 어느 매장에서 쓸지 안 고른 것 */
+export type WalletRelay = {
   id: string;
-  status: "approved" | "review" | "rejected";
-  createdAt: string;
-  receiptAt: string | null;
-  amount: number | null;
-  store: StoreRef | null;
-  /** 승인 영수증: 고를 수 있는 마지막 날 */
-  deadline: string | null;
-  /** 승인 영수증: 고를 수 있는 집 */
+  /** 넣어 준 매장 */
+  store: StoreRef;
+  /** 쓸 수 있는 매장 이름들 */
   giftNames: string[];
+  /** 고를 수 있는 마지막 날 */
+  deadline: string;
 };
 
-/** 쿠폰 종류 꼬리표 — 영수증 쿠폰은 없음 */
+/** 쿠폰 종류 꼬리표 — 계산할 때 받은 쿠폰은 없음, 매장이 따로 넣어 준 쿠폰만 */
 function kindText(c: Pick<WalletCoupon, "kind">): string | null {
-  return c.kind === "vip" ? "등급 쿠폰" : c.kind === "manual" ? "매장 쿠폰" : null;
+  return c.kind === "side" ? null : "매장 쿠폰";
 }
 
-/** 쿠폰 행 썸네일 — 품목 실사진(56px)이 있으면 사진, 없으면 매장 쿠폰 티켓 그림(64px) */
+/** 쿠폰 행 썸네일 — 품목 실사진(56px)이 있으면 사진, 없으면 매장 쿠폰 티켓 그림 */
 function CouponThumb({ c }: { c: WalletCoupon }) {
   if (c.image) return <Image src={c.image.src} alt="" width={56} height={56} sizes="56px" className="thumb" unoptimized={!c.image.local} />;
-  return <Art name={`coupon-${c.store?.id ?? "joseon"}`} className={styles.ticket} sizes="64px" />;
+  return <Art name={`coupon-${c.store?.id ?? "joseon"}`} className={styles.ticket} sizes="56px" />;
 }
 
-/* 내 등급 — 등급명, 누적 금액, 다음 등급까지 얇은 막대 */
-export function TierCard({ tierName, totalSpend, visitCount, nextName, remaining, progress }: { tierName: string; totalSpend: number; visitCount: number; nextName: string | null; remaining: number; progress: number }) {
+/* 받은 쿠폰 — 넣어 준 매장 색 네온 카드 한 장씩 */
+export function RelayCards({ relays }: { relays: WalletRelay[] }) {
   return (
-    <section id="tier" className={`card-soft ${styles.tier}`} aria-labelledby="tier-title">
-      <div className={styles.tierRow}>
-        <div>
-          <p id="tier-title" className="cap">내 등급</p>
-          <p className={styles.tierName}>{tierName}</p>
-        </div>
-        <div className={styles.tierAmt}>
-          <p className="cap">누적 {visitCount}회</p>
-          <p className={`num ${styles.tierSum}`}>{formatWon(totalSpend)}</p>
-        </div>
-      </div>
-      <div className={styles.bar} role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)} aria-label={nextName ? `${nextName}까지` : "가장 높은 등급"}>
-        <span className={styles.fill} style={{ width: `${Math.max(2, Math.round(progress * 100))}%` }} />
-      </div>
-      <p className="cap">{nextName ? `${nextName}까지 ${formatWon(remaining)} 남았어요. 세 집 금액이 합쳐져요.` : "가장 높은 등급이에요. 등급 쿠폰이 따로 들어와요."}</p>
-    </section>
-  );
-}
-
-/* 아직 안 고른 승인 영수증 */
-export function PickableReceipts({ receipts }: { receipts: WalletReceipt[] }) {
-  return (
-    <section className={`wrap ${styles.sec}`} aria-labelledby="wallet-pick">
+    <section className={`wrap ${styles.sec}`} aria-labelledby="wallet-relay">
       <div className="section-h">
-        <h2 id="wallet-pick" className="h2-event">아직 안 고른 영수증</h2>
+        <h2 id="wallet-relay" className="h2-event">받은 쿠폰</h2>
       </div>
-      <ul>
-        {receipts.map((r) => (
-          <li key={r.id} className="row">
-            <div className="body">
-              <p className="title">{r.store?.shortName ?? "매장"} {r.amount == null ? "" : formatWon(r.amount)}</p>
-              <p className="sub">{fmtMDHM(r.receiptAt ?? r.createdAt)}{r.deadline ? ` · ${fmtMD(r.deadline)}까지 골라요` : ""}</p>
-            </div>
-            <Link href={`/pick/${r.id}`} className="btn btn-sm">고르기</Link>
+      <ul className={styles.relays}>
+        {relays.map((r) => (
+          <li key={r.id} className={`card-neon ${styles.relay}`} data-store={r.store.id}>
+            <p className={`h2-event neon ${styles.relayTitle}`}>{r.store.shortName}에서 받은 쿠폰</p>
+            <p className="cap">{r.giftNames.join("·")} 중 한 곳에서 써요 · {fmtMD(r.deadline)}까지</p>
+            <Link href={`/pick/${r.id}`} className="btn btn-sm">어디서 쓸지 고르기</Link>
           </li>
         ))}
       </ul>
@@ -90,7 +65,7 @@ export function PickableReceipts({ receipts }: { receipts: WalletReceipt[] }) {
   );
 }
 
-/* 쓸 수 있는 쿠폰 — 품목 사진(없으면 티켓) · 품목 · 코드 · 만료일 */
+/* 쓸 수 있는 쿠폰 — 품목 사진(없으면 티켓) · 품목 · 매장 · 코드 · 만료일 */
 export function ActiveCoupons({ coupons }: { coupons: WalletCoupon[] }) {
   const now = new Date();
   return (
@@ -105,7 +80,7 @@ export function ActiveCoupons({ coupons }: { coupons: WalletCoupon[] }) {
               <span className="body">
                 <span className={`title ${styles.title}`}>{c.menuName}{kind && <span className="tag">{kind}</span>}</span>
                 <span className={`sub ${styles.sub}`}>
-                  {c.store?.shortName ?? "매장"} · <span className="mono">{c.code}</span> · {fmtMD(c.expiresAt)}까지{left <= 7 ? <span className={styles.soon}> · {Math.max(left, 0)}일 남음</span> : ""}
+                  <span className={styles.storeName}>{c.store?.shortName ?? "매장"}</span> · <span className="mono">{c.code}</span> · {fmtMD(c.expiresAt)}까지{left <= 7 ? <span className={styles.soon}> · {Math.max(left, 0)}일 남음</span> : ""}
                 </span>
               </span>
               <Chevron />
@@ -114,30 +89,6 @@ export function ActiveCoupons({ coupons }: { coupons: WalletCoupon[] }) {
         );
       })}
     </ul>
-  );
-}
-
-/* 직원 확인 대기 영수증 */
-export function PendingReceipts({ receipts }: { receipts: WalletReceipt[] }) {
-  return (
-    <section className={`wrap ${styles.sec}`} aria-labelledby="wallet-pending">
-      <div className="section-h">
-        <h2 id="wallet-pending" className="h2-event">확인 중인 영수증</h2>
-      </div>
-      <ul>
-        {receipts.map((r) => (
-          <li key={r.id} className="row">
-            <Art name="status-checking" className={styles.icon} sizes="40px" />
-            <div className="body">
-              <p className="title">{r.store ? `${r.store.shortName} 영수증` : "영수증"}</p>
-              <p className="sub">{fmtMDHM(r.createdAt)} 올림</p>
-            </div>
-            <span className="status-wait">확인 중</span>
-          </li>
-        ))}
-      </ul>
-      <p className={`cap ${styles.note}`}>직원이 보고 있어요. 끝나면 여기서 바로 골라요.</p>
-    </section>
   );
 }
 
@@ -169,13 +120,14 @@ export function PastCoupons({ coupons }: { coupons: WalletCoupon[] }) {
   );
 }
 
-/* 아무것도 없을 때 */
-export function EmptyWallet() {
+/* 아무것도 없을 때 — 빈 주머니, 한 줄 안내, 플레이스 버튼(매장 보기) */
+export function EmptyWallet({ stores }: { stores: PlaceSheetStore[] }) {
   return (
     <div className={styles.empty}>
       <Art name="empty-pocket" width={120} />
-      <p className="cap">아직 쿠폰이 없어요. 영수증을 올리면 여기 담겨요.</p>
-      <Link href="/verify" className="btn">영수증 올리기</Link>
+      <p className={`h2-event ${styles.emptyTitle}`}>아직 쿠폰이 없어요</p>
+      <p className="cap">한 매장에서 계산할 때 휴대폰 번호를 말해 주세요. 여기로 들어와요.</p>
+      <PlaceButton stores={stores} className={`btn btn-naver btn-block ${styles.emptyBtn}`}>네이버 플레이스에서 매장 보기</PlaceButton>
     </div>
   );
 }

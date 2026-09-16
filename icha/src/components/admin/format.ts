@@ -73,18 +73,20 @@ export const COUPON_STATUS: Record<string, { label: string; tone: "ok" | "warn" 
   void: { label: "취소", tone: "bad" },
 };
 export const COUPON_KIND: Record<string, string> = {
-  side: "영수증 증정",
+  side: "릴레이",
   vip: "등급 혜택",
-  manual: "수동 발급",
+  manual: "매장 발급",
 };
 export const AUDIT_ACTION: Record<string, string> = {
   "admin.login": "관리자 로그인",
   "admin.logout": "관리자 로그아웃",
   "receipt.approve": "영수증 승인",
   "receipt.reject": "영수증 반려",
+  counter_issue: "카운터 쿠폰 주기",
+  counter_redeem: "카운터 사용 처리",
   "coupon.redeem": "쿠폰 사용 처리",
   "coupon.void": "쿠폰 취소",
-  "coupon.issue_manual": "쿠폰 수동 발급",
+  "coupon.issue_manual": "쿠폰 매장 발급",
   "member.memo": "회원 메모 수정",
   "menu.save": "메뉴 저장",
   "menu.delete": "메뉴 삭제",

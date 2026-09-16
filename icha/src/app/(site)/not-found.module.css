@@ -1,5 +1,4 @@
-.wrap { display: grid; justify-items: center; text-align: center; gap: 6px; padding-block: 64px 48px; }
-.art { margin-bottom: 10px; }
+.wrap { display: grid; justify-items: center; text-align: center; gap: 6px; padding-block: 80px 48px; }
 .btn { margin-top: 16px; min-width: 160px; }
 .btns { display: flex; gap: 8px; margin-top: 16px; }
 .btns > * { min-width: 120px; }

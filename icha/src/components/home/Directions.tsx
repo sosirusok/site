@@ -1,15 +1,16 @@
 import { StoreMap, type MapStore } from "@/components/site/StoreMap";
 import { LOCATIONS } from "@/lib/locations";
+import { placeLinks } from "@/lib/naver";
 import { STORES } from "@/lib/stores";
 import s from "./home.module.css";
 
-/** "서면역 6번 출구에서 걸어서 2~4분" */
+/** "서면역 6번 출구 걸어서 2~4분" — 값은 lib/locations.ts */
 function walkLine(): string {
   const v = Object.values(LOCATIONS);
   const exits = Array.from(new Set(v.map((l) => l.exit))).join("·");
   const mins = v.map((l) => l.walkMin);
   const lo = Math.min(...mins), hi = Math.max(...mins);
-  return `서면역 ${exits}번 출구에서 걸어서 ${lo === hi ? `${lo}분` : `${lo}~${hi}분`}`;
+  return `서면역 ${exits}번 출구 걸어서 ${lo === hi ? `${lo}분` : `${lo}~${hi}분`}`;
 }
 
 /** "부산 부산진구 동천로85번길 14 1,2층" → "동천로85번길 14 1,2층" */
@@ -17,29 +18,37 @@ function shortAddress(a: string): string {
   return a.replace(/^부산(광역시)?\s*부산진구\s*/, "");
 }
 
-/** 오시는 길 — 한 줄 + 지도(매장색 핀, STORES 순서 그대로) + 주소 세 줄 */
+/** 오시는 길 — 한 줄, 지도(매장색 핀), 매장별 주소 행과 길찾기 버튼 */
 export function Directions() {
-  const mapStores: MapStore[] = STORES.filter((st) => st.lat != null && st.lng != null).map((st) => ({
+  const ordered = [...STORES].sort((a, b) => a.course.n - b.course.n);
+  const mapStores: MapStore[] = ordered.filter((st) => st.lat != null && st.lng != null).map((st) => ({
     id: st.id, name: st.name, shortName: st.shortName, drink: st.drink, lat: st.lat!, lng: st.lng!, address: st.address, naverPlaceId: st.naverPlaceId,
   }));
   return (
-    <section className="section" aria-labelledby="map-title">
+    <section className={`section ${s.sec}`} aria-labelledby="map-title">
       <div className="wrap">
         <div className="section-h">
           <h2 id="map-title" className="h2-event">오시는 길</h2>
         </div>
-        <p className="cap">세 집 모두 50m 안, {walkLine()}</p>
+        <p className="cap">세 집 모두 50m 안 · {walkLine()}</p>
         <div className={s.mapBox}>
           <StoreMap stores={mapStores} compact hidePanel height={200} />
         </div>
-        <dl className={`kv ${s.addr}`}>
-          {STORES.map((st) => (
-            <div key={st.id} style={{ display: "contents" }}>
-              <dt>{st.shortName}</dt>
-              <dd>{shortAddress(st.address)}</dd>
-            </div>
-          ))}
-        </dl>
+        <ul className={s.addrs}>
+          {ordered.map((st) => {
+            const links = placeLinks(st);
+            return (
+              <li key={st.id} className="row" data-store={st.id}>
+                <span className="dot" aria-hidden="true" />
+                <div className="body">
+                  <p className="title">{st.shortName}</p>
+                  <p className="sub">{shortAddress(st.address)}</p>
+                </div>
+                {links && <a className="btn btn-secondary btn-sm" href={links.directions} target="_blank" rel="noreferrer">길찾기</a>}
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </section>
   );

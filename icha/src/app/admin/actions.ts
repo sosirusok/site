@@ -8,7 +8,8 @@ import { redirect } from "next/navigation";
 import sharp from "sharp";
 import { hashPassword } from "@/lib/auth/password";
 import { clearAdminSession, getAdminSession, type AdminSession } from "@/lib/auth/session";
-import { STORE_IDS, normalizePhone, type Rules, type StoreId } from "@/lib/config";
+import { STORE_IDS, formatPhone, normalizePhone, type Rules, type StoreId } from "@/lib/config";
+import { counterRedeemPending, issueCounterPass } from "@/lib/counter";
 import { issueManualCoupons, redeemCoupon, voidCoupon } from "@/lib/coupons";
 import { query } from "@/lib/db";
 import {
@@ -98,6 +99,59 @@ export async function decideReceiptAction(_prev: ActionState, fd: FormData): Pro
         : "반려했습니다. 회원 쿠폰함에는 반려로 표시됩니다.",
       data: { status: r.status },
     };
+  });
+}
+
+/* ───────── 카운터 (계산대에서 손님 번호로 발급·사용) ───────── */
+
+/** 직원은 자기 매장, 총괄은 폼에서 고른 매장 */
+function counterStoreFor(s: AdminSession, chosen: string): StoreId {
+  if (s.role === "staff") {
+    if (s.storeId && isStoreId(s.storeId)) return s.storeId;
+    throw new ActionError("매장이 지정되지 않은 직원 계정입니다. 총괄 관리자에게 문의하세요.");
+  }
+  if (!isStoreId(chosen)) throw new ActionError("어느 매장 계산대인지 고르세요.");
+  return chosen;
+}
+
+/** (a) 이 손님에게 쿠폰 주기 — 이 매장 이름으로 릴레이 발급 */
+export async function counterIssueAction(_prev: ActionState, fd: FormData): Promise<ActionState> {
+  return run(async () => {
+    const s = await requireAdmin();
+    const phone = normalizePhone(str(fd, "phone"));
+    if (!phone) throw new ActionError("휴대폰 번호를 확인해 주세요.");
+    const storeId = counterStoreFor(s, str(fd, "storeId"));
+    const amount = num(fd, "amount");
+    if (amount != null && (amount < 0 || amount > 50_000_000)) throw new ActionError("금액이 올바르지 않습니다.");
+    const r = await issueCounterPass({ phone, storeId, amount, adminId: s.adminId });
+    const names = r.usableAt.map((id) => getStore(id)?.shortName ?? id).join("·");
+    return {
+      message: `${formatPhone(r.member.phone)} 손님에게 ${getStore(storeId)?.shortName ?? "이 매장"} 쿠폰을 넣었습니다. ${names}에서 쓸 수 있어요.`,
+      data: { receiptId: r.receiptId, phone: r.member.phone, usableAt: names },
+    };
+  });
+}
+
+/** (b) 여기서 사용 처리 — 이 매장 쿠폰이면 바로, 받은 릴레이면 이 매장 혜택 품목을 골라 발급과 동시에 사용 처리 */
+export async function counterRedeemAction(_prev: ActionState, fd: FormData): Promise<ActionState> {
+  return run(async () => {
+    const s = await requireAdmin();
+    const storeId = counterStoreFor(s, str(fd, "storeId"));
+    const couponId = str(fd, "couponId");
+    if (couponId) {
+      if (!isUuid(couponId)) throw new ActionError("쿠폰을 찾을 수 없습니다.");
+      const c = await redeemCoupon({ couponId, by: { adminId: s.adminId, storeId } });
+      await audit(s.adminId, "counter_redeem", c.id, { code: c.code, storeId, menuName: c.menuName, via: "coupon" });
+      return { message: `${c.menuName} 사용 처리했습니다.`, data: { code: c.code, couponId: c.id, menuName: c.menuName } };
+    }
+    const receiptId = str(fd, "receiptId");
+    const memberId = str(fd, "memberId");
+    const menuItemId = intId(fd, "menuItemId");
+    if (!isUuid(receiptId) || !isUuid(memberId)) throw new ActionError("받은 릴레이를 찾을 수 없습니다. 번호를 다시 조회하세요.");
+    if (!menuItemId) throw new ActionError("혜택 품목을 고르세요.");
+    const c = await counterRedeemPending({ receiptId, memberId, menuItemId, adminId: s.adminId, storeId });
+    await audit(s.adminId, "counter_redeem", c.id, { code: c.code, storeId, receiptId, menuName: c.menuName, via: "relay" });
+    return { message: `${c.menuName} 사용 처리했습니다.`, data: { code: c.code, couponId: c.id, menuName: c.menuName } };
   });
 }
 
@@ -307,63 +361,20 @@ export async function deleteMenuAction(_prev: ActionState, fd: FormData): Promis
 export async function saveRulesAction(_prev: ActionState, fd: FormData): Promise<ActionState> {
   return run(async () => {
     const s = await requireAdmin({ owner: true });
-    const receiptValidHours = num(fd, "receiptValidHours");
     const couponValidDays = num(fd, "couponValidDays");
-    const minAmount = num(fd, "minAmount");
-    const maxAutoAmount = num(fd, "maxAutoAmount");
     const dailyLimitPerMember = num(fd, "dailyLimitPerMember");
-    const dailyAttemptLimit = num(fd, "dailyAttemptLimit");
-    const dailyOcrLimit = num(fd, "dailyOcrLimit");
-    const similarHashThreshold = num(fd, "similarHashThreshold");
-    const minConfidencePct = num(fd, "minConfidence");
-    if (receiptValidHours == null || receiptValidHours < 1 || receiptValidHours > 24 * 30) throw new ActionError("영수증 인정 시간은 1~720시간 사이로 적어 주세요.");
     if (couponValidDays == null || couponValidDays < 1 || couponValidDays > 365) throw new ActionError("쿠폰 유효 기간은 1~365일 사이로 적어 주세요.");
-    if (minAmount == null || minAmount < 0 || minAmount > 1_000_000) throw new ActionError("최소 금액은 0~1,000,000원 사이로 적어 주세요.");
-    if (maxAutoAmount == null || maxAutoAmount < 0 || maxAutoAmount > 50_000_000) throw new ActionError("자동 승인 상한 금액은 0~50,000,000원 사이로 적어 주세요.");
-    if (maxAutoAmount > 0 && minAmount > maxAutoAmount) throw new ActionError("자동 승인 상한 금액은 최소 금액보다 커야 합니다.");
-    if (dailyLimitPerMember == null || dailyLimitPerMember < 1 || dailyLimitPerMember > 20) throw new ActionError("하루 한도는 1~20회 사이로 적어 주세요.");
-    if (dailyAttemptLimit == null || dailyAttemptLimit < 0 || dailyAttemptLimit > 100) throw new ActionError("하루 업로드 시도 한도는 0~100회 사이로 적어 주세요.");
-    if (dailyAttemptLimit > 0 && dailyAttemptLimit < dailyLimitPerMember) throw new ActionError("하루 업로드 시도 한도는 하루 인증 한도보다 작을 수 없습니다.");
-    if (dailyOcrLimit == null || dailyOcrLimit < 0 || dailyOcrLimit > 100_000) throw new ActionError("하루 자동 인식 상한은 0~100,000회 사이로 적어 주세요.");
-    if (similarHashThreshold == null || similarHashThreshold < 0 || similarHashThreshold > 64) throw new ActionError("유사 사진 민감도는 0~64 사이로 적어 주세요.");
-    if (minConfidencePct == null || minConfidencePct < 0 || minConfidencePct > 100) throw new ActionError("인식 신뢰도는 0~100% 사이로 적어 주세요.");
-
-    const keys = fd.getAll("tierKey").map(String);
-    const names = fd.getAll("tierName").map(String);
-    const mins = fd.getAll("tierMin").map(String);
-    const tiers: Rules["tiers"] = [];
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i]!.trim().toLowerCase().replace(/[^a-z0-9_]/g, "");
-      const name = (names[i] ?? "").trim();
-      const minSpend = Number((mins[i] ?? "").replace(/[,\s원]/g, ""));
-      if (!key && !name) continue;
-      if (!key || !name) throw new ActionError(`${i + 1}번째 등급의 키와 이름을 모두 적어 주세요.`);
-      if (key === "none") throw new ActionError("'none' 은 일반 등급을 뜻하므로 키로 쓸 수 없습니다.");
-      if (!Number.isFinite(minSpend) || minSpend < 0) throw new ActionError(`'${name}' 등급의 기준 금액이 올바르지 않습니다.`);
-      if (tiers.some((t) => t.key === key)) throw new ActionError(`등급 키 '${key}' 가 중복됩니다.`);
-      tiers.push({ key, name, minSpend: Math.round(minSpend) });
-    }
-    if (!tiers.length) throw new ActionError("등급은 최소 1개 있어야 합니다.");
-    tiers.sort((a, b) => a.minSpend - b.minSpend);
-
+    if (dailyLimitPerMember == null || dailyLimitPerMember < 1 || dailyLimitPerMember > 20) throw new ActionError("하루 한도는 1~20장 사이로 적어 주세요.");
+    // 사진·자동 인식 관련 값(인정 시간·금액·민감도·등급 표)은 화면에서 뺐으므로 기존 값을 그대로 둔다
     const patch: Partial<Rules> = {
-      receiptValidHours: Math.round(receiptValidHours),
       couponValidDays: Math.round(couponValidDays),
-      minAmount: Math.round(minAmount),
-      maxAutoAmount: Math.round(maxAutoAmount),
       dailyLimitPerMember: Math.round(dailyLimitPerMember),
-      dailyAttemptLimit: Math.round(dailyAttemptLimit),
-      dailyOcrLimit: Math.round(dailyOcrLimit),
-      similarHashThreshold: Math.round(similarHashThreshold),
-      minConfidence: Math.round(minConfidencePct) / 100,
-      tiers,
       eventActive: fd.get("eventActive") === "on",
-      sameDayOnly: fd.get("sameDayOnly") === "on",
       notice: str(fd, "notice").slice(0, 200),
     };
     await saveRules(patch);
     await audit(s.adminId, "settings.save", "rules", patch);
-    return { message: "운영 규칙을 저장했습니다. 손님 사이트에 바로 반영됩니다." };
+    return { message: "저장했습니다. 손님 사이트와 카운터에 바로 반영됩니다." };
   });
 }
 

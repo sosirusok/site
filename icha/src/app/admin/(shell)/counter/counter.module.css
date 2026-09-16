@@ -1,0 +1,64 @@
+/* 카운터 — 계산대에서 번호 하나로 3초 안에 끝내는 화면. 입력·버튼·결과가 크다. */
+.storeChips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.storeChip {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 999px;
+  border: 1px solid var(--a-line); background: var(--a-panel); font-size: 15px; color: var(--a-ink-2);
+}
+.storeChip:hover { border-color: #b9bfc6; }
+.storeChipActive { border-color: var(--a-ink); color: var(--a-ink); font-weight: 700; box-shadow: inset 0 0 0 1px var(--a-ink); }
+.storeFixed { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 15px; color: var(--a-ink-2); margin-bottom: 12px; }
+.storeFixed b { color: var(--a-ink); }
+
+.phoneForm { display: grid; gap: 8px; }
+.phoneRow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.phoneInput {
+  width: 100%; min-height: 64px; padding: 0 14px; border-radius: 6px;
+  border: 2px solid #b9bfc6; background: var(--a-panel);
+  font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 30px; letter-spacing: 0.04em; text-align: center; color: var(--a-ink);
+}
+.phoneInput::placeholder { color: #b0b6bd; letter-spacing: 0.04em; }
+.phoneInput:focus { outline: 2px solid var(--a-ink); outline-offset: 0; border-color: var(--a-ink); }
+.clear { text-decoration: underline; text-underline-offset: 3px; color: var(--a-ink-2); }
+.bigButton { min-height: 56px; padding: 0 22px; font-size: 18px; font-weight: 700; border-radius: 6px; }
+
+.result {
+  margin: 0; padding: 16px 18px; border-radius: 6px;
+  background: var(--a-ok-bg); border: 1px solid #bfe3cf; color: var(--a-ok);
+  font-size: 22px; font-weight: 700; line-height: 1.35; display: flex; gap: 10px; align-items: flex-start;
+}
+.resultMark { flex: none; font-size: 26px; line-height: 1.15; }
+.resultBad { font-size: 16px; padding: 12px 14px; }
+
+.card { display: grid; gap: 10px; }
+.cardPhone { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 34px; font-weight: 600; letter-spacing: 0.04em; line-height: 1.1; }
+.cardMeta { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 14px; color: var(--a-ink-3); }
+.cardMeta b { color: var(--a-ink); font-weight: 600; }
+.counts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 4px; }
+.count { border: 1px solid var(--a-line-2); border-radius: 6px; padding: 10px 12px; display: grid; gap: 2px; }
+.countLabel { font-size: 14px; color: var(--a-ink-3); }
+.countValue { font-family: var(--font-mono); font-size: 24px; font-weight: 600; line-height: 1.1; }
+.countHot .countValue { color: var(--a-ok); }
+
+.twoCol { display: grid; gap: 16px; grid-template-columns: 1fr; align-items: start; }
+@media (min-width: 900px) { .twoCol { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.couponRow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; }
+.couponText { display: grid; gap: 2px; min-width: 0; }
+.couponMenu { font-size: 18px; font-weight: 700; line-height: 1.25; }
+.pendingForm { padding-top: 4px; }
+.giftList { display: grid; gap: 6px; }
+.giftOpt {
+  display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 12px;
+  border: 1px solid var(--a-line); border-radius: 6px; cursor: pointer; font-size: 15px; background: var(--a-panel);
+}
+.giftOpt input { width: 18px; height: 18px; accent-color: var(--a-ink); margin: 0; flex: none; }
+.giftOpt:has(input:checked) { border-color: var(--a-ink); box-shadow: inset 0 0 0 1px var(--a-ink); }
+.giftName { flex: 1; font-weight: 600; }
+
+@media (max-width: 480px) {
+  .phoneRow { grid-template-columns: 1fr; }
+  .phoneInput { font-size: 26px; }
+  .cardPhone { font-size: 28px; }
+  .result { font-size: 19px; }
+  .couponRow { grid-template-columns: 1fr; }
+}

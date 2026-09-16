@@ -1,3 +1,5 @@
-.page { padding-block: 24px 40px; display: grid; gap: 20px; }
-.head { display: grid; gap: 6px; }
-.paused { display: grid; gap: 8px; justify-items: start; }
+.page { padding-block: 28px 40px; display: grid; gap: 18px; }
+.head { display: grid; gap: 8px; }
+.steps { display: grid; }
+/* 순서 번호 — 노랑 네온 링 */
+.num { flex: none; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--yellow); color: var(--yellow); font-size: 13px; font-weight: 700; box-shadow: 0 0 10px rgba(255, 210, 63, 0.35); }

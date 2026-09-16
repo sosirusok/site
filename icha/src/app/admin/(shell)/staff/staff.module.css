@@ -1,4 +1,4 @@
-.grid { display: grid; gap: 16px; grid-template-columns: 1fr; align-items: start; }
+.grid { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); align-items: start; }
 @media (min-width: 960px) { .grid { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); } }
 .pwForm { display: flex; gap: 6px; align-items: center; }
 .pwForm input { min-width: 150px; }

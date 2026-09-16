@@ -29,6 +29,10 @@ export type Rules = {
   receiptValidHours: number;
   /** 당일(한국 시간 기준 같은 날) 영수증만 인정 — 포스터 "당일 영수증 한정" */
   sameDayOnly: boolean;
+  /** 매장별 오늘의 소식(관리자가 적음, 비우면 숨김) */
+  storeNotices: Record<StoreId, string>;
+  /** 네이버 리뷰 이벤트: 매장별 혜택 문구(비우면 숨김). 예: "리뷰 보여 주면 소주 1병" */
+  reviewBenefit: Record<StoreId, string>;
   /** 발급된 쿠폰의 유효 기간(일). 승인된 영수증으로 증정 쿠폰을 고를 수 있는 기간도 같다 */
   couponValidDays: number;
   /** 인정 최소 결제 금액(원). 0이면 제한 없음 */
@@ -56,6 +60,8 @@ export type Rules = {
 export const DEFAULT_RULES: Rules = {
   receiptValidHours: 24,
   sameDayOnly: true,
+  storeNotices: { joseon: "", tokyo: "", wareureu: "" },
+  reviewBenefit: { joseon: "", tokyo: "", wareureu: "" },
   couponValidDays: 30,
   minAmount: 10000,
   maxAutoAmount: 1000000,

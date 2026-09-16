@@ -1,8 +1,8 @@
 import type { Store } from "@/lib/stores";
 import styles from "./StoreReviews.module.css";
 
-/** 리뷰 — 평점 한 줄과 방문자 인용 두 개(각 2줄까지). 값은 stores.ts 의 실제 리뷰. */
-export function StoreReviews({ store, limit = 2 }: { store: Store; limit?: number }) {
+/** 리뷰 — 평점 한 줄, 방문자 인용 두 개(각 2줄까지), 네이버 리뷰 버튼. 값은 stores.ts 의 실제 리뷰. */
+export function StoreReviews({ store, limit = 2, reviewUrl }: { store: Store; limit?: number; reviewUrl: string | null }) {
   const quotes = store.quotes.slice(0, limit);
   const r = store.naverRating;
   if (!quotes.length && !r) return null;
@@ -24,6 +24,7 @@ export function StoreReviews({ store, limit = 2 }: { store: Store; limit?: numbe
           ))}
         </ul>
       )}
+      {reviewUrl && <a className="btn btn-naver btn-sm btn-block" href={reviewUrl} target="_blank" rel="noreferrer">네이버 리뷰 더 보기</a>}
     </div>
   );
 }

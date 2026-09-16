@@ -1,22 +1,19 @@
 import Link from "next/link";
 import { BRAND } from "@/lib/config";
-import { query } from "@/lib/db";
 import { getStore } from "@/lib/stores";
 import { requireAdminPage } from "@/components/admin/guard";
 import { AdminNav, type NavItem } from "@/components/admin/AdminNav";
 import { logoutAction } from "@/app/admin/actions";
-import { Art } from "@/components/art/Art";
 import ui from "@/app/admin/admin.module.css";
 
 export default async function AdminShellLayout({ children }: { children: React.ReactNode }) {
   const session = await requireAdminPage();
   const owner = session.role === "owner";
-  const pending = (await query<{ n: number }>(`select count(*)::int as n from receipts where status='review'`).catch(() => []))[0]?.n ?? 0;
   const store = session.storeId ? getStore(session.storeId) : null;
 
+  // 카운터가 첫 번째. 영수증 확인·등급 일괄 발급은 내비에서 뺐다(주소는 남아 있음).
   const items: NavItem[] = [
-    { href: "/admin", label: "대시보드" },
-    { href: "/admin/receipts", label: "영수증 확인", badge: pending || undefined },
+    { href: "/admin/counter", label: "카운터" },
     { href: "/admin/coupons", label: "쿠폰 조회" },
     ...(owner
       ? [
@@ -24,7 +21,7 @@ export default async function AdminShellLayout({ children }: { children: React.R
           { href: "/admin/menus", label: "메뉴" },
           { href: "/admin/settings", label: "설정" },
           { href: "/admin/poster", label: "인쇄물" },
-          { href: "/admin/staff", label: "직원 계정" },
+          { href: "/admin/staff", label: "직원" },
           { href: "/admin/log", label: "로그" },
         ]
       : [{ href: "/admin/poster", label: "인쇄물" }]),
@@ -35,7 +32,6 @@ export default async function AdminShellLayout({ children }: { children: React.R
       <header className={ui.topbar}>
         <div className={ui.topbarInner}>
           <Link href="/admin" className={ui.brand}>
-            <Art name="logo" alt="" className={ui.brandLogo} sizes="40px" />
             {BRAND.name}
             <span className={ui.brandSub}>관리자</span>
           </Link>

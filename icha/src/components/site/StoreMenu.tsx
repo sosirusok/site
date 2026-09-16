@@ -31,28 +31,27 @@ function Row({ m }: { m: MenuItem }) {
   );
 }
 
-/** 메뉴 — 목록 행. 혜택 품목이 맨 위에 오고, 8개까지 보인 뒤 나머지는 접힌다. 값은 DB(listMenu). */
-export function StoreMenu({ store, items, naverUrl }: { store: Store; items: MenuItem[]; naverUrl: string | null }) {
-  if (!items.length) {
-    return (
-      <p className="cap">
-        {store.shortName} 메뉴는 정리 중이에요.{" "}
-        {naverUrl && <a href={naverUrl} target="_blank" rel="noreferrer" className={styles.link}>네이버 플레이스에서 볼 수 있어요</a>}
-      </p>
-    );
-  }
+/** 메뉴 — 목록 행. 혜택 품목이 맨 위, 8개까지 보인 뒤 나머지는 접힘. 맨 아래 초록 버튼은 네이버 메뉴판. 값은 DB(listMenu). */
+export function StoreMenu({ store, items, menuUrl }: { store: Store; items: MenuItem[]; menuUrl: string | null }) {
   const sorted = [...items.filter((m) => m.isGift), ...items.filter((m) => !m.isGift)];
   const head = sorted.slice(0, VISIBLE);
   const rest = sorted.slice(VISIBLE);
   return (
-    <div>
-      <ul>{head.map((m) => <Row key={m.id} m={m} />)}</ul>
-      {rest.length > 0 && (
-        <details className={styles.more}>
-          <summary className={`btn btn-secondary btn-block ${styles.moreBtn}`}>메뉴 더 보기 · {rest.length}개</summary>
-          <ul>{rest.map((m) => <Row key={m.id} m={m} />)}</ul>
-        </details>
+    <div className={styles.root}>
+      {items.length === 0 ? (
+        <p className="cap">{store.shortName} 메뉴는 정리 중이에요.</p>
+      ) : (
+        <>
+          <ul>{head.map((m) => <Row key={m.id} m={m} />)}</ul>
+          {rest.length > 0 && (
+            <details className={styles.more}>
+              <summary className={`btn btn-secondary btn-block ${styles.moreBtn}`}>메뉴 더 보기 · {rest.length}개</summary>
+              <ul>{rest.map((m) => <Row key={m.id} m={m} />)}</ul>
+            </details>
+          )}
+        </>
       )}
+      {menuUrl && <a className={`btn btn-naver btn-sm btn-block ${styles.naver}`} href={menuUrl} target="_blank" rel="noreferrer">네이버에서 메뉴 전체 보기</a>}
     </div>
   );
 }

@@ -1,49 +1,48 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { ReceiptUploader } from "@/components/flow/ReceiptUploader";
-import type { StoreLite } from "@/components/flow/types";
 import { joinOr } from "@/components/site/StoreHelpers";
 import { getMemberSession } from "@/lib/auth/session";
 import { BRAND } from "@/lib/config";
-import { ruleLine } from "@/lib/copy";
-import { getMember } from "@/lib/db/queries";
+import { STEP_LINES, ruleLine } from "@/lib/copy";
 import { getRules } from "@/lib/settings";
-import { STORES, getStore, giftStoresFor } from "@/lib/stores";
+import { getStore, giftStoresFor } from "@/lib/stores";
 import styles from "./verify.module.css";
 
-export const metadata: Metadata = { title: "영수증 올리기" };
+export const metadata: Metadata = { title: "쿠폰 받는 법" };
 
+/**
+ * 쿠폰 받는 법 — 사진은 없다. 계산할 때 번호를 말하면 직원이 넣어 준다.
+ * 포스터 QR(/verify?from=<매장>)로 들어오면 그 매장 기준으로 한 줄 더 보여 준다. 로그인 없이 볼 수 있다.
+ */
 export default async function VerifyPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
-  const session = await getMemberSession();
-  if (!session) redirect("/login?next=/verify");
-  const sp = await searchParams;
+  const [session, rules, sp] = await Promise.all([getMemberSession(), getRules(), searchParams]);
   const fromRaw = Array.isArray(sp.from) ? sp.from[0] : sp.from;
   const from = fromRaw ? getStore(fromRaw) : null;
-  const [rules, member] = await Promise.all([getRules(), getMember(session.memberId)]);
-  const stores: StoreLite[] = STORES.map((s) => ({ id: s.id, shortName: s.shortName, name: s.name, drink: s.drink }));
 
   return (
     <section className={`wrap ${styles.page}`} aria-labelledby="verify-title">
       <div className={styles.head}>
-        <h1 id="verify-title" className="h1-event">영수증 올리기</h1>
-        <p className="cap">{ruleLine(rules)}</p>
-        <p className="cap">{BRAND.condition}</p>
-        {from && <p className="cap">{from.shortName} 영수증이면 {joinOr(giftStoresFor(from.id).map((s) => s.shortName))}에서 한 잔 받아요.</p>}
+        <h1 id="verify-title" className="h1-event">쿠폰 받는 법</h1>
+        <p className="cap">{from ? `${from.shortName}에서 받으면 ${joinOr(giftStoresFor(from.id).map((s) => s.shortName))}에서 써요.` : BRAND.course}</p>
       </div>
 
-      {rules.eventActive ? (
-        <ReceiptUploader
-          rules={{ receiptValidHours: rules.receiptValidHours, dailyLimitPerMember: rules.dailyLimitPerMember, minAmount: rules.minAmount, couponValidDays: rules.couponValidDays }}
-          stores={stores}
-          totalSpend={member?.totalSpend ?? 0}
-        />
+      <ol className={styles.steps}>
+        {STEP_LINES.map((line, i) => (
+          <li key={line} className="row">
+            <span className={`num ${styles.num}`} aria-hidden="true">{i + 1}</span>
+            <div className="body">
+              <p className="title"><span className="sr-only">{i + 1}. </span>{line}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <p className="cap">{BRAND.condition} · {ruleLine(rules)}</p>
+
+      {session ? (
+        <Link href="/wallet" className="btn btn-block">내 쿠폰함</Link>
       ) : (
-        <div className={`card-soft ${styles.paused}`}>
-          <p className="h3">지금은 영수증을 받지 않아요</p>
-          <p className="cap">{rules.notice || "다시 시작하면 홈에서 알려 드릴게요."}</p>
-          <Link href="/wallet" className="btn btn-secondary btn-sm">쿠폰함 보기</Link>
-        </div>
+        <Link href="/login" className="btn btn-block">번호로 시작</Link>
       )}
     </section>
   );

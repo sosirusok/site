@@ -4,20 +4,20 @@ import { formatWon } from "@/lib/config";
 import { STORES } from "@/lib/stores";
 import s from "./home.module.css";
 
-/** 메뉴 실사진이 있으면 56px 사진, 없으면 썸네일 없이 글자만 (쿠폰 티켓 그림은 쿠폰 화면에서만) */
+/** 메뉴 실사진이 있으면 56px 사진, 없으면 빈 상자 (줄이 흔들리지 않게) */
 function Thumb({ item }: { item: MenuItem }) {
   if (item.hasImageData) return <Image src={menuImageUrl(item)} alt="" width={56} height={56} sizes="56px" className="thumb" unoptimized />;
   if (item.imagePath) return <Image src={item.imagePath} alt="" width={56} height={56} sizes="56px" className="thumb" />;
   return <span className="thumb" aria-hidden="true" />;
 }
 
-/** 매장별 특별 혜택 — 1차·2차·3차 순서로 증정 품목을 목록 행으로 */
+/** 매장별 특별 혜택 — 1차·2차·3차 순서로 증정 품목을 목록 행으로. 값은 DB(listMenu giftOnly) */
 export function GiftList({ gifts }: { gifts: Record<string, MenuItem[]> }) {
   const ordered = [...STORES].sort((a, b) => a.course.n - b.course.n);
   const rows = ordered.flatMap((st) => (gifts[st.id] ?? []).map((m) => ({ st, m })));
   if (rows.length === 0) return null;
   return (
-    <section className="section" aria-labelledby="gifts-title">
+    <section className={`section ${s.sec}`} aria-labelledby="gifts-title">
       <div className="wrap">
         <div className="section-h">
           <h2 id="gifts-title" className="h2-event">매장별 특별 혜택</h2>
@@ -31,7 +31,7 @@ export function GiftList({ gifts }: { gifts: Record<string, MenuItem[]> }) {
                 <p className="sub">{st.course.n}차 {st.shortName}</p>
               </div>
               <span className={s.price}>
-                {m.price != null && <span className="strike">{formatWon(m.price)}</span>}
+                {m.price != null && <span className="strike num">{formatWon(m.price)}</span>}
                 <span className="tag tag-free">무료</span>
               </span>
             </li>

@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 /**
  * 인증이 필요한 화면을 가볍게 보호한다 (쿠키 존재 여부만 확인; 실제 검증은 각 페이지/API 에서).
+ * /verify(쿠폰 받는 법)는 로그인 없이 볼 수 있으므로 여기 없다.
  */
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -13,7 +14,7 @@ export function proxy(req: NextRequest) {
       return NextResponse.redirect(url);
     }
   }
-  if (["/verify", "/wallet", "/pick"].some((p) => pathname === p || pathname.startsWith(`${p}/`)) || pathname.startsWith("/coupons/")) {
+  if (["/wallet", "/pick"].some((p) => pathname === p || pathname.startsWith(`${p}/`)) || pathname.startsWith("/coupons/")) {
     if (!req.cookies.get("icha_member")) {
       const url = req.nextUrl.clone();
       url.pathname = "/login";
@@ -25,5 +26,5 @@ export function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/verify/:path*", "/verify", "/wallet", "/wallet/:path*", "/pick/:path*", "/coupons/:path*"],
+  matcher: ["/admin/:path*", "/wallet", "/wallet/:path*", "/pick/:path*", "/coupons/:path*"],
 };

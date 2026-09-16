@@ -12,7 +12,8 @@ function pretty(digits: string): string {
   return `${d.slice(0, 3)}-${d.slice(3, 7)}-${d.slice(7)}`;
 }
 
-export function PhoneForm({ next }: { next: string }) {
+/** 번호 하나로 들어가는 폼 — 계산할 때 직원에게 말한 번호 그대로. 성공하면 next 로 전체 이동한다(상단 바까지 로그인 상태로). */
+export function PhoneForm({ next, label = "쿠폰함 열기" }: { next: string; label?: string }) {
   const id = useId();
   const [digits, setDigits] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -43,7 +44,6 @@ export function PhoneForm({ next }: { next: string }) {
         setBusy(false);
         return;
       }
-      // 상단 바(서버 컴포넌트)까지 로그인 상태로 바뀌도록 전체 이동
       window.location.assign(next);
     } catch {
       setError("연결이 끊겼어요. 다시 눌러 주세요.");
@@ -72,7 +72,7 @@ export function PhoneForm({ next }: { next: string }) {
         {error && <p id={`${id}-err`} className="error" role="alert">{error}</p>}
       </div>
       <button type="submit" className="btn btn-block" disabled={busy || digits.length < 10}>
-        {busy ? "잠시만요" : "시작하기"}
+        {busy ? "잠시만요" : label}
       </button>
     </form>
   );

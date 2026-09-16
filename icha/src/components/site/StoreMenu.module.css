@@ -1,10 +1,12 @@
+/* 블록이어야 한다 — grid 로 두면 nowrap 설명 때문에 목록이 가로로 넘친다 */
+.root { display: block; }
 .desc { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .price { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 4px; font-size: 15px; font-weight: 600; }
 .ask { font-weight: 400; color: var(--fg-3); }
-.link { color: var(--fg); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 .more { display: block; }
 /* summary 는 브라우저 기본이 list-item 이라 버튼 모양·높이(48px)를 직접 준다 */
 .moreBtn { display: flex; height: 48px; min-height: 48px; margin-top: 12px; list-style: none; cursor: pointer; font-size: 15px; }
 .moreBtn::-webkit-details-marker { display: none; }
 .moreBtn::marker { content: ""; }
 .more[open] > .moreBtn { display: none; }
+.naver { margin-top: 12px; }
