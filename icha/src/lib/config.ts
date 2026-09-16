@@ -129,4 +129,10 @@ export function formatWon(n: number | null | undefined): string {
   return `${n.toLocaleString("ko-KR")}원`;
 }
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
+/** 사이트 공개 주소. NEXT_PUBLIC_SITE_URL 이 없으면 Vercel 이 주는 운영 도메인(VERCEL_PROJECT_PRODUCTION_URL)을 쓴다. */
+export const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : undefined) ??
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined) ??
+  "http://localhost:3000"
+).replace(/\/$/, "");
