@@ -32,33 +32,9 @@
 - 영수증을 받은 매장에서는 쿠폰을 쓸 수 없음(서버에서 강제). 쿠폰 취소는 아직 사용되지 않은 경우에만(조건부 갱신)
 모든 임계값은 관리자 → 설정에서 바꿀 수 있다.
 
-## 디자인 (v4)
+## 디자인 (v5)
 
-사장님이 직접 만들어 보내 준 일러스트 자산 142장(`public/art/`, 목록 `src/lib/art-manifest.json`)으로 손님 화면을 만들었다. 버튼(4상태)·매장 배지·매장 카드·쿠폰 티켓·상태 그림·VIP 카드·아이콘·포스터 그림이 모두 사장님 자산이고, 코드는 그 위에 실제 값(매장 정보, 쿠폰 코드, 누적 금액)을 얹는다. 규칙은 `docs/design.md` 2절. 자산을 추가하려면 `node scripts/import-art.mjs <폴더>`(이름 매핑은 스크립트 안).
-
-- 로고는 헤더·푸터·앱 아이콘(`src/app/icon.png`, `apple-icon.png`)에, 카카오톡 공유 미리보기는 `public/art/kakao-share.png`(OG 이미지)에 쓴다.
-- 방문자 대부분이 휴대폰이라 390px 화면을 기준으로 만들고 하단 이동 메뉴(홈·영수증 인증·쿠폰함·내 혜택)를 둔다.
-- 짧은 동작 효과(선택·확인 체크·처리 중 회전)는 자산 낱장을 차례로 바꾸는 `<Fx>` 컴포넌트.
-
-## 실행
-
-```bash
-npm install
-cp .env.example .env.local   # 값 채우기 (아래 참고)
-npm run dev                   # http://localhost:3000 , 관리자 http://localhost:3000/admin
-```
-- `DATABASE_URL` 이 비어 있으면 로컬 파일 DB(PGlite, `./.data/pg`)로 돌아간다. 설치할 것이 없다.
-- `ANTHROPIC_API_KEY` 가 비어 있으면 자동 인식이 꺼지고 모든 영수증이 "직원 확인"으로 들어간다(사이트는 정상 동작).
-- 첫 기동 때 스키마·매장·메뉴·초기 관리자(`ADMIN_INITIAL_ID`/`ADMIN_INITIAL_PASSWORD`)가 자동으로 만들어진다. **운영(NODE_ENV=production)에서는 `ADMIN_INITIAL_PASSWORD` 가 10자 이상의 새 값이 아니면 기동 시 오류**를 내고 계정을 만들지 않는다.
-- 스키마는 `create ... if not exists` 라 이미 있는 DB 에 다시 돌려도 안전하다. 승인번호 유니크 인덱스는 매장별(`receipts_approval_store_live_uq`)로 바뀌었고, 옛 인덱스(`receipts_approval_live_uq`)는 기동 시 자동으로 지운다.
-
-```bash
-npm run typecheck   # 타입 검사
-npm test            # 판정 규칙·쿠폰 기한 단위 테스트
-PGLITE_MEMORY=1 npx tsx scripts/smoke.ts       # DB 계층 스모크 테스트(메모리: 잠금·유니크·한도·동시 승인)
-npx tsx scripts/create-admin.ts 아이디 비밀번호 이름 [joseon|tokyo|wareureu]   # 직원 계정
-npx tsx scripts/export-schema.ts               # supabase/schema.sql 갱신
-```
+휴대폰으로 매일 보는 서비스 화면의 문법을 그대로 따른다: 폭 480px 한 단, 흰 바탕, 검정 글자, Pretendard, 실사진, 목록 행과 카드, 검정 버튼, 하단 탭. 사장님이 보내 준 일러스트(`public/art/`)는 로고·쿠폰 티켓·영수증 상태 그림·순서 아이콘처럼 작은 자리에만 쓴다. 규칙은 `docs/design.md` 2절.
 
 ## 한 번에 배포 (Vercel 버튼, 5분)
 
