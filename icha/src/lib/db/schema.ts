@@ -175,10 +175,17 @@ async function seedStores(db: Queryable) {
         );
       }
     } else {
-      // 이미 시드된 DB 라도 코드에 사진 경로가 새로 붙은 메뉴는 채워 준다 (관리자가 올린 사진이 있으면 건드리지 않음)
+      // 이미 시드된 DB 라도 코드의 사진 경로를 따라가게 한다.
+      // 비어 있으면 채우고, 코드에서 파일 이름이 바뀌었으면(예: .jpg → 배경 지운 .png) 바꿔 준다.
+      // 관리자가 올린 사진(image_data)이나 /images/stores/ 밖의 경로는 건드리지 않는다.
       for (const m of s.menu) {
         if (!m.image) continue;
-        await db.query(`update menu_items set image_path=$3 where store_id=$1 and name=$2 and image_path is null and image_data is null`, [s.id, m.name, m.image]);
+        await db.query(
+          `update menu_items set image_path=$3
+           where store_id=$1 and name=$2 and image_data is null
+             and (image_path is null or (image_path like '/images/stores/%' and image_path <> $3))`,
+          [s.id, m.name, m.image],
+        );
       }
     }
   }
