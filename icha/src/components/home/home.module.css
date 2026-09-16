@@ -18,7 +18,7 @@
 .dirLead { font-size: 24px; line-height: 1.1; }
 .mapWrap { position: relative; padding: 6px 2px 10px; }
 .mapWrap :global(.leaflet-control-zoom) { display: none; }
-.mapNote { position: absolute; right: -6px; bottom: -14px; width: 112px; z-index: 1001; }
+.mapNote { position: absolute; right: -6px; top: -14px; width: 112px; z-index: 1001; }
 .addrPaper { margin-top: 6px; padding: 6px 16px; }
 .addrs { display: grid; }
 .addrRow { display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 8px 0; border-bottom: 1px dashed var(--paper-line); }

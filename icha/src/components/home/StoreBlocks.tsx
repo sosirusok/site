@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { NextStop } from "@/components/site/NextStop";
 import { benefitOf, Piece, plateOf } from "@/components/site/Poster";
-import { openStatus } from "@/components/site/StoreHelpers";
+import { nowText, openStatus } from "@/components/site/StoreHelpers";
 import { FAN_PHOTOS } from "@/components/site/storePhotos";
 import type { Rules, StoreId } from "@/lib/config";
 import { placeLinks } from "@/lib/naver";
@@ -15,7 +15,7 @@ function todayLine(store: Store, now: Date): string {
   const st = openStatus(store, now);
   if (st.today === "휴무") return "오늘 쉬어요";
   const hours = st.today.replace(/\s*–\s*(다음날\s*)?/, "~");
-  return `오늘 ${hours} · ${st.open ? "지금 영업 중" : /오픈 예정/.test(st.text) ? "곧 열어요" : "오늘은 끝났어요"}`;
+  return `오늘 ${hours} · ${nowText(st)}`;
 }
 
 /** 혜택 품목 이름들 → "산토리 프리미엄 생맥주" / "와르르요거트(초코쉘) 또는 소주 1병" (DB에 없으면 포스터의 혜택 이름) */

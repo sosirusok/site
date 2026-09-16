@@ -11,7 +11,7 @@ import { listMenu } from "@/lib/db/queries";
 import { getRules } from "@/lib/settings";
 import styles from "./page.module.css";
 
-export const metadata: Metadata = { title: `${BRAND.name} — ${BRAND.unionName}`, description: BRAND.tagline };
+export const metadata: Metadata = { description: BRAND.tagline };
 
 /** 가게별 혜택 품목 이름(관리자가 메뉴에서 '혜택'으로 켠 것). DB 가 없으면 빈 배열 → 포스터 혜택 이름으로 대신 쓴다 */
 async function giftNames(): Promise<Record<StoreId, string[]>> {

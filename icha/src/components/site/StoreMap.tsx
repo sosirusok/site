@@ -161,7 +161,7 @@ export function StoreMap({ stores, focusId, height = 440, compact = false, hideP
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자',
       }).addTo(map);
       const markers = new Map<string, import("leaflet").Marker>();
-      const icon = (i: number, s: MapStore, act: boolean) => L.divIcon({ className: "", html: pinHtml(i + 1, s.shortName, act, s.id, compact), iconSize: [38, 48], iconAnchor: [19, 48] });
+      const icon = (i: number, s: MapStore, act: boolean) => L.divIcon({ className: "", html: pinHtml(i + 1, s.shortName, act, s.id, compact), iconSize: [44, 48], iconAnchor: [22, 48] });
       stores.forEach((s, i) => {
         const m = L.marker([s.lat, s.lng], { icon: icon(i, s, s.id === activeId), zIndexOffset: s.id === activeId ? 1000 : 0, keyboard: true, title: s.name }).addTo(map);
         m.on("click", () => {

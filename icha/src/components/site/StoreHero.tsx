@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { Store } from "@/lib/stores";
 import { Piece, plateOf } from "./Poster";
-import { heroImage, kstNow, openStatus, parseHours } from "./StoreHelpers";
+import { heroImage, kstNow, nowText, openStatus, parseHours } from "./StoreHelpers";
 import { HERO_POS } from "./storePhotos";
 import styles from "./StoreHero.module.css";
 
@@ -19,7 +19,7 @@ export function StoreHero({ store }: { store: Store }) {
     .filter((l) => !l.dayset.has(dow))
     .map((l) => `${l.days} ${l.openText}~${l.closeText}`);
   const today = st.today === "휴무" ? "오늘 쉬어요" : `오늘 ${st.today.replace(/\s*–\s*/, "~").replace("다음날 ", "")}`;
-  const state = st.open ? "지금 영업 중" : st.today === "휴무" ? "오늘 쉬어요" : /오픈 예정/.test(st.text) ? "곧 열어요" : "오늘 영업 끝";
+  const state = st.today === "휴무" ? "오늘 쉬어요" : nowText(st);
   const sub = [st.lastOrder ? `주문 마감 ${st.lastOrder}` : null, ...otherDays].filter(Boolean).join(" · ");
 
   return (

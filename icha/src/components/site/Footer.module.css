@@ -8,7 +8,7 @@
 .storeName { font-weight: 600; color: var(--cream); }
 .dot { color: rgba(244, 233, 210, 0.5); }
 .addr { color: rgba(244, 233, 210, 0.78); }
-.tel { display: inline-flex; align-items: center; min-height: 44px; margin: -12px 0; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(244, 233, 210, 0.45); color: var(--cream); }
+.tel { display: inline-flex; align-items: center; min-height: 44px; margin: 0; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(244, 233, 210, 0.45); color: var(--cream); }
 .links { display: flex; align-items: center; flex-wrap: wrap; gap: 0 4px; }
 .link { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; padding: 0 2px; color: var(--cream); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(244, 233, 210, 0.45); }
 .sep { color: rgba(244, 233, 210, 0.45); padding: 0 4px; }
