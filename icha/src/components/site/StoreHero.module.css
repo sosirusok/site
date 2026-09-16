@@ -1,24 +1,20 @@
-.hero { position: relative; isolation: isolate; overflow: hidden; min-height: 72svh; display: grid; align-content: end; gap: 22px; padding-top: 120px; background: #0d0d0d; }
-.img { object-fit: cover; z-index: -2; }
-.shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(10,10,10,0.5) 0%, rgba(10,10,10,0.15) 30%, rgba(10,10,10,0.7) 65%, rgba(20,20,20,0.98) 100%); }
-.inner { display: grid; gap: 8px; }
-.crumb { display: flex; gap: 8px; font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 700; }
-.crumb a:hover { color: #fff; }
-.drink { color: var(--gold); font-weight: 800; font-size: 14px; letter-spacing: 0.04em; }
-.name { color: #fff; text-shadow: 0 2px 22px rgba(0,0,0,0.6); }
-.full { font-size: 14px; color: rgba(255,255,255,0.7); font-weight: 600; }
-.headline { color: rgba(255,255,255,0.9); max-width: 40ch; margin-top: 6px; }
-.status { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 10px; font-weight: 800; font-size: 15px; color: var(--fg-2); }
-.dot { width: 9px; height: 9px; border-radius: 50%; background: var(--fg-3); }
-.open { color: #fff; }
-.open .dot { background: var(--green); box-shadow: 0 0 0 4px rgba(47,158,91,0.28); }
-.today { font-weight: 600; font-size: 14px; color: var(--fg-3); }
-.quick { display: grid; gap: 8px; padding-bottom: 6px; }
-.quickItem { display: grid; gap: 2px; padding: 14px 16px; border: 1px solid rgba(255,255,255,0.22); border-radius: var(--radius); background: rgba(20,20,20,0.6); backdrop-filter: blur(6px); transition: border-color 0.2s, background 0.2s; }
-.quickItem:hover { border-color: var(--gold); background: rgba(20,20,20,0.85); }
-.quickItem b { font-size: 15px; }
-.quickItem span { font-size: 13.5px; color: var(--fg-3); }
+.hero { display: grid; gap: 20px; }
+.photo { position: relative; aspect-ratio: 4 / 3; background: var(--bg-2); }
+.img { object-fit: cover; }
+.inner { display: grid; gap: 10px; }
+.crumb { font-size: 13.5px; color: var(--fg-3); font-weight: 600; }
+.crumb a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.name { max-width: 24ch; }
+.meta { grid-template-columns: 72px 1fr; gap: 6px 16px; margin-top: 4px; }
+.open { color: var(--red); font-weight: 700; }
+.closed { color: var(--fg-2); font-weight: 700; }
+.quick { display: grid; margin-top: 8px; border-top: 1px solid var(--line); }
+.quick li { border-bottom: 1px solid var(--line); }
+.quick a { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 12px 0; font-size: 15px; }
+.quick a:hover b { text-decoration: underline; text-underline-offset: 4px; }
+.quick b { white-space: nowrap; font-weight: 700; }
 @media (min-width: 760px) {
-  .hero { min-height: 78svh; padding-top: 160px; gap: 34px; }
-  .quick { grid-template-columns: 1fr 1fr; gap: 12px; padding-bottom: 12px; }
+  .hero { gap: 28px; }
+  .photo { aspect-ratio: 21 / 9; max-height: 520px; }
+  .quick { grid-template-columns: 1fr 1fr; gap: 0 32px; }
 }

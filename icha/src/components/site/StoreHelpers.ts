@@ -1,14 +1,12 @@
 /**
- * 화면 전용 도우미 — 영업시간 해석(오늘/지금), 사진 고르기, 금액 짧게 쓰기.
- * lib/ 는 공용이라 손대지 않고, 손님 화면(A)에서만 쓰는 계산을 여기 모은다.
+ * 손님 화면 전용 도우미 — 영업시간 해석(오늘/지금), 사진 고르기, 조사.
+ * lib/ 는 공용이라 손대지 않고, 화면에서만 쓰는 계산을 여기 모은다. 위치 문구는 lib/locations.ts 값만 쓴다.
  */
-import { formatWon } from "@/lib/config";
 import type { Store, StoreImage } from "@/lib/stores";
 
-/* ───────── 시간 ───────── */
+/* ───────── 영업시간 ───────── */
 
 const DAY_INDEX: Record<string, number> = { 일: 0, 월: 1, 화: 2, 수: 3, 목: 4, 금: 5, 토: 6 };
-const DAY_NAME = ["일", "월", "화", "수", "목", "금", "토"];
 
 export type HoursLine = {
   days: string;
@@ -75,13 +73,11 @@ export function kstNow(now = new Date()): { dow: number; minutes: number; date: 
 
 export type OpenStatus = {
   open: boolean;
-  /** "지금 영업 중 · 09:00까지" 같은 한 줄 */
+  /** "영업 중 · 09:00까지" / "15:00 오픈 예정" / "영업 종료" / "휴무" */
   text: string;
-  /** 오늘 적용되는 영업시간 한 줄 ("15:00 – 다음날 09:00") */
+  /** 오늘 적용되는 영업시간 ("15:00 – 다음날 09:00"). 휴무면 "휴무" */
   today: string;
   lastOrder: string | null;
-  /** 카드 배지용 아주 짧은 표기: "영업 중" / "17:00 오픈" / "영업 종료" / "오늘 휴무" */
-  short: string;
 };
 
 export function openStatus(store: Pick<Store, "hours">, now = new Date()): OpenStatus {
@@ -89,47 +85,27 @@ export function openStatus(store: Pick<Store, "hours">, now = new Date()): OpenS
   const { dow, minutes } = kstNow(now);
   const todayLine = lines.find((l) => l.dayset.has(dow)) ?? null;
   const yLine = lines.find((l) => l.dayset.has((dow + 6) % 7)) ?? null;
-  const todayText = todayLine
-    ? `${todayLine.openText} – ${todayLine.overnight ? "다음날 " : ""}${todayLine.closeText}`
-    : "오늘 휴무";
+  const todayText = todayLine ? `${todayLine.openText} – ${todayLine.overnight ? "다음날 " : ""}${todayLine.closeText}` : "휴무";
 
   // 어제 시작해 새벽까지 이어지는 영업
   if (yLine && yLine.overnight && yLine.close != null && minutes < yLine.close) {
-    return { open: true, text: `지금 영업 중 · ${yLine.closeText}까지`, today: todayText, lastOrder: yLine.lastOrder, short: "영업 중" };
+    return { open: true, text: `영업 중 · ${yLine.closeText}까지`, today: todayText, lastOrder: yLine.lastOrder };
   }
   if (todayLine && todayLine.open != null && todayLine.close != null) {
     const within = todayLine.overnight ? minutes >= todayLine.open : minutes >= todayLine.open && minutes < todayLine.close;
-    if (within) return { open: true, text: `지금 영업 중 · ${todayLine.overnight ? "다음날 " : ""}${todayLine.closeText}까지`, today: todayText, lastOrder: todayLine.lastOrder, short: "영업 중" };
-    if (minutes < todayLine.open) return { open: false, text: `오늘 ${todayLine.openText}에 열어요`, today: todayText, lastOrder: todayLine.lastOrder, short: `${todayLine.openText} 오픈` };
-    return { open: false, text: "오늘 영업은 끝났어요", today: todayText, lastOrder: todayLine.lastOrder, short: "영업 종료" };
+    if (within) return { open: true, text: `영업 중 · ${todayLine.overnight ? "다음날 " : ""}${todayLine.closeText}까지`, today: todayText, lastOrder: todayLine.lastOrder };
+    if (minutes < todayLine.open) return { open: false, text: `${todayLine.openText} 오픈 예정`, today: todayText, lastOrder: todayLine.lastOrder };
+    return { open: false, text: "영업 종료", today: todayText, lastOrder: todayLine.lastOrder };
   }
-  return { open: false, text: "오늘은 쉬어요", today: todayText, lastOrder: null, short: "오늘 휴무" };
+  return { open: false, text: "휴무", today: todayText, lastOrder: null };
 }
 
-export function todayLabel(now = new Date()): string {
-  const { dow, date } = kstNow(now);
-  return `${date.getUTCMonth() + 1}/${date.getUTCDate()} (${DAY_NAME[dow]})`;
-}
-
-/** "15:00 – 다음날 09:00 · 주문 마감 08:00" → "15:00–09:00" 처럼 짧게 */
-export function shortHours(store: Pick<Store, "hours">): string {
-  const lines = parseHours(store);
-  const first = lines[0];
-  if (!first || !first.openText) return "";
-  const closes = Array.from(new Set(lines.map((l) => l.closeText))).filter(Boolean);
-  return closes.length > 1 ? `${first.openText}–${closes.join("/")}` : `${first.openText}–${first.closeText}`;
+/** "15:00 – 다음날 09:00 · 주문 마감 08:00" 한 줄 */
+export function todayHoursText(st: OpenStatus): string {
+  return st.lastOrder ? `${st.today} · 주문 마감 ${st.lastOrder}` : st.today;
 }
 
 /* ───────── 사진 ───────── */
-
-/** 밤 외관 — hero 가 밤 사진이면 hero, 아니면 '밤/해질녘' 외관, 그것도 없으면 첫 외관/hero */
-export function nightExterior(store: Pick<Store, "images">): StoreImage | null {
-  const hero = store.images.find((i) => i.kind === "hero") ?? null;
-  if (hero && /밤/.test(hero.alt)) return hero;
-  const night = store.images.find((i) => i.kind === "exterior" && /밤|해질녘|저녁/.test(i.alt));
-  if (night) return night;
-  return store.images.find((i) => i.kind === "exterior") ?? hero ?? store.images[0] ?? null;
-}
 
 export function heroImage(store: Pick<Store, "images">): StoreImage | null {
   return store.images.find((i) => i.kind === "hero") ?? store.images[0] ?? null;
@@ -157,15 +133,7 @@ export function josa(word: string, type: "은는" | "이가" | "을를" | "과�
   }
 }
 
-/* ───────── 숫자 ───────── */
-
-/** 100000 → "10만", 25000 → "2.5만" (원 없이). 만 단위가 아니면 천 단위 콤마. */
-export function wonShort(n: number): { num: string; unit: string } {
-  if (n >= 10000 && n % 1000 === 0) {
-    const man = n / 10000;
-    return { num: Number.isInteger(man) ? String(man) : man.toFixed(1), unit: "만원" };
-  }
-  return { num: n.toLocaleString("ko-KR"), unit: "원" };
+/** ["도쿄스탠드", "와르르맨숀"] → "도쿄스탠드나 와르르맨숀" */
+export function joinOr(names: string[]): string {
+  return names.map((n, i) => (i < names.length - 1 ? josa(n, "이나") : n)).join(" ");
 }
-
-export { formatWon };

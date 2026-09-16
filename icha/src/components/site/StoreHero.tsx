@@ -1,46 +1,51 @@
 import Image from "next/image";
 import Link from "next/link";
-import { distanceM, SEOMYEON_STATION, walkMinutes } from "@/lib/geo";
 import { STORES, type Store } from "@/lib/stores";
-import { heroImage, openStatus } from "./StoreHelpers";
+import { heroImage, openStatus, todayHoursText } from "./StoreHelpers";
 import styles from "./StoreHero.module.css";
 
-/** 매장 상세 상단 — 전체 폭 실사진, 번호·이름·술·오늘 영업, 영수증/쿠폰 바로가기. */
+/** 매장 상세 상단 — 전체 폭 실사진(사각), 그 아래 이름·대표 술·오늘 영업시간과 영수증/쿠폰 바로가기. */
 export function StoreHero({ store }: { store: Store }) {
   const img = heroImage(store);
   const st = openStatus(store);
-  const num = String(STORES.findIndex((s) => s.id === store.id) + 1).padStart(2, "0");
-  const walk = store.lat != null && store.lng != null ? walkMinutes(distanceM(SEOMYEON_STATION, { lat: store.lat, lng: store.lng })) : null;
+  const num = STORES.findIndex((s) => s.id === store.id) + 1;
 
   return (
     <header className={styles.hero}>
-      {img && <Image src={img.src} alt={img.alt} fill priority sizes="100vw" className={styles.img} />}
-      <div className={styles.shade} aria-hidden="true" />
+      {img && (
+        <div className={styles.photo}>
+          <Image src={img.src} alt={img.alt} fill priority sizes="100vw" className={styles.img} />
+        </div>
+      )}
       <div className={`wrap ${styles.inner}`}>
         <p className={styles.crumb}>
-          <Link href="/#stores">매장</Link>
-          <span aria-hidden="true">/</span>
-          <span>{num}</span>
+          <Link href="/#stores">참여 매장</Link>
+          <span aria-hidden="true"> / </span>
+          <span>{num}. {store.shortName}</span>
         </p>
-        <p className={styles.drink}>{store.drink} · {SEOMYEON_STATION.name}{walk != null ? ` 도보 ${walk}분` : ""}</p>
-        <h1 className={`display ${styles.name}`}>{store.shortName}</h1>
-        <p className={styles.full}>{store.name}</p>
-        <p className={`lead ${styles.headline}`}>{store.headline}</p>
-        <p className={`${styles.status} ${st.open ? styles.open : ""}`}>
-          <span className={styles.dot} aria-hidden="true" />
-          {st.text}
-          <span className={styles.today}>오늘 {st.today}{st.lastOrder ? ` · 주문 마감 ${st.lastOrder}` : ""}</span>
-        </p>
-      </div>
-      <div className={`wrap ${styles.quick}`}>
-        <Link href={`/verify?from=${store.id}`} className={styles.quickItem}>
-          <b>이 매장 영수증이 있나요?</b>
-          <span>찍어서 올리면 나머지 두 곳 사이드 한 접시 →</span>
-        </Link>
-        <Link href="/wallet" className={styles.quickItem}>
-          <b>이 매장에서 쓸 쿠폰이 있나요?</b>
-          <span>쿠폰함을 열고 직원에게 보여 주세요 →</span>
-        </Link>
+        <h1 className={`h1 ${styles.name}`}>{store.name}</h1>
+        <dl className={`dl ${styles.meta}`}>
+          <dt>대표 술</dt>
+          <dd>{store.drink}</dd>
+          <dt>오늘 영업</dt>
+          <dd>{todayHoursText(st)}</dd>
+          <dt>현재</dt>
+          <dd className={st.open ? styles.open : styles.closed}>{st.text}</dd>
+        </dl>
+        <ul className={styles.quick}>
+          <li>
+            <Link href={`/verify?from=${store.id}`}>
+              <span>이 매장 영수증이 있습니까?</span>
+              <b>영수증 인증 →</b>
+            </Link>
+          </li>
+          <li>
+            <Link href="/wallet">
+              <span>이 매장에서 쓸 쿠폰이 있습니까?</span>
+              <b>쿠폰함 →</b>
+            </Link>
+          </li>
+        </ul>
       </div>
     </header>
   );

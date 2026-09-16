@@ -1,8 +1,18 @@
 /**
  * 타입이 붙은 데이터 접근 함수 모음. 화면/API 는 SQL 대신 이 함수들을 쓴다.
  */
-import { formatPhone, type StoreId } from "../config";
+import { formatPhone, type Rules, type StoreId } from "../config";
+import { tierFor } from "../settings";
 import { one, query, toBuffer, toDate, type Queryable } from "./index";
+
+/** UUID 형식 검사 — pg 는 형식이 틀리면 22P02 를 던지므로 조회 전에 거른다 */
+export const isUuid = (s: unknown): s is string => typeof s === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
+
+/** KST 기준 오늘 0시(UTC Date) */
+export function kstDayStart(now: Date): Date {
+  const kst = new Date(now.getTime() + 9 * 3600 * 1000);
+  return new Date(Date.UTC(kst.getUTCFullYear(), kst.getUTCMonth(), kst.getUTCDate()) - 9 * 3600 * 1000);
+}
 
 /* ───────────────────────── 회원 ───────────────────────── */
 
@@ -44,6 +54,7 @@ export async function findOrCreateMember(phone: string): Promise<Member> {
 }
 
 export async function getMember(id: string): Promise<Member | null> {
+  if (!isUuid(id)) return null;
   const r = await one<MemberRow>(`select * from members where id=$1`, [id]);
   return r ? mapMember(r) : null;
 }
@@ -100,16 +111,18 @@ export type Receipt = {
   couponId: string | null;
   ocr: unknown;
   imageMime: string | null;
+  /** 원본 사진이 아직 보관 중인지 (보관 기간이 지나면 지운다) */
+  hasImage: boolean;
 };
 
 type ReceiptRow = {
   id: string; member_id: string; member_phone?: string; store_id: string | null; status: ReceiptStatus; reasons: string[] | null;
   receipt_at: unknown; amount: number | null; approval_no: string | null; card_last4: string | null; created_at: unknown;
-  reviewed_at: unknown; reviewed_by: string | null; review_note: string | null; coupon_id: string | null; ocr: unknown; image_mime: string | null;
+  reviewed_at: unknown; reviewed_by: string | null; review_note: string | null; coupon_id: string | null; ocr: unknown; image_mime: string | null; has_image: boolean;
 };
 
 const RECEIPT_COLS = `r.id, r.member_id, r.store_id, r.status, r.reasons, r.receipt_at, r.amount, r.approval_no, r.card_last4,
-  r.created_at, r.reviewed_at, r.reviewed_by, r.review_note, r.coupon_id, r.ocr, r.image_mime`;
+  r.created_at, r.reviewed_at, r.reviewed_by, r.review_note, r.coupon_id, r.ocr, r.image_mime, (r.image is not null) as has_image`;
 
 const mapReceipt = (r: ReceiptRow): Receipt => ({
   id: r.id,
@@ -129,6 +142,7 @@ const mapReceipt = (r: ReceiptRow): Receipt => ({
   couponId: r.coupon_id,
   ocr: typeof r.ocr === "string" ? safeJson(r.ocr) : r.ocr,
   imageMime: r.image_mime,
+  hasImage: Boolean(r.has_image),
 });
 
 function parsePgArray(v: unknown): string[] {
@@ -140,11 +154,13 @@ function safeJson(s: string): unknown {
 }
 
 export async function getReceipt(id: string): Promise<Receipt | null> {
+  if (!isUuid(id)) return null;
   const r = await one<ReceiptRow>(`select ${RECEIPT_COLS}, m.phone as member_phone from receipts r join members m on m.id=r.member_id where r.id=$1`, [id]);
   return r ? mapReceipt(r) : null;
 }
 
 export async function getReceiptImage(id: string): Promise<{ data: Buffer; mime: string } | null> {
+  if (!isUuid(id)) return null;
   const r = await one<{ image: unknown; image_mime: string | null }>(`select image, image_mime from receipts where id=$1`, [id]);
   const data = r ? toBuffer(r.image) : null;
   return data ? { data, mime: r!.image_mime ?? "image/jpeg" } : null;
@@ -155,11 +171,12 @@ export async function listReceiptsForMember(memberId: string, limit = 30): Promi
   return rows.map(mapReceipt);
 }
 
-export async function listReceipts(opts: { status?: ReceiptStatus; storeId?: string | null; limit?: number; offset?: number; q?: string } = {}): Promise<{ items: Receipt[]; total: number }> {
+export async function listReceipts(opts: { status?: ReceiptStatus; storeId?: string | null; /** 직원용: 자기 매장 + 매장 미확정 건 */ storeIdOrNull?: string | null; limit?: number; offset?: number; q?: string } = {}): Promise<{ items: Receipt[]; total: number }> {
   const conds: string[] = [];
   const params: unknown[] = [];
   if (opts.status) { params.push(opts.status); conds.push(`r.status=$${params.length}`); }
   if (opts.storeId) { params.push(opts.storeId); conds.push(`r.store_id=$${params.length}`); }
+  if (opts.storeIdOrNull) { params.push(opts.storeIdOrNull); conds.push(`(r.store_id=$${params.length} or r.store_id is null)`); }
   if (opts.q) { params.push(`%${opts.q.replace(/\D/g, "")}%`); conds.push(`m.phone like $${params.length}`); }
   const where = conds.length ? `where ${conds.join(" and ")}` : "";
   const total = (await one<{ n: number }>(`select count(*)::int as n from receipts r join members m on m.id=r.member_id ${where}`, params))?.n ?? 0;
@@ -172,15 +189,17 @@ export async function listReceipts(opts: { status?: ReceiptStatus; storeId?: str
   return { items: rows.map(mapReceipt), total };
 }
 
-/** 오늘(KST) 회원이 접수한 건수(approved+review) */
-export async function countMemberReceiptsToday(memberId: string, now: Date): Promise<number> {
-  const kst = new Date(now.getTime() + 9 * 3600 * 1000);
-  const dayStartUtc = new Date(Date.UTC(kst.getUTCFullYear(), kst.getUTCMonth(), kst.getUTCDate()) - 9 * 3600 * 1000);
-  const r = await one<{ n: number }>(
-    `select count(*)::int as n from receipts where member_id=$1 and status in ('approved','review') and created_at >= $2`,
-    [memberId, dayStartUtc.toISOString()],
+/**
+ * 오늘(KST) 회원이 접수한 건수. 기본은 approved+review(인증 한도), all=true 면 반려 포함(업로드 시도 한도).
+ * 트랜잭션 안에서 다시 셀 때는 q 를 넘긴다.
+ */
+export async function countMemberReceiptsToday(memberId: string, now: Date, opts: { all?: boolean; q?: Queryable } = {}): Promise<number> {
+  const runner = opts.q ?? { query };
+  const rows = await runner.query<{ n: number }>(
+    `select count(*)::int as n from receipts where member_id=$1 and created_at >= $2${opts.all ? "" : " and status in ('approved','review')"}`,
+    [memberId, kstDayStart(now).toISOString()],
   );
-  return r?.n ?? 0;
+  return rows[0]?.n ?? 0;
 }
 
 export type DedupProbe = {
@@ -190,6 +209,13 @@ export type DedupProbe = {
   recentHashes: { id: string; dhash: string }[];
 };
 
+/**
+ * 중복 조회.
+ *  - exact: 같은 사진(sha256)이 살아 있는지(approved/review)
+ *  - approvalHit: 같은 승인번호가 같은 매장(또는 매장 미확정 건)에 살아 있는지. 다른 매장의 같은 8자리는 정상 손님이므로 중복이 아니다
+ *  - fingerprintHit: 같은 매장·결제시각(±3분)·금액이 살아 있는지
+ *  - recentHashes: 유사 사진 비교용 dHash 목록(최근순 2000건). withHashes=false 면 건너뛴다
+ */
 export async function probeDuplicates(p: {
   sha256: string;
   approvalNo: string | null;
@@ -197,28 +223,38 @@ export async function probeDuplicates(p: {
   receiptAt: Date | null;
   amount: number | null;
   sinceForHashes: Date;
+  withHashes?: boolean;
+  /** 자기 자신(관리자 재판정 시) 제외 */
+  excludeId?: string | null;
+  q?: Queryable;
 }): Promise<DedupProbe> {
-  const exact = await one<{ id: string; status: ReceiptStatus }>(`select id, status from receipts where sha256=$1 and status <> 'rejected' order by created_at desc limit 1`, [p.sha256]);
+  const runner = p.q ?? { query };
+  const notSelf = p.excludeId ? ` and id <> '${p.excludeId.replace(/[^0-9a-f-]/gi, "")}'` : "";
+  const exact = (await runner.query<{ id: string; status: ReceiptStatus }>(`select id, status from receipts where sha256=$1 and status <> 'rejected'${notSelf} order by created_at desc limit 1`, [p.sha256]))[0] ?? null;
   let approvalHit = false;
   if (p.approvalNo) {
-    const r = await one<{ n: number }>(
-      `select count(*)::int as n from receipts where approval_no=$1 and status <> 'rejected' and sha256 <> $2`,
-      [p.approvalNo, p.sha256],
+    const r = await runner.query<{ n: number }>(
+      `select count(*)::int as n from receipts where approval_no=$1 and status <> 'rejected' and sha256 <> $2${notSelf}
+         and ($3::text is null or store_id is null or store_id = $3)`,
+      [p.approvalNo, p.sha256, p.storeId],
     );
-    approvalHit = (r?.n ?? 0) > 0;
+    approvalHit = (r[0]?.n ?? 0) > 0;
   }
   let fingerprintHit = false;
   if (p.storeId && p.receiptAt && p.amount != null) {
-    const r = await one<{ n: number }>(
-      `select count(*)::int as n from receipts where store_id=$1 and receipt_at=$2 and amount=$3 and status <> 'rejected' and sha256 <> $4`,
+    const r = await runner.query<{ n: number }>(
+      `select count(*)::int as n from receipts where store_id=$1 and amount=$3 and status <> 'rejected' and sha256 <> $4${notSelf}
+         and receipt_at between $2::timestamptz - interval '3 minutes' and $2::timestamptz + interval '3 minutes'`,
       [p.storeId, p.receiptAt.toISOString(), p.amount, p.sha256],
     );
-    fingerprintHit = (r?.n ?? 0) > 0;
+    fingerprintHit = (r[0]?.n ?? 0) > 0;
   }
-  const recentHashes = await query<{ id: string; dhash: string }>(
-    `select id, dhash from receipts where dhash is not null and status <> 'rejected' and created_at >= $1 and sha256 <> $2 limit 2000`,
-    [p.sinceForHashes.toISOString(), p.sha256],
-  );
+  const recentHashes = p.withHashes === false
+    ? []
+    : await runner.query<{ id: string; dhash: string }>(
+        `select id, dhash from receipts where dhash is not null and status <> 'rejected' and created_at >= $1 and sha256 <> $2 order by created_at desc limit 2000`,
+        [p.sinceForHashes.toISOString(), p.sha256],
+      );
   return { exact, approvalHit, fingerprintHit, recentHashes };
 }
 
@@ -252,20 +288,55 @@ export async function insertReceipt(q: Queryable, r: NewReceipt): Promise<string
   return rows[0]!.id;
 }
 
-/** 승인 확정 시 누적 금액/방문 반영 (트랜잭션 안에서 호출) */
-export async function applyApprovedSpend(q: Queryable, p: { memberId: string; storeId: StoreId | null; receiptId: string; amount: number | null; tierKey: string }): Promise<void> {
+/**
+ * 승인 확정 시 누적 금액/방문 반영 (트랜잭션 안에서 호출).
+ * 회원 행을 잠근 뒤 잠근 시점의 누적 금액으로 등급을 계산하므로 동시 승인이 겹쳐도 등급이 어긋나지 않는다.
+ * 같은 영수증에 대한 원장 행이 이미 있으면 두 번 더하지 않는다.
+ */
+export async function applyApprovedSpend(q: Queryable, p: { memberId: string; storeId: StoreId | null; receiptId: string; amount: number | null; rules?: Rules; /** rules 가 없을 때만 쓰는 옛 방식(호출부 호환) */ tierKey?: string }): Promise<{ totalSpend: number; tierKey: string }> {
   const amount = p.amount ?? 0;
+  const tierOf = (total: number) => (p.rules ? tierFor(total, p.rules).key : (p.tierKey ?? "none"));
+  const locked = await q.query<{ total_spend: number }>(`select total_spend from members where id=$1 for update`, [p.memberId]);
+  if (!locked[0]) throw new Error("member not found");
+  const dup = await q.query<{ n: number }>(`select count(*)::int as n from spend_ledger where receipt_id=$1`, [p.receiptId]);
+  if ((dup[0]?.n ?? 0) > 0) {
+    const total = Number(locked[0].total_spend);
+    return { totalSpend: total, tierKey: tierOf(total) };
+  }
+  const total = Number(locked[0].total_spend) + amount;
+  const tierKey = tierOf(total);
   await q.query(`insert into spend_ledger (member_id, store_id, receipt_id, amount) values ($1,$2,$3,$4)`, [p.memberId, p.storeId, p.receiptId, amount]);
-  await q.query(`update members set total_spend = total_spend + $2, visit_count = visit_count + 1, tier=$3 where id=$1`, [p.memberId, amount, p.tierKey]);
+  await q.query(`update members set total_spend = $2, visit_count = visit_count + 1, tier=$3 where id=$1`, [p.memberId, total, tierKey]);
+  return { totalSpend: total, tierKey };
 }
 
-export async function setReceiptDecision(q: Queryable, p: { id: string; status: ReceiptStatus; reasons: string[]; reviewedBy: string; note: string | null; storeId?: StoreId | null; amount?: number | null; receiptAt?: Date | null }): Promise<void> {
-  await q.query(
+/**
+ * 관리자 판정 저장. 이미 승인된 건은 다시 바꾸지 않는다(상태 조건부 update) — 0행이면 false.
+ * 호출부는 먼저 `select ... for update` 로 행을 잠근 상태여야 한다.
+ */
+export async function setReceiptDecision(q: Queryable, p: { id: string; status: ReceiptStatus; reasons: string[]; reviewedBy: string; note: string | null; storeId?: StoreId | null; amount?: number | null; receiptAt?: Date | null }): Promise<boolean> {
+  const rows = await q.query<{ id: string }>(
     `update receipts set status=$2, reasons=$3, reviewed_by=$4, reviewed_at=now(), review_note=$5,
        store_id = coalesce($6, store_id), amount = coalesce($7, amount), receipt_at = coalesce($8, receipt_at)
-     where id=$1`,
+     where id=$1 and status <> 'approved' returning id`,
     [p.id, p.status, p.reasons, p.reviewedBy, p.note, p.storeId ?? null, p.amount ?? null, p.receiptAt?.toISOString() ?? null],
   );
+  return rows.length > 0;
+}
+
+/**
+ * 보관 정책: 반려 건은 7일, 나머지는 90일이 지나면 원본 사진만 지운다(판정 기록·읽은 값은 남긴다).
+ * 오래된 속도 제한 행도 함께 정리한다. /api/cron/purge 에서 하루 한 번 부른다.
+ */
+export async function purgeOldData(now: Date = new Date()): Promise<{ images: number; rateLimits: number }> {
+  const rejectedBefore = new Date(now.getTime() - 7 * 86400 * 1000).toISOString();
+  const allBefore = new Date(now.getTime() - 90 * 86400 * 1000).toISOString();
+  const imgs = await query<{ id: string }>(
+    `update receipts set image=null where image is not null and ((status='rejected' and created_at < $1) or created_at < $2) returning id`,
+    [rejectedBefore, allBefore],
+  );
+  const rl = await query<{ key: string }>(`delete from rate_limits where window_start < now() - interval '1 day' returning key`);
+  return { images: imgs.length, rateLimits: rl.length };
 }
 
 /* ───────────────────────── 메뉴 ───────────────────────── */
@@ -278,19 +349,23 @@ export type MenuItem = {
   description: string | null;
   imagePath: string | null;
   hasImageData: boolean;
+  /** DB 사진이 마지막으로 바뀐 시각. 캐시 무효화용 (menuImageUrl) */
+  imageUpdatedAt: Date | null;
   isGift: boolean;
   active: boolean;
   sort: number;
 };
 
-type MenuRow = { id: number; store_id: string; name: string; price: number | null; description: string | null; image_path: string | null; has_image: boolean; is_gift: boolean; active: boolean; sort: number };
+type MenuRow = { id: number; store_id: string; name: string; price: number | null; description: string | null; image_path: string | null; has_image: boolean; image_updated_at: unknown; is_gift: boolean; active: boolean; sort: number };
 
 const mapMenu = (r: MenuRow): MenuItem => ({
   id: Number(r.id), storeId: r.store_id as StoreId, name: r.name, price: r.price == null ? null : Number(r.price), description: r.description,
-  imagePath: r.image_path, hasImageData: Boolean(r.has_image), isGift: r.is_gift, active: r.active, sort: Number(r.sort),
+  imagePath: r.image_path, hasImageData: Boolean(r.has_image), imageUpdatedAt: toDate(r.image_updated_at), isGift: r.is_gift, active: r.active, sort: Number(r.sort),
 });
 
-const MENU_COLS = `id, store_id, name, price, description, image_path, (image_data is not null) as has_image, is_gift, active, sort`;
+const MENU_COLS = `id, store_id, name, price, description, image_path, (image_data is not null) as has_image, image_updated_at, is_gift, active, sort`;
+
+export { menuImageUrl } from "../menu-image";
 
 export async function listMenu(storeId: StoreId, opts: { giftOnly?: boolean; includeInactive?: boolean } = {}): Promise<MenuItem[]> {
   const conds = [`store_id=$1`];
@@ -324,7 +399,7 @@ export async function upsertMenuItem(m: { id?: number; storeId: StoreId; name: s
 }
 
 export async function setMenuImage(id: number, data: Buffer | null, mime: string | null): Promise<void> {
-  await query(`update menu_items set image_data=$2, image_mime=$3 where id=$1`, [id, data, mime]);
+  await query(`update menu_items set image_data=$2, image_mime=$3, image_updated_at=now() where id=$1`, [id, data, mime]);
 }
 
 export async function deleteMenuItem(id: number): Promise<boolean> {
@@ -377,6 +452,7 @@ const mapCoupon = (r: CouponRow): Coupon => {
 const COUPON_COLS = `c.id, c.code, c.member_id, c.receipt_id, c.use_store_id, c.menu_item_id, c.menu_name, c.kind, c.status, c.issued_at, c.expires_at, c.used_at, c.used_via, c.note`;
 
 export async function getCoupon(id: string): Promise<Coupon | null> {
+  if (!isUuid(id)) return null;
   const r = await one<CouponRow>(`select ${COUPON_COLS}, m.phone as member_phone from coupons c join members m on m.id=c.member_id where c.id=$1`, [id]);
   return r ? mapCoupon(r) : null;
 }
@@ -394,7 +470,10 @@ export async function listCouponsForMember(memberId: string): Promise<Coupon[]> 
 export async function listCoupons(opts: { status?: CouponStatus; storeId?: string | null; q?: string; limit?: number; offset?: number } = {}): Promise<{ items: Coupon[]; total: number }> {
   const conds: string[] = [];
   const params: unknown[] = [];
-  if (opts.status) { params.push(opts.status); conds.push(`c.status=$${params.length}`); }
+  // 만료는 DB 상태를 따로 갱신하지 않고 expires_at 으로 판단한다
+  if (opts.status === "expired") conds.push(`c.status='active' and c.expires_at <= now()`);
+  else if (opts.status === "active") conds.push(`c.status='active' and c.expires_at > now()`);
+  else if (opts.status) { params.push(opts.status); conds.push(`c.status=$${params.length}`); }
   if (opts.storeId) { params.push(opts.storeId); conds.push(`c.use_store_id=$${params.length}`); }
   if (opts.q) {
     const d = opts.q.replace(/\D/g, "");
@@ -428,8 +507,13 @@ export async function updateAdmin(id: string, p: { active?: boolean; pwHash?: st
   await query(`update admins set active=coalesce($2, active), pw_hash=coalesce($3, pw_hash), name=coalesce($4, name) where id=$1`, [id, p.active ?? null, p.pwHash ?? null, p.name ?? null]);
 }
 
+/** 감사 기록. 기록 자체의 실패가 이미 끝난 작업을 실패로 보고하지 않도록 안에서 삼키고 로그만 남긴다. */
 export async function audit(actor: string, action: string, target: string | null, meta: unknown = null): Promise<void> {
-  await query(`insert into audit_log (actor, action, target, meta) values ($1,$2,$3,$4::jsonb)`, [actor, action, target, meta == null ? null : JSON.stringify(meta)]);
+  try {
+    await query(`insert into audit_log (actor, action, target, meta) values ($1,$2,$3,$4::jsonb)`, [actor, action, target, meta == null ? null : JSON.stringify(meta)]);
+  } catch (e) {
+    console.error("[audit]", action, e);
+  }
 }
 
 export async function listAudit(limit = 100): Promise<{ id: number; at: Date; actor: string; action: string; target: string | null; meta: unknown }[]> {

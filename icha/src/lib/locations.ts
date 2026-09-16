@@ -1,42 +1,58 @@
 /**
- * 찾아오는 길 — 조사된 안내 문구(네이버 플레이스 업체 안내·블로그) 기반.
- * stores.ts 와 분리해 둔 이유: 위치 설명은 자주 바뀌고, 매장 마스터와 별도로 관리한다.
+ * 오시는 길 — 한 곳에서만 관리하고 모든 화면(홈·매장·지도·포스터)이 이 값을 그대로 쓴다.
+ * 출구·도보 시간은 네이버 플레이스 업체 안내와 블로그 후기 기준. 화면마다 다른 숫자를 계산해 넣지 않는다.
  */
 import type { StoreId } from "./config";
 
 export type StoreLocation = {
-  /** 지하철 안내 */
+  /** 지하철 출구 번호 */
+  exit: number;
+  /** 서면역 해당 출구에서 도보(분) */
+  walkMin: number;
+  /** 화면에 그대로 쓰는 한 줄 */
   subway: string;
   /** 업체가 안내하는 길 설명 */
   directions: string;
-  /** 층 */
   floor: string;
-  /** 주변 랜드마크 */
   landmarks: string[];
-  /** 주차 */
   parking: string;
 };
 
 export const LOCATIONS: Record<StoreId, StoreLocation> = {
   joseon: {
-    subway: "서면역 6번 출구에서 도보 약 4분 (238m)",
-    directions: "서면 밀리오레 맞은편 골목으로 들어와 다이닝캠프 옆 건물. 1층과 2층(좌식)을 함께 씁니다.",
+    exit: 6,
+    walkMin: 4,
+    subway: "서면역 6번 출구 도보 4분",
+    directions: "서면 밀리오레 맞은편 골목으로 들어와 다이닝캠프 옆 건물. 1층과 2층(좌식)을 함께 사용합니다.",
     floor: "1·2층",
     landmarks: ["서면 밀리오레 맞은편", "다이닝캠프 옆"],
-    parking: "주차 정보 없음 (인근 공영주차장 이용)",
+    parking: "주차 공간 없음 (인근 공영주차장 이용)",
   },
   tokyo: {
-    subway: "서면역 6번 출구에서 도보 약 2분 (2번 출구 142m)",
-    directions: "서면 젊음의 거리 골목, 파란 간판과 '산토리 공식매장' 노렌이 걸린 1층 매장.",
+    exit: 6,
+    walkMin: 2,
+    subway: "서면역 6번 출구 도보 2분",
+    directions: "서면 젊음의 거리 골목. 파란 간판과 '산토리 공식매장' 노렌이 걸린 1층 매장입니다.",
     floor: "1층",
-    landmarks: ["서면 젊음의 거리", "서면역 2번 출구 142m"],
+    landmarks: ["서면 젊음의 거리"],
     parking: "주차 불가",
   },
   wareureu: {
-    subway: "서면역 6번 출구에서 도보 약 3분",
+    exit: 6,
+    walkMin: 3,
+    subway: "서면역 6번 출구 도보 3분",
     directions: "서면2번가 해피통닭 바로 옆 건물 2층. 불로장생을 바라보고 오른쪽 골목으로 들어오면 됩니다.",
     floor: "2층",
     landmarks: ["서면2번가 해피통닭 옆 건물", "불로장생 우측 골목"],
     parking: "주차 불가",
   },
 };
+
+/** "서면역 6번 출구 도보 2~4분" 처럼 세 매장을 아우르는 한 줄 */
+export function subwaySummary(): string {
+  const v = Object.values(LOCATIONS);
+  const exits = Array.from(new Set(v.map((l) => l.exit)));
+  const mins = v.map((l) => l.walkMin);
+  const lo = Math.min(...mins), hi = Math.max(...mins);
+  return `서면역 ${exits.join("·")}번 출구 도보 ${lo === hi ? `${lo}분` : `${lo}~${hi}분`}`;
+}

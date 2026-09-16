@@ -109,3 +109,17 @@ export function pct(n: number, total: number): string {
   if (!total) return "0%";
   return `${Math.round((n / total) * 100)}%`;
 }
+
+/** 받침 유무에 따른 조사. 마지막 글자가 한글이 아니면(영문·숫자) 받침 없는 것으로 본다. */
+export function josa(word: string, type: "이나" | "과와" | "은는" | "이가" | "을를"): string {
+  const last = word.charCodeAt(word.length - 1);
+  const hangul = last >= 0xac00 && last <= 0xd7a3;
+  const batchim = hangul ? (last - 0xac00) % 28 !== 0 : false;
+  const map: Record<typeof type, [string, string]> = { 이나: ["이나", "나"], 과와: ["과", "와"], 은는: ["은", "는"], 이가: ["이", "가"], 을를: ["을", "를"] };
+  return word + map[type][batchim ? 0 : 1];
+}
+
+/** "A나 B", "A와 B" 처럼 이름 목록을 조사로 잇는다 */
+export function joinWithJosa(names: string[], type: "이나" | "과와"): string {
+  return names.map((n, i) => (i < names.length - 1 ? josa(n, type) : n)).join(" ");
+}

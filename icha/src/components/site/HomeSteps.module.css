@@ -1,25 +1,13 @@
-.list { display: grid; gap: 48px; }
-.step { display: grid; gap: 20px; }
-.media { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--radius); background: var(--surface); }
-.img { object-fit: cover; transition: transform 0.8s var(--ease-out); }
-.step:hover .img { transform: scale(1.04); }
-.paperMedia { display: grid; place-items: center; background: radial-gradient(120% 90% at 50% 20%, #2a2620 0%, #141414 70%); }
-.paper { width: min(300px, 78%); transform: rotate(-2.5deg); font-size: 13px; }
-.paperHead { font-weight: 700; font-size: 15px; text-align: center; }
-.paperSub { text-align: center; font-size: 12px; color: var(--ink-3); margin-top: 2px; }
-.paperGift { font-size: 13px; line-height: 1.6; }
-.paperGift b { font-weight: 700; }
-.stamp { position: absolute; right: 10px; bottom: 14px; }
-.text { display: grid; gap: 10px; }
-.num { font-family: var(--font-display); font-size: 64px; line-height: 0.9; color: var(--gold); letter-spacing: -0.02em; }
-.title em { font-style: normal; color: var(--gold); }
-.desc { color: var(--fg-2); max-width: 40ch; }
-.desc b { color: var(--fg); font-weight: 800; }
+.list { display: grid; }
+.step { display: grid; grid-template-columns: 44px 1fr; gap: 12px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+.step:first-child { padding-top: 4px; }
+.num { font-weight: 800; font-size: 30px; line-height: 1; letter-spacing: -0.03em; color: var(--fg); }
+.body { display: grid; gap: 6px; }
+.title { font-weight: 700; font-size: 17px; line-height: 1.35; }
+.desc { font-size: 15px; line-height: 1.7; color: var(--fg-2); }
 @media (min-width: 760px) {
-  .list { gap: 72px; }
-  .step { grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
-  .step:nth-child(even) .media { order: 2; }
-  .media { aspect-ratio: 5 / 4; }
-  .num { font-size: 96px; }
-  .text { padding-top: 8px; }
+  .list { grid-template-columns: repeat(4, 1fr); }
+  .step, .step:first-child { grid-template-columns: 1fr; gap: 14px; padding: 4px 24px 0 20px; border-bottom: 0; border-left: 1px solid var(--line); }
+  .step:first-child { border-left: 0; padding-left: 0; }
+  .num { font-size: 36px; }
 }

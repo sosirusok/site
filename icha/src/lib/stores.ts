@@ -97,12 +97,12 @@ export const STORES: Store[] = [
       { days: "일~목", time: "15:00 – 다음날 09:00 · 주문 마감 08:00" },
       { days: "금·토", time: "15:00 – 다음날 10:00 · 주문 마감 09:00" },
     ],
-    hoursNote: "정기 휴무는 표기되어 있지 않아요(네이버 플레이스 기준). 주문은 테이블 태블릿으로 해요.",
+    hoursNote: "정기 휴무 없음. 주문은 테이블 태블릿으로 합니다.",
     lat: 35.1564299,
     lng: 129.061563,
-    headline: "칼국수 한 그릇, 통막걸리 한 통. 아침 9시까지 합니다.",
+    headline: "칼국수·전·통막걸리를 내는 요리주점. 아침 9시까지 영업합니다.",
     intro:
-      "서면 밀리오레 맞은편 골목, 통나무로 지은 1·2층 요리주점이에요. 입구에는 물이 흘러내리는 돌벽과 장승이 서 있고, 2층은 좌식이에요.\n칼국수·수제비·냉면 같은 식사와 김치전·호박전·빈대떡 같은 전, 양은 통에 담아 내는 조선막걸리가 중심이에요. 오후 3시에 열어 다음날 아침까지 하니 2차, 3차, 해장 손님이 많아요.",
+      "서면 밀리오레 맞은편 골목에 있는 통나무 건물의 1·2층 요리주점입니다. 입구에 물이 흐르는 돌벽과 장승이 있고, 2층은 좌식입니다.\n칼국수·수제비·냉면 같은 식사와 김치전·호박전·빈대떡 같은 전, 양은 통에 담아 내는 조선막걸리가 주 메뉴입니다. 오후 3시에 열어 다음날 아침까지 영업합니다.",
     keywords: ["통막걸리", "칼국수·수제비", "전 모듬", "아침까지 영업", "2층 좌식·단체석"],
     quotes: [
       { text: "비 오는 날 퇴근 후 칼국수에 막걸리가 생각나서 방문했어요. 메뉴가 엄청 다양한데 실패했다 하는 맛은 아닌 것 같아서 좋아요.", date: "2026.06" },
@@ -137,13 +137,13 @@ export const STORES: Store[] = [
       { name: "조선 수제비", price: 7000 },
       { name: "조선 김치칼국수", price: 7500 },
       { name: "조선 김치수제비", price: 7500 },
-      { name: "조선 바지락칼국수", price: 7500, description: "바지락을 넣은 맑은 칼국수. 네이버 대표 메뉴", image: `${J}/menu/bajirak-kalguksu.jpg` },
+      { name: "조선 바지락칼국수", price: 7500, description: "바지락을 넣은 맑은 칼국수", image: `${J}/menu/bajirak-kalguksu.jpg` },
       { name: "조선 바지락수제비", price: 7500 },
       { name: "조선 해물매운칼국수", price: 7500, description: "홍합·바지락이 든 얼큰한 국물", image: `${J}/menu/haemul-maeun-kalguksu.jpg` },
       { name: "조선 해물매운수제비", price: 7500 },
       { name: "조선 황태칼국수", price: 7000 },
       { name: "조선 황태수제비", price: 7000 },
-      { name: "조선 물냉면", price: 7500, description: "주문이 가장 많은 메뉴(네이버 기준)", image: `${J}/menu/mul-naengmyeon.jpg` },
+      { name: "조선 물냉면", price: 7500, description: "주문이 가장 많은 메뉴", image: `${J}/menu/mul-naengmyeon.jpg` },
       { name: "조선 만두", price: 6000, description: "찐만두 8개", image: `${J}/menu/mandu.jpg`, gift: true },
       { name: "계란 추가", price: 700 },
       // 식사류(밥)
@@ -153,12 +153,12 @@ export const STORES: Store[] = [
       { name: "조선 고추장불고기비빔밥(돌솥)", price: 8000 },
       { name: "공기밥", price: 1000 },
       // 안주류
-      { name: "조선 계란말이", price: 7000, description: "리뷰에 자주 오르는 안주", gift: true },
-      { name: "조선 해물파전", price: 14000, description: "쪽파와 해물을 넣은 큰 파전. 매장 메뉴판 기준(네이버의 13,500원은 이전 가격)", image: `${J}/menu/haemul-pajeon.jpg` },
+      { name: "조선 계란말이", price: 7000, description: "두툼하게 말아 썰어 내는 계란말이", gift: true },
+      { name: "조선 해물파전", price: 14000, description: "쪽파와 해물을 넣은 큰 파전", image: `${J}/menu/haemul-pajeon.jpg` }, // 매장 메뉴판 14,000원(네이버 13,500원은 이전 가격)
       { name: "조선 반반전(김치+정구지)", price: 12000, description: "김치전 반, 정구지(부추)전 반", image: `${J}/menu/banban-jeon.jpg`, gift: true },
       { name: "조선 김치전", price: 12000, image: `${J}/menu/kimchi-jeon.jpg`, gift: true },
       { name: "조선 땡초정구지전", price: 12000, description: "청양고추를 넣은 부추전" },
-      { name: "조선 호박전", price: 12000, description: "매장 메뉴판 기준(네이버의 11,500원은 이전 가격)", image: `${J}/menu/hobak-jeon.jpg`, gift: true },
+      { name: "조선 호박전", price: 12000, image: `${J}/menu/hobak-jeon.jpg`, gift: true }, // 매장 메뉴판 12,000원(네이버 11,500원은 이전 가격)
       { name: "조선 빈대떡", price: 12000, description: "녹두 빈대떡", image: `${J}/menu/bindaetteok.jpg` },
       { name: "조선 모듬전", price: 14000, description: "김치전·호박전·빈대떡·감자전·땡초정구지전 다섯 가지", image: `${J}/menu/modeum-jeon.jpg` },
       { name: "조선 두부김치", price: 11500, image: `${J}/menu/dubu-kimchi.jpg`, gift: true },
@@ -216,13 +216,13 @@ export const STORES: Store[] = [
       { days: "월~목·일", time: "17:00 – 다음날 03:00 · 주문 마감 02:00" },
       { days: "금·토", time: "17:00 – 다음날 04:00 · 주문 마감 03:00" },
     ],
-    hoursNote: "정기 휴무는 표기되어 있지 않아요. 2026년 9월에 문을 연 매장이라 영업시간이 바뀔 수 있으니 방문 전 확인을 권해요.",
+    hoursNote: "정기 휴무 없음. 2026년 9월에 문을 연 매장이라 영업시간이 바뀔 수 있습니다.",
     lat: 35.156364,
     lng: 129.0601968,
-    headline: "서서 마시는 산토리 생맥주. 오늘도 완벽한 한 잔.",
+    headline: "서서 마시는 산토리 공식 생맥주 매장. 생맥주 한 잔 8,900원입니다.",
     intro:
-      "서면역에서 걸어서 2분, 2026년 9월에 문을 연 일본식 타치노미(서서 마시는 술집)예요. 산토리 공식 매장으로 크리미·소프트·밀코 세 가지 산토리 생맥주와 직접 만든 밀맥주 '도쿄 윗 비어'를 한 잔 8,900원에 내요. 가게에서는 17년 동안 생맥주를 연구한 노하우를 담았다고 소개해요.\n안주는 비어슁켄·약드부어스트·본레스 세 가지 수제 햄을 담은 콜드햄 플레이트가 중심이고, 오이사라다나 계란볶음밥처럼 가볍게 곁들일 것도 있어요. 카운터석과 바 테이블 위주라 혼자 와서 한 잔 하기에도 편해요.",
-    keywords: ["산토리 생맥주", "타치노미", "콜드햄 플레이트", "혼술", "서면역 2분"],
+      "서면역 6번 출구에서 걸어서 2분, 2026년 9월에 문을 연 일본식 타치노미(서서 마시는 술집)입니다. 산토리 공식 매장으로 크리미·소프트·밀코 세 가지 산토리 생맥주와 직접 만든 밀맥주 '도쿄 윗 비어'를 한 잔 8,900원에 냅니다. 17년 동안 생맥주를 다룬 경험으로 잔을 냅니다.\n안주는 비어슁켄·약드부어스트·본레스 세 가지 수제 햄을 담은 콜드햄 플레이트가 중심이고, 오이사라다·계란볶음밥처럼 가볍게 곁들일 것도 있습니다. 카운터석과 바 테이블 위주라 혼자 와서 한 잔 하기에도 편합니다.",
+    keywords: ["산토리 생맥주", "타치노미", "콜드햄 플레이트", "혼술", "서면역 도보 2분"],
     quotes: [
       { text: "맥주 종류도 다양하고 취향에 맞게 골라 마실 수 있어서 좋네요. 무엇보다 생맥주가 시원하고 목넘김이 좋아서 계속 들어가요!", date: "2026.09" },
       { text: "서서 마시는데도 전혀 불편함 없고, 오히려 옆 테이블과 자연스럽게 소통하는 재미도 있었습니다.", date: "2026.09" },
@@ -250,14 +250,14 @@ export const STORES: Store[] = [
     // 가격: 네이버 등록 메뉴(2026-09-10)와 매장 메뉴판 사진(2026-09-11) 일치.
     menu: [
       // 맥주
-      { name: "산토리 크리미 생맥주", price: 8900, description: "풍성한 크림 거품. 가게가 첫손에 꼽는 잔", image: `${T}/menu/suntory-creamy.jpg` },
+      { name: "산토리 크리미 생맥주", price: 8900, description: "풍성한 크림 거품. 처음이라면 이 잔부터", image: `${T}/menu/suntory-creamy.jpg` },
       { name: "산토리 소프트 생맥주", price: 8900, description: "쫀쫀한 거품에 탄산이 또렷한 잔", image: `${T}/menu/suntory-soft.jpg` },
       { name: "산토리 밀코 생맥주", price: 8900, description: "우유처럼 하얀 거품이 잔을 덮는 생맥주", image: `${T}/menu/suntory-milko.jpg` },
-      { name: "도쿄 윗 비어", price: 8900, description: "직접 만든 호가든 스타일 밀맥주. 오렌지 슬라이스를 올려 내요" },
+      { name: "도쿄 윗 비어", price: 8900, description: "직접 만든 호가든 스타일 밀맥주. 오렌지 슬라이스를 올려 냅니다" },
       { name: "코젤다크 생맥주", price: 10900, description: "카라멜 풍미의 체코 흑맥주" },
       // 콜드햄
       { name: "시그니처 콜드햄 플레이트", price: 13900, description: "비어슁켄·약드부어스트·본레스 세 가지 수제 햄 12조각. 이 집 대표 안주", image: `${T}/menu/signature-cold-ham-plate.jpg` },
-      { name: "시그니처 햄세트", price: 28900, description: "생맥주 2잔 + 시그니처 콜드햄 플레이트. 네이버 메뉴 기준(매장 메뉴판에는 없음)", image: `${T}/menu/signature-ham-set.jpg` },
+      { name: "시그니처 햄세트", price: 28900, description: "생맥주 2잔 + 시그니처 콜드햄 플레이트", image: `${T}/menu/signature-ham-set.jpg` }, // 네이버 메뉴 기준(매장 메뉴판에는 없음)
       { name: "콜드햄 플레이트(비어슁켄)", price: 8900, description: "독일식 햄 한 종류 6조각", image: `${T}/menu/cold-ham-plate.jpg` },
       { name: "콜드햄 플레이트(약드부어스트)", price: 8900, description: "한 종류 6조각", image: `${T}/menu/cold-ham-plate.jpg` },
       { name: "콜드햄 플레이트(본레스)", price: 8900, description: "훈연 향이 있는 본레스햄 6조각", image: `${T}/menu/cold-ham-plate.jpg` },
@@ -273,7 +273,7 @@ export const STORES: Store[] = [
       // 면
       { name: "나폴리탄", price: 9900, description: "케첩 소스의 일본식 스파게티", image: `${T}/menu/napolitan.jpg` },
       { name: "야끼소바", price: 9900, description: "가쓰오부시를 올린 일본식 볶음면", image: `${T}/menu/yakisoba.jpg` },
-      { name: "매콤 야끼소바", price: 9900, description: "네이버 메뉴 기준(매장 메뉴판에는 야끼소바만 있음)", image: `${T}/menu/spicy-yakisoba.jpg` },
+      { name: "매콤 야끼소바", price: 9900, image: `${T}/menu/spicy-yakisoba.jpg` }, // 네이버 메뉴 기준(매장 메뉴판에는 야끼소바만 있음)
       { name: "얼큰우동", price: 6900, description: "칼칼한 국물 우동", image: `${T}/menu/spicy-udon.jpg` },
       // 디저트
       { name: "시나몬 오렌지", price: 4900, description: "오렌지 슬라이스에 시나몬 설탕", image: `${T}/menu/cinnamon-orange.jpg` },
@@ -313,12 +313,12 @@ export const STORES: Store[] = [
       { days: "일~목", time: "17:00 – 다음날 04:00 · 주문 마감 03:00" },
       { days: "금·토", time: "17:00 – 다음날 05:00 · 주문 마감 04:00" },
     ],
-    hoursNote: "정기 휴무는 표기되어 있지 않아요. 주차 공간은 없어요.",
+    hoursNote: "정기 휴무 없음.",
     lat: 35.1565856,
     lng: 129.0610548,
-    headline: "식사도 되고 안주도 되는 한식요리주점, 새벽 4시까지.",
+    headline: "식사와 안주가 모두 되는 한식요리주점. 새벽 4시까지 영업합니다.",
     intro:
-      "식사가 되는 한식요리주점이에요. 초저녁엔 맥주나 하이볼에 곁들일 과일·디저트, 밤이 깊으면 스지전골·크림짬뽕·육회차돌쌈 같은 안주까지 메뉴가 일흔 가지가 넘어요.\n서면2번가 해피통닭 옆 건물 2층이에요. 천장 선풍기와 스테인드글라스 조명, 접이식 철문을 둔 레트로한 홀에 최대 40명까지 앉을 수 있고, 주문은 테이블 태블릿으로 해요. 오후 5시에 열어 새벽 4시(금·토 5시)까지 하니 2차, 3차로 오는 손님이 많아요.",
+      "식사가 되는 한식요리주점입니다. 초저녁에는 맥주나 하이볼에 곁들일 과일·디저트, 밤이 깊으면 스지전골·크림짬뽕·육회차돌쌈 같은 안주까지 메뉴가 일흔 가지가 넘습니다.\n서면2번가 해피통닭 옆 건물 2층입니다. 천장 선풍기와 스테인드글라스 조명, 접이식 철문을 둔 홀에 최대 40명까지 앉을 수 있고, 주문은 테이블 태블릿으로 합니다. 오후 5시에 열어 새벽 4시(금·토 5시)까지 영업합니다.",
     keywords: ["한식요리주점", "스지전골", "크림짬뽕", "단체 40명", "새벽 4시까지"],
     quotes: [
       { text: "길 걷다가 분위기 좋아 보여서 들어왔는데 매장 분위기가 너무 시끄럽지도 않고 좋네요. 크림짬뽕 나오자마자 순삭했어요!", date: "2026.09" },
@@ -327,9 +327,9 @@ export const STORES: Store[] = [
     ],
     naverRating: { score: 4.89, count: 939, asOf: "2026-09-15" },
     images: [
-      { src: `${W}/hero.jpg`, alt: "티파니 조명 두 개 아래 '와르르맨숀' 로고 벽과 접이식 철문, 소파 위 인형", kind: "hero" },
+      { src: `${W}/exterior-sign-night.jpg`, alt: "밤의 초록 돌출 간판 'WA-R-R MANSION'", kind: "hero" },
+      { src: `${W}/hero.jpg`, alt: "티파니 조명 두 개 아래 '와르르맨숀' 로고 벽과 접이식 철문, 소파 위 인형", kind: "interior" },
       { src: `${W}/exterior-dusk.jpg`, alt: "해질녘 골목에서 올려다본 2층 초록 간판 '와르르맨숀'", kind: "exterior" },
-      { src: `${W}/exterior-sign-night.jpg`, alt: "밤의 초록 돌출 간판 'WA-R-R MANSION'", kind: "exterior" },
       { src: `${W}/interior-hall.jpg`, alt: "로고 벽과 태블릿이 놓인 나무 테이블이 있는 홀", kind: "interior" },
       { src: `${W}/interior-overview.jpg`, alt: "천장 선풍기와 펜던트 조명, 칸막이 좌석이 있는 홀 전경", kind: "interior" },
       { src: `${W}/interior-booth.jpg`, alt: "다마스크 무늬 기둥과 부스 좌석, 칸막이 위 인형", kind: "interior" },
@@ -346,10 +346,10 @@ export const STORES: Store[] = [
       { src: `${W}/menu-board-signature.jpg`, alt: "시그니처 메뉴판. 불스지 25,900원, 아롱사태스지전골 28,900원 등", kind: "menu" },
       { src: `${W}/kiosk-new-menu.jpg`, alt: "테이블 태블릿의 신메뉴 화면. 통모짜렐라튀김+웨지감자 10,900원, 쫀득감자 8,900원", kind: "menu" },
     ],
-    // 가격: 매장 메뉴판 사진(2026-07-15) 기준. 네이버 등록가와 다른 항목은 설명에 적었다.
+    // 가격: 매장 메뉴판 사진(2026-07-15) 기준. 네이버 등록가와 다른 항목은 줄 끝 주석에 적었다(손님 화면에는 보이지 않음).
     menu: [
       // 시즌 한정
-      { name: "동해초코오징어통찜", price: 32900, description: "시즌 한정. 동해 오징어를 통으로 쪄 내요" },
+      { name: "동해초코오징어통찜", price: 32900, description: "시즌 한정. 동해 오징어를 통으로 쪄 냅니다" },
       { name: "신안당일바리생새우회", price: 35900, description: "시즌 한정. 하루 10접시" },
       // 와르르 시그니처
       { name: "매일 삶는 가브리모둠수육", price: 36900, description: "미나리 향 고기 육수에 수육 모둠", image: `${W}/menu/modum-suyuk.jpg` },
@@ -359,21 +359,21 @@ export const STORES: Store[] = [
       { name: "한우대창묵도리탕(묵은지)", price: 27900, description: "묵은지·한우대창·닭고기를 넣은 닭도리탕", image: `${W}/menu/daechang-dakdoritang.jpg` },
       { name: "얼큰토마토해장빼쉐", price: 19900, description: "조개를 넣은 얼큰한 토마토 국물" },
       // 전골류
-      { name: "와르르반점 크림짬뽕", price: 19900, description: "크림에 짬뽕의 매운맛. 리뷰에 가장 자주 오르는 메뉴", image: `${W}/menu/cream-jjamppong.jpg` },
+      { name: "와르르반점 크림짬뽕", price: 19900, description: "크림에 짬뽕의 매운맛. 이 집 대표 메뉴", image: `${W}/menu/cream-jjamppong.jpg` },
       { name: "맨숀밀푀유나베", price: 21900, description: "간장 베이스의 맑은 국물" },
       { name: "돈짬(돈까스짬뽕탕)", price: 20900, description: "짬뽕탕 위에 돈까스" },
       { name: "와르르꼬꼬야끼", price: 21900, description: "닭고기와 차돌을 넣은 얼큰한 닭 전골" },
       { name: "무뼈국물닭발", price: 17900, image: `${W}/menu/gukmul-dakbal.jpg` },
       // 요리류
-      { name: "투뿔한우육회차돌쌈", price: 29900, description: "1++ 한우 육회와 차돌. 매장 메뉴판 기준(네이버 등록가 28,900원)", image: `${W}/menu/yukhoe-chadol-ssam.jpg` },
-      { name: "투뿔한우육회&김부각", price: 26900, description: "매장 메뉴판 기준(네이버 등록가 25,900원)" },
-      { name: "육회불닭양파쌈", price: 27900, description: "육회에 불닭, 매운맛 뺀 양파와 김부각. 매장 메뉴판 기준(네이버 등록가 26,900원)", image: `${W}/menu/yukhoe-buldak.jpg` },
-      { name: "가브리수육 칼빔면", price: 27900, description: "가브리살 수육을 매콤새콤 칼국수 비빔면에 싸서. 매장 메뉴판 기준(네이버 등록가 25,900원)", image: `${W}/menu/suyuk-kalbimmyeon.jpg` },
+      { name: "투뿔한우육회차돌쌈", price: 29900, description: "1++ 한우 육회와 차돌", image: `${W}/menu/yukhoe-chadol-ssam.jpg` }, // 매장 메뉴판 29,900원(네이버 28,900원)
+      { name: "투뿔한우육회&김부각", price: 26900 }, // 매장 메뉴판 26,900원(네이버 25,900원)
+      { name: "육회불닭양파쌈", price: 27900, description: "육회에 불닭, 매운맛 뺀 양파와 김부각", image: `${W}/menu/yukhoe-buldak.jpg` }, // 매장 메뉴판 27,900원(네이버 26,900원)
+      { name: "가브리수육 칼빔면", price: 27900, description: "가브리살 수육을 매콤새콤 칼국수 비빔면에 싸서", image: `${W}/menu/suyuk-kalbimmyeon.jpg` }, // 매장 메뉴판 27,900원(네이버 25,900원)
       { name: "노포 묵골뱅이소면", price: 23900, description: "매콤새콤 골뱅이에 소면과 김부각", image: `${W}/menu/muk-golbaengi.jpg` },
-      { name: "차돌육전 한 판", price: 22900, description: "계란옷 입혀 부친 차돌 위에 부추 무침. 매장 메뉴판 기준(네이버 등록가 20,900원)", image: `${W}/menu/chadol-yukjeon.jpg` },
-      { name: "차돌새우미나리전", price: 23900, description: "매장 메뉴판 기준(네이버 등록가 20,900원)" },
-      { name: "불고기치즈김치전", price: 18900, description: "매장 메뉴판 기준(네이버 등록가 17,900원)" },
-      { name: "살얼음 김치말이묵국수", price: 14900, description: "매장 메뉴판 기준(네이버 등록가 14,500원)" },
+      { name: "차돌육전 한 판", price: 22900, description: "계란옷 입혀 부친 차돌 위에 부추 무침", image: `${W}/menu/chadol-yukjeon.jpg` }, // 매장 메뉴판 22,900원(네이버 20,900원)
+      { name: "차돌새우미나리전", price: 23900 }, // 매장 메뉴판 23,900원(네이버 20,900원)
+      { name: "불고기치즈김치전", price: 18900 }, // 매장 메뉴판 18,900원(네이버 17,900원)
+      { name: "살얼음 김치말이묵국수", price: 14900 }, // 매장 메뉴판 14,900원(네이버 14,500원)
       { name: "오리훈제 한판", price: 23900 },
       { name: "명란치즈감자채전", price: 16900 },
       { name: "매콤무뼈닭발", price: 16900, image: `${W}/menu/maekom-dakbal.jpg` },
@@ -382,8 +382,8 @@ export const STORES: Store[] = [
       // 튀김류
       { name: "통모짜렐라튀김(2pcs)+웨지감자", price: 10900, description: "매콤한 양념의 통모짜렐라 튀김에 웨지감자" },
       { name: "뿌링통모짜(2pcs)+뿌링감자", price: 10900 },
-      { name: "와르르 쫀득감자", price: 8900, description: "2026년 신메뉴, 쫀득한 감자볼", gift: true },
-      { name: "김치피자탕수육", price: 18500, description: "탕수육에 김치와 치즈. 리뷰에서는 '김피탕'", image: `${W}/menu/kimchi-pizza-tangsuyuk.jpg` },
+      { name: "와르르 쫀득감자", price: 8900, description: "2026년 신메뉴. 쫀득한 감자볼에 소스 두 가지", image: `${W}/potato-balls.jpg`, gift: true },
+      { name: "김치피자탕수육", price: 18500, description: "탕수육에 김치와 치즈. 줄여서 '김피탕'", image: `${W}/menu/kimchi-pizza-tangsuyuk.jpg` },
       { name: "감자크림탕수육", price: 17500 },
       { name: "수제등심탕수육", price: 17500 },
       { name: "오지치즈프라이", price: 13500 },
@@ -394,7 +394,7 @@ export const STORES: Store[] = [
       { name: "뿌륑순살치킨", price: 12500 },
       { name: "뿌륑뿌륑치즈볼", price: 12500 },
       { name: "모듬감자튀김", price: 12500 },
-      { name: "와르르 우유튀김", price: 11500, description: "네이버 메뉴 기준(7월 메뉴판에는 없음)" },
+      { name: "와르르 우유튀김", price: 11500 }, // 네이버 메뉴 기준(7월 메뉴판에는 없음)
       { name: "키다리고구마치즈스틱", price: 11500 },
       { name: "와르르 오코노미야끼", price: 8900, gift: true },
       { name: "와르르 타코야끼", price: 7900, gift: true },
@@ -408,7 +408,7 @@ export const STORES: Store[] = [
       { name: "와르르요거트(시그니처) 300g", price: 14500, description: "요거트에 초코쉘·벌집꿀·샤인머스켓·초코그래놀라", image: `${W}/menu/yogurt.jpg` },
       { name: "와르르요거트(초코쉘)", price: 6500 },
       { name: "샤인머스켓크림치즈곶감말이", price: 14500 },
-      { name: "무화과 크림치즈", price: 12500, description: "네이버 메뉴 기준(7월 메뉴판에는 없음)" },
+      { name: "무화과 크림치즈", price: 12500 }, // 네이버 메뉴 기준(7월 메뉴판에는 없음)
       { name: "계절과일플래터", price: 16500 },
       { name: "수박 완전와르르", price: 14900 },
       { name: "메반파반", price: 13500, description: "메론 반, 파인애플 반" },
@@ -420,21 +420,21 @@ export const STORES: Store[] = [
       { name: "바삭바삭먹태", price: 13500 },
       { name: "계란식빵토스트", price: 11000 },
       { name: "꿀버터 반건오징어", price: 9900, gift: true },
-      { name: "도리토스나쵸칩", price: 7900, description: "매장 메뉴판 기준(네이버 등록가 7,500원)" },
+      { name: "도리토스나쵸칩", price: 7900 }, // 매장 메뉴판 7,900원(네이버 7,500원)
       { name: "와르르 잔치국수", price: 7500 },
       { name: "콘치이이이즈", price: 7500, description: "콘치즈", gift: true },
       { name: "통실통실물만두", price: 7500, gift: true },
-      { name: "계란후라이", price: 5000, description: "매장 메뉴판 기준(네이버 등록가 5,500원)" },
+      { name: "계란후라이", price: 5000 }, // 매장 메뉴판 5,000원(네이버 5,500원)
       { name: "혜자간장순두부", price: 4000 },
       { name: "간장버터계란밥", price: 3500 },
       { name: "나 한입만 셀프라면", price: 3500 },
       { name: "주먹밥", price: 3000 },
       { name: "공기밥", price: 1500 },
       // 주류 — 공식 메뉴판에 없어 확인된 것만. 가격이 없는 항목은 매장에서 확인.
-      { name: "생맥주 600cc", price: null, description: "주문이 가장 많은 메뉴(네이버 기준). 가격은 매장에서 확인" },
+      { name: "생맥주 600cc", price: null, description: "가격은 매장에서 확인" },
       { name: "소주", price: null, description: "좋은데이·진로 등" },
-      { name: "와르르 복소사", price: 16000, description: "세종복분자주 1병 + 소주 1병 + 사이다 1병, 1,100ml(테이블 태블릿 기준)" },
-      { name: "와르르 복막사", price: 16000, description: "세종복분자주 + 국순당 생막걸리 + 사이다, 1,400ml(테이블 태블릿 기준)" },
+      { name: "와르르 복소사", price: 16000, description: "세종복분자주 1병 + 소주 1병 + 사이다 1병, 1,100ml" },
+      { name: "와르르 복막사", price: 16000, description: "세종복분자주 + 국순당 생막걸리 + 사이다, 1,400ml" },
     ],
     sort: 3,
   },

@@ -97,7 +97,7 @@ async function main() {
   }
   const already = await query<{ n: number }>(`select count(*)::int as n from receipts where member_id=$1`, [member.id]);
   if ((already[0]?.n ?? 0) > 0) {
-    console.error("[demo] 이미 시연 데이터가 있습니다. 초기화하려면 PGLITE_DIR 폴더를 지우고 다시 실행하세요.");
+    console.error("[demo] 이미 시연 데이터가 있습니다. 초기화하려면 PGLITE_DIR 폴더를 지우고 다시 실행하십시오.");
   }
 
   const gifts = { joseon: await ensureGifts("joseon"), tokyo: await ensureGifts("tokyo"), wareureu: await ensureGifts("wareureu") };

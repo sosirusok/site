@@ -15,7 +15,7 @@ export type DecisionReceipt = {
   reviewNote: string | null;
 };
 
-export function ReceiptDecisionForm({ receipt, stores }: { receipt: DecisionReceipt; stores: { id: string; shortName: string }[] }) {
+export function ReceiptDecisionForm({ receipt, stores, lockStore = null }: { receipt: DecisionReceipt; stores: { id: string; shortName: string }[]; /** 직원 계정: 이 매장으로 고정, 변경 불가 */ lockStore?: string | null }) {
   const router = useRouter();
   const [state, action, pending] = useActionState<ActionState, FormData>(decideReceiptAction, null);
   useEffect(() => {
@@ -32,7 +32,7 @@ export function ReceiptDecisionForm({ receipt, stores }: { receipt: DecisionRece
           <label className={ui.label} htmlFor="d-store">
             매장 (승인에 필요)
           </label>
-          <select id="d-store" name="storeId" key={`store-${receipt.storeId ?? ""}`} className={ui.select} defaultValue={receipt.storeId ?? ""} disabled={locked}>
+          <select id="d-store" name="storeId" key={`store-${receipt.storeId ?? lockStore ?? ""}`} className={ui.select} defaultValue={receipt.storeId ?? lockStore ?? ""} disabled={locked || Boolean(lockStore)}>
             <option value="">— 읽지 못함 —</option>
             {stores.map((st) => (
               <option key={st.id} value={st.id}>
@@ -40,6 +40,12 @@ export function ReceiptDecisionForm({ receipt, stores }: { receipt: DecisionRece
               </option>
             ))}
           </select>
+          {lockStore ? (
+            <>
+              <input type="hidden" name="storeId" value={lockStore} />
+              <span className={ui.help}>직원 계정은 자기 매장으로만 승인할 수 있습니다. 다른 매장 영수증이면 총괄 관리자에게 넘겨 주세요.</span>
+            </>
+          ) : null}
         </div>
         <div className={ui.field}>
           <label className={ui.label} htmlFor="d-amount">

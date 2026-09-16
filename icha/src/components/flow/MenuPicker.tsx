@@ -3,7 +3,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import { formatWon } from "@/lib/config";
-import { fmtDate } from "./format";
 import type { ApiFail, IssueApiOk } from "./types";
 import styles from "./MenuPicker.module.css";
 
@@ -18,12 +17,8 @@ export type PickItem = {
 
 export type PickStore = {
   id: "joseon" | "tokyo" | "wareureu";
-  /** 01/02/03 */
-  no: string;
   shortName: string;
   name: string;
-  drink: "막걸리" | "맥주" | "소주";
-  headline: string;
   items: PickItem[];
 };
 
@@ -34,24 +29,29 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
   const id = useId();
   const [tab, setTab] = useState<string>(stores[0]?.id ?? "");
   const [selected, setSelected] = useState<Selected | null>(null);
+  const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [issued, setIssued] = useState<IssueApiOk["coupon"] | null>(null);
   const confirmRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (selected) confirmRef.current?.focus();
-  }, [selected]);
+    if (confirming) confirmRef.current?.focus();
+  }, [confirming]);
 
   useEffect(() => {
-    if (!issued) return;
-    const t = setTimeout(() => router.push(`/coupons/${issued.id}`), 1700);
-    return () => clearTimeout(t);
+    if (issued) router.push(`/coupons/${issued.id}`);
   }, [issued, router]);
 
   const current = stores.find((s) => s.id === tab) ?? stores[0];
 
-  async function confirm() {
+  function choose(store: PickStore, item: PickItem) {
+    setError(null);
+    setConfirming(false);
+    setSelected((prev) => (prev?.item.id === item.id ? null : { store, item }));
+  }
+
+  async function issue() {
     if (!selected || busy) return;
     setBusy(true);
     setError(null);
@@ -64,15 +64,15 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
       const data = (await res.json().catch(() => null)) as IssueApiOk | ApiFail | null;
       if (!res.ok || !data || !data.ok) {
         setError(
-          res.status === 401 ? "로그인이 풀렸어요. 다시 로그인한 뒤 쿠폰함에서 이어서 고를 수 있어요."
-          : (data && !data.ok && data.error) || "쿠폰을 만들지 못했어요. 잠시 후 다시 시도해 주세요.",
+          res.status === 401 ? "로그인이 만료되었습니다. 다시 로그인한 뒤 쿠폰함에서 이어서 선택할 수 있습니다."
+          : (data && !data.ok && data.error) || "쿠폰을 발급하지 못했습니다. 잠시 후 다시 시도해 주십시오.",
         );
         setBusy(false);
         return;
       }
       setIssued(data.coupon);
     } catch {
-      setError("연결이 끊겼어요. 신호를 확인하고 다시 시도해 주세요.");
+      setError("연결이 끊겼습니다. 통신 상태를 확인한 뒤 다시 시도해 주십시오.");
       setBusy(false);
     }
   }
@@ -81,7 +81,7 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
 
   return (
     <div className={styles.root}>
-      <div className={styles.tabs} role="tablist" aria-label="쿠폰을 쓸 매장">
+      <div className={styles.tabs} role="tablist" aria-label="쿠폰을 사용할 매장">
         {stores.map((s) => (
           <button
             key={s.id}
@@ -93,130 +93,110 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
             className={styles.tab}
             onClick={() => setTab(s.id)}
           >
-            <span className={styles.tabNo} aria-hidden="true">{s.no}</span>
-            <span className={styles.tabName}>{s.shortName}</span>
-            <span className={styles.tabDrink}>{s.drink}</span>
-            <span className={`num ${styles.tabCount}`}>{s.items.length}</span>
+            {s.shortName} <span className={styles.tabCount}>{s.items.length}</span>
           </button>
         ))}
       </div>
 
-      {stores.map((s) => (
-        <section
-          key={s.id}
-          role="tabpanel"
-          id={`${id}-panel-${s.id}`}
-          aria-labelledby={`${id}-tab-${s.id}`}
-          hidden={s.id !== current.id}
-          className={styles.panel}
-        >
-          <p className={styles.headline}>
-            <b>{s.name}</b> · {s.headline}
-          </p>
-          {s.items.length === 0 ? (
-            <p className={styles.empty}>이 매장은 아직 고를 수 있는 사이드가 등록되지 않았어요. 다른 매장에서 골라 주세요.</p>
-          ) : !s.items.some((it) => it.image) ? (
-            /* 사진이 하나도 없는 매장은 빈 사진 칸 대신 목록으로 */
-            <ul className={styles.list}>
-              {s.items.map((it) => {
-                const on = selected?.item.id === it.id;
-                return (
-                  <li key={it.id}>
-                    <button
-                      type="button"
-                      className={`${styles.row} ${on ? styles.on : ""}`}
-                      aria-pressed={on}
-                      onClick={() => { setError(null); setSelected({ store: s, item: it }); }}
-                    >
-                      <span className={styles.rowFree}>무료</span>
-                      <span className={styles.rowBody}>
+      {stores.map((s) => {
+        const withPhoto = s.items.filter((it) => it.image);
+        const noPhoto = s.items.filter((it) => !it.image);
+        return (
+          <section
+            key={s.id}
+            role="tabpanel"
+            id={`${id}-panel-${s.id}`}
+            aria-labelledby={`${id}-tab-${s.id}`}
+            hidden={s.id !== current.id}
+            className={styles.panel}
+          >
+            <p className={styles.panelName}>{s.name}</p>
+            {s.items.length === 0 && (
+              <p className={styles.empty}>등록된 사이드 메뉴가 없습니다. 다른 매장을 선택해 주십시오.</p>
+            )}
+            {withPhoto.length > 0 && (
+              <ul className={styles.grid}>
+                {withPhoto.map((it) => {
+                  const on = selected?.item.id === it.id;
+                  return (
+                    <li key={it.id}>
+                      <button type="button" className={styles.item} aria-pressed={on} onClick={() => choose(s, it)}>
+                        <span className={styles.photo}>
+                          {it.image?.kind === "static" ? (
+                            <Image src={it.image.src} alt="" fill sizes="(min-width: 760px) 280px, 45vw" />
+                          ) : (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={it.image?.src} alt="" loading="lazy" />
+                          )}
+                        </span>
                         <span className={styles.itemName}>{it.name}</span>
+                        <span className={styles.itemPrice}>
+                          {it.price != null && <s className="mono">{formatWon(it.price)}</s>}
+                          <b className={styles.free}>무료</b>
+                        </span>
                         {it.description && <span className={styles.itemDesc}>{it.description}</span>}
-                      </span>
-                      <span className={styles.rowRight}>
-                        {it.price != null && <span className={`num ${styles.itemPrice}`}>{formatWon(it.price)}</span>}
-                        <span className={styles.rowCheck} aria-hidden="true">{on ? "선택" : ""}</span>
-                      </span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            <ul className={styles.grid}>
-              {s.items.map((it) => {
-                const on = selected?.item.id === it.id;
-                return (
-                  <li key={it.id}>
-                    <button
-                      type="button"
-                      className={`${styles.item} ${on ? styles.on : ""}`}
-                      aria-pressed={on}
-                      onClick={() => { setError(null); setSelected({ store: s, item: it }); }}
-                    >
-                      <span className={styles.photo}>
-                        {it.image?.kind === "static" ? (
-                          <Image src={it.image.src} alt="" fill sizes="(min-width: 760px) 30vw, 46vw" />
-                        ) : it.image?.kind === "db" ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={it.image.src} alt="" loading="lazy" />
-                        ) : (
-                          <span className={styles.noPhoto} aria-hidden="true">{s.drink}</span>
-                        )}
-                        <span className={styles.free}>무료</span>
-                      </span>
-                      <span className={styles.itemBody}>
-                        <span className={styles.itemName}>{it.name}</span>
-                        {it.price != null && <span className={`num ${styles.itemPrice}`}>{formatWon(it.price)}</span>}
-                        {it.description && <span className={styles.itemDesc}>{it.description}</span>}
-                      </span>
-                      <span className={styles.check} aria-hidden="true">{on ? "선택" : ""}</span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </section>
-      ))}
+                        <span className={styles.itemMark} aria-hidden="true">{on ? "선택됨" : "선택"}</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+            {noPhoto.length > 0 && (
+              <ul className={styles.list}>
+                {noPhoto.map((it) => {
+                  const on = selected?.item.id === it.id;
+                  return (
+                    <li key={it.id}>
+                      <button type="button" className={styles.row} aria-pressed={on} onClick={() => choose(s, it)}>
+                        <span className={styles.rowBody}>
+                          <span className={styles.itemName}>{it.name}</span>
+                          {it.description && <span className={styles.itemDesc}>{it.description}</span>}
+                        </span>
+                        <span className={styles.itemPrice}>
+                          {it.price != null && <s className="mono">{formatWon(it.price)}</s>}
+                          <b className={styles.free}>무료</b>
+                        </span>
+                        <span className={styles.itemMark} aria-hidden="true">{on ? "선택됨" : "선택"}</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </section>
+        );
+      })}
 
-      {selected && !issued && (
-        <div className={styles.sheetWrap} role="dialog" aria-modal="false" aria-labelledby={`${id}-sheet-title`}>
-          <div className={`${styles.sheet} ${busy ? styles.sheetBusy : ""}`}>
-            <p className="eyebrow">확인</p>
-            <p id={`${id}-sheet-title`} className={styles.sheetTitle}>
-              {selected.store.shortName} · <span className="gold">{selected.item.name}</span><br />무료 쿠폰을 받을게요.
+      <div className={styles.bar} aria-live="polite">
+        {issued ? (
+          <p className={styles.barText}>쿠폰이 발급되었습니다. 쿠폰 화면으로 이동합니다.</p>
+        ) : !selected ? (
+          <p className={styles.barText}>받을 메뉴를 하나 선택해 주십시오.</p>
+        ) : confirming ? (
+          <div className={styles.confirm} role="group" aria-labelledby={`${id}-confirm`}>
+            <p id={`${id}-confirm`} className={styles.confirmTitle}>
+              {selected.store.shortName} · {selected.item.name} 무료 쿠폰을 발급합니다.
             </p>
-            <p className={styles.sheetNote}>영수증 한 장에 쿠폰 한 장이에요. 받은 뒤에는 메뉴를 바꿀 수 없고, 오늘부터 {couponValidDays}일 안에 써야 해요.</p>
+            <p className={styles.confirmText}>영수증 1장당 쿠폰 1장이 발급되며, 발급 후에는 메뉴를 바꿀 수 없습니다. 쿠폰은 발급일부터 {couponValidDays}일간 유효합니다.</p>
             {error && <p className="error" role="alert">{error}</p>}
-            <div className={styles.sheetActions}>
-              <button ref={confirmRef} type="button" className="btn btn-lg btn-block" onClick={confirm} disabled={busy}>
-                {busy ? "쿠폰 만드는 중" : "받을게요"}
+            <div className={styles.confirmActions}>
+              <button ref={confirmRef} type="button" className="btn btn-red btn-lg" onClick={issue} disabled={busy}>
+                {busy ? "발급 중" : "발급"}
               </button>
-              <button type="button" className="btn btn-outline btn-block" onClick={() => setSelected(null)} disabled={busy}>다시 고를게요</button>
+              <button type="button" className="btn btn-outline btn-lg" onClick={() => setConfirming(false)} disabled={busy}>취소</button>
             </div>
           </div>
-        </div>
-      )}
-
-      {issued && selected && (
-        <div className={styles.issueWrap} role="status" aria-live="polite">
-          <div className={styles.issueStub}>
-            <p className={`mono ${styles.issueStubText}`}>발급 완료 · 잠시 후 쿠폰으로 이동해요</p>
+        ) : (
+          <div className={styles.barRow}>
+            <p className={styles.barPick}>
+              <span className={styles.barStore}>{selected.store.shortName}</span>
+              <b>{selected.item.name}</b>
+            </p>
+            <button type="button" className="btn btn-red" onClick={() => setConfirming(true)}>쿠폰 발급</button>
           </div>
-          <div className={styles.perf} aria-hidden="true" />
-          <div className={styles.issued}>
-            <div className={styles.issuedBand}>
-              <span className={styles.issuedNo}>{selected.store.no}</span>
-              <span>{selected.store.shortName}</span>
-              <span className={styles.issuedKind}>무료 사이드</span>
-            </div>
-            <p className={styles.issuedName}>{issued.menuName}</p>
-            <p className={`mono ${styles.issuedCode}`}>{issued.code}</p>
-            <p className={`mono ${styles.issuedExp}`}>{fmtDate(issued.expiresAt)}까지</p>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

@@ -1,11 +1,20 @@
-.section { background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-.section > div { display: grid; gap: 32px; }
-.map { min-width: 0; }
-.notes { display: grid; gap: 18px; }
-.notes li { display: grid; gap: 4px; padding-top: 14px; border-top: 1px solid var(--line); }
-.noteName { font-weight: 800; font-size: 16px; display: flex; gap: 8px; align-items: baseline; }
-.noteName span { color: var(--gold); font-size: 13px; }
-.noteName em { font-style: normal; font-size: 13px; color: var(--fg-3); font-weight: 700; }
-.noteLine { font-size: 14.5px; color: var(--fg-2); line-height: 1.6; }
-.noteSmall { font-size: 13px; color: var(--fg-3); }
-@media (min-width: 760px) { .notes { grid-template-columns: repeat(3, 1fr); gap: 28px; } }
+.root { display: grid; gap: 28px; }
+.tables { display: grid; gap: 24px; }
+.caption { text-align: left; font-weight: 800; font-size: 16px; padding: 0 0 10px; caption-side: top; }
+.table th { width: 84px; }
+
+/* 공용 StoreMap 은 v2 스타일(둥근 모서리·금색 핀)이 남아 있어 이 페이지 안에서만 v3 로 맞춘다.
+   StoreMap.module.css / StoreMap.css 가 v3 로 바뀌면 아래 블록은 지워도 된다. */
+.map > div > div:first-child { border-radius: 0; background: var(--bg-2); }
+.map a { border-radius: 0; text-decoration: underline; text-underline-offset: 3px; padding: 0; border: 0; }
+.map a:hover { background: none; color: var(--fg); }
+.map :global(.sm-pin) { filter: none; }
+.map :global(.sm-pin__body) { background: var(--dark); border-color: #fff; }
+.map :global(.sm-pin__num) { color: #fff; }
+.map :global(.sm-pin--active .sm-pin__body) { background: var(--red); }
+.map :global(.sm-pin__label) { border-radius: 0; }
+.map :global(.leaflet-container) { background: var(--bg-2); }
+
+@media (min-width: 760px) {
+  .tables { grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: start; }
+}

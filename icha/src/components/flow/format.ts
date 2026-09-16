@@ -60,6 +60,14 @@ export function fmtShort(v: string | Date | null | undefined): string {
   return `${p.m}.${p.d} ${p.h}:${p.mi}`;
 }
 
+/** 2026.09.15 21:34:05 */
+export function fmtDateTimeSec(v: string | Date | null | undefined): string {
+  const d = toDate(v);
+  if (!d) return "-";
+  const p = parts(d);
+  return `${p.y}.${p.m}.${p.d} ${p.h}:${p.mi}:${p.s}`;
+}
+
 /** 21:34:05 */
 export function fmtTime(v: string | Date | null | undefined): string {
   const d = toDate(v);
@@ -102,4 +110,26 @@ export function safeNext(v: string | string[] | undefined, fallback: string): st
 export function storeNo(id: string | null | undefined): string {
   const i = id ? (STORE_IDS as string[]).indexOf(id) : -1;
   return i < 0 ? "--" : String(i + 1).padStart(2, "0");
+}
+
+/** 받침에 따라 조사 선택: josa("도쿄스탠드", "과와") → "도쿄스탠드와" */
+export function josa(word: string, type: "은는" | "이가" | "을를" | "과와"): string {
+  const last = word.charCodeAt(word.length - 1);
+  const isHangul = last >= 0xac00 && last <= 0xd7a3;
+  const has = isHangul ? (last - 0xac00) % 28 > 0 : /[0-9]$/.test(word) ? [0, 1, 3, 6, 7, 8].includes(Number(word.slice(-1))) : false;
+  switch (type) {
+    case "은는": return word + (has ? "은" : "는");
+    case "이가": return word + (has ? "이" : "가");
+    case "을를": return word + (has ? "을" : "를");
+    case "과와": return word + (has ? "과" : "와");
+  }
+}
+
+/** "A와 B" / "A, B와 C" 처럼 이름을 잇는다 */
+export function joinNames(names: string[]): string {
+  if (names.length === 0) return "";
+  if (names.length === 1) return names[0]!;
+  const head = names.slice(0, -1);
+  const tail = names[names.length - 1]!;
+  return `${head.slice(0, -1).join(", ")}${head.length > 1 ? ", " : ""}${josa(head[head.length - 1]!, "과와")} ${tail}`;
 }

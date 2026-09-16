@@ -50,13 +50,33 @@ export function SettingsForm({ rules }: { rules: Rules }) {
                 </div>
               </div>
               <div className={ui.field}>
+                <label className={ui.label} htmlFor="st-max">
+                  자동 승인 상한 금액
+                </label>
+                <div className={s.numUnit}>
+                  <input id="st-max" name="maxAutoAmount" type="number" min={0} max={50000000} step={10000} className={`${ui.input} ${ui.inputMono}`} defaultValue={rules.maxAutoAmount} required />
+                  <span>원 (0이면 제한 없음)</span>
+                </div>
+                <span className={ui.help}>이 금액을 넘는 결제는 자동 승인하지 않고 "확인 대기"로 넘깁니다. 금액 오독으로 등급이 뛰는 것을 막습니다.</span>
+              </div>
+              <div className={ui.field}>
                 <label className={ui.label} htmlFor="st-daily">
                   회원 1명당 하루 인증 한도
                 </label>
                 <div className={s.numUnit}>
                   <input id="st-daily" name="dailyLimitPerMember" type="number" min={1} max={20} className={`${ui.input} ${ui.inputMono}`} defaultValue={rules.dailyLimitPerMember} required />
-                  <span>회</span>
+                  <span>회 (승인·확인 대기 기준)</span>
                 </div>
+              </div>
+              <div className={ui.field}>
+                <label className={ui.label} htmlFor="st-attempts">
+                  회원 1명당 하루 업로드 시도 한도
+                </label>
+                <div className={s.numUnit}>
+                  <input id="st-attempts" name="dailyAttemptLimit" type="number" min={0} max={100} className={`${ui.input} ${ui.inputMono}`} defaultValue={rules.dailyAttemptLimit} required />
+                  <span>회 (반려 포함, 0이면 제한 없음)</span>
+                </div>
+                <span className={ui.help}>아무 사진이나 계속 올려 자동 인식 비용을 태우는 것을 막습니다. 넘으면 인식 없이 바로 반려합니다.</span>
               </div>
               <div className={ui.field}>
                 <label className={ui.label} htmlFor="st-days">
@@ -64,8 +84,9 @@ export function SettingsForm({ rules }: { rules: Rules }) {
                 </label>
                 <div className={s.numUnit}>
                   <input id="st-days" name="couponValidDays" type="number" min={1} max={365} className={`${ui.input} ${ui.inputMono}`} defaultValue={rules.couponValidDays} required />
-                  <span>일 (발급일부터)</span>
+                  <span>일 (발급일부터, 그날 23:59까지)</span>
                 </div>
+                <span className={ui.help}>승인된 영수증으로 사이드를 고를 수 있는 기간도 같습니다(승인일부터).</span>
               </div>
             </div>
           </section>
@@ -93,7 +114,17 @@ export function SettingsForm({ rules }: { rules: Rules }) {
                   <input id="st-conf" name="minConfidence" type="number" min={0} max={100} className={`${ui.input} ${ui.inputMono}`} defaultValue={Math.round(rules.minConfidence * 100)} required />
                   <span>% 미만이면 직원 확인</span>
                 </div>
-                <span className={ui.help}>상호·일시·금액 중 하나라도 이 값보다 낮게 읽히면 자동 승인하지 않고 "확인 대기"로 넘깁니다.</span>
+                <span className={ui.help}>상호·일시·금액 중 하나라도 이 값보다 낮게 읽히면 자동 승인하지 않고 "확인 대기"로 넘깁니다. 승인번호가 없거나 흐린 영수증은 이 값과 관계없이 직원 확인으로 갑니다.</span>
+              </div>
+              <div className={ui.field}>
+                <label className={ui.label} htmlFor="st-ocr">
+                  사이트 전체 하루 자동 인식 상한
+                </label>
+                <div className={s.numUnit}>
+                  <input id="st-ocr" name="dailyOcrLimit" type="number" min={0} max={100000} step={50} className={`${ui.input} ${ui.inputMono}`} defaultValue={rules.dailyOcrLimit} required />
+                  <span>회 (0이면 제한 없음)</span>
+                </div>
+                <span className={ui.help}>자동 인식 한 번이 곧 API 비용입니다. 하루 이 횟수를 넘으면 인식을 멈추고 모든 영수증을 "확인 대기"로 받습니다. 세 매장 합쳐 하루 100~200장이면 500이 넉넉합니다.</span>
               </div>
               <div className={ui.field}>
                 <label className={ui.check}>

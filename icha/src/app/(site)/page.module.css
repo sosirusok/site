@@ -1,7 +1,14 @@
-.steps > div, .stores > div, .gifts > div, .tiers > div, .quotes > div { display: grid; gap: 36px; }
-.stores { scroll-margin-top: var(--header-h); }
-.gifts { background: var(--bg-2); border-top: 1px solid var(--line); }
-.tiers > div { gap: 30px; }
+.section { scroll-margin-top: var(--header-h); padding: clamp(44px, 6vw, 72px) 0; }
+.alt { background: var(--bg-2); }
+.paused { padding: 14px 0; font-size: 15px; font-weight: 600; color: var(--red); border-bottom: 1px solid var(--line); }
+.note { font-size: 15px; line-height: 1.7; color: var(--fg-2); margin: -8px 0 22px; }
+.reviews { display: grid; gap: 32px; }
+.guide { display: grid; gap: 24px; }
+.guideDl { grid-template-columns: 104px 1fr; }
+.guideActions { display: flex; flex-wrap: wrap; gap: 8px; }
 @media (min-width: 760px) {
-  .steps > div, .stores > div, .gifts > div, .tiers > div, .quotes > div { gap: 48px; }
+  .reviews { grid-template-columns: repeat(3, 1fr); gap: 32px; align-items: start; }
+  .guide { grid-template-columns: 1fr auto; align-items: start; gap: 40px; }
+  .guideDl { grid-template-columns: 120px 1fr; max-width: 680px; }
+  .guideActions { flex-direction: column; }
 }

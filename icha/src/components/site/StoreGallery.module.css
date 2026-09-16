@@ -1,17 +1,4 @@
-.strip { overflow: hidden; }
-.track {
-  display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
-  padding-inline: var(--gutter); scroll-padding-inline: var(--gutter); padding-bottom: 8px; scrollbar-width: none;
-}
-.track::-webkit-scrollbar { display: none; }
-.item { flex: 0 0 78vw; max-width: 420px; scroll-snap-align: start; }
-.fig { display: grid; gap: 8px; }
-.photo { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--radius); background: var(--surface); }
-.img { object-fit: cover; transition: transform 0.8s var(--ease-out); }
-.fig:hover .img { transform: scale(1.04); }
-.cap { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--fg-3); font-weight: 700; }
-.kind { color: var(--gold); }
-@media (min-width: 760px) {
-  .track { gap: 14px; padding-inline: max(var(--gutter), calc((100vw - var(--page-max)) / 2)); scroll-padding-inline: max(var(--gutter), calc((100vw - var(--page-max)) / 2)); }
-  .item { flex-basis: 420px; }
-}
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.cell { position: relative; aspect-ratio: 1; overflow: hidden; background: var(--bg-2); }
+.img { object-fit: cover; }
+@media (min-width: 760px) { .grid { gap: 8px; } }

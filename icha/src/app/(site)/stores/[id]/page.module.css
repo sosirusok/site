@@ -1,12 +1,13 @@
-.gallery { padding: 22px 0 8px; }
-.section { display: grid; gap: 28px; padding: clamp(48px, 8vw, 96px) 0 0; scroll-margin-top: calc(var(--header-h) + 8px); }
-.introGrid { display: grid; gap: 22px; }
-.intro { display: grid; gap: 14px; max-width: 60ch; }
-.introPara { font-size: 17px; line-height: 1.8; color: var(--fg-2); }
-.keywords { display: flex; flex-wrap: wrap; gap: 8px; align-content: start; }
-.keyword { font-size: 13.5px; font-weight: 800; padding: 8px 12px; border: 1.5px solid var(--line-strong); border-radius: 999px; color: var(--fg-2); }
-.next { padding-bottom: 20px; }
-@media (min-width: 760px) {
-  .section { gap: 36px; }
-  .introGrid { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 48px; }
-}
+.page { padding-bottom: clamp(48px, 7vw, 80px); }
+.section { padding-top: clamp(40px, 6vw, 64px); scroll-margin-top: calc(var(--header-h) + 8px); }
+.intro { display: grid; gap: 12px; max-width: 64ch; }
+.introPara { font-size: 16px; line-height: 1.8; color: var(--fg-2); }
+.othersNote { font-size: 15px; line-height: 1.7; color: var(--fg-2); margin: -8px 0 16px; }
+.others { display: grid; }
+.other { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.other > a { flex: none; white-space: nowrap; }
+.otherBody { display: grid; gap: 3px; min-width: 0; }
+.otherKicker { font-size: 13.5px; font-weight: 700; color: var(--fg-2); }
+.otherName { font-weight: 800; font-size: 17px; }
+.otherMeta { font-size: 14px; color: var(--fg-3); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }

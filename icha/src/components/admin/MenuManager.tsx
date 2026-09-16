@@ -1,4 +1,5 @@
 "use client";
+import { menuImageUrl } from "@/lib/menu-image";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState, useTransition } from "react";
@@ -99,7 +100,7 @@ export function MenuManager({ storeId, storeName, items }: { storeId: string; st
                   <tr key={m.id} className={m.active ? "" : s.rowInactive}>
                     <td>
                       {m.hasImageData ? (
-                        <img src={`/api/menu-image/${m.id}`} alt="" className={s.thumb} loading="lazy" />
+                        <img src={menuImageUrl(m)} alt="" className={s.thumb} loading="lazy" />
                       ) : m.imagePath ? (
                         <Image src={m.imagePath} alt="" width={48} height={48} className={s.thumb} sizes="48px" />
                       ) : (

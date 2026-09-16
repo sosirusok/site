@@ -1,7 +1,6 @@
 "use client";
 import { useId, useState, type ChangeEvent, type FormEvent } from "react";
 import { formatPhone, normalizePhone } from "@/lib/config";
-import { ArrowIcon } from "@/components/ui/icons";
 import styles from "./PhoneForm.module.css";
 
 /** 입력 중인 숫자열을 자동 하이픈으로 보여 준다 (010-1234-5678) */
@@ -28,7 +27,7 @@ export function PhoneForm({ next }: { next: string }) {
     e.preventDefault();
     const phone = normalizePhone(digits);
     if (!phone) {
-      setError("휴대폰 번호를 다시 확인해 주세요. 예: 010-1234-5678");
+      setError("휴대폰 번호 형식이 올바르지 않습니다. 예: 010-1234-5678");
       return;
     }
     setBusy(true);
@@ -40,14 +39,14 @@ export function PhoneForm({ next }: { next: string }) {
       });
       const data = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
       if (!res.ok || !data?.ok) {
-        setError(data?.error ?? (res.status === 429 ? "요청이 너무 잦아요. 잠시 후 다시 시도해 주세요." : "지금은 시작할 수 없어요. 잠시 후 다시 시도해 주세요."));
+        setError(data?.error ?? (res.status === 429 ? "요청이 너무 많습니다. 잠시 후 다시 시도해 주십시오." : "지금은 로그인할 수 없습니다. 잠시 후 다시 시도해 주십시오."));
         setBusy(false);
         return;
       }
       // 상단 메뉴(서버 컴포넌트)까지 로그인 상태로 바뀌도록 전체 이동
       window.location.assign(next);
     } catch {
-      setError("연결이 끊겼어요. 신호를 확인하고 다시 시도해 주세요.");
+      setError("연결이 끊겼습니다. 통신 상태를 확인한 뒤 다시 시도해 주십시오.");
       setBusy(false);
     }
   }
@@ -58,25 +57,22 @@ export function PhoneForm({ next }: { next: string }) {
         <label className="label" htmlFor={id}>휴대폰 번호</label>
         <input
           id={id}
-          className={`input mono ${styles.input}`}
+          className="input mono"
           type="tel"
           inputMode="numeric"
-          autoComplete="tel-national"
+          autoComplete="tel"
           placeholder="010-0000-0000"
           value={pretty(digits)}
           onChange={onChange}
-          maxLength={13}
-          aria-describedby={`${id}-help ${error ? `${id}-err` : ""}`}
+          aria-describedby={`${id}-help`}
           aria-invalid={error ? true : undefined}
-          autoFocus
-          enterKeyHint="go"
+          disabled={busy}
         />
-        <p id={`${id}-help`} className="help">인증번호 없이 번호만으로 시작해요. 쿠폰은 이 번호에 보관됩니다.</p>
-        {error && <p id={`${id}-err`} className="error" role="alert">{error}</p>}
+        <p id={`${id}-help`} className="help">쿠폰은 입력한 번호에 보관됩니다. 인증번호는 발송하지 않습니다.</p>
+        {error && <p className="error" role="alert">{error}</p>}
       </div>
-      <button type="submit" className={`btn btn-lg btn-block ${styles.submit}`} disabled={busy}>
-        {busy ? "확인하는 중" : "이 번호로 시작하기"}
-        {!busy && <ArrowIcon size={20} />}
+      <button type="submit" className="btn btn-red btn-lg btn-block" disabled={busy}>
+        {busy ? "확인 중" : "시작하기"}
       </button>
     </form>
   );

@@ -27,7 +27,10 @@ export default async function ReceiptsPage({ searchParams }: { searchParams: Pro
   const store = STORES.find((x) => x.id === sp.store)?.id ?? null;
   const q = (sp.q ?? "").trim();
   const page = Math.max(1, Number(sp.page) || 1);
-  const { items, total } = await listReceipts({ status, storeId: store, q: q || undefined, limit: SIZE, offset: (page - 1) * SIZE });
+  // 직원 계정은 자기 매장 영수증과 매장을 읽지 못한 건만 본다
+  const staffStore = session.role === "staff" ? session.storeId : null;
+  const { items, total } = await listReceipts({ status, storeId: staffStore ? null : store, storeIdOrNull: staffStore, q: q || undefined, limit: SIZE, offset: (page - 1) * SIZE });
+  const myStore = staffStore ? STORES.find((x) => x.id === staffStore) : null;
   const now = new Date();
   const qs = new URLSearchParams();
   if (status) qs.set("status", status);
@@ -40,7 +43,10 @@ export default async function ReceiptsPage({ searchParams }: { searchParams: Pro
       <div className={ui.pageHead}>
         <div>
           <h1 className={ui.pageTitle}>영수증 확인</h1>
-          <p className={ui.pageDesc}>확인 대기 건이 먼저 보입니다. 행을 누르면 사진과 읽은 값을 보고 판정합니다.</p>
+          <p className={ui.pageDesc}>
+            확인 대기 건이 먼저 보입니다. 행을 누르면 사진과 읽은 값을 보고 판정합니다.
+            {myStore ? ` ${myStore.shortName} 영수증과 매장을 읽지 못한 건만 보입니다.` : ""}
+          </p>
         </div>
       </div>
 
@@ -61,7 +67,7 @@ export default async function ReceiptsPage({ searchParams }: { searchParams: Pro
         <label className="sr-only" htmlFor="f-store">
           매장
         </label>
-        <select id="f-store" name="store" className={ui.select} defaultValue={store ?? ""}>
+        <select id="f-store" name="store" className={ui.select} defaultValue={staffStore ?? store ?? ""} disabled={Boolean(staffStore)}>
           <option value="">모든 매장</option>
           {STORES.map((st) => (
             <option key={st.id} value={st.id}>
@@ -105,7 +111,7 @@ export default async function ReceiptsPage({ searchParams }: { searchParams: Pro
                   <tr key={r.id} className={r.status === "review" ? ui.rowHi : ""}>
                     <td>
                       <Link href={`/admin/receipts/${r.id}`}>
-                        <img src={`/api/receipts/${r.id}/image?w=120`} alt="" className={ui.thumb} loading="lazy" />
+                        {r.hasImage ? <img src={`/api/receipts/${r.id}/image?w=120`} alt="" className={ui.thumb} loading="lazy" /> : <span className={ui.thumb} title="보관 기간이 지나 사진 삭제됨" />}
                       </Link>
                     </td>
                     <td className={ui.nowrap}>

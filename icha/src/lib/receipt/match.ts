@@ -9,6 +9,7 @@ export type MatchResult = { storeId: StoreId | null; score: number; evidence: st
 
 /**
  * OCR 결과가 어느 매장인지 판단한다. 규칙 기반 점수 + 모델 판단을 합산하며, 사업자번호가 맞으면 즉시 확정.
+ * 사업자번호가 읽혔는데 등록값과 다르면 크게 감점한다(다른 지점 대비). 판정(rules.ts)에서 한 번 더 BIZNO_MISMATCH 로 걸러 직원 확인으로 보낸다.
  */
 export function matchStore(ocr: Pick<ReceiptOcr, "merchant_name" | "business_number" | "merchant_phone" | "merchant_address" | "matched_store" | "raw_text">): MatchResult {
   const name = norm(ocr.merchant_name);
@@ -17,13 +18,21 @@ export function matchStore(ocr: Pick<ReceiptOcr, "merchant_name" | "business_num
   const phone = digits(ocr.merchant_phone);
   const addr = norm(ocr.merchant_address);
 
-  let best: MatchResult = { storeId: null, score: 0, evidence: [] };
+  let best: MatchResult = { storeId: null, score: Number.NEGATIVE_INFINITY, evidence: [] };
+  const notes: string[] = [];
   for (const s of STORES) {
     let score = 0;
     const ev: string[] = [];
-    if (s.bizNo && biz && digits(s.bizNo) === biz) {
-      score += 100;
-      ev.push("사업자번호 일치");
+    if (s.bizNo && biz) {
+      if (digits(s.bizNo) === biz) {
+        score += 100;
+        ev.push("사업자번호 일치");
+      } else {
+        // 사업자번호가 읽혔는데 등록값과 다르면 같은 상호의 다른 지점일 가능성이 크다
+        score -= 100;
+        ev.push("사업자번호 불일치");
+        notes.push(`${s.shortName} 사업자번호 불일치`);
+      }
     }
     const phones = [s.phone, ...s.phoneAliases].filter(Boolean).map((x) => digits(x));
     if (phone && phones.includes(phone)) {
@@ -34,7 +43,7 @@ export function matchStore(ocr: Pick<ReceiptOcr, "merchant_name" | "business_num
     if (keys.some((k) => name.includes(k) || k.includes(name) && name.length >= 3)) {
       score += 50;
       ev.push("상호 일치");
-    } else if (keys.some((k) => raw.includes(k))) {
+    } else if (keys.some((k) => k.length >= 4 && raw.includes(k))) {
       score += 35;
       ev.push("본문에 상호 포함");
     }
@@ -51,6 +60,8 @@ export function matchStore(ocr: Pick<ReceiptOcr, "merchant_name" | "business_num
     }
     if (score > best.score) best = { storeId: s.id, score, evidence: ev };
   }
-  if (best.score < 50) return { storeId: null, score: best.score, evidence: best.evidence };
-  return best;
+  // 50점 미만이면 미확정. 근거(예: '사업자번호 불일치')는 관리자 화면에 보이도록 남긴다.
+  const score = Number.isFinite(best.score) ? best.score : 0;
+  if (score < 50) return { storeId: null, score, evidence: Array.from(new Set([...best.evidence, ...notes])) };
+  return { ...best, score };
 }

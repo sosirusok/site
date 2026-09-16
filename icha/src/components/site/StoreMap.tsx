@@ -5,10 +5,10 @@
  *  - 없으면 Leaflet + OpenStreetMap/CARTO 타일 (키 불필요)
  * 핀을 누르거나 아래 목록을 누르면 해당 매장으로 이동하고 정보가 바뀐다.
  */
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "leaflet/dist/leaflet.css";
 import "./StoreMap.css";
-import { distanceM, formatDistance, googleMapUrl, kakaoMapUrl, naverWalkUrl, SEOMYEON_STATION, walkMinutes } from "@/lib/geo";
+import { googleMapUrl, kakaoMapUrl, naverWalkUrl, SEOMYEON_STATION } from "@/lib/geo";
 import styles from "./StoreMap.module.css";
 
 export type MapStore = {
@@ -30,8 +30,10 @@ type Props = {
   /** 처음에 강조할 매장 */
   focusId?: string;
   height?: number;
-  /** 목록/상세 패널 숨김 (매장 상세 페이지처럼 한 곳만 보여 줄 때) */
+  /** 목록 숨김 + 첫 매장 중심 (매장 상세 페이지처럼 한 곳만 보여 줄 때) */
   compact?: boolean;
+  /** 상세 패널 숨김 (기본: compact 와 같음) */
+  hidePanel?: boolean;
   className?: string;
 };
 
@@ -77,14 +79,13 @@ function pinHtml(n: number, label: string, active: boolean) {
   return `<div class="sm-pin${active ? " sm-pin--active" : ""}"><div class="sm-pin__body"></div><div class="sm-pin__num">${n}</div><div class="sm-pin__label">${label}</div></div>`;
 }
 
-export function StoreMap({ stores, focusId, height = 440, compact = false, className = "" }: Props) {
+export function StoreMap({ stores, focusId, height = 440, compact = false, hidePanel = compact, className = "" }: Props) {
   const elRef = useRef<HTMLDivElement>(null);
   const [activeId, setActiveId] = useState<string>(focusId ?? stores[0]?.id ?? "");
   const [engine, setEngine] = useState<"naver" | "osm" | "loading" | "error">("loading");
   const controls = useRef<{ pan: (id: string) => void; setActive: (id: string) => void } | null>(null);
 
   const active = stores.find((s) => s.id === activeId) ?? stores[0];
-  const fromStation = useMemo(() => stores.map((s) => ({ id: s.id, m: distanceM(SEOMYEON_STATION, s) })), [stores]);
 
   useEffect(() => {
     const el = elRef.current;
@@ -233,7 +234,6 @@ export function StoreMap({ stores, focusId, height = 440, compact = false, class
       {!compact && (
         <ol className={styles.list} aria-label="매장 목록">
           {stores.map((s, i) => {
-            const d = fromStation.find((x) => x.id === s.id)?.m ?? 0;
             const isActive = s.id === activeId;
             return (
               <li key={s.id}>
@@ -241,7 +241,7 @@ export function StoreMap({ stores, focusId, height = 440, compact = false, class
                   <span className={styles.num}>{i + 1}</span>
                   <span className={styles.itemBody}>
                     <span className={styles.itemName}>{s.shortName} <em>{s.drink}</em></span>
-                    <span className={styles.itemMeta}>{SEOMYEON_STATION.name}에서 {formatDistance(d)} · 도보 {walkMinutes(d)}분{s.floor ? ` · ${s.floor}` : ""}</span>
+                    <span className={styles.itemMeta}>{s.subway ?? ""}{s.floor ? ` · ${s.floor}` : ""}</span>
                   </span>
                 </button>
               </li>
@@ -250,7 +250,7 @@ export function StoreMap({ stores, focusId, height = 440, compact = false, class
         </ol>
       )}
 
-      {active && (
+      {active && !hidePanel && (
         <div className={styles.panel} aria-live="polite">
           <p className={styles.panelName}>{active.name}</p>
           <p className={styles.panelAddr}>{active.address}</p>

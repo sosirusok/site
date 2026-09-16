@@ -7,10 +7,10 @@
 import { createHash } from "node:crypto";
 import sharp from "sharp";
 import { getDb, query, tx } from "../src/lib/db";
-import { applyApprovedSpend, audit, createAdmin, findOrCreateMember, getAdmin, getMember, insertReceipt, listMenu, updateMemberMemo, upsertMenuItem, type MenuItem } from "../src/lib/db/queries";
+import { applyApprovedSpend, audit, createAdmin, findOrCreateMember, getAdmin, insertReceipt, listMenu, updateMemberMemo, upsertMenuItem, type MenuItem } from "../src/lib/db/queries";
 import { issueManualCoupons, issueSideCoupon, redeemCoupon, voidCoupon } from "../src/lib/coupons";
 import { hashPassword } from "../src/lib/auth/password";
-import { getRules, tierFor } from "../src/lib/settings";
+import { getRules } from "../src/lib/settings";
 import { STORE_BY_ID, giftStoresFor } from "../src/lib/stores";
 import type { StoreId } from "../src/lib/config";
 import { computeDHash } from "../src/lib/receipt/image";
@@ -83,21 +83,20 @@ async function approved(o: ApprovedOpts): Promise<string> {
   const items = o.items ?? [{ name: "주문", amount: o.amount }];
   const img = await receiptImage(slipLines(o.storeId, o.amount, o.at, o.approval, items), `demo ${o.approval}`);
   const rules = await getRules();
-  const member = (await getMember(o.memberId))!;
   const id = await tx(async (q) => {
     const id = await insertReceipt(q, {
       memberId: o.memberId, storeId: o.storeId, status: "approved", reasons: [], image: img.buf, imageMime: "image/jpeg", sha256: img.sha, dhash: img.dhash,
       ocr: {
         is_receipt: true, document_type: "card_slip", merchant_name: STORE_BY_ID[o.storeId].name, business_number: null, merchant_phone: null, merchant_address: STORE_BY_ID[o.storeId].address || null,
         paid_at: kst(o.at).replace(" ", "T") + ":00", total_amount: o.amount, approval_number: o.approval, card_last4: "1188", payment_method: "card",
-        items: items.map((it) => ({ name: it.name, qty: 1, amount: it.amount })), matched_store: o.storeId, is_reprint: false, looks_like_screen_photo: false, quality_notes: [],
+        items: items.map((it) => ({ name: it.name, qty: 1, amount: it.amount })), matched_store: o.storeId, is_reprint: false, looks_like_screen_photo: false, is_cancellation: false, suspicious_text: false, quality_notes: [],
         confidence: { merchant: 0.97, paid_at: 0.93, total_amount: 0.95, approval_number: 0.9 },
         raw_text: slipLines(o.storeId, o.amount, o.at, o.approval, items).join("\n"),
         _match: { storeId: o.storeId, score: 70, evidence: ["상호 일치", "모델 판단 일치"] },
       },
       receiptAt: o.at, amount: o.amount, approvalNo: o.approval, cardLast4: "1188",
     });
-    await applyApprovedSpend(q, { memberId: o.memberId, storeId: o.storeId, receiptId: id, amount: o.amount, tierKey: tierFor(member.totalSpend + o.amount, rules).key });
+    await applyApprovedSpend(q, { memberId: o.memberId, storeId: o.storeId, receiptId: id, amount: o.amount, rules });
     return id;
   });
   const created = new Date(o.at.getTime() + (o.createdHoursAfter ?? 0.3) * H);
@@ -109,7 +108,7 @@ async function approved(o: ApprovedOpts): Promise<string> {
 async function main() {
   await getDb();
   const marker = await query<{ n: number }>(`select count(*)::int as n from members where memo like '[demo]%'`);
-  if ((marker[0]?.n ?? 0) > 0) console.error("[demo] 이미 시연 데이터가 있습니다. 초기화하려면 PGLITE_DIR 폴더를 지우고 다시 실행하세요.");
+  if ((marker[0]?.n ?? 0) > 0) console.error("[demo] 이미 시연 데이터가 있습니다. 초기화하려면 PGLITE_DIR 폴더를 지우고 다시 실행하십시오.");
 
   const gifts = { joseon: await ensureGifts("joseon"), tokyo: await ensureGifts("tokyo"), wareureu: await ensureGifts("wareureu") };
   const gift = (receiptStore: StoreId, i: number): MenuItem => {
@@ -196,7 +195,7 @@ async function main() {
       ocr: {
         is_receipt: true, document_type: "card_slip", merchant_name: "도쿄스탠드 서면점", business_number: "6078812345", merchant_phone: "0518021234", merchant_address: "부산 부산진구 서면로68번길",
         paid_at: kst(at1).replace(" ", "T") + ":00", total_amount: 42900, approval_number: "30177421", card_last4: "1188", payment_method: "card",
-        items: items1.map((it) => ({ name: it.name, qty: 1, amount: it.amount })), matched_store: "tokyo", is_reprint: false, looks_like_screen_photo: false,
+        items: items1.map((it) => ({ name: it.name, qty: 1, amount: it.amount })), matched_store: "tokyo", is_reprint: false, looks_like_screen_photo: false, is_cancellation: false, suspicious_text: false,
         quality_notes: ["합계 줄이 접혀 일부 흐림", "오른쪽 위 빛 반사"],
         confidence: { merchant: 0.94, paid_at: 0.52, total_amount: 0.48, approval_number: 0.9 },
         raw_text: lines1.join("\n"),
@@ -226,7 +225,7 @@ async function main() {
       ocr: {
         is_receipt: true, document_type: "card_slip", merchant_name: null, business_number: null, merchant_phone: null, merchant_address: "부산 부산진구 동천로85번길 14",
         paid_at: kst(at3).replace(" ", "T") + ":00", total_amount: 28000, approval_number: "30177999", card_last4: null, payment_method: "card", items: [],
-        matched_store: "none", is_reprint: false, looks_like_screen_photo: false, quality_notes: ["상단이 잘려 상호가 보이지 않음"],
+        matched_store: "none", is_reprint: false, looks_like_screen_photo: false, is_cancellation: false, suspicious_text: false, quality_notes: ["상단이 잘려 상호가 보이지 않음"],
         confidence: { merchant: 0.1, paid_at: 0.9, total_amount: 0.92, approval_number: 0.88 }, raw_text: lines3.join("\n"),
         _match: { storeId: null, score: 25, evidence: ["주소 키워드 '동천로85번길'"] },
       },

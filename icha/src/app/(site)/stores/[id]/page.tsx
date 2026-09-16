@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { listMenu } from "@/lib/db/queries";
-import { getStore, giftStoresFor, naverPlaceUrl } from "@/lib/stores";
-import { SectionHead } from "@/components/site/HomeSectionHead";
-import { josa } from "@/components/site/StoreHelpers";
+import { LOCATIONS } from "@/lib/locations";
+import { getStore, giftStoresFor, naverPlaceUrl, STORES } from "@/lib/stores";
 import { StoreGallery } from "@/components/site/StoreGallery";
+import { joinOr, openStatus, todayHoursText } from "@/components/site/StoreHelpers";
 import { StoreHero } from "@/components/site/StoreHero";
 import { StoreMenu } from "@/components/site/StoreMenu";
-import { StoreNext } from "@/components/site/StoreNext";
-import { StoreQuotes } from "@/components/site/StoreQuotes";
+import { StoreReviews } from "@/components/site/StoreReviews";
 import { StoreVisit } from "@/components/site/StoreVisit";
 import styles from "./page.module.css";
 
@@ -19,11 +19,11 @@ type Props = { params: Promise<{ id: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const store = getStore(id);
-  if (!store) return { title: "매장을 찾을 수 없어요" };
-  const others = giftStoresFor(store.id).map((s) => s.shortName).join("·");
+  if (!store) return { title: "페이지를 찾을 수 없습니다" };
+  const others = joinOr(giftStoresFor(store.id).map((s) => s.shortName));
   return {
-    title: store.shortName,
-    description: `${store.name} — ${store.headline} 이 매장 영수증으로 ${others}에서 사이드 한 접시.`,
+    title: store.name,
+    description: `${store.name} — ${store.address}. ${LOCATIONS[store.id].subway}. 이 매장 영수증 인증 시 ${others}에서 사이드 메뉴 1개 무료.`,
   };
 }
 
@@ -36,52 +36,75 @@ export default async function StorePage({ params }: Props) {
   const naver = naverPlaceUrl(store);
   const others = giftStoresFor(store.id);
   const introParas = store.intro.split(/\n+/).map((p) => p.trim()).filter(Boolean);
-  const menuBoards = store.images.filter((i) => i.kind === "menu");
-  const otherNames = others.map((s, i) => (i < others.length - 1 ? josa(s.shortName, "이나") : s.shortName)).join(" ");
+  const now = new Date();
 
   return (
-    <article>
+    <article className={styles.page}>
       <StoreHero store={store} />
 
-      <section className={styles.gallery} aria-label="매장 사진">
-        <StoreGallery store={store} />
-      </section>
-
       <div className="wrap">
+        <section className={styles.section} aria-label="매장 사진">
+          <StoreGallery store={store} />
+        </section>
+
         <section className={styles.section} aria-labelledby="intro-title">
-          <SectionHead id="intro-title" eyebrow="이런 곳이에요" title={<>{josa(store.shortName, "은는")}<br /><em>{store.drink}</em> 집.</>} />
-          <div className={styles.introGrid}>
-            <div className={`rise ${styles.intro}`}>
-              {introParas.map((p, i) => <p key={i} className={styles.introPara}>{p}</p>)}
-            </div>
-            {store.keywords.length > 0 && (
-              <ul className={`rise rise-d1 ${styles.keywords}`} aria-label="키워드">
-                {store.keywords.map((k) => <li key={k} className={styles.keyword}>{k}</li>)}
-              </ul>
-            )}
+          <div className="sec-head">
+            <h2 id="intro-title" className="h2">매장 소개</h2>
+          </div>
+          <div className={styles.intro}>
+            {introParas.map((p, i) => <p key={i} className={styles.introPara}>{p}</p>)}
           </div>
         </section>
 
         <section className={styles.section} id="visit" aria-labelledby="visit-title">
-          <SectionHead id="visit-title" eyebrow="영업시간과 위치" title={<>언제, <em>어디로</em></>} />
-          <div className="rise"><StoreVisit store={store} /></div>
+          <div className="sec-head">
+            <h2 id="visit-title" className="h2">영업시간 · 오시는 길</h2>
+            {naver && <a href={naver} target="_blank" rel="noreferrer" className="more">네이버 플레이스</a>}
+          </div>
+          <StoreVisit store={store} />
         </section>
 
         <section className={styles.section} id="menu" aria-labelledby="menu-title">
-          <SectionHead id="menu-title" eyebrow="메뉴" title={<>뭘 <em>먹을까</em></>} sub={`'무료 사이드' 표시가 있는 메뉴는 ${otherNames} 영수증으로 무료예요.`} />
-          <div className="rise"><StoreMenu store={store} items={menu} others={others} naverUrl={naver} menuBoards={menuBoards} /></div>
+          <div className="sec-head">
+            <h2 id="menu-title" className="h2">메뉴</h2>
+          </div>
+          <StoreMenu store={store} items={menu} others={others} naverUrl={naver} />
         </section>
 
-        {store.quotes.length > 0 && (
-          <section className={styles.section} aria-labelledby="quotes-title">
-            <SectionHead id="quotes-title" eyebrow="다녀간 분들" title={<>이런 말을 <em>남겼어요</em></>} />
-            <StoreQuotes quotes={store.quotes.slice(0, 3)} />
+        {(store.quotes.length > 0 || store.naverRating) && (
+          <section className={styles.section} aria-labelledby="reviews-title">
+            <div className="sec-head">
+              <h2 id="reviews-title" className="h2">고객 리뷰</h2>
+            </div>
+            <StoreReviews store={store} limit={3} />
           </section>
         )}
 
-        <section className={`${styles.section} ${styles.next}`} aria-labelledby="next-title">
-          <SectionHead id="next-title" eyebrow="2차" title={<>{store.shortName} 영수증이면,<br />사이드는 <em>여기서.</em></>} sub="영수증을 받은 매장에서는 혜택이 없어요. 아래 두 곳 중 한 곳에서 한 접시." />
-          <StoreNext store={store} others={others} />
+        <section className={styles.section} aria-labelledby="others-title">
+          <div className="sec-head">
+            <h2 id="others-title" className="h2">다른 참여 매장</h2>
+          </div>
+          <p className={styles.othersNote}>{store.shortName} 영수증을 인증하면 아래 두 매장 중 한 곳에서 사이드 메뉴 1개를 무료로 받을 수 있습니다.</p>
+          <ul className={styles.others}>
+            {others.map((o) => {
+              const st = openStatus(o, now);
+              const num = STORES.findIndex((s) => s.id === o.id) + 1;
+              return (
+                <li key={o.id} className={styles.other}>
+                  <div className={styles.otherBody}>
+                    <p className={styles.otherKicker}>{num}. {o.drink}</p>
+                    <p className={styles.otherName}>{o.name}</p>
+                    <p className={styles.otherMeta}>오늘 {todayHoursText(st)} · {LOCATIONS[o.id].subway}</p>
+                  </div>
+                  <Link href={`/stores/${o.id}`} className="btn btn-outline btn-sm">매장 정보</Link>
+                </li>
+              );
+            })}
+          </ul>
+          <div className={styles.actions}>
+            <Link href={`/verify?from=${store.id}`} className="btn btn-red">영수증 인증</Link>
+            <Link href="/#stores" className="btn btn-outline">참여 매장 목록</Link>
+          </div>
         </section>
       </div>
     </article>

@@ -7,6 +7,7 @@ import type { MatchResult } from "@/lib/receipt/match";
 import { getRules } from "@/lib/settings";
 import { STORES, getStore } from "@/lib/stores";
 import { requireAdminPage, phoneFor } from "@/components/admin/guard";
+import { Forbidden } from "@/components/admin/Forbidden";
 import { fmtAgo, fmtDateTime, tierName, toLocalInput, won } from "@/components/admin/format";
 import { Badge, CouponBadge, ReceiptBadge } from "@/components/admin/Badge";
 import { StoreTag } from "@/components/admin/StoreTag";
@@ -23,6 +24,7 @@ const DOC_TYPE: Record<string, string> = {
   card_slip: "카드 매출전표",
   cash_receipt: "현금영수증",
   simple_receipt: "간이 영수증",
+  cancel_slip: "취소 전표",
   order_slip: "주문서(빌지)",
   screen_capture: "화면 캡처",
   other: "기타",
@@ -40,6 +42,9 @@ export default async function ReceiptDetailPage({ params }: { params: Promise<{ 
   if (!/^[0-9a-f-]{36}$/i.test(id)) notFound();
   const r = await getReceipt(id);
   if (!r) notFound();
+  // 직원은 자기 매장 영수증(또는 매장 미확정 건)만 본다
+  if (session.role === "staff" && r.storeId && r.storeId !== session.storeId) return <Forbidden what={`${getStore(r.storeId)?.shortName ?? "다른 매장"} 영수증`} />;
+  const staffStore = session.role === "staff" ? session.storeId : null;
   const [member, rules, coupons] = await Promise.all([getMember(r.memberId), getRules(), listCouponsForMember(r.memberId)]);
   const ocr = (r.ocr && typeof r.ocr === "object" ? (r.ocr as Ocr) : null);
   const coupon = r.couponId ? coupons.find((c) => c.id === r.couponId) ?? null : null;
@@ -66,7 +71,13 @@ export default async function ReceiptDetailPage({ params }: { params: Promise<{ 
 
       <div className={s.detail}>
         <div className={ui.stack}>
-          <ReceiptViewer src={`/api/receipts/${r.id}/image?w=1200`} originalHref={`/api/receipts/${r.id}/image`} />
+          {r.hasImage ? (
+            <ReceiptViewer src={`/api/receipts/${r.id}/image?w=1200`} originalHref={`/api/receipts/${r.id}/image`} />
+          ) : (
+            <div className={`${ui.panel} ${ui.panelBody}`}>
+              <p className={`${ui.notice} ${ui.noticeInfo}`}>보관 기간이 지나 원본 사진은 삭제되었습니다. 읽은 값과 판정 기록만 남아 있습니다. (반려 건 7일, 그 외 90일)</p>
+            </div>
+          )}
 
           <section className={ui.panel}>
             <div className={ui.panelHead}>
@@ -133,6 +144,7 @@ export default async function ReceiptDetailPage({ params }: { params: Promise<{ 
               <ReceiptDecisionForm
                 receipt={{ id: r.id, status: r.status, storeId: r.storeId, amount: r.amount, receiptAtLocal: toLocalInput(r.receiptAt), reviewNote: r.reviewNote }}
                 stores={STORES.map((st) => ({ id: st.id, shortName: st.shortName }))}
+                lockStore={staffStore}
               />
             </div>
           </section>

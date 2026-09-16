@@ -1,0 +1,10 @@
+.block { display: grid; gap: 10px; }
+.head { display: grid; gap: 4px; padding-bottom: 10px; border-bottom: 2px solid var(--line-strong); }
+.name { font-weight: 800; font-size: 17px; }
+.rating { font-size: 14px; color: var(--fg-2); }
+.rating b { font-size: 18px; color: var(--fg); }
+.asOf { color: var(--fg-3); }
+.list { display: grid; }
+.item { display: grid; gap: 6px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.text { font-size: 15px; line-height: 1.7; }
+.meta { font-size: 13px; color: var(--fg-3); }

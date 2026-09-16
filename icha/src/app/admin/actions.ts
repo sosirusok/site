@@ -12,13 +12,13 @@ import { STORE_IDS, normalizePhone, type Rules, type StoreId } from "@/lib/confi
 import { issueManualCoupons, redeemCoupon, voidCoupon } from "@/lib/coupons";
 import { query } from "@/lib/db";
 import {
-  audit, createAdmin, deleteMenuItem, getAdmin, getMember, getMemberByPhone, getMenuItem, listMembers, listMenu,
+  audit, createAdmin, deleteMenuItem, getAdmin, getMember, getMemberByPhone, getMenuItem, isUuid, listMembers, listMenu,
   setMenuImage, updateAdmin, updateMemberMemo, upsertMenuItem,
 } from "@/lib/db/queries";
 import { adminDecideReceipt } from "@/lib/receipt/service";
 import { getRules, saveRules, tierFor } from "@/lib/settings";
 import { getStore } from "@/lib/stores";
-import { fromLocalInput } from "@/components/admin/format";
+import { fromLocalInput, josa } from "@/components/admin/format";
 
 export type ActionState = { ok: boolean; message: string; at: number; data?: Record<string, string | number | null> } | null;
 
@@ -53,6 +53,11 @@ const num = (fd: FormData, k: string): number | null => {
   return Number.isFinite(n) ? n : null;
 };
 const isStoreId = (v: string): v is StoreId => (STORE_IDS as string[]).includes(v);
+/** 폼의 정수 id (menu_items.id 등). 아니면 null */
+const intId = (fd: FormData, k: string): number | null => {
+  const n = Number(str(fd, k));
+  return Number.isInteger(n) && n > 0 ? n : null;
+};
 
 /* ───────── 세션 ───────── */
 
@@ -70,10 +75,13 @@ export async function decideReceiptAction(_prev: ActionState, fd: FormData): Pro
     const s = await requireAdmin();
     const receiptId = str(fd, "receiptId");
     const decision = str(fd, "decision");
-    if (!receiptId || (decision !== "approve" && decision !== "reject")) throw new ActionError("잘못된 요청입니다.");
+    if (!isUuid(receiptId) || (decision !== "approve" && decision !== "reject")) throw new ActionError("잘못된 요청입니다.");
     const storeRaw = str(fd, "storeId");
     const storeId = storeRaw ? (isStoreId(storeRaw) ? storeRaw : null) : null;
     if (storeRaw && !storeId) throw new ActionError("매장 값이 올바르지 않습니다.");
+    // 직원 계정은 자기 매장 영수증만, 매장 변경 없이 처리한다 (adminDecideReceipt 가 잠근 행 기준으로 한 번 더 검사)
+    const restrictToStore = s.role === "staff" ? (s.storeId && isStoreId(s.storeId) ? s.storeId : "__none__") : null;
+    if (restrictToStore === "__none__") throw new ActionError("매장이 지정되지 않은 직원 계정은 영수증을 판정할 수 없습니다.");
     const amount = num(fd, "amount");
     if (amount != null && (amount < 0 || amount > 50_000_000)) throw new ActionError("금액이 올바르지 않습니다.");
     const receiptAtRaw = str(fd, "receiptAt");
@@ -82,11 +90,11 @@ export async function decideReceiptAction(_prev: ActionState, fd: FormData): Pro
     const note = str(fd, "note") || null;
     if (decision === "reject" && !note) throw new ActionError("반려할 때는 사유를 적어 주세요. 회원에게 보이지 않지만 기록에 남습니다.");
     const approve = decision === "approve";
-    const r = await adminDecideReceipt({ receiptId, approve, adminId: s.adminId, note, storeId, amount, receiptAt });
+    const r = await adminDecideReceipt({ receiptId, approve, adminId: s.adminId, note, storeId, amount, receiptAt, restrictToStore });
     await audit(s.adminId, approve ? "receipt.approve" : "receipt.reject", receiptId, { storeId: r.storeId, amount: r.amount, note });
     return {
       message: approve
-        ? `승인했습니다. 회원이 쿠폰함에서 ${getStore(r.storeId ?? "")?.shortName ?? "해당 매장"}을 제외한 두 매장의 사이드를 고를 수 있습니다.`
+        ? `승인했습니다. 회원이 쿠폰함에서 ${josa(getStore(r.storeId ?? "")?.shortName ?? "해당 매장", "을를")} 제외한 두 매장의 사이드를 고를 수 있습니다.`
         : "반려했습니다. 회원 쿠폰함에는 반려로 표시됩니다.",
       data: { status: r.status },
     };
@@ -99,7 +107,7 @@ export async function redeemCouponAction(_prev: ActionState, fd: FormData): Prom
   return run(async () => {
     const s = await requireAdmin();
     const couponId = str(fd, "couponId");
-    if (!couponId) throw new ActionError("쿠폰을 찾을 수 없습니다.");
+    if (!isUuid(couponId)) throw new ActionError("쿠폰을 찾을 수 없습니다.");
     const storeId = s.storeId && isStoreId(s.storeId) ? s.storeId : null;
     const c = await redeemCoupon({ couponId, by: { adminId: s.adminId, storeId } });
     return { message: `${c.code} · ${c.menuName} 사용 처리했습니다.`, data: { code: c.code } };
@@ -111,7 +119,7 @@ export async function voidCouponAction(_prev: ActionState, fd: FormData): Promis
     const s = await requireAdmin({ owner: true });
     const couponId = str(fd, "couponId");
     const note = str(fd, "note") || null;
-    if (!couponId) throw new ActionError("쿠폰을 찾을 수 없습니다.");
+    if (!isUuid(couponId)) throw new ActionError("쿠폰을 찾을 수 없습니다.");
     if (!note) throw new ActionError("취소 사유를 적어 주세요.");
     const c = await voidCoupon({ couponId, adminId: s.adminId, note });
     return { message: `${c.code} 쿠폰을 취소했습니다.` };
@@ -133,7 +141,8 @@ export async function issueCouponsAction(_prev: ActionState, fd: FormData): Prom
     let menuName = str(fd, "menuName");
     const itemRaw = str(fd, "menuItemId");
     if (itemRaw) {
-      const item = await getMenuItem(Number(itemRaw));
+      const itemId = intId(fd, "menuItemId");
+      const item = itemId ? await getMenuItem(itemId) : null;
       if (!item || item.storeId !== useStoreId) throw new ActionError("고른 메뉴가 그 매장의 메뉴가 아닙니다.");
       menuItemId = item.id;
       menuName = item.name;
@@ -159,7 +168,7 @@ export async function issueCouponsAction(_prev: ActionState, fd: FormData): Prom
       label = "회원 1명";
     } else if (targetType === "member") {
       const memberId = str(fd, "memberId");
-      const m = memberId ? await getMember(memberId) : null;
+      const m = isUuid(memberId) ? await getMember(memberId) : null;
       if (!m) throw new ActionError("회원을 찾을 수 없습니다.");
       target = { memberId: m.id };
       label = "회원 1명";
@@ -178,7 +187,7 @@ export async function saveMemberMemoAction(_prev: ActionState, fd: FormData): Pr
     const s = await requireAdmin({ owner: true });
     const memberId = str(fd, "memberId");
     const memo = str(fd, "memo").slice(0, 500) || null;
-    if (!memberId || !(await getMember(memberId))) throw new ActionError("회원을 찾을 수 없습니다.");
+    if (!isUuid(memberId) || !(await getMember(memberId))) throw new ActionError("회원을 찾을 수 없습니다.");
     await updateMemberMemo(memberId, memo);
     await audit(s.adminId, "member.memo", memberId, { length: memo?.length ?? 0 });
     return { message: "메모를 저장했습니다." };
@@ -191,7 +200,8 @@ export async function saveMenuAction(_prev: ActionState, fd: FormData): Promise<
   return run(async () => {
     const s = await requireAdmin({ owner: true });
     const idRaw = str(fd, "id");
-    const id = idRaw ? Number(idRaw) : undefined;
+    const id = idRaw ? intId(fd, "id") ?? undefined : undefined;
+    if (idRaw && !id) throw new ActionError("메뉴를 찾을 수 없습니다.");
     const storeId = str(fd, "storeId");
     if (!isStoreId(storeId)) throw new ActionError("매장이 올바르지 않습니다.");
     const name = str(fd, "name");
@@ -222,7 +232,7 @@ export async function saveMenuAction(_prev: ActionState, fd: FormData): Promise<
           .jpeg({ quality: 82, mozjpeg: true })
           .toBuffer();
       } catch {
-        throw new ActionError("사진 파일을 읽지 못했습니다. JPG/PNG/HEIC 를 올려 주세요.");
+        throw new ActionError("사진 파일을 읽지 못했습니다. JPG 또는 PNG 를 올려 주세요. (아이폰 HEIC 는 설정 > 카메라 > 포맷을 '높은 호환성'으로)");
       }
       await setMenuImage(savedId, jpeg, "image/jpeg");
       await audit(s.adminId, "menu.image", String(savedId), { bytes: jpeg.length });
@@ -238,9 +248,9 @@ export async function saveMenuAction(_prev: ActionState, fd: FormData): Promise<
 export async function toggleMenuGiftAction(_prev: ActionState, fd: FormData): Promise<ActionState> {
   return run(async () => {
     const s = await requireAdmin({ owner: true });
-    const id = Number(str(fd, "id"));
-    const item = await getMenuItem(id);
-    if (!item) throw new ActionError("메뉴를 찾을 수 없습니다.");
+    const id = intId(fd, "id");
+    const item = id ? await getMenuItem(id) : null;
+    if (!item || !id) throw new ActionError("메뉴를 찾을 수 없습니다.");
     const isGift = !item.isGift;
     await upsertMenuItem({ ...item, id: item.id, isGift });
     await audit(s.adminId, "menu.gift", String(id), { name: item.name, isGift });
@@ -251,9 +261,9 @@ export async function toggleMenuGiftAction(_prev: ActionState, fd: FormData): Pr
 export async function toggleMenuActiveAction(_prev: ActionState, fd: FormData): Promise<ActionState> {
   return run(async () => {
     const s = await requireAdmin({ owner: true });
-    const id = Number(str(fd, "id"));
-    const item = await getMenuItem(id);
-    if (!item) throw new ActionError("메뉴를 찾을 수 없습니다.");
+    const id = intId(fd, "id");
+    const item = id ? await getMenuItem(id) : null;
+    if (!item || !id) throw new ActionError("메뉴를 찾을 수 없습니다.");
     const active = !item.active;
     await upsertMenuItem({ ...item, id: item.id, active });
     await audit(s.adminId, "menu.active", String(id), { name: item.name, active });
@@ -264,10 +274,10 @@ export async function toggleMenuActiveAction(_prev: ActionState, fd: FormData): 
 export async function moveMenuAction(_prev: ActionState, fd: FormData): Promise<ActionState> {
   return run(async () => {
     const s = await requireAdmin({ owner: true });
-    const id = Number(str(fd, "id"));
+    const id = intId(fd, "id");
     const dir = str(fd, "dir") === "up" ? -1 : 1;
-    const item = await getMenuItem(id);
-    if (!item) throw new ActionError("메뉴를 찾을 수 없습니다.");
+    const item = id ? await getMenuItem(id) : null;
+    if (!item || !id) throw new ActionError("메뉴를 찾을 수 없습니다.");
     const items = await listMenu(item.storeId, { includeInactive: true });
     const idx = items.findIndex((m) => m.id === id);
     const swap = idx + dir;
@@ -283,9 +293,9 @@ export async function moveMenuAction(_prev: ActionState, fd: FormData): Promise<
 export async function deleteMenuAction(_prev: ActionState, fd: FormData): Promise<ActionState> {
   return run(async () => {
     const s = await requireAdmin({ owner: true });
-    const id = Number(str(fd, "id"));
-    const item = await getMenuItem(id);
-    if (!item) throw new ActionError("메뉴를 찾을 수 없습니다.");
+    const id = intId(fd, "id");
+    const item = id ? await getMenuItem(id) : null;
+    if (!item || !id) throw new ActionError("메뉴를 찾을 수 없습니다.");
     const removed = await deleteMenuItem(id);
     await audit(s.adminId, "menu.delete", String(id), { name: item.name, hard: removed });
     return { message: removed ? `'${item.name}' 을(를) 삭제했습니다.` : `'${item.name}' 은(는) 발급된 쿠폰이 있어 삭제 대신 숨김·무료 사이드 해제 처리했습니다.` };
@@ -300,13 +310,21 @@ export async function saveRulesAction(_prev: ActionState, fd: FormData): Promise
     const receiptValidHours = num(fd, "receiptValidHours");
     const couponValidDays = num(fd, "couponValidDays");
     const minAmount = num(fd, "minAmount");
+    const maxAutoAmount = num(fd, "maxAutoAmount");
     const dailyLimitPerMember = num(fd, "dailyLimitPerMember");
+    const dailyAttemptLimit = num(fd, "dailyAttemptLimit");
+    const dailyOcrLimit = num(fd, "dailyOcrLimit");
     const similarHashThreshold = num(fd, "similarHashThreshold");
     const minConfidencePct = num(fd, "minConfidence");
     if (receiptValidHours == null || receiptValidHours < 1 || receiptValidHours > 24 * 30) throw new ActionError("영수증 인정 시간은 1~720시간 사이로 적어 주세요.");
     if (couponValidDays == null || couponValidDays < 1 || couponValidDays > 365) throw new ActionError("쿠폰 유효 기간은 1~365일 사이로 적어 주세요.");
     if (minAmount == null || minAmount < 0 || minAmount > 1_000_000) throw new ActionError("최소 금액은 0~1,000,000원 사이로 적어 주세요.");
+    if (maxAutoAmount == null || maxAutoAmount < 0 || maxAutoAmount > 50_000_000) throw new ActionError("자동 승인 상한 금액은 0~50,000,000원 사이로 적어 주세요.");
+    if (maxAutoAmount > 0 && minAmount > maxAutoAmount) throw new ActionError("자동 승인 상한 금액은 최소 금액보다 커야 합니다.");
     if (dailyLimitPerMember == null || dailyLimitPerMember < 1 || dailyLimitPerMember > 20) throw new ActionError("하루 한도는 1~20회 사이로 적어 주세요.");
+    if (dailyAttemptLimit == null || dailyAttemptLimit < 0 || dailyAttemptLimit > 100) throw new ActionError("하루 업로드 시도 한도는 0~100회 사이로 적어 주세요.");
+    if (dailyAttemptLimit > 0 && dailyAttemptLimit < dailyLimitPerMember) throw new ActionError("하루 업로드 시도 한도는 하루 인증 한도보다 작을 수 없습니다.");
+    if (dailyOcrLimit == null || dailyOcrLimit < 0 || dailyOcrLimit > 100_000) throw new ActionError("하루 자동 인식 상한은 0~100,000회 사이로 적어 주세요.");
     if (similarHashThreshold == null || similarHashThreshold < 0 || similarHashThreshold > 64) throw new ActionError("유사 사진 민감도는 0~64 사이로 적어 주세요.");
     if (minConfidencePct == null || minConfidencePct < 0 || minConfidencePct > 100) throw new ActionError("인식 신뢰도는 0~100% 사이로 적어 주세요.");
 
@@ -332,7 +350,10 @@ export async function saveRulesAction(_prev: ActionState, fd: FormData): Promise
       receiptValidHours: Math.round(receiptValidHours),
       couponValidDays: Math.round(couponValidDays),
       minAmount: Math.round(minAmount),
+      maxAutoAmount: Math.round(maxAutoAmount),
       dailyLimitPerMember: Math.round(dailyLimitPerMember),
+      dailyAttemptLimit: Math.round(dailyAttemptLimit),
+      dailyOcrLimit: Math.round(dailyOcrLimit),
       similarHashThreshold: Math.round(similarHashThreshold),
       minConfidence: Math.round(minConfidencePct) / 100,
       tiers,

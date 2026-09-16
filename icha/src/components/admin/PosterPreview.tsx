@@ -27,9 +27,17 @@ export function PosterPreview({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function PrintButton({ className }: { className?: string }) {
+/** 인쇄 버튼. 배포 주소가 아니면(QR 이 로컬을 가리키면) 한 번 더 묻는다. */
+export function PrintButton({ className, warn }: { className?: string; warn?: string | null }) {
   return (
-    <button type="button" className={className} onClick={() => window.print()}>
+    <button
+      type="button"
+      className={className}
+      onClick={() => {
+        if (warn && !window.confirm(warn)) return;
+        window.print();
+      }}
+    >
       인쇄
     </button>
   );

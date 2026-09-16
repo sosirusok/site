@@ -1,6 +1,6 @@
 import styles from "./HomeNotice.module.css";
 
-/** 관리자 공지 — 헤더 아래 얇은 금색 띠. 비어 있으면 아무것도 그리지 않는다. */
+/** 관리자 공지 — 헤더 아래 검정 띠에 흰 글자 한 줄. 비어 있으면 그리지 않는다. */
 export function HomeNotice({ text }: { text: string }) {
   const t = text.trim();
   if (!t) return null;

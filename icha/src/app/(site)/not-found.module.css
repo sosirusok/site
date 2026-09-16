@@ -1,9 +1,7 @@
-.wrap { display: grid; place-items: center; min-height: calc(100svh - var(--header-h) - 120px); padding: 56px 0; }
-.paper { width: min(100%, 420px); display: grid; gap: 14px; transform: rotate(-1deg); }
-.code { font-family: var(--font-display); font-size: 84px; line-height: 0.9; color: var(--ink); letter-spacing: -0.02em; }
-.title { font-family: var(--font-display); font-weight: 400; font-size: 30px; line-height: 1.2; color: var(--ink); }
-.text { font-size: 14px; line-height: 1.7; color: var(--ink-2); }
-.stamp { display: flex; justify-content: flex-end; margin-top: -14px; padding-right: 6px; }
-.actions { display: grid; gap: 10px; justify-items: center; }
-.link { font-size: 13px; font-weight: 700; color: var(--ink-2); border-bottom: 1px solid var(--ink-line-strong); }
-.detail { font-size: 12px; color: var(--ink-3); text-align: center; }
+.wrap { display: grid; place-items: center; min-height: calc(100svh - var(--header-h) - 200px); padding: 48px 0; }
+.wrap .paper { width: min(100%, 440px); display: grid; gap: 12px; padding: 28px 24px; font-family: var(--font-sans); }
+.code { font-size: 15px; color: var(--fg-3); }
+.title { font-weight: 800; font-size: 22px; line-height: 1.35; letter-spacing: -0.02em; }
+.text { font-size: 15px; line-height: 1.7; color: var(--fg-2); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.detail { font-size: 13px; color: var(--fg-3); }

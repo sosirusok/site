@@ -31,6 +31,7 @@ create table if not exists menu_items (
   active      boolean not null default true,
   sort        int not null default 0
 );
+alter table menu_items add column if not exists image_updated_at timestamptz;
 create index if not exists menu_items_store_idx on menu_items(store_id, sort);
 
 create table if not exists members (
@@ -67,7 +68,9 @@ create table if not exists receipts (
 );
 create index if not exists receipts_sha_idx on receipts(sha256);
 create unique index if not exists receipts_sha_live_uq on receipts(sha256) where status <> 'rejected';
-create unique index if not exists receipts_approval_live_uq on receipts(approval_no) where approval_no is not null and status <> 'rejected';
+-- 승인번호 유니크는 매장 단위. 카드 승인번호는 단말·카드사별 일련번호라 다른 매장끼리는 같은 8자리가 나올 수 있다. 매장 미확정 건은 제외.
+drop index if exists receipts_approval_live_uq;
+create unique index if not exists receipts_approval_store_live_uq on receipts(store_id, approval_no) where approval_no is not null and store_id is not null and status <> 'rejected';
 create index if not exists receipts_member_idx on receipts(member_id, created_at desc);
 create index if not exists receipts_status_idx on receipts(status, created_at desc);
 create index if not exists receipts_approval_idx on receipts(approval_no) where approval_no is not null;
@@ -141,6 +144,8 @@ export function ensureSchema(db: Driver): Promise<void> {
       await db.exec(SCHEMA_SQL);
       await seedStores(db);
       await seedInitialAdmin(db);
+      // 기동 때마다 오래된 속도 제한 행을 정리한다 (실패해도 기동은 계속)
+      await db.query(`delete from rate_limits where window_start < now() - interval '1 day'`).catch(() => {});
     })().catch((e) => {
       ensured = null;
       throw e;
@@ -156,7 +161,7 @@ async function seedStores(db: Queryable) {
       `insert into stores (id, name, short_name, drink, naver_place_id, address, phone, biz_no, sort)
        values ($1,$2,$3,$4,$5,$6,$7,$8,$9)
        on conflict (id) do update set name=excluded.name, short_name=excluded.short_name, drink=excluded.drink,
-         naver_place_id=excluded.naver_place_id, address=excluded.address, phone=excluded.phone, sort=excluded.sort`,
+         naver_place_id=excluded.naver_place_id, address=excluded.address, phone=excluded.phone, biz_no=excluded.biz_no, sort=excluded.sort`,
       [s.id, s.name, s.shortName, s.drink, s.naverPlaceId, s.address, s.phone, s.bizNo ?? null, s.sort],
     );
     const existing = await db.query<{ n: number }>(`select count(*)::int as n from menu_items where store_id=$1`, [s.id]);
@@ -169,15 +174,26 @@ async function seedStores(db: Queryable) {
           [s.id, m.name, m.price ?? null, m.description ?? null, m.image ?? null, m.gift ?? false, i++],
         );
       }
+    } else {
+      // 이미 시드된 DB 라도 코드에 사진 경로가 새로 붙은 메뉴는 채워 준다 (관리자가 올린 사진이 있으면 건드리지 않음)
+      for (const m of s.menu) {
+        if (!m.image) continue;
+        await db.query(`update menu_items set image_path=$3 where store_id=$1 and name=$2 and image_path is null and image_data is null`, [s.id, m.name, m.image]);
+      }
     }
   }
 }
+
+const WEAK_INITIAL_PASSWORDS = new Set(["change-me", "changeme", "admin", "admin1234", "password", "12345678"]);
 
 async function seedInitialAdmin(db: Queryable) {
   const rows = await db.query<{ n: number }>(`select count(*)::int as n from admins`);
   if ((rows[0]?.n ?? 0) > 0) return;
   const id = process.env.ADMIN_INITIAL_ID?.trim() || "owner";
   const pw = process.env.ADMIN_INITIAL_PASSWORD?.trim() || "change-me";
+  if (process.env.NODE_ENV === "production" && (pw.length < 10 || WEAK_INITIAL_PASSWORDS.has(pw.toLowerCase()))) {
+    throw new Error("ADMIN_INITIAL_PASSWORD 를 10자 이상의 새 비밀번호로 설정하세요. 운영 환경에서는 기본값(change-me)으로 관리자 계정을 만들지 않습니다.");
+  }
   const hash = await hashPassword(pw);
   await db.query(
     `insert into admins (id, name, store_id, pw_hash, role) values ($1,$2,null,$3,'owner') on conflict (id) do nothing`,

@@ -1,22 +1,13 @@
-.footer { margin-top: 0; background: #0f0f0f; border-top: 1px solid var(--line); padding: 48px 0 calc(32px + env(safe-area-inset-bottom)); color: var(--fg-2); }
-.top { display: grid; gap: 40px; }
-.brand { font-family: var(--font-display); font-size: 34px; line-height: 1; color: var(--gold); }
-.brand span { font-family: var(--font-sans); font-size: 13px; color: var(--fg-3); margin-left: 8px; letter-spacing: 0.15em; }
-.union { margin-top: 10px; font-weight: 800; color: var(--fg); }
-.rule { margin-top: 4px; font-size: 14px; color: var(--fg-3); }
-.links { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; font-weight: 600; }
-.links a { color: var(--fg-2); border-bottom: 1px solid var(--line-strong); }
-.links a:hover { color: var(--fg); border-color: var(--fg); }
-.staff { color: var(--fg-3) !important; }
-.stores { display: grid; gap: 22px; }
-.store { display: grid; gap: 3px; font-size: 13.5px; color: var(--fg-3); }
-.storeName { font-weight: 800; color: var(--fg); font-size: 15px; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
-.storeNum { color: var(--gold); font-variant-numeric: tabular-nums; font-size: 13px; }
-.drink { font-size: 12px; color: var(--fg-3); font-weight: 600; }
-.storeLine { display: flex; gap: 14px; flex-wrap: wrap; }
-.naver { display: inline-block; margin-top: 4px; color: var(--gold); font-weight: 700; font-size: 13px; }
-.bottom { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--line); display: grid; gap: 4px; font-size: 12.5px; color: var(--fg-3); }
-@media (min-width: 760px) {
-  .top { grid-template-columns: 1fr 1.6fr; gap: 60px; }
-  .stores { gap: 18px; }
-}
+.footer { margin-top: 0; background: var(--dark); color: var(--on-dark-2); padding: 44px 0 calc(28px + env(safe-area-inset-bottom)); font-size: 13.5px; line-height: 1.7; }
+.top { display: grid; gap: 32px; }
+.brand { font-weight: 900; font-size: 22px; letter-spacing: -0.04em; color: #fff; }
+.union { margin-top: 6px; }
+.links { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 6px 18px; font-weight: 600; color: #fff; }
+.links a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.staff { color: var(--on-dark-2); }
+.stores { display: grid; gap: 14px; }
+.storeName { font-weight: 700; color: #fff; }
+.store p:last-child { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.store a { text-decoration: underline; text-underline-offset: 3px; color: #fff; }
+.bottom { margin-top: 32px; padding-top: 16px; border-top: 1px solid #333; font-size: 12.5px; color: #8f8f8f; }
+@media (min-width: 760px) { .top { grid-template-columns: 1fr 1.5fr; gap: 56px; } }

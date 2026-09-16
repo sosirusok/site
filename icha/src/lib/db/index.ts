@@ -22,10 +22,12 @@ type GlobalWithDb = typeof globalThis & { __ichaDb?: Promise<Driver> };
 
 async function createPgDriver(url: string): Promise<Driver> {
   const { Pool } = await import("pg");
+  // DATABASE_CA 에 Supabase 가 제공하는 CA 인증서(PEM)를 넣으면 서버 인증서를 검증한다. 없으면 암호화만 하고 검증은 건너뛴다.
+  const ca = process.env.DATABASE_CA?.trim();
   const pool = new Pool({
     connectionString: url,
     max: 4,
-    ssl: /localhost|127\.0\.0\.1/.test(url) ? undefined : { rejectUnauthorized: false },
+    ssl: /localhost|127\.0\.0\.1/.test(url) ? undefined : ca ? { ca: ca.replace(/\\n/g, "\n"), rejectUnauthorized: true } : { rejectUnauthorized: false },
   });
   const q = async <T extends Row>(text: string, params?: unknown[]) => {
     const r = await pool.query(text, params as never[]);

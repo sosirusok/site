@@ -1,9 +1,0 @@
-/* 푸터가 margin-top: 80px 을 갖고 있어 사진 섹션 뒤에 바탕색 띠가 생긴다 — 음수 여백으로 상쇄해 푸터에 바로 붙인다 */
-.cta { position: relative; isolation: isolate; overflow: hidden; padding: clamp(88px, 13vw, 150px) 0; background: #0d0d0d; }
-.img { object-fit: cover; z-index: -2; }
-.shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(20,20,20,0.92) 0%, rgba(20,20,20,0.55) 45%, rgba(20,20,20,0.9) 100%); }
-.inner { display: grid; gap: 18px; justify-items: center; text-align: center; }
-.title { color: #fff; text-shadow: 0 2px 20px rgba(0,0,0,0.6); font-size: clamp(38px, 8.5vw, 88px); }
-.title em { font-style: normal; color: var(--gold); }
-.sub { max-width: 40ch; color: rgba(255,255,255,0.85); }
-.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 8px; }

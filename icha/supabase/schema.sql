@@ -25,6 +25,7 @@ create table if not exists menu_items (
   active      boolean not null default true,
   sort        int not null default 0
 );
+alter table menu_items add column if not exists image_updated_at timestamptz;
 create index if not exists menu_items_store_idx on menu_items(store_id, sort);
 
 create table if not exists members (
@@ -61,7 +62,9 @@ create table if not exists receipts (
 );
 create index if not exists receipts_sha_idx on receipts(sha256);
 create unique index if not exists receipts_sha_live_uq on receipts(sha256) where status <> 'rejected';
-create unique index if not exists receipts_approval_live_uq on receipts(approval_no) where approval_no is not null and status <> 'rejected';
+-- 승인번호 유니크는 매장 단위. 카드 승인번호는 단말·카드사별 일련번호라 다른 매장끼리는 같은 8자리가 나올 수 있다. 매장 미확정 건은 제외.
+drop index if exists receipts_approval_live_uq;
+create unique index if not exists receipts_approval_store_live_uq on receipts(store_id, approval_no) where approval_no is not null and store_id is not null and status <> 'rejected';
 create index if not exists receipts_member_idx on receipts(member_id, created_at desc);
 create index if not exists receipts_status_idx on receipts(status, created_at desc);
 create index if not exists receipts_approval_idx on receipts(approval_no) where approval_no is not null;

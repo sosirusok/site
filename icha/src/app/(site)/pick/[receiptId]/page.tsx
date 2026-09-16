@@ -1,3 +1,4 @@
+import { menuImageUrl } from "@/lib/menu-image";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
@@ -6,12 +7,11 @@ import { formatWon } from "@/lib/config";
 import { getReceipt, listMenu } from "@/lib/db/queries";
 import { getRules } from "@/lib/settings";
 import { getStore, giftStoresFor } from "@/lib/stores";
-import { Stamp } from "@/components/ui/Stamp";
 import { MenuPicker, type PickStore } from "@/components/flow/MenuPicker";
-import { fmtDateTime, storeNo } from "@/components/flow/format";
+import { fmtDateTime, joinNames } from "@/components/flow/format";
 import styles from "./pick.module.css";
 
-export const metadata: Metadata = { title: "무료 사이드 고르기" };
+export const metadata: Metadata = { title: "사이드 메뉴 선택" };
 
 export default async function PickPage({ params }: { params: Promise<{ receiptId: string }> }) {
   const { receiptId } = await params;
@@ -28,26 +28,27 @@ export default async function PickPage({ params }: { params: Promise<{ receiptId
 
   if (receipt.status !== "approved" || !receipt.storeId || !store) {
     const waiting = receipt.status === "review";
+    const rejected = receipt.status === "rejected";
     return (
       <section className={`wrap ${styles.page}`}>
-        <div className={`paper paper-shadow ${styles.notice}`}>
-          <Stamp text={waiting ? "대기" : receipt.status === "rejected" ? "반려" : "보류"} color={waiting ? "#6b665e" : undefined} size={96} />
-          <div>
-            <p className={styles.noticeTitle}>
-              {waiting ? "아직 직원이 확인하는 중이에요." : receipt.status === "rejected" ? "받을 수 없었던 영수증이에요." : "매장을 확인하지 못한 영수증이에요."}
-            </p>
+        <div className={styles.col}>
+          <header className={styles.head}>
+            <h1 className="h2">사이드 메뉴 선택</h1>
+          </header>
+          <div className={styles.notice}>
+            <p><span className={`status ${waiting ? "status-wait" : "status-no"}`}>{waiting ? "직원 확인 대기" : rejected ? "반려" : "매장 미확인"}</span></p>
             <p className={styles.noticeText}>
               {waiting
-                ? "승인되면 쿠폰함에 '사이드 고르기' 버튼이 생겨요. 영업 중에는 보통 몇 분이면 끝나요."
-                : receipt.status === "rejected"
-                  ? "다른 영수증으로 다시 인증할 수 있어요."
-                  : "직원에게 문의해 주세요. 쿠폰함에서 상태를 볼 수 있어요."}
+                ? "직원이 영수증 사진을 확인하고 있습니다. 승인되면 쿠폰함에 사이드 메뉴 선택 버튼이 표시됩니다."
+                : rejected
+                  ? "인정되지 않은 영수증입니다. 다른 영수증으로 다시 인증할 수 있습니다."
+                  : "매장을 확인하지 못한 영수증입니다. 매장 직원에게 문의해 주십시오."}
             </p>
             <p className={`mono ${styles.noticeMeta}`}>접수 {fmtDateTime(receipt.createdAt)}</p>
           </div>
-          <div className={styles.noticeActions}>
-            <Link href="/wallet" className="btn">쿠폰함 보기</Link>
-            <Link href="/verify" className={`btn ${styles.inkOutline}`}>영수증 다시 올리기</Link>
+          <div className={styles.actions}>
+            <Link href="/wallet" className="btn btn-lg btn-block">쿠폰함 보기</Link>
+            <Link href="/verify" className="btn btn-outline btn-block">다른 영수증 인증</Link>
           </div>
         </div>
       </section>
@@ -61,17 +62,14 @@ export default async function PickPage({ params }: { params: Promise<{ receiptId
       const items = await listMenu(s.id, { giftOnly: true });
       return {
         id: s.id,
-        no: storeNo(s.id),
         shortName: s.shortName,
         name: s.name,
-        drink: s.drink,
-        headline: s.headline,
         items: items.map((it) => ({
           id: it.id,
           name: it.name,
           price: it.price,
           description: it.description,
-          image: it.hasImageData ? { kind: "db" as const, src: `/api/menu-image/${it.id}` } : it.imagePath ? { kind: "static" as const, src: it.imagePath } : null,
+          image: it.hasImageData ? { kind: "db" as const, src: menuImageUrl(it) } : it.imagePath ? { kind: "static" as const, src: it.imagePath } : null,
         })),
       };
     }),
@@ -79,33 +77,27 @@ export default async function PickPage({ params }: { params: Promise<{ receiptId
 
   return (
     <section className={`wrap ${styles.page}`}>
-      <header className={styles.head}>
-        <div className={styles.headText}>
-          <p className="eyebrow">무료 사이드 고르기</p>
-          <h1 className={`h1 ${styles.title}`}>
-            <span className="gold">한 접시</span> 고르세요.
-          </h1>
-          <p className={`lead ${styles.titleSub}`}>{gifts.map((s) => s.shortName).join(" 또는 ")}에서 드려요. 영수증 한 장에 한 접시예요.</p>
-        </div>
-        <div className={`paper paper-shadow ${styles.receipt}`} aria-label="승인된 영수증">
-          <p className={styles.receiptEyebrow}>승인된 영수증</p>
-          <p className={styles.receiptStore}>
-            <span className={styles.receiptNo}>{storeNo(store.id)}</span>
-            <b>{store.shortName}</b>
-            <span className={styles.receiptDrink}>{store.drink}</span>
+      <div className={styles.col}>
+        <header className={styles.head}>
+          <h1 className="h2">사이드 메뉴 선택</h1>
+          <p className={styles.lead}>
+            {joinNames(gifts.map((s) => s.shortName))}의 사이드 메뉴 중 하나를 선택합니다. {store.shortName} 영수증이므로 {store.shortName} 메뉴는 선택할 수 없습니다.
           </p>
-          <hr className="dots" />
-          <div className="row"><b>결제</b><span className="val">{fmtDateTime(receipt.receiptAt ?? receipt.createdAt)}</span></div>
-          <div className="row"><b>금액</b><span className="val">{receipt.amount == null ? "미확인" : formatWon(receipt.amount)}</span></div>
-          <span className={styles.receiptStamp}><Stamp text="승인" size={76} /></span>
-        </div>
-      </header>
+        </header>
 
-      <MenuPicker receiptId={receipt.id} stores={stores} couponValidDays={rules.couponValidDays} />
+        <dl className={`dl ${styles.receipt}`} aria-label="승인된 영수증">
+          <dt>영수증 매장</dt>
+          <dd>{store.name}</dd>
+          <dt>결제 일시</dt>
+          <dd className="mono">{fmtDateTime(receipt.receiptAt ?? receipt.createdAt)}</dd>
+          <dt>결제 금액</dt>
+          <dd className="mono">{receipt.amount == null ? "미확인" : formatWon(receipt.amount)}</dd>
+          <dt>상태</dt>
+          <dd><b className="red">승인</b></dd>
+        </dl>
 
-      <p className={`small ${styles.foot}`}>
-        {store.shortName} 영수증이라 {store.shortName}의 메뉴는 고를 수 없어요. 고른 쿠폰은 쿠폰함에 보관되고, 매장에서 직원에게 보여 주면 돼요.
-      </p>
+        <MenuPicker receiptId={receipt.id} stores={stores} couponValidDays={rules.couponValidDays} />
+      </div>
     </section>
   );
 }

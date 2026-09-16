@@ -5,7 +5,6 @@ import { getMemberSession } from "@/lib/auth/session";
 import { getCoupon } from "@/lib/db/queries";
 import { getStore } from "@/lib/stores";
 import { CouponTicket, type TicketCoupon, type TicketStore } from "@/components/flow/CouponTicket";
-import { storeNo } from "@/components/flow/format";
 import styles from "./coupon.module.css";
 
 export const metadata: Metadata = { title: "쿠폰" };
@@ -33,12 +32,12 @@ export default async function CouponPage({ params }: { params: Promise<{ id: str
     usedAt: coupon.usedAt?.toISOString() ?? null,
     note: coupon.note,
   };
-  const ts: TicketStore = { id: store.id, no: storeNo(store.id), shortName: store.shortName, name: store.name, drink: store.drink, address: store.address };
+  const ts: TicketStore = { id: store.id, shortName: store.shortName, name: store.name, address: store.address };
 
   return (
     <section className={`wrap ${styles.page}`}>
       <p className={styles.back}>
-        <Link href="/wallet">← 쿠폰함</Link>
+        <Link href="/wallet">쿠폰함으로 돌아가기</Link>
       </p>
       <CouponTicket coupon={tc} store={ts} />
     </section>

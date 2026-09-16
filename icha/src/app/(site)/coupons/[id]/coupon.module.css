@@ -1,7 +1,7 @@
-.page { padding: 20px 0 72px; display: grid; gap: 18px; }
-.back { font-size: 14px; font-weight: 700; color: var(--fg-2); }
-.back a { display: inline-flex; align-items: center; min-height: 44px; border-bottom: 1px solid transparent; }
-.back a:hover { border-bottom-color: currentColor; color: var(--fg); }
+.page { padding: 24px 0 88px; display: grid; gap: 16px; }
+.back { max-width: 480px; margin: 0 auto; width: 100%; font-size: 14px; font-weight: 600; color: var(--fg-2); }
+.back a { text-decoration: underline; text-underline-offset: 3px; }
+
 @media (min-width: 760px) {
-  .page { padding: 40px 0 96px; gap: 20px; }
+  .page { padding: 48px 0 120px; }
 }
