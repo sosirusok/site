@@ -1,28 +1,303 @@
 {
+ "arrow": {
+  "src": "/images/kit/arrow.png",
+  "w": 600,
+  "h": 300
+ },
+ "benefit-joseon": {
+  "src": "/images/kit/benefit-joseon.png",
+  "w": 1000,
+  "h": 300
+ },
+ "benefit-tokyo": {
+  "src": "/images/kit/benefit-tokyo.png",
+  "w": 1000,
+  "h": 300
+ },
+ "benefit-wareureu": {
+  "src": "/images/kit/benefit-wareureu.png",
+  "w": 1000,
+  "h": 300
+ },
+ "bg-night-wide": {
+  "src": "/images/kit/bg-night-wide.jpg",
+  "w": 1920,
+  "h": 1080
+ },
+ "bg-night": {
+  "src": "/images/kit/bg-night.jpg",
+  "w": 1080,
+  "h": 1920
+ },
+ "btn-book": {
+  "src": "/images/kit/btn-book.png",
+  "w": 900,
+  "h": 220
+ },
+ "btn-close": {
+  "src": "/images/kit/btn-close.png",
+  "w": 420,
+  "h": 150
+ },
+ "btn-details": {
+  "src": "/images/kit/btn-details.png",
+  "w": 900,
+  "h": 220
+ },
+ "btn-directions": {
+  "src": "/images/kit/btn-directions.png",
+  "w": 420,
+  "h": 150
+ },
+ "btn-get": {
+  "src": "/images/kit/btn-get.png",
+  "w": 900,
+  "h": 220
+ },
+ "btn-login": {
+  "src": "/images/kit/btn-login.png",
+  "w": 420,
+  "h": 150
+ },
+ "btn-moremenu": {
+  "src": "/images/kit/btn-moremenu.png",
+  "w": 900,
+  "h": 220
+ },
+ "btn-morephoto": {
+  "src": "/images/kit/btn-morephoto.png",
+  "w": 900,
+  "h": 220
+ },
+ "btn-pick": {
+  "src": "/images/kit/btn-pick.png",
+  "w": 900,
+  "h": 220
+ },
+ "btn-review": {
+  "src": "/images/kit/btn-review.png",
+  "w": 900,
+  "h": 220
+ },
+ "btn-search": {
+  "src": "/images/kit/btn-search.png",
+  "w": 900,
+  "h": 220
+ },
+ "btn-use": {
+  "src": "/images/kit/btn-use.png",
+  "w": 900,
+  "h": 220
+ },
+ "btn-wallet": {
+  "src": "/images/kit/btn-wallet.png",
+  "w": 900,
+  "h": 220
+ },
+ "cut-beer": {
+  "src": "/images/kit/cut-beer.png",
+  "w": 700,
+  "h": 1000
+ },
+ "cut-makgeolli": {
+  "src": "/images/kit/cut-makgeolli.png",
+  "w": 900,
+  "h": 800
+ },
+ "cut-soju": {
+  "src": "/images/kit/cut-soju.png",
+  "w": 700,
+  "h": 1000
+ },
+ "cut-yogurt": {
+  "src": "/images/kit/cut-yogurt.png",
+  "w": 700,
+  "h": 800
+ },
  "empty-wallet": {
   "src": "/images/kit/empty-wallet.png",
-  "w": 360,
-  "h": 360
+  "w": 700,
+  "h": 700
+ },
+ "footer-line": {
+  "src": "/images/kit/footer-line.png",
+  "w": 1400,
+  "h": 100
+ },
+ "head-banner": {
+  "src": "/images/kit/head-banner.jpg",
+  "w": 1080,
+  "h": 420
+ },
+ "icon-home": {
+  "src": "/images/kit/icon-home.png",
+  "w": 240,
+  "h": 240
+ },
+ "icon-info": {
+  "src": "/images/kit/icon-info.png",
+  "w": 240,
+  "h": 240
+ },
+ "icon-place": {
+  "src": "/images/kit/icon-place.png",
+  "w": 240,
+  "h": 240
+ },
+ "icon-wallet": {
+  "src": "/images/kit/icon-wallet.png",
+  "w": 240,
+  "h": 240
  },
  "icon": {
   "src": "/images/kit/icon.png",
   "w": 512,
   "h": 512
  },
+ "label-benefit": {
+  "src": "/images/kit/label-benefit.png",
+  "w": 700,
+  "h": 200
+ },
+ "label-faq": {
+  "src": "/images/kit/label-faq.png",
+  "w": 700,
+  "h": 200
+ },
+ "label-guide": {
+  "src": "/images/kit/label-guide.png",
+  "w": 700,
+  "h": 200
+ },
+ "label-howto": {
+  "src": "/images/kit/label-howto.png",
+  "w": 700,
+  "h": 200
+ },
+ "label-map": {
+  "src": "/images/kit/label-map.png",
+  "w": 700,
+  "h": 200
+ },
+ "label-menu": {
+  "src": "/images/kit/label-menu.png",
+  "w": 700,
+  "h": 200
+ },
+ "label-phone": {
+  "src": "/images/kit/label-phone.png",
+  "w": 700,
+  "h": 200
+ },
+ "label-photo": {
+  "src": "/images/kit/label-photo.png",
+  "w": 700,
+  "h": 200
+ },
+ "label-place": {
+  "src": "/images/kit/label-place.png",
+  "w": 700,
+  "h": 200
+ },
+ "label-review": {
+  "src": "/images/kit/label-review.png",
+  "w": 700,
+  "h": 200
+ },
+ "label-wallet": {
+  "src": "/images/kit/label-wallet.png",
+  "w": 700,
+  "h": 200
+ },
+ "note-again": {
+  "src": "/images/kit/note-again.png",
+  "w": 700,
+  "h": 360
+ },
+ "note-good": {
+  "src": "/images/kit/note-good.png",
+  "w": 520,
+  "h": 600
+ },
+ "note-phone": {
+  "src": "/images/kit/note-phone.png",
+  "w": 900,
+  "h": 420
+ },
+ "note-today": {
+  "src": "/images/kit/note-today.png",
+  "w": 800,
+  "h": 360
+ },
  "notfound": {
   "src": "/images/kit/notfound.png",
-  "w": 360,
-  "h": 360
+  "w": 700,
+  "h": 700
+ },
+ "pill-condition": {
+  "src": "/images/kit/pill-condition.png",
+  "w": 1200,
+  "h": 140
+ },
+ "plate-joseon": {
+  "src": "/images/kit/plate-joseon.png",
+  "w": 1200,
+  "h": 500
+ },
+ "plate-tokyo": {
+  "src": "/images/kit/plate-tokyo.png",
+  "w": 1200,
+  "h": 500
+ },
+ "plate-wareureu": {
+  "src": "/images/kit/plate-wareureu.png",
+  "w": 1200,
+  "h": 500
+ },
+ "ribbon-event": {
+  "src": "/images/kit/ribbon-event.png",
+  "w": 1600,
+  "h": 260
  },
  "share": {
   "src": "/images/kit/share.jpg",
   "w": 1200,
   "h": 630
  },
- "sign-wareureu": {
-  "src": "/images/kit/sign-wareureu.png",
-  "w": 440,
-  "h": 100
+ "stamp-free": {
+  "src": "/images/kit/stamp-free.png",
+  "w": 500,
+  "h": 500
+ },
+ "stamp-used": {
+  "src": "/images/kit/stamp-used.png",
+  "w": 500,
+  "h": 500
+ },
+ "step-1": {
+  "src": "/images/kit/step-1.png",
+  "w": 600,
+  "h": 360
+ },
+ "step-2": {
+  "src": "/images/kit/step-2.png",
+  "w": 600,
+  "h": 360
+ },
+ "step-3": {
+  "src": "/images/kit/step-3.png",
+  "w": 600,
+  "h": 360
+ },
+ "step-4": {
+  "src": "/images/kit/step-4.png",
+  "w": 600,
+  "h": 360
+ },
+ "tape": {
+  "src": "/images/kit/tape.png",
+  "w": 400,
+  "h": 120
  },
  "ticket-joseon": {
   "src": "/images/kit/ticket-joseon.png",
@@ -38,5 +313,15 @@
   "src": "/images/kit/ticket-wareureu.png",
   "w": 880,
   "h": 290
+ },
+ "ticket": {
+  "src": "/images/kit/ticket.png",
+  "w": 1400,
+  "h": 600
+ },
+ "title": {
+  "src": "/images/kit/title.png",
+  "w": 1400,
+  "h": 480
  }
 }
