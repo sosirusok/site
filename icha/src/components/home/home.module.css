@@ -12,21 +12,23 @@
 .rule { font-size: 14px; line-height: 1.5; color: var(--fg-2); }
 
 /* 홈 섹션은 전역 .section(24px)보다 조금 촘촘하게 */
-.sec { padding-block: 14px; }
+.sec { padding-block: 10px; }
 .sec :global(.section-h) { margin-bottom: 8px; }
 
 /* 3) 1차·2차·3차 — 매장색 네온 카드: 왼쪽 사진, 오른쪽 이름·오늘, 아래 쿠폰 혜택과 버튼 둘 */
-.cards { display: grid; gap: 10px; }
-.card { padding: 12px; display: grid; gap: 8px; }
+.cards { display: grid; gap: 8px; }
+.card { padding: 12px; display: grid; gap: 6px; }
 .head { display: flex; align-items: flex-start; gap: 10px; }
-.photo { display: block; position: relative; width: 124px; aspect-ratio: 4 / 3; border-radius: 10px; overflow: hidden; flex: none; background: var(--bg-3); }
+.photo { display: block; position: relative; width: 124px; aspect-ratio: 3 / 2; border-radius: 10px; overflow: hidden; flex: none; background: var(--bg-3); }
 .photoImg { object-fit: cover; }
 .info { flex: 1; min-width: 0; display: grid; gap: 2px; align-content: start; }
 .name { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; font-weight: 400; }
 .courseLine { font-size: 13px; font-weight: 700; color: var(--fg-2); }
+/* 세 카드가 같은 높이가 되게 — 술·오늘 영업시간은 한 줄 */
+.hours { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .notice { font-size: 13px; line-height: 1.5; color: var(--yellow); }
 .gift { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 10px; background: var(--bg-3); font-size: 13px; }
-.giftThumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; flex: none; background: var(--bg-2); }
+.giftThumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; flex: none; background: var(--bg-2); border: 1px solid var(--line); }
 .giftName { flex: 1; min-width: 0; font-weight: 600; color: var(--fg-2); }
 .gift :global(.strike), .gift :global(.tag) { flex: none; }
 .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }

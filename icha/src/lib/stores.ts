@@ -258,35 +258,35 @@ export const STORES: Store[] = [
     // 가격: 네이버 등록 메뉴(2026-09-10)와 매장 메뉴판 사진(2026-09-11) 일치.
     menu: [
       // 맥주
-      { name: "산토리 프리미엄 생맥주", price: 8900, description: "퍼펙트 푸어링 크리미 거품", image: `${T}/menu/suntory-creamy.jpg`, gift: true },
-      { name: "산토리 소프트 생맥주", price: 8900, description: "쫀쫀한 거품에 탄산이 또렷한 잔", image: `${T}/menu/suntory-soft.jpg` },
-      { name: "산토리 밀코 생맥주", price: 8900, description: "우유처럼 하얀 거품이 잔을 덮는 생맥주", image: `${T}/menu/suntory-milko.jpg` },
+      { name: "산토리 프리미엄 생맥주", price: 8900, description: "퍼펙트 푸어링 크리미 거품", image: `${T}/menu/suntory-creamy.png`, gift: true },
+      { name: "산토리 소프트 생맥주", price: 8900, description: "쫀쫀한 거품에 탄산이 또렷한 잔", image: `${T}/menu/suntory-soft.png` },
+      { name: "산토리 밀코 생맥주", price: 8900, description: "우유처럼 하얀 거품이 잔을 덮는 생맥주", image: `${T}/menu/suntory-milko.png` },
       { name: "도쿄 윗 비어", price: 8900, description: "직접 만든 호가든 스타일 밀맥주. 오렌지 슬라이스를 올려 냅니다" },
       { name: "코젤다크 생맥주", price: 10900, description: "카라멜 풍미의 체코 흑맥주" },
       // 콜드햄
-      { name: "시그니처 콜드햄 플레이트", price: 13900, description: "비어슁켄·약드부어스트·본레스 세 가지 수제 햄 12조각. 이 집 대표 안주", image: `${T}/menu/signature-cold-ham-plate.jpg` },
-      { name: "시그니처 햄세트", price: 28900, description: "생맥주 2잔 + 시그니처 콜드햄 플레이트", image: `${T}/menu/signature-ham-set.jpg` }, // 네이버 메뉴 기준(매장 메뉴판에는 없음)
-      { name: "콜드햄 플레이트(비어슁켄)", price: 8900, description: "독일식 햄 한 종류 6조각", image: `${T}/menu/cold-ham-plate.jpg` },
-      { name: "콜드햄 플레이트(약드부어스트)", price: 8900, description: "한 종류 6조각", image: `${T}/menu/cold-ham-plate.jpg` },
-      { name: "콜드햄 플레이트(본레스)", price: 8900, description: "훈연 향이 있는 본레스햄 6조각", image: `${T}/menu/cold-ham-plate.jpg` },
-      { name: "그릴부어스트 소시지", price: 9900, description: "수제 소시지에 스위트칠리 소스", image: `${T}/menu/grill-wurst.jpg` },
+      { name: "시그니처 콜드햄 플레이트", price: 13900, description: "비어슁켄·약드부어스트·본레스 세 가지 수제 햄 12조각. 이 집 대표 안주", image: `${T}/menu/signature-cold-ham-plate.png` },
+      { name: "시그니처 햄세트", price: 28900, description: "생맥주 2잔 + 시그니처 콜드햄 플레이트", image: `${T}/menu/signature-ham-set.png` }, // 네이버 메뉴 기준(매장 메뉴판에는 없음)
+      { name: "콜드햄 플레이트(비어슁켄)", price: 8900, description: "독일식 햄 한 종류 6조각", image: `${T}/menu/cold-ham-plate.png` },
+      { name: "콜드햄 플레이트(약드부어스트)", price: 8900, description: "한 종류 6조각", image: `${T}/menu/cold-ham-plate.png` },
+      { name: "콜드햄 플레이트(본레스)", price: 8900, description: "훈연 향이 있는 본레스햄 6조각", image: `${T}/menu/cold-ham-plate.png` },
+      { name: "그릴부어스트 소시지", price: 9900, description: "수제 소시지에 스위트칠리 소스", image: `${T}/menu/grill-wurst.png` },
       // 가벼운 안주
-      { name: "콜드햄 샐러드", price: 6900, description: "수제 햄을 올린 샐러드", image: `${T}/menu/cold-ham-salad.jpg` },
-      { name: "유자토마토", price: 5900, description: "유자 드레싱을 뿌린 토마토", image: `${T}/menu/yuzu-tomato.jpg` },
-      { name: "오이사라다", price: 5900, description: "특제 소스에 버무린 오이", image: `${T}/menu/oi-salad.jpg` },
-      { name: "계란볶음밥", price: 5900, description: "고슬하게 볶은 볶음밥", image: `${T}/menu/egg-fried-rice.jpg` },
-      { name: "테바사키 윙", price: 7900, description: "일본식 닭날개 튀김", image: `${T}/menu/tebasaki.jpg` },
-      { name: "트러플 감자튀김", price: 7900, description: "트러플 마요를 뿌린 감자튀김", image: `${T}/menu/truffle-fries.jpg` },
-      { name: "토마토 달걀볶음", price: 9900, description: "방울토마토·베이컨을 넣은 달걀 볶음", image: `${T}/menu/tomato-egg.jpg` },
+      { name: "콜드햄 샐러드", price: 6900, description: "수제 햄을 올린 샐러드", image: `${T}/menu/cold-ham-salad.png` },
+      { name: "유자토마토", price: 5900, description: "유자 드레싱을 뿌린 토마토", image: `${T}/menu/yuzu-tomato.png` },
+      { name: "오이사라다", price: 5900, description: "특제 소스에 버무린 오이", image: `${T}/menu/oi-salad.png` },
+      { name: "계란볶음밥", price: 5900, description: "고슬하게 볶은 볶음밥", image: `${T}/menu/egg-fried-rice.png` },
+      { name: "테바사키 윙", price: 7900, description: "일본식 닭날개 튀김", image: `${T}/menu/tebasaki.png` },
+      { name: "트러플 감자튀김", price: 7900, description: "트러플 마요를 뿌린 감자튀김", image: `${T}/menu/truffle-fries.png` },
+      { name: "토마토 달걀볶음", price: 9900, description: "방울토마토·베이컨을 넣은 달걀 볶음", image: `${T}/menu/tomato-egg.png` },
       // 면
-      { name: "나폴리탄", price: 9900, description: "케첩 소스의 일본식 스파게티", image: `${T}/menu/napolitan.jpg` },
-      { name: "야끼소바", price: 9900, description: "가쓰오부시를 올린 일본식 볶음면", image: `${T}/menu/yakisoba.jpg` },
-      { name: "매콤 야끼소바", price: 9900, image: `${T}/menu/spicy-yakisoba.jpg` }, // 네이버 메뉴 기준(매장 메뉴판에는 야끼소바만 있음)
-      { name: "얼큰우동", price: 6900, description: "칼칼한 국물 우동", image: `${T}/menu/spicy-udon.jpg` },
+      { name: "나폴리탄", price: 9900, description: "케첩 소스의 일본식 스파게티", image: `${T}/menu/napolitan.png` },
+      { name: "야끼소바", price: 9900, description: "가쓰오부시를 올린 일본식 볶음면", image: `${T}/menu/yakisoba.png` },
+      { name: "매콤 야끼소바", price: 9900, image: `${T}/menu/spicy-yakisoba.png` }, // 네이버 메뉴 기준(매장 메뉴판에는 야끼소바만 있음)
+      { name: "얼큰우동", price: 6900, description: "칼칼한 국물 우동", image: `${T}/menu/spicy-udon.png` },
       // 디저트
-      { name: "시나몬 오렌지", price: 4900, description: "오렌지 슬라이스에 시나몬 설탕", image: `${T}/menu/cinnamon-orange.jpg` },
-      { name: "치즈케이크", price: 6900, image: `${T}/menu/cheesecake.jpg` },
-      { name: "아이스크림", price: 7900, description: "초코 시럽과 견과류를 올린 바닐라", image: `${T}/menu/ice-cream.jpg` },
+      { name: "시나몬 오렌지", price: 4900, description: "오렌지 슬라이스에 시나몬 설탕", image: `${T}/menu/cinnamon-orange.png` },
+      { name: "치즈케이크", price: 6900, image: `${T}/menu/cheesecake.png` },
+      { name: "아이스크림", price: 7900, description: "초코 시럽과 견과류를 올린 바닐라", image: `${T}/menu/ice-cream.png` },
     ],
     sort: 2,
   },

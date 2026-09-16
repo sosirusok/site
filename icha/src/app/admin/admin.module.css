@@ -83,6 +83,19 @@
   top: 0;
   z-index: 20;
 }
+/* 좁은 화면에서는 탭이 옆으로 넘친다 — 오른쪽 끝을 흐리게 해 밀어 볼 수 있다는 것을 보인다 */
+.navbar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 28px;
+  pointer-events: none;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), var(--a-panel) 78%);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
 .navInner {
   width: min(100% - 32px, 1240px);
   margin-inline: auto;
@@ -91,10 +104,14 @@
   overflow-x: auto;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 12px;
+  overscroll-behavior-x: contain;
 }
 .navInner::-webkit-scrollbar { display: none; }
 .navLink {
   flex: none;
+  scroll-snap-align: start;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -309,4 +326,7 @@
   .siteLink { display: none; }
   .whoName { display: none; }
   .navLink { padding: 0 10px; }
+  /* 마지막 탭이 흐린 띠에 가리지 않게 오른쪽 여백을 둔다 */
+  .navInner { padding-right: 22px; }
+  .navbar::after { opacity: 1; }
 }

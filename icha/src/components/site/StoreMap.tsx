@@ -154,6 +154,8 @@ export function StoreMap({ stores, focusId, height = 440, compact = false, hideP
       const L = (await import("leaflet")).default;
       if (disposed) return;
       const map = L.map(el!, { zoomControl: !compact, scrollWheelZoom: false, attributionControl: true });
+      // 기본 접두사(Leaflet 글자 + 우크라이나 국기 SVG)는 지우고 지도 출처만 남긴다
+      map.attributionControl.setPrefix("");
       L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자',

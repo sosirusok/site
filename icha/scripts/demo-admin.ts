@@ -1,7 +1,7 @@
 /**
  * 관리자 화면 시연 데이터 — 회원 여러 명, 매장별 승인/대기/반려 영수증(최근 14일에 분산), 쿠폰(사용 가능/사용/만료/취소), 직원 계정.
  * 파일 DB 를 쓰는 dev 서버를 잠시 내린 뒤 같은 PGLITE_DIR 로 실행한다 (PGlite 파일 DB 는 한 프로세스만 연다).
- *   PGLITE_DIR=/path/to/pg ADMIN_INITIAL_PASSWORD=admin1234 npx tsx scripts/demo-admin.ts
+ *   PGLITE_DIR=/path/to/pg ADMIN_INITIAL_PASSWORD=Seomyeon2026owner npx tsx scripts/demo-admin.ts
  * 결과로 화면 확인에 쓸 id 를 JSON 으로 출력한다.
  */
 import { createHash } from "node:crypto";

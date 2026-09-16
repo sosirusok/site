@@ -1,6 +1,9 @@
-/* 블록이어야 한다 — grid 로 두면 nowrap 설명 때문에 목록이 가로로 넘친다 */
+/* 블록이어야 한다 — grid 로 두면 긴 설명 때문에 목록이 가로로 넘친다 */
 .root { display: block; }
-.desc { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* 설명이 두 줄이 되면서 목록이 길어진다 — 행 위아래 여백을 조금 줄인다 */
+.root :global(.row) { padding-block: 10px; }
+/* 설명은 두 줄까지 — 한 줄로 자르면 '이 집 대표 안주' 같은 뒷말이 통째로 날아간다 */
+.desc { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; white-space: normal; overflow: hidden; }
 .price { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 4px; font-size: 15px; font-weight: 600; }
 .ask { font-weight: 400; color: var(--fg-3); }
 .more { display: block; }

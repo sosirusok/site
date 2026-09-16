@@ -3,7 +3,6 @@ import Link from "next/link";
 import { heroImage, openStatus } from "@/components/site/StoreHelpers";
 import { formatWon, type Rules } from "@/lib/config";
 import { menuImageUrl, type MenuItem } from "@/lib/db/queries";
-import { LOCATIONS } from "@/lib/locations";
 import { placeLinks } from "@/lib/naver";
 import { STORES, type Store } from "@/lib/stores";
 import s from "./home.module.css";
@@ -22,16 +21,21 @@ function GiftThumb({ item }: { item: MenuItem }) {
   return null;
 }
 
+/** 좁은 카드 한 줄에 맞게 괄호 설명은 뺀 이름 ("와르르요거트(초코쉘)" → "와르르요거트") */
+function shortName(name: string): string {
+  return name.replace(/\s*\([^)]*\)/g, "").trim();
+}
+
 /** 카드 한 줄로 보여 주는 이 매장의 쿠폰 혜택 — 값은 DB(listMenu giftOnly) */
 function GiftRow({ items }: { items: MenuItem[] }) {
   const first = items[0];
   if (!first) return null;
-  const names = items.map((m) => m.name).join(" 또는 ");
+  const names = items.map((m) => shortName(m.name)).join(" 또는 ");
   const price = items.length === 1 ? first.price : null;
   return (
     <p className={s.gift}>
       <GiftThumb item={first} />
-      <span className={s.giftName}>쿠폰 혜택 · {names}</span>
+      <span className={s.giftName}>{names}</span>
       {price != null && <span className="strike num">{formatWon(price)}</span>}
       <span className="tag tag-free">무료</span>
     </p>
@@ -50,7 +54,6 @@ export function StoreCards({ now, gifts, rules }: { now: Date; gifts: Record<str
         <ul className={s.cards}>
           {ordered.map((st) => {
             const img = heroImage(st);
-            const loc = LOCATIONS[st.id];
             const links = placeLinks(st);
             const notice = rules.storeNotices?.[st.id];
             return (
@@ -67,7 +70,7 @@ export function StoreCards({ now, gifts, rules }: { now: Date; gifts: Record<str
                       <span className="tag tag-neon">{st.course.n}차</span>
                     </h3>
                     <p className={s.courseLine}>{st.course.line}</p>
-                    <p className="cap">{st.drink} · 걸어서 {loc.walkMin}분 · 오늘 {todayCompact(st, now)}</p>
+                    <p className={`cap ${s.hours}`}>{st.drink} · 오늘 {todayCompact(st, now)}</p>
                   </div>
                 </div>
                 {notice && <p className={s.notice}>오늘 · {notice}</p>}

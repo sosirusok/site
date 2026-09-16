@@ -186,17 +186,35 @@ async function seedStores(db: Queryable) {
 
 const WEAK_INITIAL_PASSWORDS = new Set(["change-me", "changeme", "admin", "admin1234", "password", "12345678"]);
 
+/**
+ * 초기 관리자 계정을 만들지 못한 이유. 약한 ADMIN_INITIAL_PASSWORD 는 계정을 만들지 않을 뿐,
+ * 손님 화면(홈·매장·이용 안내)까지 막지 않는다. 이유는 /admin/login 에서만 보여 준다.
+ */
+let initialAdminNote: string | null = null;
+
+/** /admin 화면에서만 읽는다. 스키마 준비가 끝난 뒤에 호출해야 값이 있다. */
+export function initialAdminIssue(): string | null {
+  return initialAdminNote;
+}
+
 async function seedInitialAdmin(db: Queryable) {
   const rows = await db.query<{ n: number }>(`select count(*)::int as n from admins`);
-  if ((rows[0]?.n ?? 0) > 0) return;
+  if ((rows[0]?.n ?? 0) > 0) {
+    initialAdminNote = null;
+    return;
+  }
   const id = process.env.ADMIN_INITIAL_ID?.trim() || "owner";
   const pw = process.env.ADMIN_INITIAL_PASSWORD?.trim() || "change-me";
   if (process.env.NODE_ENV === "production" && (pw.length < 10 || WEAK_INITIAL_PASSWORDS.has(pw.toLowerCase()))) {
-    throw new Error("ADMIN_INITIAL_PASSWORD 를 10자 이상의 새 비밀번호로 설정하세요. 운영 환경에서는 기본값(change-me)으로 관리자 계정을 만들지 않습니다.");
+    initialAdminNote =
+      "ADMIN_INITIAL_PASSWORD 가 너무 약해 총괄 계정을 만들지 않았습니다. 10자 이상이면서 admin1234·password 같은 흔한 값이 아닌 비밀번호로 다시 띄워 주십시오.";
+    console.error(`[icha] ${initialAdminNote}`);
+    return;
   }
   const hash = await hashPassword(pw);
   await db.query(
     `insert into admins (id, name, store_id, pw_hash, role) values ($1,$2,null,$3,'owner') on conflict (id) do nothing`,
     [id, "총괄 관리자", hash],
   );
+  initialAdminNote = null;
 }

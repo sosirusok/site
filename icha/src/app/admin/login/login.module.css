@@ -46,3 +46,15 @@
   padding: 16px;
 }
 .foot a { text-decoration: underline; text-underline-offset: 3px; }
+/* 초기 관리자 계정을 만들지 못했을 때만 보이는 줄 (손님 화면은 막지 않는다) */
+.warn {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border: 1px solid #f0c8c0;
+  border-radius: 4px;
+  background: #fdf3f1;
+  color: #8c2f1d;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
+}

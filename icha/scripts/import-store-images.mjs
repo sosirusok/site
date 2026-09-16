@@ -4,6 +4,9 @@
  *   node scripts/import-store-images.mjs            # 복사 + 경로 검증
  *   node scripts/import-store-images.mjs --check    # 검증만 (stores.ts 가 가리키는 파일이 다 있는지)
  *
+ * 이 스크립트로 메뉴 사진을 다시 복사했다면 이어서 `node scripts/knockout-menu-cutouts.mjs` 를 돌린다.
+ * (흰 배경에 오려 놓은 사진은 투명 PNG 로 바꿔야 어두운 화면에서 흰 사각형으로 보이지 않는다.)
+ *
  * 원본 위치는 NAVER_DIR 환경변수로 바꿀 수 있다. 기본값은 조사 스크래치 디렉터리.
  * 규칙: 긴 변 1600px 이하(작은 원본은 확대하지 않음), JPEG 82. 메뉴 썸네일은 640px, JPEG 80.
  *       매장당 총 용량 6MB 이하. 사람 얼굴이 크게 나온 사진·홍보용 합성 이미지는 목록에서 뺐다.

@@ -35,7 +35,7 @@ export function Directions() {
         </div>
         <p className="cap">세 집 모두 50m 안 · {walkLine()}</p>
         <div className={s.mapBox}>
-          <StoreMap stores={mapStores} compact hidePanel height={180} />
+          <StoreMap stores={mapStores} compact hidePanel height={156} />
         </div>
         <ul className={s.addrs}>
           {ordered.map((st) => {
