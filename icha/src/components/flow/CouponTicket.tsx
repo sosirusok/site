@@ -176,7 +176,7 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
           <b>{coupon.menuName}</b> 무료{coupon.kind === "vip" ? " · VIP 쿠폰" : coupon.kind === "manual" ? " · 매장에서 드린 쿠폰" : ""}
         </p>
         <p className={`mono ${styles.code}`} aria-label={`쿠폰 코드 ${coupon.code.split("").join(" ")}`}>{coupon.code}</p>
-        <p className={styles.codeHelp}>직원이 관리자 화면에서 코드로도 확인할 수 있어요.</p>
+        <p className={styles.codeHelp}>직원이 코드로도 확인할 수 있어요.</p>
         <p className={styles.exp}>
           <b>{fmtMD(coupon.expiresAt)}까지</b>{left <= 7 && ` · ${Math.max(left, 0)}일 남았어요`} · {fmtMDHM(coupon.issuedAt)}에 받음
         </p>

@@ -20,7 +20,6 @@ export default function SiteError({ error, retry }: { error: Error & { digest?: 
         <button type="button" className="btn" onClick={() => retry()}>다시 시도</button>
         <Link href="/" className="btn btn-outline">홈으로</Link>
       </div>
-      {error.digest && <p className={`mono ${styles.detail}`}>오류 번호 {error.digest}</p>}
     </div>
   );
 }

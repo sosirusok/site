@@ -89,7 +89,7 @@ export function ReceiptResult({
           </div>
         </div>
         <p className={styles.lead}>
-          자동으로 읽지 못한 부분이 있어서 직원이 사진을 직접 확인해요. 보통 영업 중에 몇 분 안에 끝나고, 직원이 확인한 뒤 쿠폰함에서 고를 수 있어요.
+          읽지 못한 부분이 있어서 직원이 사진을 직접 확인해요. 보통 영업 중에 몇 분 안에 끝나고, 직원이 확인한 뒤 쿠폰함에서 고를 수 있어요.
         </p>
         {reasons.length > 0 && (
           <ul className={styles.reasons} aria-label="확인이 필요한 이유">
