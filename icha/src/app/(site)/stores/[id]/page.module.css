@@ -2,11 +2,16 @@
 .top { display: grid; gap: 14px; padding-block: 12px 20px; }
 .anchor { scroll-margin-top: calc(var(--header-h) + 8px); }
 
-/* 특별 혜택 — 매장색 네온 카드: 증정 품목 행(이름·원래 값·무료·사진) + 조건 한 줄 */
+/* 오늘 소식 한 줄 — 관리자가 적은 매장 공지(비면 숨김) */
+.notice { display: flex; align-items: center; gap: 8px; padding: 11px var(--gutter); background: var(--bg-2); border-block: 1px solid var(--line); font-size: 14px; color: var(--fg-2); }
+.noticeDay { flex: none; font-weight: 700; color: var(--yellow); }
+
+/* 특별 혜택 — 매장색 네온 카드: 증정 품목 행(이름·원래 값·무료·사진) + 조건 두 줄 */
 .giftCard { display: grid; gap: 4px; padding-block: 4px 14px; }
 .giftRow { border-bottom: 0; }
 .giftDesc { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .giftPrice { display: inline-flex; flex-direction: column; align-items: flex-end; gap: 4px; flex: none; font-size: 13px; }
 .giftEmpty { padding: 12px 0 8px; }
 .giftPick { color: var(--fg-2); font-weight: 600; }
-.giftRule { padding-top: 8px; border-top: 1px solid var(--line); text-wrap: balance; }
+/* 조건은 한 줄에 하나씩 — 390px 에서 어중간하게 접히지 않게 */
+.giftRule { display: grid; gap: 2px; margin-top: 4px; padding-top: 10px; border-top: 1px solid var(--line); }

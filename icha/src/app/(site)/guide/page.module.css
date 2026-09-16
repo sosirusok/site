@@ -3,3 +3,9 @@
 /* 번호 원 — 노랑 바탕, 검정 숫자 */
 .num { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--yellow); color: #14120a; font-size: 13px; font-weight: 700; }
 .rule { margin-top: 12px; }
+/* 답 속 예약 버튼 세 개 — 좁은 화면에서는 줄바꿈 */
+.bookRow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+/* 리뷰 이벤트 — 매장 이름은 그 집 네온색 */
+.revList { display: grid; gap: 6px; }
+.revList li { line-height: 1.5; }
+.revList b { font-weight: 700; margin-right: 6px; }

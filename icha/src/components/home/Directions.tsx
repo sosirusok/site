@@ -1,6 +1,6 @@
 import { StoreMap, type MapStore } from "@/components/site/StoreMap";
 import { LOCATIONS } from "@/lib/locations";
-import { placeLinks } from "@/lib/naver";
+import { naverSearchUrl, placeLinks } from "@/lib/naver";
 import { STORES } from "@/lib/stores";
 import s from "./home.module.css";
 
@@ -18,7 +18,10 @@ function shortAddress(a: string): string {
   return a.replace(/^부산(광역시)?\s*부산진구\s*/, "");
 }
 
-/** 오시는 길 — 한 줄, 지도(매장색 핀), 매장별 주소 행과 길찾기 버튼 */
+/** 네이버 검색창에 그대로 넣는 말 */
+const SEARCH_QUERY = "서면 알콜부시기";
+
+/** 오시는 길 — 한 줄, 지도(매장색 핀), 매장별 주소 행과 길찾기 버튼, 네이버 검색 */
 export function Directions() {
   const ordered = [...STORES].sort((a, b) => a.course.n - b.course.n);
   const mapStores: MapStore[] = ordered.filter((st) => st.lat != null && st.lng != null).map((st) => ({
@@ -32,7 +35,7 @@ export function Directions() {
         </div>
         <p className="cap">세 집 모두 50m 안 · {walkLine()}</p>
         <div className={s.mapBox}>
-          <StoreMap stores={mapStores} compact hidePanel height={200} />
+          <StoreMap stores={mapStores} compact hidePanel height={180} />
         </div>
         <ul className={s.addrs}>
           {ordered.map((st) => {
@@ -49,6 +52,7 @@ export function Directions() {
             );
           })}
         </ul>
+        <a className={`btn btn-secondary btn-block ${s.search}`} href={naverSearchUrl(SEARCH_QUERY)} target="_blank" rel="noreferrer">네이버에서 ‘{SEARCH_QUERY}’ 검색</a>
       </div>
     </section>
   );

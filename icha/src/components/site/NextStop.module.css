@@ -1,0 +1,8 @@
+/* 다음 집 — 다음 매장색 네온 카드: 제목 줄(누르면 그 가게), 한 줄 설명, 버튼 둘 */
+.card { display: grid; gap: 12px; padding: 14px 16px 16px; }
+.head { display: flex; align-items: center; gap: 10px; min-height: 44px; }
+.head:active { opacity: 0.8; }
+.text { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.title { text-wrap: balance; }
+.sub { color: var(--fg-2); }
+.btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }

@@ -23,7 +23,8 @@ export default async function CounterPage({ searchParams }: { searchParams: Prom
   const session = await requireAdminPage();
   const sp = await searchParams;
   const owner = session.role === "owner";
-  const store = owner ? (STORES.find((x) => x.id === sp.store) ?? STORES[0]!) : session.storeId ? getStore(session.storeId) : null;
+  const ordered = [...STORES].sort((a, b) => a.course.n - b.course.n);
+  const store = owner ? (ordered.find((x) => x.id === sp.store) ?? ordered[0]!) : session.storeId ? getStore(session.storeId) : null;
   const now = new Date();
 
   if (!store) {
@@ -55,7 +56,7 @@ export default async function CounterPage({ searchParams }: { searchParams: Prom
 
       {owner ? (
         <div className={s.storeChips} role="group" aria-label="계산대 매장">
-          {STORES.map((st) => (
+          {ordered.map((st) => (
             <Link key={st.id} href={`/admin/counter?store=${st.id}${phone ? `&phone=${phone}` : ""}`} data-store={st.id} className={`${s.storeChip} ${st.id === store.id ? s.storeChipActive : ""}`} aria-current={st.id === store.id ? "true" : undefined}>
               <span className={ui.storeDot} aria-hidden="true" />
               {st.shortName}

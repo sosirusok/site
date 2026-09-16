@@ -9,7 +9,9 @@
 /* 쿠폰 행 */
 .link:active { background: var(--bg-2); }
 .ticket { width: 56px; height: 56px; flex: none; object-fit: contain; border-radius: 10px; background: var(--bg-3); padding: 5px; }
-.title { display: flex; align-items: center; gap: 6px; }
+/* 제목 글줄과 종류 칩은 나란히 — 칩이 제목 글 안에 섞이지 않게 */
+.titleRow { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.titleRow .title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sub { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .storeName { color: var(--store, var(--fg-2)); font-weight: 600; }
 .soon { color: var(--accent); font-weight: 600; }

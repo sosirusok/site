@@ -4,7 +4,7 @@ import { LogoutButton } from "@/components/flow/LogoutButton";
 import { ActiveCoupons, EmptyWallet, PastCoupons, RelayCards, type WalletCoupon, type WalletRelay } from "@/components/flow/WalletSections";
 import { PlaceButton } from "@/components/site/PlaceButton";
 import { getMemberSession } from "@/lib/auth/session";
-import { BRAND, STORE_IDS, maskPhone, type StoreId } from "@/lib/config";
+import { BRAND, STORE_IDS, type StoreId } from "@/lib/config";
 import { ruleLine } from "@/lib/copy";
 import { isPickExpired, pickDeadlineFor } from "@/lib/coupons";
 import { listCouponsForMember, listMenu, listReceiptsForMember, menuImageUrl, type MenuItem } from "@/lib/db/queries";
@@ -78,7 +78,7 @@ export default async function WalletPage() {
 
       <section className={`wrap ${styles.top}`}>
         <h1 className="h1-event">쿠폰함</h1>
-        <p className={`cap num ${styles.phone}`}>{maskPhone(session.phone)}</p>
+        <p className="cap">쓸 때 직원에게 이 화면을 보여 주세요.</p>
       </section>
 
       {nothing ? (

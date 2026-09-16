@@ -1,3 +1,7 @@
 .strip { padding-bottom: 2px; }
 .cell { position: relative; width: 88%; max-width: 420px; height: 220px; border-radius: var(--radius-lg); overflow: hidden; background: var(--bg-2); }
 .img { object-fit: cover; }
+/* 맨 끝 칸 — 네이버 사진으로 */
+.more { display: grid; place-items: center; height: 100%; border: 1px solid var(--naver); border-radius: var(--radius-lg); background: color-mix(in srgb, var(--naver) 10%, var(--bg-2)); }
+.more:active { background: color-mix(in srgb, var(--naver) 18%, var(--bg-2)); }
+.moreText { color: var(--naver); font-size: 16px; font-weight: 700; text-align: center; line-height: 1.4; }

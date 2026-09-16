@@ -4,9 +4,10 @@
 .dim .ticket { box-shadow: none; }
 
 /* 쿠폰 정보 */
-.info { display: grid; gap: 4px; }
-.name { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.kind { flex: none; font-family: var(--font-sans); font-size: 12px; letter-spacing: -0.01em; }
+.info { display: grid; gap: 4px; justify-items: start; }
+.name { display: block; }
+/* 쿠폰 종류 꼬리표 — 제목 글줄 밖, 위에 작은 칩으로 */
+.kind { margin-bottom: 2px; }
 .photo { width: 100%; height: 200px; object-fit: cover; border-radius: 12px; display: block; }
 .plain { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; padding: 24px 20px; border-radius: 12px; border: 1px solid color-mix(in srgb, var(--store, var(--line-2)) 55%, transparent); background: var(--bg-2); font-size: 20px; }
 .how { color: var(--fg-2); font-weight: 600; }

@@ -105,7 +105,7 @@ details > summary::-webkit-details-marker { display: none; }
 /* 버튼 */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 52px; padding: 0 20px; border-radius: var(--radius); background: var(--yellow); color: #14120a; font-weight: 700; font-size: 16px; transition: filter 0.12s, transform 0.08s; user-select: none; white-space: nowrap; }
 .btn:active { transform: scale(0.99); filter: brightness(0.92); }
-.btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; filter: none; }
 .btn-secondary { background: var(--bg-3); color: var(--fg); }
 .btn-naver { background: var(--naver); color: #fff; box-shadow: 0 0 20px rgba(3, 199, 90, 0.25); }
 .btn-naver:active { background: var(--naver-2); }
@@ -151,9 +151,11 @@ summary.btn { list-style: none; }
 .paper .val { font-variant-numeric: tabular-nums; font-weight: 600; }
 .paper .dots { height: 1px; background: var(--line); margin: 6px 0; }
 
-/* 지도 타일을 어둡게 */
-.leaflet-tile { filter: invert(1) hue-rotate(190deg) saturate(0.6) brightness(0.85) contrast(0.9); }
-.leaflet-container { background: #0b0a12; }
+/* 지도 타일을 어둡게 — leaflet.css 가 이 파일 뒤에 실려서(.leaflet-tile{filter:inherit}) 더 구체적인 선택자로 이긴다 */
+.leaflet-container .leaflet-tile-pane img.leaflet-tile { filter: invert(1) hue-rotate(190deg) saturate(0.6) brightness(0.85) contrast(0.9); }
+.leaflet-container.leaflet-container { background: var(--bg); }
+.leaflet-container .leaflet-control-attribution { background: rgba(11, 10, 18, 0.78); color: var(--fg-3); }
+.leaflet-container .leaflet-control-attribution a { color: var(--fg-2); }
 
 .rise { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }

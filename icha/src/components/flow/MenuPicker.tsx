@@ -26,6 +26,8 @@ export type PickStore = {
   course: { n: 1 | 2 | 3; line: string };
   /** 네이버 플레이스 홈(없으면 null) */
   placeHome: string | null;
+  /** 네이버 예약(없으면 null) */
+  placeBooking: string | null;
   items: PickItem[];
 };
 
@@ -50,7 +52,11 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
   }
 
   async function issue() {
-    if (!selected || busy) return;
+    if (busy) return;
+    if (!selected) {
+      setError("받을 곳을 먼저 골라 주세요.");
+      return;
+    }
     setBusy(true);
     setError(null);
     try {
@@ -104,8 +110,11 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
               <div className={styles.cardHead}>
                 <span className="tag tag-neon">{s.course.n}차</span>
                 <p className={`h2-event neon ${styles.cardName}`}>{s.shortName}</p>
-                <span className={`cap ${styles.cardLine}`}>{s.course.line}</span>
+                {s.placeBooking && (
+                  <a className={styles.book} href={s.placeBooking} target="_blank" rel="noreferrer">예약</a>
+                )}
               </div>
+              <p className={`cap ${styles.cardLine}`}>{s.course.line}</p>
               {none ? (
                 <p className={`cap ${styles.none}`}>어떤 혜택을 드릴지 정하고 있어요. 다른 매장을 골라 주세요.</p>
               ) : (
@@ -137,7 +146,7 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
       {/* 하단 고정 버튼(탭 위) */}
       <div className={`fixed-col sticky-cta ${styles.sticky}`}>
         {error && <p id={`${id}-err`} className="error" role="alert">{error}</p>}
-        <button type="button" className="btn btn-block" onClick={issue} disabled={!selected || busy} aria-describedby={error ? `${id}-err` : undefined}>
+        <button type="button" className="btn btn-block" onClick={issue} disabled={busy} aria-describedby={error ? `${id}-err` : undefined}>
           {busy ? "받는 중" : selected ? `${selected.store.shortName}에서 받기` : "이 쿠폰 받기"}
         </button>
       </div>

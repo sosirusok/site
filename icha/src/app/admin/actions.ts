@@ -365,12 +365,21 @@ export async function saveRulesAction(_prev: ActionState, fd: FormData): Promise
     const dailyLimitPerMember = num(fd, "dailyLimitPerMember");
     if (couponValidDays == null || couponValidDays < 1 || couponValidDays > 365) throw new ActionError("쿠폰 유효 기간은 1~365일 사이로 적어 주세요.");
     if (dailyLimitPerMember == null || dailyLimitPerMember < 1 || dailyLimitPerMember > 20) throw new ActionError("하루 한도는 1~20장 사이로 적어 주세요.");
+    // 매장별 한 줄 — 비우면 손님 화면에서 숨는다
+    const storeNotices = {} as Record<StoreId, string>;
+    const reviewBenefit = {} as Record<StoreId, string>;
+    for (const id of STORE_IDS) {
+      storeNotices[id] = str(fd, `storeNotice_${id}`).slice(0, 80);
+      reviewBenefit[id] = str(fd, `reviewBenefit_${id}`).slice(0, 40);
+    }
     // 사진·자동 인식 관련 값(인정 시간·금액·민감도·등급 표)은 화면에서 뺐으므로 기존 값을 그대로 둔다
     const patch: Partial<Rules> = {
       couponValidDays: Math.round(couponValidDays),
       dailyLimitPerMember: Math.round(dailyLimitPerMember),
       eventActive: fd.get("eventActive") === "on",
       notice: str(fd, "notice").slice(0, 200),
+      storeNotices,
+      reviewBenefit,
     };
     await saveRules(patch);
     await audit(s.adminId, "settings.save", "rules", patch);

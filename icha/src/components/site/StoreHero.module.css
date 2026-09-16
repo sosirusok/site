@@ -9,6 +9,5 @@
 .sub { display: block; margin-top: 2px; }
 /* 전화 링크 — 글줄은 그대로, 터치 영역만 44px */
 .tel { display: inline-flex; align-items: center; min-height: 44px; margin-block: -12px; text-decoration: underline; text-underline-offset: 3px; }
-/* 큰 플레이스 버튼 + 작은 버튼 셋 */
-.naver { display: grid; gap: 8px; margin-top: 8px; }
-.small { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+/* 큰 초록 버튼 하나 — 네이버 예약 */
+.book { margin-top: 8px; }

@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     type: "website",
     images: [{ url: "/images/event/poster.jpg", width: 1080, height: 1350, alt: `${BRAND.unionName} — 영수증 한 장으로 옆집에서 한 잔` }],
   },
-  twitter: { card: "summary_large_image", title: `${BRAND.name} — ${BRAND.unionName}`, description: BRAND.tagline, images: ["/art/kakao-share.png"] },
+  twitter: { card: "summary_large_image", title: `${BRAND.name} — ${BRAND.unionName}`, description: BRAND.tagline, images: ["/images/event/poster.jpg"] },
   robots: { index: true, follow: true },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
+  themeColor: "#0b0a12",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",

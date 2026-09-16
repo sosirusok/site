@@ -83,7 +83,7 @@ export function CounterActions({
             <button type="submit" className={`${ui.button} ${s.bigButton} ${ui.buttonBlock}`} disabled={!eventActive || busy}>
               {issuing ? "넣는 중…" : "이 손님에게 쿠폰 주기"}
             </button>
-            <p className={ui.help}>{eventActive ? `${storeName} 이름으로 들어가고, ${usableAtNames}에서 쓸 수 있어요.` : "지금은 이벤트 기간이 아니라 쿠폰을 줄 수 없습니다. 설정에서 이벤트를 켜세요."}</p>
+            <p className={ui.help}>{eventActive ? `${storeName} 이름으로 들어가고, ${usableAtNames}에서 쓸 수 있습니다.` : "지금은 이벤트 기간이 아니라 쿠폰을 줄 수 없습니다. 설정에서 이벤트를 켜세요."}</p>
           </form>
         </section>
 

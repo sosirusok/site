@@ -4,40 +4,46 @@
 .poster { background: #000; }
 .posterImg { width: 100%; height: auto; display: block; }
 
-/* 2) 이벤트 카드(노랑 네온) — 제목 하나, 버튼 하나 */
-.event { padding-block: 14px 16px; }
+/* 2) 이벤트 카드(노랑 네온) — 제목 하나, 사실 세 줄 */
+.event { padding-block: 12px 14px; }
 .eventCard { display: grid; gap: 6px; }
 .h1 { margin-top: 2px; }
 .course { font-size: 15px; font-weight: 700; }
 .rule { font-size: 14px; line-height: 1.5; color: var(--fg-2); }
-.eventBtn { margin-top: 6px; }
 
 /* 홈 섹션은 전역 .section(24px)보다 조금 촘촘하게 */
-.sec { padding-block: 20px; }
+.sec { padding-block: 14px; }
 .sec :global(.section-h) { margin-bottom: 8px; }
 
-/* 3) 1차·2차·3차 — 매장색 네온 카드: 사진 16:9, 이름, 한 줄, 버튼 둘 */
+/* 3) 1차·2차·3차 — 매장색 네온 카드: 왼쪽 사진, 오른쪽 이름·오늘, 아래 쿠폰 혜택과 버튼 둘 */
 .cards { display: grid; gap: 10px; }
-.card { padding: 12px; display: grid; gap: 6px; }
-.photo { position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: var(--bg-3); }
+.card { padding: 12px; display: grid; gap: 8px; }
+.head { display: flex; align-items: flex-start; gap: 10px; }
+.photo { display: block; position: relative; width: 124px; aspect-ratio: 4 / 3; border-radius: 10px; overflow: hidden; flex: none; background: var(--bg-3); }
 .photoImg { object-fit: cover; }
+.info { flex: 1; min-width: 0; display: grid; gap: 2px; align-content: start; }
 .name { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; font-weight: 400; }
-.courseLine { font-size: 14px; font-weight: 700; color: var(--fg-2); }
-.meta { margin-top: -2px; }
-.btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
-.btnOff { opacity: 0.35; }
+.courseLine { font-size: 13px; font-weight: 700; color: var(--fg-2); }
+.notice { font-size: 13px; line-height: 1.5; color: var(--yellow); }
+.gift { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 10px; background: var(--bg-3); font-size: 13px; }
+.giftThumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; flex: none; background: var(--bg-2); }
+.giftName { flex: 1; min-width: 0; font-weight: 600; color: var(--fg-2); }
+.gift :global(.strike), .gift :global(.tag) { flex: none; }
+.btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
 /* 4) 이렇게 받아요 — 노란 번호 원 */
 .step { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--yellow); color: #14120a; font-size: 13px; font-weight: 700; }
-.stepRow { min-height: 48px; padding-block: 10px; }
-.ruleCap { margin-top: 10px; }
+.stepRow { min-height: 44px; padding-block: 8px; }
+.ruleCap { margin-top: 8px; }
 
-/* 5) 매장별 특별 혜택 — 오른쪽에 원래 값과 '무료' */
-.price { display: flex; align-items: center; gap: 6px; flex: none; font-size: 14px; }
+/* 5) 다녀온 뒤에 — 매장 이름과 리뷰 버튼 */
+.reviews { margin-top: 2px; }
+.reviews :global(.row) { min-height: 52px; padding-block: 6px; }
 
-/* 6) 오시는 길 — 지도 상자, 매장 행 */
+/* 6) 오시는 길 — 지도 상자, 매장 행, 네이버 검색 */
 .mapBox { margin-top: 10px; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--line-2); }
 .mapBox :global(.leaflet-control-zoom) { display: none; }
 .addrs { margin-top: 2px; }
-.addrs :global(.row) { padding-block: 10px; }
+.addrs :global(.row) { min-height: 52px; padding-block: 6px; }
 .addrs .dot { flex: none; margin-inline: 4px; }
+.search { margin-top: 10px; }

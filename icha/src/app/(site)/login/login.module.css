@@ -1,2 +1,3 @@
-.page { padding-block: 28px 40px; display: grid; gap: 22px; }
+/* 화면을 채워서 푸터가 첫 화면 가운데로 올라오지 않게 한다 */
+.page { padding-block: 28px 40px; display: grid; gap: 22px; align-content: start; min-height: calc(100dvh - var(--header-h) - var(--tabbar-h)); }
 .head { display: grid; gap: 8px; }

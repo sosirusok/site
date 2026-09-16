@@ -78,7 +78,10 @@ export function ActiveCoupons({ coupons }: { coupons: WalletCoupon[] }) {
             <Link href={`/coupons/${c.id}`} className={`row ${styles.link}`} data-store={c.store?.id}>
               <CouponThumb c={c} />
               <span className="body">
-                <span className={`title ${styles.title}`}>{c.menuName}{kind && <span className="tag">{kind}</span>}</span>
+                <span className={styles.titleRow}>
+                  <span className="title">{c.menuName}</span>
+                  {kind && <span className="tag">{kind}</span>}
+                </span>
                 <span className={`sub ${styles.sub}`}>
                   <span className={styles.storeName}>{c.store?.shortName ?? "매장"}</span> · <span className="mono">{c.code}</span> · {fmtMD(c.expiresAt)}까지{left <= 7 ? <span className={styles.soon}> · {Math.max(left, 0)}일 남음</span> : ""}
                 </span>
@@ -106,7 +109,7 @@ export function PastCoupons({ coupons }: { coupons: WalletCoupon[] }) {
             <Link href={`/coupons/${c.id}`} className={`row ${styles.link} ${styles.dim}`} data-status={c.status}>
               <CouponThumb c={c} />
               <span className="body">
-                <span className={`title ${styles.title}`}>{c.menuName}</span>
+                <span className="title">{c.menuName}</span>
                 <span className={`sub ${styles.sub}`}>
                   {c.store?.shortName ?? ""} · {c.status === "used" ? `${fmtMDHM(c.usedAt)} 사용` : c.status === "expired" ? `${fmtMD(c.expiresAt)} 만료` : "취소됨"}
                 </span>

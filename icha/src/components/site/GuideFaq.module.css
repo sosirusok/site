@@ -8,4 +8,4 @@
 .details[open] .chev { transform: rotate(-90deg); }
 .a { padding: 0 0 16px; font-size: 14px; line-height: 1.55; color: var(--fg-2); }
 /* 답 속 링크 — 글줄은 그대로, 터치 영역만 44px */
-.a a { display: inline-flex; align-items: center; min-height: 44px; margin-block: -12px; padding-inline: 2px; color: var(--fg); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.a a:not(:global(.btn)) { display: inline-flex; align-items: center; min-height: 44px; margin-block: -12px; padding-inline: 2px; color: var(--fg); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }

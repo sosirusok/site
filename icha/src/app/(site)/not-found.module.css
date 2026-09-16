@@ -1,4 +1,5 @@
-.wrap { display: grid; justify-items: center; text-align: center; gap: 6px; padding-block: 80px 48px; }
+/* 가운데 한 줄 — 화면을 채워서 푸터가 위로 올라오지 않게 */
+.wrap { display: grid; justify-items: center; align-content: center; text-align: center; gap: 6px; padding-block: 48px; min-height: calc(100dvh - var(--header-h) - var(--tabbar-h)); }
 .btn { margin-top: 16px; min-width: 160px; }
 .btns { display: flex; gap: 8px; margin-top: 16px; }
 .btns > * { min-width: 120px; }

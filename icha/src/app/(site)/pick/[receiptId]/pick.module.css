@@ -1,3 +1,4 @@
-.page { padding-block: 24px 40px; display: grid; gap: 18px; }
+/* 하단 고정 버튼 위까지 화면을 채워서 푸터가 가운데로 올라오지 않게 한다 */
+.page { padding-block: 24px 40px; display: grid; gap: 18px; align-content: start; min-height: calc(100dvh - var(--header-h) - var(--tabbar-h) - 76px); }
 .head { display: grid; gap: 8px; }
 .from { font-weight: 700; }

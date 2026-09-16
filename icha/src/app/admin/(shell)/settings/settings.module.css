@@ -2,3 +2,7 @@
 .numUnit input { max-width: 160px; }
 .numUnit span { font-size: 14px; color: var(--a-ink-3); white-space: nowrap; }
 .sticky { padding: 12px 0 0; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; border-top: 1px solid var(--a-line); margin-top: 8px; }
+
+/* 매장 소식 · 리뷰 이벤트 — 매장 색 점이 붙은 라벨, 한 줄짜리 입력 */
+.storeLabel { display: inline-flex; align-items: center; color: var(--a-ink); }
+textarea.lineInput { min-height: 56px; }

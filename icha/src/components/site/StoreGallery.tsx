@@ -8,8 +8,8 @@ function stripPhotos(store: Pick<Store, "images">, max = 6): StoreImage[] {
   return order.flatMap((k) => store.images.filter((i) => i.kind === k)).slice(0, max);
 }
 
-/** 매장 사진 띠 — 옆으로 넘겨 보는 실사진(폭 88%, 높이 220px, 둥근 16px). */
-export function StoreGallery({ store }: { store: Store }) {
+/** 매장 사진 띠 — 옆으로 넘겨 보는 실사진. 맨 끝 장은 네이버 사진으로 가는 초록 칸. */
+export function StoreGallery({ store, photoUrl = null }: { store: Store; photoUrl?: string | null }) {
   const photos = stripPhotos(store);
   if (!photos.length) return null;
   return (
@@ -19,6 +19,13 @@ export function StoreGallery({ store }: { store: Store }) {
           <Image src={p.src} alt={p.alt} fill sizes="(min-width: 480px) 420px, 88vw" priority={i === 0} className={styles.img} />
         </li>
       ))}
+      {photoUrl && (
+        <li className={styles.cell}>
+          <a className={styles.more} href={photoUrl} target="_blank" rel="noreferrer">
+            <span className={styles.moreText}>네이버에서<br />사진 더 보기</span>
+          </a>
+        </li>
+      )}
     </ul>
   );
 }

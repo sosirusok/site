@@ -1,6 +1,4 @@
-import { PlaceButton } from "@/components/site/PlaceButton";
 import { BRAND } from "@/lib/config";
-import { placeSheetStores } from "@/lib/place-stores";
 import s from "./home.module.css";
 
 /**
@@ -9,7 +7,7 @@ import s from "./home.module.css";
  */
 const RULE_TWO_LINES = "계산할 때 번호를 말하면 쿠폰이 와요. 50m 안 다른 매장에서 특별 혜택을 받아요.";
 
-/** 포스터 아래 네온 카드 — 이벤트 이름, 코스, 규칙 두 줄, 조건, 플레이스 버튼 하나 */
+/** 포스터 아래 네온 카드 — 이벤트 이름, 코스, 규칙 두 줄, 조건. 플레이스 버튼은 아래 고정 버튼 하나로 충분하다. */
 export function EventCard() {
   return (
     <section className={`wrap ${s.event}`} aria-labelledby="event-title">
@@ -19,7 +17,6 @@ export function EventCard() {
         <p className={s.course}>{BRAND.course}</p>
         <p className={s.rule}>{RULE_TWO_LINES}</p>
         <p className="cap">{BRAND.condition}</p>
-        <PlaceButton stores={placeSheetStores()} className={`btn btn-naver btn-block ${s.eventBtn}`}>네이버 플레이스에서 보기</PlaceButton>
       </div>
     </section>
   );

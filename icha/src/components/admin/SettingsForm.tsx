@@ -3,10 +3,14 @@ import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
 import { saveRulesAction, type ActionState } from "@/app/admin/actions";
 import type { Rules } from "@/lib/config";
+import { STORES } from "@/lib/stores";
 import ui from "@/app/admin/admin.module.css";
 import s from "@/app/admin/(shell)/settings/settings.module.css";
 
-/** 운영 규칙 — 카운터 발급 방식에서 실제로 쓰는 네 가지만 보인다 (쿠폰 유효일·하루 한도·이벤트 진행·공지). */
+/** 1차 → 2차 → 3차 순서로 세 매장 */
+const ORDERED = [...STORES].sort((a, b) => a.course.n - b.course.n);
+
+/** 운영 규칙 — 카운터 발급 방식에서 실제로 쓰는 값만 보인다 (쿠폰·진행·공지·매장 소식·리뷰 이벤트). */
 export function SettingsForm({ rules }: { rules: Rules }) {
   const router = useRouter();
   const [state, action, pending] = useActionState<ActionState, FormData>(saveRulesAction, null);
@@ -63,6 +67,61 @@ export function SettingsForm({ rules }: { rules: Rules }) {
               <textarea id="st-notice" name="notice" className={ui.textarea} defaultValue={rules.notice} maxLength={200} placeholder="예: 9월 30일까지 도쿄스탠드는 점검으로 쿠폰 사용이 어렵습니다." style={{ minHeight: 64 }} />
               <span className={ui.help}>비워 두면 띠가 사라집니다. 홈과 쿠폰함 상단에 한 줄로 보입니다.</span>
             </div>
+          </div>
+        </section>
+      </div>
+
+      <div className={ui.grid2}>
+        <section className={ui.panel}>
+          <div className={ui.panelHead}>
+            <h2 className={ui.panelTitle}>매장 소식</h2>
+            <span className={ui.panelNote}>매장마다 한 줄</span>
+          </div>
+          <div className={`${ui.panelBody} ${ui.form}`}>
+            {ORDERED.map((st) => (
+              <div key={st.id} className={ui.field}>
+                <label className={`${ui.label} ${s.storeLabel}`} htmlFor={`st-notice-${st.id}`} data-store={st.id}>
+                  <span className={ui.storeDot} aria-hidden="true" />
+                  {st.course.n}차 {st.shortName}
+                </label>
+                <textarea
+                  id={`st-notice-${st.id}`}
+                  name={`storeNotice_${st.id}`}
+                  className={`${ui.textarea} ${s.lineInput}`}
+                  defaultValue={rules.storeNotices[st.id] ?? ""}
+                  maxLength={80}
+                  placeholder="예: 오늘 하이볼 1+1"
+                />
+              </div>
+            ))}
+            <span className={ui.help}>손님 홈 매장 카드와 매장 화면에 한 줄로 보입니다. 비우면 숨깁니다.</span>
+          </div>
+        </section>
+
+        <section className={ui.panel}>
+          <div className={ui.panelHead}>
+            <h2 className={ui.panelTitle}>리뷰 이벤트</h2>
+            <span className={ui.panelNote}>네이버 리뷰 혜택</span>
+          </div>
+          <div className={`${ui.panelBody} ${ui.form}`}>
+            {ORDERED.map((st) => (
+              <div key={st.id} className={ui.field}>
+                <label className={`${ui.label} ${s.storeLabel}`} htmlFor={`st-review-${st.id}`} data-store={st.id}>
+                  <span className={ui.storeDot} aria-hidden="true" />
+                  {st.course.n}차 {st.shortName}
+                </label>
+                <input
+                  id={`st-review-${st.id}`}
+                  name={`reviewBenefit_${st.id}`}
+                  className={ui.input}
+                  defaultValue={rules.reviewBenefit[st.id] ?? ""}
+                  maxLength={40}
+                  placeholder="예: 리뷰 보여 주면 소주 1병"
+                  autoComplete="off"
+                />
+              </div>
+            ))}
+            <span className={ui.help}>네이버 리뷰를 쓴 손님에게 주는 혜택. 손님 홈 '리뷰 쓰기' 줄에 보입니다. 비우면 기본 문구만 보입니다.</span>
           </div>
         </section>
       </div>

@@ -71,7 +71,7 @@ export function PhoneForm({ next, label = "쿠폰함 열기" }: { next: string; 
         />
         {error && <p id={`${id}-err`} className="error" role="alert">{error}</p>}
       </div>
-      <button type="submit" className="btn btn-block" disabled={busy || digits.length < 10}>
+      <button type="submit" className="btn btn-block" disabled={busy}>
         {busy ? "잠시만요" : label}
       </button>
     </form>

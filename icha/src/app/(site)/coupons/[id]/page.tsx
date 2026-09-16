@@ -40,7 +40,7 @@ export default async function CouponPage({ params }: { params: Promise<{ id: str
   const item = menu.find((m) => (coupon.menuItemId && m.id === coupon.menuItemId) || m.name === coupon.menuName);
   const image = item ? (item.imagePath ?? (item.hasImageData ? menuImageUrl(item) : null)) : null;
   const links = placeLinks(store);
-  const ts: TicketStore = { id: store.id, shortName: store.shortName, name: store.name, address: store.address, drink: store.drink, image, placeReview: links?.review ?? null, placeHome: links?.home ?? null };
+  const ts: TicketStore = { id: store.id, shortName: store.shortName, name: store.name, address: store.address, drink: store.drink, image, placeReview: links?.review ?? null, placeHome: links?.home ?? null, placeBooking: links?.booking ?? null };
 
   return (
     <section className={`wrap ${styles.page}`} data-store={store.id}>

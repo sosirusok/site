@@ -30,6 +30,8 @@ export type TicketStore = {
   /** 네이버 플레이스 — 사용 완료 뒤 리뷰 남기기(플레이스 트래픽) */
   placeReview?: string | null;
   placeHome?: string | null;
+  /** 네이버 예약 */
+  placeBooking?: string | null;
 };
 
 /** 이 시간 안에 사용한 쿠폰은 '방금 사용' 화면(흐르는 시계)을 보여 준다 */
@@ -130,11 +132,12 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
   if (status === "used") {
     return (
       <article className={styles.root} data-status="used" aria-live="polite">
-        <div className={styles.dim}>{ticket}</div>
         <div className={styles.state}>
           <p className="status-ok">사용 완료</p>
           <h1 className="h1-event">{fresh ? "잘 썼어요" : "이미 쓴 쿠폰"}</h1>
         </div>
+        {store.placeReview && <a href={store.placeReview} target="_blank" rel="noreferrer" className="btn btn-naver btn-block">이 매장 네이버 리뷰 남기기</a>}
+        <div className={styles.dim}>{ticket}</div>
         {fresh && <LiveClock />}
         <div className="paper">
           <div className="row"><b>사용 시각</b><span className="val mono">{usedAt ? fmtDateTimeSec(usedAt) : "방금"}</span></div>
@@ -144,7 +147,6 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
         </div>
         {fresh && <p className="cap">직원은 위 시계가 지금 시각과 같은지만 봐 주세요. 캡처한 화면은 시계가 멈춰 있어요.</p>}
         <div className={styles.actions}>
-          {store.placeReview && <a href={store.placeReview} target="_blank" rel="noreferrer" className="btn btn-naver btn-block">이 매장 네이버 리뷰 남기기</a>}
           <Link href="/wallet" className="btn btn-secondary btn-block">쿠폰함으로</Link>
         </div>
       </article>
@@ -184,7 +186,8 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
       {ticket}
 
       <div className={styles.info}>
-        <h1 className={`h1-event ${styles.name}`}>{coupon.menuName}{kind && <span className={`tag ${styles.kind}`}>{kind}</span>}</h1>
+        {kind && <span className={`tag ${styles.kind}`}>{kind}</span>}
+        <h1 className={`h1-event ${styles.name}`}>{coupon.menuName}</h1>
         <p className={`neon ${styles.store}`}>{store.name}</p>
         <p className={`mono ${styles.code}`} aria-label={`쿠폰 코드 ${coupon.code.split("").join(" ")}`}>{coupon.code}</p>
         <p className={`cap ${styles.how}`}>메인안주 1개 주문 시 · 직원에게 보여 주세요</p>
@@ -198,6 +201,9 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
         {error && <p className="error" role="alert">{error}</p>}
         <button type="button" className="btn btn-block" onClick={() => { setError(null); setConfirming(true); }}>직원 앞에서 사용하기</button>
         <p className="cap">직원이 확인한 뒤에 눌러 주세요. 한 번 쓰면 되돌릴 수 없어요.</p>
+        {store.placeBooking && (
+          <a href={store.placeBooking} target="_blank" rel="noreferrer" className="btn btn-naver btn-sm btn-block">이 매장 예약하기</a>
+        )}
       </div>
 
       {confirming && (

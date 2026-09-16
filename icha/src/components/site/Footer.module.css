@@ -1,6 +1,6 @@
-.footer { margin-top: 24px; padding: 24px var(--gutter) 28px; background: #000; font-size: 12px; line-height: 1.6; color: var(--fg-3); display: grid; gap: 8px; }
+.footer { margin-top: 20px; padding: 18px var(--gutter) 22px; background: #000; font-size: 12px; line-height: 1.55; color: var(--fg-3); display: grid; gap: 6px; }
 .brand { font-weight: 700; color: var(--fg-2); }
-.stores { display: grid; gap: 2px; }
+.stores { display: grid; gap: 1px; }
 .links { display: flex; gap: 14px; }
-.links a { font-weight: 600; color: var(--fg-2); padding: 6px 0; }
-.slogan { letter-spacing: 0.08em; font-weight: 600; color: var(--fg-3); }
+.links a { font-weight: 600; color: var(--fg-2); padding: 4px 0; }
+.slogan { letter-spacing: 0.06em; font-weight: 600; color: var(--fg-3); }

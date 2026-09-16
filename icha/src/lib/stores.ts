@@ -468,3 +468,10 @@ export function naverPlaceUrl(s: Store): string | null {
 export function naverMobilePlaceUrl(s: Store): string | null {
   return s.naverPlaceId ? `https://m.place.naver.com/restaurant/${s.naverPlaceId}/home` : null;
 }
+
+/** 코스에서 다음 매장 — 1차→2차→3차, 3차 다음은 다시 1차 */
+export function nextStore(id: StoreId): Store {
+  const cur = STORE_BY_ID[id];
+  const n = cur.course.n === 3 ? 1 : cur.course.n + 1;
+  return STORES.find((s) => s.course.n === n) ?? cur;
+}

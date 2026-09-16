@@ -1,5 +1,5 @@
-.page { padding-block: 28px 40px; display: grid; gap: 18px; }
+.page { padding-block: 28px 40px; display: grid; gap: 18px; align-content: start; min-height: calc(100dvh - var(--header-h) - var(--tabbar-h)); }
 .head { display: grid; gap: 8px; }
 .steps { display: grid; }
-/* 순서 번호 — 노랑 네온 링 */
-.num { flex: none; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--yellow); color: var(--yellow); font-size: 13px; font-weight: 700; box-shadow: 0 0 10px rgba(255, 210, 63, 0.35); }
+/* 순서 번호 — 홈과 같은 노랑 동그라미(28px)에 어두운 숫자 */
+.num { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--yellow); color: #14120a; font-size: 14px; font-weight: 800; box-shadow: 0 0 14px rgba(255, 210, 63, 0.3); }

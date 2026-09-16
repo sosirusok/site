@@ -1,16 +1,16 @@
-/* 지도 핀·역 표시 — Leaflet/네이버 지도 안에 삽입되는 HTML 이라 전역 클래스 */
+/* 지도 핀·역 표시 — Leaflet/네이버 지도 안에 삽입되는 HTML 이라 전역 클래스. 타일은 globals.css 가 어둡게 만든다 */
 .sm-pin { width: 38px; height: 48px; position: relative; cursor: pointer; }
-.sm-pin__body { position: absolute; left: 0; top: 0; width: 38px; height: 38px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: #111111; border: 2px solid #ffffff; box-sizing: border-box; box-shadow: 0 1px 3px rgba(0,0,0,.35); }
+.sm-pin__body { position: absolute; left: 0; top: 0; width: 38px; height: 38px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: #1c1930; border: 2px solid #ffffff; box-sizing: border-box; box-shadow: 0 0 10px rgba(0,0,0,.6); }
 .sm-pin__num { position: absolute; left: 0; top: 0; width: 38px; height: 38px; display: grid; place-items: center; font: 800 16px/1 "Pretendard Variable", Pretendard, sans-serif; color: #ffffff; }
 .sm-pin--active .sm-pin__body { background: #d0261b; }
-.sm-pin[data-store="joseon"] .sm-pin__body { background: #c7382b; }
-.sm-pin[data-store="tokyo"] .sm-pin__body { background: #2b5bd7; }
-.sm-pin[data-store="wareureu"] .sm-pin__body { background: #1f8a4c; }
-.sm-pin[data-store="joseon"] .sm-pin__label { background: #c7382b; }
-.sm-pin[data-store="tokyo"] .sm-pin__label { background: #2b5bd7; }
-.sm-pin[data-store="wareureu"] .sm-pin__label { background: #1f8a4c; }
-.sm-pin__label { position: absolute; left: 50%; top: 100%; transform: translate(-50%, 2px); white-space: nowrap; background: #111111; color: #fff; font: 700 12px/1 "Pretendard Variable", Pretendard, sans-serif; padding: 5px 8px; border-radius: 6px; }
-.sm-station { width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 4px solid #2b5cd9; box-sizing: border-box; box-shadow: 0 0 0 2px #fff; }
-.sm-station__label { position: absolute; left: 26px; top: 1px; white-space: nowrap; font: 700 12px/1.2 "Pretendard Variable", Pretendard, sans-serif; color: #1b3fa0; text-shadow: 0 0 3px #fff, 0 0 3px #fff; }
-.leaflet-container { font-family: "Pretendard Variable", Pretendard, sans-serif; background: #f6f6f6; }
-.leaflet-control-attribution { font-size: 10px; opacity: .85; }
+.sm-pin[data-store="joseon"] .sm-pin__body { background: #d63a2c; box-shadow: 0 0 12px rgba(255,77,61,.6); }
+.sm-pin[data-store="tokyo"] .sm-pin__body { background: #2f63e0; box-shadow: 0 0 12px rgba(76,141,255,.6); }
+.sm-pin[data-store="wareureu"] .sm-pin__body { background: #1f9a56; box-shadow: 0 0 12px rgba(46,229,157,.55); }
+.sm-pin[data-store="joseon"] .sm-pin__label { background: #d63a2c; }
+.sm-pin[data-store="tokyo"] .sm-pin__label { background: #2f63e0; }
+.sm-pin[data-store="wareureu"] .sm-pin__label { background: #1f9a56; }
+.sm-pin__label { position: absolute; left: 50%; top: 100%; transform: translate(-50%, 2px); white-space: nowrap; background: #1c1930; color: #fff; font: 700 12px/1 "Pretendard Variable", Pretendard, sans-serif; padding: 5px 8px; border-radius: 6px; box-shadow: 0 0 0 1px rgba(0,0,0,.5); }
+.sm-station { width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 4px solid #2f63e0; box-sizing: border-box; box-shadow: 0 0 0 2px #0b0a12; }
+.sm-station__label { position: absolute; left: 26px; top: 1px; white-space: nowrap; font: 700 12px/1.2 "Pretendard Variable", Pretendard, sans-serif; color: #dbe4ff; text-shadow: 0 0 3px #0b0a12, 0 0 3px #0b0a12, 0 0 6px #0b0a12; }
+.leaflet-container.leaflet-container { font-family: "Pretendard Variable", Pretendard, sans-serif; background: #0b0a12; }
+.leaflet-container .leaflet-control-attribution { font-size: 10px; opacity: .9; }

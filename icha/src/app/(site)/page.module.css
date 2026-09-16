@@ -1,7 +1,8 @@
-/* 홈 — 공지 한 줄, 맨 아래 이용 안내 행만. 나머지는 components/home/home.module.css */
+/* 홈 — 공지 한 줄, 맨 아래 두 줄(이용 안내·보내기)만. 나머지는 components/home/home.module.css */
 .notice { background: var(--bg-2); color: var(--fg-2); font-size: 13px; padding: 10px var(--gutter); }
 
-/* 이용 안내 — 목록 행 모양의 링크(56px) */
-.guide { border-top: 1px solid var(--line); }
-.guide:active { background: var(--bg-2); }
-.guide .title { display: block; }
+/* 맨 아래 목록 행 두 개 — 전역 .row 를 그대로 쓰고 위에 선만 얹는다 */
+.tail { border-top: 1px solid var(--line); }
+.tail :global(.row) { width: 100%; text-align: left; }
+.tail :global(.row):active { background: var(--bg-2); }
+.tail :global(.row) :global(.title) { display: block; }

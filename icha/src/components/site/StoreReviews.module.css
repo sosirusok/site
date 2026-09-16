@@ -4,3 +4,7 @@
 .list { display: grid; gap: 8px; }
 .text { font-size: 14px; line-height: 1.55; color: var(--fg); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .meta { margin-top: 6px; }
+/* 버튼 둘 나란히 — 초록 리뷰 쓰기, 보조 리뷰 더 보기 */
+.btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+/* 매장이 적어 둔 리뷰 혜택 한 줄(비면 숨김) */
+.benefit { font-size: 14px; font-weight: 700; color: var(--yellow); }

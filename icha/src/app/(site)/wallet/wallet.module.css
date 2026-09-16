@@ -1,7 +1,6 @@
 .page { display: grid; }
 .notice { background: var(--bg-2); color: var(--fg-2); font-size: 13px; padding: 10px var(--gutter); }
 .top { display: grid; gap: 4px; padding-block: 24px 20px; }
-.phone { letter-spacing: 0.04em; }
 .sec { padding-block: 24px; }
 .count { color: var(--accent); margin-left: 6px; }
 .foot { display: grid; gap: 14px; justify-items: start; }

@@ -3,7 +3,7 @@ import type { Store } from "@/lib/stores";
 import { kstNow, openStatus, parseHours } from "./StoreHelpers";
 import styles from "./StoreHero.module.css";
 
-/** 이름(노랑 붓글씨) + N차 칩 + 코스 한 마디 + 평점, 영업·주소·전화 표, 큰 플레이스 버튼과 작은 버튼 줄(리뷰·사진·길찾기) */
+/** 이름(노랑 붓글씨) + N차 칩 + 코스 한 마디 + 평점, 영업·주소·전화 표, 큰 초록 버튼 하나(네이버 예약하기) */
 export function StoreHero({ store }: { store: Store }) {
   const st = openStatus(store);
   const r = store.naverRating;
@@ -41,14 +41,7 @@ export function StoreHero({ store }: { store: Store }) {
         )}
       </dl>
       {links && (
-        <div className={styles.naver}>
-          <a className="btn btn-naver btn-block" href={links.home} target="_blank" rel="noreferrer">네이버 플레이스에서 보기</a>
-          <div className={styles.small}>
-            <a className="btn btn-secondary btn-sm" href={links.review} target="_blank" rel="noreferrer">리뷰</a>
-            <a className="btn btn-secondary btn-sm" href={links.photo} target="_blank" rel="noreferrer">사진</a>
-            <a className="btn btn-secondary btn-sm" href={links.directions} target="_blank" rel="noreferrer">길찾기</a>
-          </div>
-        </div>
+        <a className={`btn btn-naver btn-block ${styles.book}`} href={links.booking} target="_blank" rel="noreferrer">예약하기</a>
       )}
     </header>
   );

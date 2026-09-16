@@ -53,6 +53,7 @@ export default async function PickPage({ params }: { params: Promise<{ receiptId
         drink: s.drink,
         course: s.course,
         placeHome: placeLinks(s)?.home ?? null,
+        placeBooking: placeLinks(s)?.booking ?? null,
         items: items.map((it) => ({
           id: it.id,
           name: it.name,
