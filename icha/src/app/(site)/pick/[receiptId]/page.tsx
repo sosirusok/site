@@ -33,7 +33,7 @@ export default async function PickPage({ params }: { params: Promise<{ receiptId
     return (
       <section className={`wrap ${styles.page}`} aria-labelledby="pick-title">
         <div className={styles.head}>
-          <h1 id="pick-title" className="h1">고를 수 있는 기간이 지났어요</h1>
+          <h1 id="pick-title" className="h1-event">고를 수 있는 기간이 지났어요</h1>
           <p className="cap">{store.shortName} 영수증은 {fmtMD(deadline)}까지 고를 수 있었어요. 새 영수증을 올리면 다시 받아요.</p>
         </div>
         <div className={styles.actions}>
@@ -44,7 +44,8 @@ export default async function PickPage({ params }: { params: Promise<{ receiptId
     );
   }
 
-  const gifts = giftStoresFor(receipt.storeId);
+  // 포스터 순서(1차 → 2차 → 3차)대로 보여 준다
+  const gifts = [...giftStoresFor(receipt.storeId)].sort((a, b) => a.course.n - b.course.n);
   const stores: PickStore[] = await Promise.all(
     gifts.map(async (s) => {
       const items = await listMenu(s.id, { giftOnly: true });
@@ -53,6 +54,7 @@ export default async function PickPage({ params }: { params: Promise<{ receiptId
         shortName: s.shortName,
         name: s.name,
         drink: s.drink,
+        course: s.course,
         items: items.map((it) => ({
           id: it.id,
           name: it.name,
@@ -67,7 +69,7 @@ export default async function PickPage({ params }: { params: Promise<{ receiptId
   return (
     <section className={`wrap ${styles.page}`} aria-labelledby="pick-title">
       <div className={styles.head}>
-        <h1 id="pick-title" className="h1">어느 집에서 받을까요?</h1>
+        <h1 id="pick-title" className="h1-event">어디서 받을까요?</h1>
         <p className="cap">{store.shortName} 영수증 {receipt.amount == null ? "" : formatWon(receipt.amount)} · {fmtMD(deadline)}까지 골라요</p>
       </div>
       <MenuPicker receiptId={receipt.id} stores={stores} couponValidDays={rules.couponValidDays} />

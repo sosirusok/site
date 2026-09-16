@@ -2,7 +2,7 @@ import type { Store } from "@/lib/stores";
 import { STORE_COPY, kstNow, openStatus, parseHours } from "./StoreHelpers";
 import styles from "./StoreHero.module.css";
 
-/** 이름, 한 줄, 평점·대표 술, 그리고 영업·주소·전화 표. */
+/** 이름(포스터 글꼴), 몇 차인지 한 줄(매장색 칩), 한 줄 소개, 평점·대표 술, 그리고 영업·주소·전화 표. */
 export function StoreHero({ store }: { store: Store }) {
   const st = openStatus(store);
   const r = store.naverRating;
@@ -16,7 +16,11 @@ export function StoreHero({ store }: { store: Store }) {
 
   return (
     <header className={styles.hero}>
-      <h1 className="h1">{store.shortName}</h1>
+      <h1 className="h1-event">{store.shortName}</h1>
+      <p className={styles.course}>
+        <span className="tag tag-store">{store.course.n}차</span>
+        <span className={styles.courseLine}>{store.course.line}</span>
+      </p>
       <p className={styles.line}>{STORE_COPY[store.id].headline}</p>
       <p className={`cap ${styles.meta}`}>
         {r && <span className="num">★ {r.score.toFixed(2)} ({r.count.toLocaleString("ko-KR")})</span>}

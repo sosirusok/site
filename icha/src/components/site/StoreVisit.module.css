@@ -1,3 +1,7 @@
 .block { display: grid; gap: 16px; }
 .map { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--line-2); }
 .map :global(.leaflet-container) { background: var(--bg-2); }
+/* 50m 안 다른 두 집 — 글자는 한 줄이지만 링크 터치 영역은 44px */
+.others { margin-top: -4px; }
+.sep { margin: 0 6px; }
+.other { display: inline-flex; align-items: center; gap: 5px; min-height: 44px; margin-block: -13px; padding-inline: 2px; color: var(--fg); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }

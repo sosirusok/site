@@ -5,6 +5,7 @@ import { ReceiptUploader } from "@/components/flow/ReceiptUploader";
 import type { StoreLite } from "@/components/flow/types";
 import { joinOr } from "@/components/site/StoreHelpers";
 import { getMemberSession } from "@/lib/auth/session";
+import { BRAND } from "@/lib/config";
 import { ruleLine } from "@/lib/copy";
 import { getMember } from "@/lib/db/queries";
 import { getRules } from "@/lib/settings";
@@ -25,8 +26,9 @@ export default async function VerifyPage({ searchParams }: { searchParams: Promi
   return (
     <section className={`wrap ${styles.page}`} aria-labelledby="verify-title">
       <div className={styles.head}>
-        <h1 id="verify-title" className="h1">영수증 올리기</h1>
+        <h1 id="verify-title" className="h1-event">영수증 올리기</h1>
         <p className="cap">{ruleLine(rules)}</p>
+        <p className="cap">{BRAND.condition}</p>
         {from && <p className="cap">{from.shortName} 영수증이면 {joinOr(giftStoresFor(from.id).map((s) => s.shortName))}에서 한 잔 받아요.</p>}
       </div>
 

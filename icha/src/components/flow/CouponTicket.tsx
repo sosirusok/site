@@ -23,6 +23,10 @@ export type TicketStore = {
   shortName: string;
   name: string;
   address: string;
+  /** 대표 술 — 품목명에 이 말이 들어갈 때만 매장 쿠폰 티켓 그림을 쓴다 */
+  drink?: string;
+  /** 품목 사진(있으면 티켓 대신) */
+  image?: string | null;
 };
 
 /** 이 시간 안에 사용한 쿠폰은 '방금 사용' 화면(흐르는 시계)을 보여 준다 */
@@ -104,7 +108,14 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
   const usedMs = usedAt ? Date.now() - new Date(usedAt).getTime() : Number.POSITIVE_INFINITY;
   const fresh = justUsed || usedMs < FRESH_MS;
   const kind = kindText(coupon);
-  const ticket = <Art name={`coupon-${store.id}`} alt={`${store.shortName} ${coupon.menuName} 무료 쿠폰`} sizes="(min-width: 480px) 440px, 92vw" priority className={styles.ticket} />;
+  const drinkTicket = !store.drink || coupon.menuName.includes(store.drink);
+  const ticket = drinkTicket ? (
+    <Art name={`coupon-${store.id}`} alt={`${store.shortName} ${coupon.menuName} 무료 쿠폰`} sizes="(min-width: 480px) 440px, 92vw" priority className={styles.ticket} />
+  ) : store.image ? (
+    <img src={store.image} alt={`${store.shortName} ${coupon.menuName}`} className={styles.photo} />
+  ) : (
+    <div className={styles.plain} data-store={store.id}><span className="tag tag-store">{store.shortName}</span><b>{coupon.menuName}</b></div>
+  );
 
   /* 사용한 쿠폰 */
   if (status === "used") {
@@ -113,7 +124,7 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
         <div className={styles.dim}>{ticket}</div>
         <div className={styles.state}>
           <p className="status-ok">사용 완료</p>
-          <h1 className="h1">{fresh ? "잘 썼어요" : "이미 쓴 쿠폰이에요"}</h1>
+          <h1 className="h1-event">{fresh ? "잘 썼어요" : "이미 쓴 쿠폰이에요"}</h1>
         </div>
         {fresh && <LiveClock />}
         <div className="paper">
@@ -135,7 +146,7 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
         <div className={styles.dim}>{ticket}</div>
         <div className={styles.state}>
           <p className="status-no">{expired ? "기간 지남" : "취소됨"}</p>
-          <h1 className="h1">{expired ? "기간이 지났어요" : "취소된 쿠폰이에요"}</h1>
+          <h1 className="h1-event">{expired ? "기간이 지났어요" : "취소된 쿠폰이에요"}</h1>
           <p className="cap">
             {expired
               ? `${fmtMD(coupon.expiresAt)}까지 쓸 수 있었어요. 새 영수증을 올리면 다시 받아요.`
@@ -162,9 +173,10 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
       {ticket}
 
       <div className={styles.info}>
-        <h1 className="h1">{coupon.menuName}{kind && <span className={`tag ${styles.kind}`}>{kind}</span>}</h1>
+        <h1 className={`h1-event ${styles.name}`}>{coupon.menuName}{kind && <span className={`tag ${styles.kind}`}>{kind}</span>}</h1>
         <p className={styles.store}>{store.name}</p>
         <p className={`mono ${styles.code}`} aria-label={`쿠폰 코드 ${coupon.code.split("").join(" ")}`}>{coupon.code}</p>
+        <p className={`cap ${styles.how}`}>메인안주 1개 주문 시 · 직원에게 보여 주세요</p>
         <p className="cap">
           {fmtMD(coupon.expiresAt)}까지{left <= 7 && <span className={styles.soon}> · {Math.max(left, 0)}일 남음</span>} · {fmtMDHM(coupon.issuedAt)}에 받음
         </p>

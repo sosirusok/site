@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { CouponTicket, type TicketCoupon, type TicketStore } from "@/components/flow/CouponTicket";
+import { listMenu } from "@/lib/db/queries";
+import { menuImageUrl } from "@/lib/menu-image";
 import { Chevron } from "@/components/ui/Chevron";
 import { getMemberSession } from "@/lib/auth/session";
 import { getCoupon } from "@/lib/db/queries";
@@ -33,7 +35,10 @@ export default async function CouponPage({ params }: { params: Promise<{ id: str
     usedAt: coupon.usedAt?.toISOString() ?? null,
     note: coupon.note,
   };
-  const ts: TicketStore = { id: store.id, shortName: store.shortName, name: store.name, address: store.address };
+  const menu = await listMenu(store.id, { includeInactive: true }).catch(() => []);
+  const item = menu.find((m) => (coupon.menuItemId && m.id === coupon.menuItemId) || m.name === coupon.menuName);
+  const image = item ? (item.imagePath ?? (item.hasImageData ? menuImageUrl(item) : null)) : null;
+  const ts: TicketStore = { id: store.id, shortName: store.shortName, name: store.name, address: store.address, drink: store.drink, image };
 
   return (
     <section className={`wrap ${styles.page}`}>

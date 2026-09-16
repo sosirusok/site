@@ -416,7 +416,7 @@ export const STORES: Store[] = [
       { name: "명란청양크림파스타", price: 16900 },
       // 과일·디저트
       { name: "와르르요거트(시그니처) 300g", price: 14500, description: "요거트에 초코쉘·벌집꿀·샤인머스켓·초코그래놀라", image: `${W}/menu/yogurt.jpg` },
-      { name: "와르르요거트(초코쉘)", price: 6500, gift: true },
+      { name: "와르르요거트(초코쉘)", price: 6500, image: `${W}/menu/yogurt.jpg`, gift: true },
       { name: "샤인머스켓크림치즈곶감말이", price: 14500 },
       { name: "무화과 크림치즈", price: 12500 }, // 네이버 메뉴 기준(7월 메뉴판에는 없음)
       { name: "계절과일플래터", price: 16500 },

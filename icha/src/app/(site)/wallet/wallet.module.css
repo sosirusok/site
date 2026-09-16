@@ -4,4 +4,7 @@
 .sec { padding-block: 24px; }
 .block { padding-bottom: 20px; }
 .count { color: var(--accent); margin-left: 6px; }
+/* 섹션 머리의 작은 링크 — 글자는 그대로, 누르는 영역만 44px (행 높이는 안 늘어나게 음수 여백) */
+.more { display: inline-flex; align-items: center; min-height: 44px; margin-block: -10px; padding-inline: 6px; margin-inline: -6px; border-radius: 8px; }
+.more:active { background: var(--bg-2); }
 .foot { display: grid; gap: 12px; justify-items: start; }

@@ -1,29 +1,30 @@
-/* 홈 전용 — 전역 .strip/.row/.card 위에 얹는 최소한의 보정만 둔다 */
+/* 홈 전용 — 전역 .row/.card 위에 얹는 최소한의 보정만 둔다 */
 
-/* 1) 사진 띠 */
-.stripSection { padding-block: 12px 20px; }
-.shot { position: relative; width: 88%; height: 200px; border-radius: var(--radius-lg); overflow: hidden; background: var(--bg-2); }
-.shot img { object-fit: cover; }
-.chip { position: absolute; left: 12px; bottom: 12px; padding: 5px 9px; border-radius: 8px; background: rgba(0, 0, 0, 0.6); color: #fff; font-size: 13px; font-weight: 600; line-height: 1.2; }
+/* 1) 포스터 — 폭 100%, 모서리 0 */
+.poster { background: var(--bg-2); }
+.posterImg { width: 100%; height: auto; display: block; }
 
 /* 2) 혜택 카드 */
-.benefit { padding-bottom: 24px; }
-.desc { margin-top: 8px; color: var(--fg-2); }
-.benefit :global(.cap) { margin-top: 10px; }
+.benefit { padding-block: 16px 24px; }
+.h1 { margin-top: 6px; }
+.course { margin-top: 8px; font-size: 15px; font-weight: 600; }
+.desc { margin-top: 6px; color: var(--fg-2); }
+.cond { margin-top: 10px; }
 
-/* 3) 이렇게 받아요 */
-.icon { width: 48px; height: 48px; flex: none; display: grid; place-items: center; }
-.icon img { width: 48px; height: 48px; object-fit: contain; }
+/* 3) 이렇게 받아요 — 48px 그림 자리 위에 번호 원 */
+.slot { position: relative; width: 48px; height: 48px; flex: none; display: grid; place-items: center; }
+.slot img { width: 48px; height: 48px; object-fit: contain; }
+.step { position: absolute; left: -4px; top: -4px; width: 24px; height: 24px; border-radius: 50%; background: var(--fg); color: #fff; font-size: 12px; font-weight: 700; line-height: 1; display: grid; place-items: center; font-variant-numeric: tabular-nums; }
+.slotEmpty { background: var(--bg-2); border-radius: 10px; }
 .rule { margin-top: 12px; }
 
-/* 4) 참여 매장 — 행 전체가 링크 */
+/* 4) 1차·2차·3차 — 행 전체가 링크, 이름 앞에 매장색 칩 */
 .link { display: flex; align-items: center; gap: 12px; width: 100%; }
 .link:active { background: var(--bg-2); }
 .title { display: flex; align-items: center; gap: 6px; }
-.sub { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sub { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-/* 5) 받을 수 있는 술 */
-.ticket { object-fit: contain !important; padding: 3px; }
+/* 5) 매장별 특별 혜택 */
 .price { display: flex; align-items: center; gap: 6px; flex: none; font-size: 14px; }
 
 /* 6) 오시는 길 */
@@ -34,4 +35,3 @@
 /* 7) 단골 등급 */
 .tierLine { font-size: 15px; font-weight: 600; }
 .tier :global(.cap) { margin-top: 6px; }
-

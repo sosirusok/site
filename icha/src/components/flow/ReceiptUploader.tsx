@@ -153,11 +153,11 @@ export function ReceiptUploader({ rules, stores, totalSpend }: { rules: UploadRu
 
       {phase.kind === "idle" && (
         <>
-          <div className={styles.drop}>
+          <div className={`card-soft ${styles.drop}`}>
             <p className="h3">영수증 사진을 올려 주세요</p>
             <p className="cap">상호·결제 시각·금액·승인번호가 보이게요</p>
             <div className={styles.dropBtns}>
-              <button type="button" className="btn btn-secondary" onClick={() => camRef.current?.click()}>사진 찍기</button>
+              <button type="button" className="btn" onClick={() => camRef.current?.click()}>사진 찍기</button>
               <button type="button" className="btn btn-secondary" onClick={() => albumRef.current?.click()}>앨범에서 고르기</button>
             </div>
           </div>

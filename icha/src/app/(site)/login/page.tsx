@@ -16,7 +16,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   return (
     <section className={`wrap ${styles.page}`} aria-labelledby="login-title">
       <div className={styles.head}>
-        <h1 id="login-title" className="h1">휴대폰 번호로 시작</h1>
+        <h1 id="login-title" className="h1-event">번호로 시작</h1>
         <p className="cap">번호만 넣으면 돼요. 쿠폰은 이 번호에 담겨요.</p>
       </div>
       <PhoneForm next={next} />

@@ -16,7 +16,7 @@ export function Tier({ rules }: { rules: Rules }) {
     <section className={`section ${s.tier}`} aria-labelledby="tier-title">
       <div className="wrap">
         <div className="section-h">
-          <h2 id="tier-title" className="h2">단골 등급</h2>
+          <h2 id="tier-title" className="h2-event">단골 등급</h2>
         </div>
         <div className="card-soft">
           <p className={s.tierLine}>세 집 합쳐 누적<br />{line}</p>

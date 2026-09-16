@@ -8,9 +8,10 @@ import styles from "./StoreMenu.module.css";
 /** 처음에 보이는 줄 수. 나머지는 '메뉴 더 보기' 안에. */
 const VISIBLE = 8;
 
-function Thumb({ m }: { m: MenuItem }) {
-  if (m.imagePath) return <Image src={m.imagePath} alt="" width={64} height={64} sizes="64px" className={styles.thumb} />;
-  if (m.hasImageData) return <img src={menuImageUrl(m)} alt="" width={64} height={64} loading="lazy" className={styles.thumb} />;
+/** 메뉴 실사진이 있으면 56px 썸네일, 없으면 아무것도 그리지 않는다. */
+export function MenuThumb({ m }: { m: MenuItem }) {
+  if (m.imagePath) return <Image src={m.imagePath} alt="" width={56} height={56} sizes="56px" className="thumb" />;
+  if (m.hasImageData) return <Image src={menuImageUrl(m)} alt="" width={56} height={56} sizes="56px" unoptimized className="thumb" />;
   return null;
 }
 
@@ -21,24 +22,16 @@ function Row({ m }: { m: MenuItem }) {
         <p className="title">{m.name}</p>
         {m.description && <p className={`sub ${styles.desc}`}>{m.description}</p>}
         <p className={`num ${styles.price}`}>
-          {m.isGift ? (
-            <>
-              {m.price != null && <s className="strike">{formatWon(m.price)}</s>}
-              <span className="tag tag-free">무료</span>
-            </>
-          ) : m.price != null ? (
-            formatWon(m.price)
-          ) : (
-            <span className={styles.ask}>가격은 매장에서 확인해요</span>
-          )}
+          {m.price != null ? formatWon(m.price) : <span className={styles.ask}>가격은 매장에서 확인해요</span>}
+          {m.isGift && <span className="tag tag-store">특별 혜택</span>}
         </p>
       </div>
-      <Thumb m={m} />
+      <MenuThumb m={m} />
     </li>
   );
 }
 
-/** 메뉴 — 목록 행. 증정 품목이 맨 위에 오고, 8개까지 보인 뒤 나머지는 접힌다. 값은 DB(listMenu). */
+/** 메뉴 — 목록 행. 혜택 품목이 맨 위에 오고, 8개까지 보인 뒤 나머지는 접힌다. 값은 DB(listMenu). */
 export function StoreMenu({ store, items, naverUrl }: { store: Store; items: MenuItem[]; naverUrl: string | null }) {
   if (!items.length) {
     return (
@@ -56,7 +49,7 @@ export function StoreMenu({ store, items, naverUrl }: { store: Store; items: Men
       <ul>{head.map((m) => <Row key={m.id} m={m} />)}</ul>
       {rest.length > 0 && (
         <details className={styles.more}>
-          <summary className={`btn btn-secondary btn-block btn-sm ${styles.moreBtn}`}>메뉴 더 보기 · {rest.length}개</summary>
+          <summary className={`btn btn-secondary btn-block ${styles.moreBtn}`}>메뉴 더 보기 · {rest.length}개</summary>
           <ul>{rest.map((m) => <Row key={m.id} m={m} />)}</ul>
         </details>
       )}

@@ -57,7 +57,7 @@ export function PhoneForm({ next }: { next: string }) {
         <label className="label" htmlFor={id}>휴대폰 번호</label>
         <input
           id={id}
-          className="input mono"
+          className={`input ${styles.phone}`}
           type="tel"
           inputMode="numeric"
           autoComplete="tel"

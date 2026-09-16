@@ -1,4 +1,8 @@
 .hero { display: grid; gap: 6px; }
+/* "1차 · 맥주로 시작!" — 매장색 칩 + 포스터 한 마디 */
+.course { display: flex; align-items: center; gap: 6px; margin-top: -2px; }
+.courseLine { font-size: 14px; font-weight: 700; color: var(--store, var(--fg)); }
+.courseLine::before { content: "· "; color: var(--fg-3); font-weight: 400; }
 .line { font-size: 15px; line-height: 1.5; color: var(--fg-2); }
 .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
 .drink { display: inline-flex; align-items: center; gap: 6px; }
@@ -6,4 +10,5 @@
 .open { color: var(--green); font-weight: 700; }
 .closed { color: var(--fg-3); font-weight: 700; }
 .sub { display: block; margin-top: 2px; }
-.tel { text-decoration: underline; text-underline-offset: 3px; }
+/* 전화 링크 — 글줄은 그대로, 터치 영역만 44px */
+.tel { display: inline-flex; align-items: center; min-height: 44px; margin-block: -12px; text-decoration: underline; text-underline-offset: 3px; }

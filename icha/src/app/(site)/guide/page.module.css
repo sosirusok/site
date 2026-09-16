@@ -1,3 +1,8 @@
 .page { padding-bottom: 8px; }
-.rule { margin-top: 6px; font-weight: 600; color: var(--fg); }
+.brand { margin-top: 4px; font-weight: 600; }
+.lead { margin-top: 10px; color: var(--fg); }
+.steps { display: grid; }
+/* 번호 원 — 검정 바탕, 흰 숫자 */
+.num { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--fg); color: #fff; font-size: 13px; font-weight: 700; }
 .icon { flex: none; width: 48px; height: 48px; display: grid; place-items: center; }
+.rule { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); font-weight: 600; color: var(--fg-2); }

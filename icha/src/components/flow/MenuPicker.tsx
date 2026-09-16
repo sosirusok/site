@@ -22,6 +22,8 @@ export type PickStore = {
   shortName: string;
   name: string;
   drink: "막걸리" | "맥주" | "소주";
+  /** 포스터 순서(1차·2차·3차)와 한 마디 */
+  course: { n: 1 | 2 | 3; line: string };
   items: PickItem[];
 };
 
@@ -94,11 +96,13 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
           return (
             <div key={s.id} className={`card ${styles.card}`} data-on={on || undefined} data-store={s.id}>
               <div className={styles.cardHead}>
-                <span className="dot" aria-hidden="true" />
-                <p className="h3">{s.shortName}</p>
-                <span className="cap">{s.drink}</span>
+                <span className="tag tag-store">{s.course.n}차</span>
+                <p className={`h2-event ${styles.cardName}`}>{s.shortName}</p>
+                <span className={`cap ${styles.cardLine}`}>{s.course.line}</span>
               </div>
-              <Art name={`coupon-${s.id}`} alt="" sizes="(min-width: 480px) 400px, 84vw" className={styles.ticket} />
+              {s.items.length === 1 && s.items[0]!.name.includes(s.drink) && (
+                <Art name={`coupon-${s.id}`} alt="" sizes="(min-width: 480px) 400px, 84vw" className={styles.ticket} />
+              )}
               {none ? (
                 <p className="cap">받을 수 있는 품목을 정하는 중이에요. 다른 집을 골라 주세요.</p>
               ) : (
@@ -112,11 +116,9 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
                           <Thumb item={it} />
                           <span className="body">
                             <span className={`title ${styles.name}`}>{it.name}</span>
+                            {it.price != null && <span className={`sub ${styles.price}`}><span className="strike">{formatWon(it.price)}</span></span>}
                           </span>
-                          <span className={styles.price}>
-                            {it.price != null && <span className="strike">{formatWon(it.price)}</span>}
-                            <span className="tag tag-free">무료</span>
-                          </span>
+                          <span className="tag tag-free">무료</span>
                         </button>
                       </li>
                     );

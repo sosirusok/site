@@ -1,10 +1,14 @@
 .page { padding-bottom: 8px; }
 .top { display: grid; gap: 14px; padding-block: 12px 20px; }
 .anchor { scroll-margin-top: calc(var(--header-h) + 8px); }
+/* 섹션 제목 옆 링크 — 글자는 작아도 터치 영역은 44px */
+.moreLink { display: inline-flex; align-items: center; min-height: 44px; margin-block: -12px; }
 
-/* 무료 한 잔 */
-.giftCard { display: grid; gap: 6px; }
-.ticket { width: 100%; height: auto; border-radius: 12px; margin-bottom: 4px; }
+/* 특별 혜택 — 증정 품목 행(사진·이름·원래 값·무료) + 규칙 두 줄. 테두리에 매장색을 살짝 */
+.giftCard { display: grid; gap: 4px; padding-block: 4px 14px; border-color: color-mix(in srgb, var(--store, var(--line-2)) 35%, var(--line-2)); }
 .giftRow { border-bottom: 0; }
 .giftDesc { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.giftEmpty { padding: 8px 0; }
+.giftPrice { display: inline-flex; flex-direction: column; align-items: flex-end; gap: 4px; flex: none; font-size: 13px; }
+.giftEmpty { padding: 12px 0 8px; }
+.giftPick { color: var(--fg-2); font-weight: 600; }
+.giftRule { padding-top: 8px; border-top: 1px solid var(--line); }

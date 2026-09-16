@@ -19,9 +19,9 @@ const PHONE = process.env.DEMO_PHONE ?? "01012345678";
 
 /** 증정 품목이 비어 있는 매장에만 넣는 시연용 술 한 잔 (사장님 데이터가 들어오면 그쪽이 우선) */
 const DEMO_GIFTS: Record<StoreId, { name: string; price: number; description: string }[]> = {
-  joseon: [{ name: "조선막걸리 1통", price: 6000, description: "양은 통에 담아 내는 막걸리." }],
-  tokyo: [{ name: "산토리 생맥주 1잔", price: 8900, description: "산토리 크리미 생맥주 한 잔." }],
-  wareureu: [{ name: "소주 1병", price: 5000, description: "소주 한 병." }],
+  joseon: [{ name: "조선막걸리 2통 1반", price: 11500, description: "막걸리 2통에 사이다 1병을 섞어 큰 사발에" }],
+  tokyo: [{ name: "산토리 프리미엄 생맥주", price: 8900, description: "퍼펙트 푸어링 크리미 거품" }],
+  wareureu: [{ name: "와르르요거트(초코쉘)", price: 6500, description: "요거트 아이스크림" }, { name: "소주 1병", price: 5000, description: "좋은데이·진로 중 선택" }],
 };
 
 async function receiptImage(storeName: string, amount: number, when: string, approval: string): Promise<{ buf: Buffer; sha: string; dhash: string }> {

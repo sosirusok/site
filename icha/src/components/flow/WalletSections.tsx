@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Art } from "@/components/art/Art";
 import { Chevron } from "@/components/ui/Chevron";
@@ -17,6 +18,8 @@ export type WalletCoupon = {
   expiresAt: string;
   usedAt: string | null;
   store: StoreRef | null;
+  /** 품목 실사진. local 이면 /public 정적 파일(next/image 최적화), 아니면 DB 사진 주소 */
+  image: { src: string; local: boolean } | null;
 };
 
 export type WalletReceipt = {
@@ -35,6 +38,12 @@ export type WalletReceipt = {
 /** 쿠폰 종류 꼬리표 — 영수증 쿠폰은 없음 */
 function kindText(c: Pick<WalletCoupon, "kind">): string | null {
   return c.kind === "vip" ? "등급 쿠폰" : c.kind === "manual" ? "매장 쿠폰" : null;
+}
+
+/** 쿠폰 행 썸네일 — 품목 실사진(56px)이 있으면 사진, 없으면 매장 쿠폰 티켓 그림(64px) */
+function CouponThumb({ c }: { c: WalletCoupon }) {
+  if (c.image) return <Image src={c.image.src} alt="" width={56} height={56} sizes="56px" className="thumb" unoptimized={!c.image.local} />;
+  return <Art name={`coupon-${c.store?.id ?? "joseon"}`} className={styles.ticket} sizes="64px" />;
 }
 
 /* 내 등급 — 등급명, 누적 금액, 다음 등급까지 얇은 막대 */
@@ -64,7 +73,7 @@ export function PickableReceipts({ receipts }: { receipts: WalletReceipt[] }) {
   return (
     <section className={`wrap ${styles.sec}`} aria-labelledby="wallet-pick">
       <div className="section-h">
-        <h2 id="wallet-pick" className="h2">아직 안 고른 영수증</h2>
+        <h2 id="wallet-pick" className="h2-event">아직 안 고른 영수증</h2>
       </div>
       <ul>
         {receipts.map((r) => (
@@ -81,7 +90,7 @@ export function PickableReceipts({ receipts }: { receipts: WalletReceipt[] }) {
   );
 }
 
-/* 쓸 수 있는 쿠폰 — 티켓 썸네일 · 품목 · 코드 · 만료일 */
+/* 쓸 수 있는 쿠폰 — 품목 사진(없으면 티켓) · 품목 · 코드 · 만료일 */
 export function ActiveCoupons({ coupons }: { coupons: WalletCoupon[] }) {
   const now = new Date();
   return (
@@ -92,7 +101,7 @@ export function ActiveCoupons({ coupons }: { coupons: WalletCoupon[] }) {
         return (
           <li key={c.id}>
             <Link href={`/coupons/${c.id}`} className={`row ${styles.link}`} data-store={c.store?.id}>
-              <Art name={`coupon-${c.store?.id ?? "joseon"}`} className={styles.ticket} sizes="64px" />
+              <CouponThumb c={c} />
               <span className="body">
                 <span className={`title ${styles.title}`}>{c.menuName}{kind && <span className="tag">{kind}</span>}</span>
                 <span className={`sub ${styles.sub}`}>
@@ -113,7 +122,7 @@ export function PendingReceipts({ receipts }: { receipts: WalletReceipt[] }) {
   return (
     <section className={`wrap ${styles.sec}`} aria-labelledby="wallet-pending">
       <div className="section-h">
-        <h2 id="wallet-pending" className="h2">확인 중인 영수증</h2>
+        <h2 id="wallet-pending" className="h2-event">확인 중인 영수증</h2>
       </div>
       <ul>
         {receipts.map((r) => (
@@ -132,22 +141,22 @@ export function PendingReceipts({ receipts }: { receipts: WalletReceipt[] }) {
   );
 }
 
-/* 지난 쿠폰: 사용 / 만료 / 취소 — 접어 둔다 */
+/* 지난 쿠폰: 사용 / 만료 / 취소 — 접어 둔다. 누르는 줄(summary) 자체가 44px 이상 */
 export function PastCoupons({ coupons }: { coupons: WalletCoupon[] }) {
   return (
-    <details className={`wrap ${styles.sec} ${styles.past}`}>
+    <details id="wallet-past" className={`wrap ${styles.past}`}>
       <summary className={styles.pastSummary}>
-        <span className="h2">지난 쿠폰 {coupons.length}장</span>
+        <span className="h2-event">지난 쿠폰 {coupons.length}장</span>
         <Chevron className={styles.pastChev} />
       </summary>
-      <ul>
+      <ul className={styles.pastList}>
         {coupons.map((c) => (
           <li key={c.id}>
             <Link href={`/coupons/${c.id}`} className={`row ${styles.link} ${styles.dim}`} data-status={c.status}>
-              <Art name={`coupon-${c.store?.id ?? "joseon"}`} className={styles.ticket} sizes="64px" />
+              <CouponThumb c={c} />
               <span className="body">
-                <span className="title">{c.menuName}</span>
-                <span className="sub">
+                <span className={`title ${styles.title}`}>{c.menuName}</span>
+                <span className={`sub ${styles.sub}`}>
                   {c.store?.shortName ?? ""} · {c.status === "used" ? `${fmtMDHM(c.usedAt)} 사용` : c.status === "expired" ? `${fmtMD(c.expiresAt)} 만료` : "취소됨"}
                 </span>
               </span>

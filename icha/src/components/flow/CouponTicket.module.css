@@ -4,8 +4,11 @@
 
 /* 쿠폰 정보 */
 .info { display: grid; gap: 4px; }
-.info .h1 { display: flex; align-items: center; gap: 8px; }
-.kind { flex: none; }
+.name { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.kind { flex: none; font-family: var(--font-sans); font-size: 12px; letter-spacing: -0.01em; }
+.photo { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; display: block; }
+.plain { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; padding: 20px; border-radius: 12px; border: 2px solid var(--store, var(--line-2)); font-size: 18px; }
+.how { color: var(--fg-2); font-weight: 600; }
 .store { color: var(--fg-2); }
 .code { font-size: 28px; font-weight: 600; letter-spacing: 0.2em; line-height: 1.3; margin: 8px 0 4px; }
 .soon { color: var(--accent); font-weight: 600; }
