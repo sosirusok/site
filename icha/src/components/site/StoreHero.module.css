@@ -1,0 +1,19 @@
+.hero { display: grid; gap: 8px; padding-top: 20px; }
+.badge { width: 170px; margin-bottom: 4px; }
+.badge img { width: 100%; height: auto; }
+.name { font-size: clamp(28px, 7.4vw, 40px); }
+.headline { font-size: 17px; line-height: 1.75; color: var(--fg-2); max-width: 40em; }
+.today { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; font-size: 16.5px; font-weight: 700; margin-top: 4px; }
+.lo { font-weight: 400; color: var(--fg-2); }
+.open { color: var(--red); font-family: var(--font-display); font-weight: 700; }
+.closed { color: var(--fg-2); font-family: var(--font-display); font-weight: 700; }
+.facts { display: grid; gap: 4px; font-size: 16px; color: var(--fg-2); }
+.facts li { display: flex; gap: 12px; align-items: baseline; }
+.k { flex: none; min-width: 52px; font-weight: 700; color: var(--fg); }
+.tel { border-bottom: 2px solid var(--outline); padding-bottom: 1px; color: var(--fg); }
+.photo { position: relative; aspect-ratio: 3 / 2; margin-top: 12px; border-radius: var(--radius); border: 2px solid var(--outline); overflow: hidden; background: var(--panel-2); }
+.img { object-fit: cover; }
+@media (min-width: 760px) {
+  .hero { padding-top: 32px; gap: 12px; }
+  .photo { aspect-ratio: 16 / 9; margin-top: 20px; }
+}

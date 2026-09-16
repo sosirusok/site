@@ -1,0 +1,18 @@
+.footer { margin-top: 48px; border-top: 2px solid var(--outline); background: var(--panel-2); padding: 40px 0 28px; font-size: 15.5px; color: var(--fg-2); }
+.inner { display: grid; gap: 32px; }
+.logo { margin-bottom: 10px; }
+.brand { font-family: var(--font-display); font-size: 30px; line-height: 1; color: var(--fg); }
+.union { margin-top: 8px; font-weight: 700; color: var(--fg); }
+.rule { margin-top: 4px; }
+.links { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 6px 18px; font-weight: 700; color: var(--fg); }
+.links a { border-bottom: 2px solid var(--line); }
+.links a:hover { border-color: var(--fg); }
+.staff { color: var(--fg-3); }
+.stores { display: grid; gap: 18px; }
+.store { display: grid; gap: 2px; }
+.store img { margin-bottom: 4px; }
+.storeName { font-weight: 700; color: var(--fg); }
+.storeMeta { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.storeMeta a { text-decoration: underline; text-underline-offset: 3px; font-weight: 700; color: var(--fg); }
+.bottom { margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 14.5px; color: var(--fg-3); display: grid; gap: 4px; }
+@media (min-width: 760px) { .inner { grid-template-columns: 1fr 1.5fr; gap: 56px; } .stores { gap: 16px; } }

@@ -1,0 +1,58 @@
+/* 아직 안 고른 영수증 */
+.pickBox { display: grid; gap: 12px; background: var(--panel); }
+.pickList { display: grid; gap: 18px; }
+.pickRow { display: grid; gap: 6px; justify-items: start; }
+.pickRow > a[aria-label] { width: 100% !important; max-width: 360px; }
+.pickRow + .pickRow { padding-top: 16px; border-top: 2px dashed var(--line); }
+.pickLine { font-size: 16.5px; }
+.pickSub { font-size: 16px; line-height: 1.7; color: var(--fg-2); margin-bottom: 4px; }
+
+/* 쓸 수 있는 쿠폰 */
+.coupons { display: grid; gap: 26px; }
+.coupon { display: grid; gap: 6px; }
+.couponArt { display: block; width: 100%; max-width: 460px; }
+.couponArt img { width: 100%; height: auto; transition: transform 0.15s var(--ease-out); }
+.coupon:hover .couponArt img { transform: rotate(-1deg); }
+.couponLine { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; max-width: 460px; }
+.couponCode { font-size: 30px; font-weight: 600; letter-spacing: 0.16em; line-height: 1.1; }
+.couponExp { font-size: 16px; font-weight: 700; color: var(--fg-2); }
+.couponWhat { font-size: 16px; color: var(--fg-2); }
+
+/* 확인 대기 */
+.pending { display: grid; gap: 10px; }
+.pendingHead { display: flex; align-items: center; gap: 12px; }
+.pendingArt { width: 64px; flex: none; }
+.pendingArt img { width: 100%; height: auto; }
+.pendingText { font-size: 16px; color: var(--fg-2); }
+.pendingList { display: grid; gap: 4px; font-size: 16px; color: var(--fg-2); padding-left: 76px; }
+
+/* 지난 쿠폰 */
+.past { border-top: 2px solid var(--outline); }
+.pastSummary { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 16px 0; cursor: pointer; list-style: none; }
+.pastSummary::-webkit-details-marker { display: none; }
+.pastToggle { font-size: 15.5px; font-weight: 700; color: var(--fg-2); border-bottom: 2px solid var(--outline); }
+.past[open] .pastToggle { opacity: 0.6; }
+.pastList { display: grid; gap: 14px; padding-bottom: 12px; }
+.pastRow { display: grid; grid-template-columns: 44% 1fr; gap: 14px; align-items: center; }
+.pastArt { position: relative; display: block; }
+.pastTicket { width: 100%; height: auto; }
+.pastRow[data-status="void"] .pastTicket { opacity: 0.45; filter: grayscale(1); }
+.pastRow[data-status="expired"] .pastArt { width: 72px; }
+.pastRow[data-status="expired"] .pastArt img { width: 72px; height: auto; }
+.pastArt .stamp { position: absolute; right: 2%; bottom: -4%; width: 42%; height: auto; }
+.pastText { display: grid; gap: 2px; }
+.pastName { font-weight: 700; font-size: 16px; }
+.pastState { font-size: 15.5px; color: var(--fg-3); }
+
+/* 빈 쿠폰함 */
+.empty { display: grid; gap: 14px; justify-items: start; }
+.empty > a[aria-label] { width: 100% !important; max-width: 360px; }
+.emptyArt { width: min(55%, 260px); }
+.emptyArt img { width: 100%; height: auto; }
+.emptyText { font-size: 17px; line-height: 1.8; color: var(--fg-2); }
+
+@media (min-width: 760px) {
+  .coupons { grid-template-columns: 1fr 1fr; gap: 32px 28px; }
+  .pastList { grid-template-columns: 1fr 1fr; gap: 16px 28px; }
+  .pastRow { grid-template-columns: 200px 1fr; }
+}

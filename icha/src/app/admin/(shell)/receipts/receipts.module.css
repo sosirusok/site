@@ -1,0 +1,34 @@
+.detail { display: grid; gap: 16px; grid-template-columns: 1fr; align-items: start; }
+@media (min-width: 1000px) { .detail { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); } }
+
+.viewerBar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 8px 10px; border-bottom: 1px solid var(--a-line-2); }
+.viewerBar .zoom { font-family: var(--font-mono); font-size: 14px; color: var(--a-ink-3); min-width: 48px; text-align: center; }
+.viewerBox {
+  overflow: auto;
+  max-height: 76vh;
+  min-height: 240px;
+  background: #e2e5e9;
+  background-image: linear-gradient(45deg, #d9dde2 25%, transparent 25%, transparent 75%, #d9dde2 75%), linear-gradient(45deg, #d9dde2 25%, transparent 25%, transparent 75%, #d9dde2 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  padding: 10px;
+}
+.viewerBox canvas { display: block; margin: 0 auto; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18); background: #fff; }
+.viewerEmpty { display: grid; place-items: center; color: var(--a-ink-3); min-height: 240px; }
+
+.readGrid { display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; font-size: 14px; }
+.readGrid dt { color: var(--a-ink-3); white-space: nowrap; }
+.readGrid dd { margin: 0; }
+.conf { font-family: var(--font-mono); font-size: 13px; color: var(--a-ink-3); margin-left: 6px; }
+.confLow { color: var(--a-bad); font-weight: 600; }
+.items { margin: 0; padding: 0; list-style: none; font-size: 14px; }
+.items li { display: flex; justify-content: space-between; gap: 8px; padding: 3px 0; border-bottom: 1px dashed var(--a-line-2); }
+.items li:last-child { border-bottom: 0; }
+.flags { display: flex; flex-wrap: wrap; gap: 6px; }
+.reasons { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.reasons li { display: flex; gap: 10px; align-items: baseline; font-size: 14px; }
+.reasons code { font-family: var(--font-mono); font-size: 13px; color: var(--a-ink-3); white-space: nowrap; }
+.decisionBtns { display: flex; flex-wrap: wrap; gap: 8px; }
+.decisionBtns button { flex: 1 1 140px; min-height: 46px; }
+.decided { display: grid; gap: 6px; font-size: 14px; }
+.thumbCell { width: 52px; }

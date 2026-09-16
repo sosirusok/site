@@ -1,0 +1,15 @@
+.block { display: grid; gap: 16px; }
+.hours th { width: 92px; font-family: var(--font-display); font-weight: 700; color: var(--fg); }
+.hours td { font-size: 16.5px; }
+.lo { display: block; color: var(--fg-2); font-size: 15.5px; }
+.note { font-size: 16.5px; line-height: 1.75; color: var(--fg-2); max-width: 40em; }
+.where th { width: 84px; font-family: var(--font-display); font-weight: 700; color: var(--fg); }
+.where td { font-size: 16px; line-height: 1.7; }
+.sub { display: block; font-size: 15px; color: var(--fg-3); }
+.mapWrap { border: 2px solid var(--outline); border-radius: var(--radius); padding: 10px; background: var(--panel); }
+.mapWrap :global(.leaflet-container) { background: var(--panel-2); }
+.links { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (min-width: 760px) {
+  .hours th { width: 120px; }
+  .where th { width: 110px; }
+}

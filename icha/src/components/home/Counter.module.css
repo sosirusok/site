@@ -1,0 +1,22 @@
+.hero { padding: 18px 0 8px; }
+.scene { position: relative; height: clamp(190px, 34vw, 330px); margin-bottom: 8px; }
+.scene img { width: 100%; height: auto; }
+.artJoseon { position: absolute; left: 1%; bottom: 40px; width: 44%; max-width: 420px; }
+.artTokyo { position: absolute; left: 38%; bottom: 44px; width: 38%; max-width: 360px; }
+.artWareureu { position: absolute; right: 1%; bottom: 46px; width: 30%; max-width: 300px; }
+.counter { position: absolute; left: -2%; right: -2%; bottom: 0; width: 104%; height: 60px; }
+.intro { display: grid; gap: 16px; padding-top: 18px; }
+.eyebrow { font-weight: 700; color: var(--fg-3); font-size: 15px; }
+.para { font-size: 17px; line-height: 1.85; color: var(--fg-2); max-width: 44em; }
+.note { font-size: 16px; line-height: 1.75; color: var(--fg-2); max-width: 44em; }
+.badges { display: flex; flex-wrap: wrap; gap: 8px 10px; margin-top: 2px; }
+.badges a { flex: 0 0 auto; }
+.badges img { width: 148px; height: auto; transition: transform 0.15s; }
+.badges a:hover img { transform: translateY(-2px); }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin-top: 4px; }
+.textLink { font-weight: 700; border-bottom: 2px solid var(--outline); padding-bottom: 2px; }
+@media (min-width: 760px) {
+  .hero { padding-top: 28px; }
+  .intro { grid-template-columns: 1fr; max-width: 820px; }
+  .badges img { width: 170px; }
+}

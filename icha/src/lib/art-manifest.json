@@ -1,0 +1,727 @@
+{
+ "status-checking": {
+  "src": "/art/status-checking.png",
+  "width": 480,
+  "height": 477
+ },
+ "status-ok": {
+  "src": "/art/status-ok.png",
+  "width": 480,
+  "height": 575
+ },
+ "status-photo-fail": {
+  "src": "/art/status-photo-fail.png",
+  "width": 480,
+  "height": 506
+ },
+ "status-wrong-store": {
+  "src": "/art/status-wrong-store.png",
+  "width": 480,
+  "height": 522
+ },
+ "status-used": {
+  "src": "/art/status-used.png",
+  "width": 480,
+  "height": 574
+ },
+ "receipt-info": {
+  "src": "/art/receipt-info.png",
+  "width": 654,
+  "height": 933
+ },
+ "pick-from-joseon": {
+  "src": "/art/pick-from-joseon.png",
+  "width": 800,
+  "height": 649
+ },
+ "pick-from-tokyo": {
+  "src": "/art/pick-from-tokyo.png",
+  "width": 800,
+  "height": 649
+ },
+ "pick-from-wareureu": {
+  "src": "/art/pick-from-wareureu.png",
+  "width": 800,
+  "height": 649
+ },
+ "coupon-joseon": {
+  "src": "/art/coupon-joseon.png",
+  "width": 900,
+  "height": 297
+ },
+ "coupon-tokyo": {
+  "src": "/art/coupon-tokyo.png",
+  "width": 900,
+  "height": 297
+ },
+ "coupon-wareureu": {
+  "src": "/art/coupon-wareureu.png",
+  "width": 900,
+  "height": 298
+ },
+ "wallet-active": {
+  "src": "/art/wallet-active.png",
+  "width": 600,
+  "height": 658
+ },
+ "wallet-used": {
+  "src": "/art/wallet-used.png",
+  "width": 600,
+  "height": 658
+ },
+ "wallet-expired": {
+  "src": "/art/wallet-expired.png",
+  "width": 600,
+  "height": 656
+ },
+ "btn-use-staff": {
+  "src": "/art/btn-use-staff.png",
+  "width": 640,
+  "height": 125
+ },
+ "confirm-card": {
+  "src": "/art/confirm-card.png",
+  "width": 640,
+  "height": 587
+ },
+ "empty-pocket": {
+  "src": "/art/empty-pocket.png",
+  "width": 560,
+  "height": 381
+ },
+ "empty-holder": {
+  "src": "/art/empty-holder.png",
+  "width": 560,
+  "height": 832
+ },
+ "retry": {
+  "src": "/art/retry.png",
+  "width": 560,
+  "height": 564
+ },
+ "vip-progress": {
+  "src": "/art/vip-progress.png",
+  "width": 900,
+  "height": 80
+ },
+ "ledger": {
+  "src": "/art/ledger.png",
+  "width": 790,
+  "height": 985
+ },
+ "vipcard-01": {
+  "src": "/art/vipcard-01.png",
+  "width": 800,
+  "height": 459
+ },
+ "vipcard-10": {
+  "src": "/art/vipcard-10.png",
+  "width": 800,
+  "height": 458
+ },
+ "vipcard-11": {
+  "src": "/art/vipcard-11.png",
+  "width": 800,
+  "height": 458
+ },
+ "vipcard-12": {
+  "src": "/art/vipcard-12.png",
+  "width": 800,
+  "height": 458
+ },
+ "vipcard-02": {
+  "src": "/art/vipcard-02.png",
+  "width": 800,
+  "height": 459
+ },
+ "vipcard-03": {
+  "src": "/art/vipcard-03.png",
+  "width": 800,
+  "height": 458
+ },
+ "vipcard-04": {
+  "src": "/art/vipcard-04.png",
+  "width": 800,
+  "height": 458
+ },
+ "vipcard-05": {
+  "src": "/art/vipcard-05.png",
+  "width": 800,
+  "height": 460
+ },
+ "vipcard-06": {
+  "src": "/art/vipcard-06.png",
+  "width": 800,
+  "height": 459
+ },
+ "vipcard-07": {
+  "src": "/art/vipcard-07.png",
+  "width": 800,
+  "height": 459
+ },
+ "vipcard-08": {
+  "src": "/art/vipcard-08.png",
+  "width": 800,
+  "height": 460
+ },
+ "vipcard-09": {
+  "src": "/art/vipcard-09.png",
+  "width": 800,
+  "height": 460
+ },
+ "poster-art-joseon": {
+  "src": "/art/poster-art-joseon.png",
+  "width": 1100,
+  "height": 659
+ },
+ "poster-art-tokyo": {
+  "src": "/art/poster-art-tokyo.png",
+  "width": 1100,
+  "height": 667
+ },
+ "poster-art-wareureu": {
+  "src": "/art/poster-art-wareureu.png",
+  "width": 657,
+  "height": 947
+ },
+ "tent-art-joseon": {
+  "src": "/art/tent-art-joseon.png",
+  "width": 800,
+  "height": 598
+ },
+ "tent-art-tokyo": {
+  "src": "/art/tent-art-tokyo.png",
+  "width": 800,
+  "height": 714
+ },
+ "tent-art-wareureu": {
+  "src": "/art/tent-art-wareureu.png",
+  "width": 746,
+  "height": 936
+ },
+ "badge-joseon": {
+  "src": "/art/badge-joseon.png",
+  "width": 720,
+  "height": 199
+ },
+ "badge-tokyo": {
+  "src": "/art/badge-tokyo.png",
+  "width": 720,
+  "height": 203
+ },
+ "badge-wareureu": {
+  "src": "/art/badge-wareureu.png",
+  "width": 720,
+  "height": 202
+ },
+ "icon-receipt": {
+  "src": "/art/icon-receipt.png",
+  "width": 256,
+  "height": 265
+ },
+ "icon-coupon": {
+  "src": "/art/icon-coupon.png",
+  "width": 256,
+  "height": 160
+ },
+ "icon-store": {
+  "src": "/art/icon-store.png",
+  "width": 256,
+  "height": 218
+ },
+ "icon-phone": {
+  "src": "/art/icon-phone.png",
+  "width": 256,
+  "height": 288
+ },
+ "icon-vip": {
+  "src": "/art/icon-vip.png",
+  "width": 256,
+  "height": 154
+ },
+ "icon-history": {
+  "src": "/art/icon-history.png",
+  "width": 256,
+  "height": 253
+ },
+ "icon-ok": {
+  "src": "/art/icon-ok.png",
+  "width": 256,
+  "height": 255
+ },
+ "icon-error": {
+  "src": "/art/icon-error.png",
+  "width": 256,
+  "height": 259
+ },
+ "icon-back": {
+  "src": "/art/icon-back.png",
+  "width": 256,
+  "height": 188
+ },
+ "card-joseon": {
+  "src": "/art/card-joseon.png",
+  "width": 600,
+  "height": 865
+ },
+ "card-tokyo": {
+  "src": "/art/card-tokyo.png",
+  "width": 600,
+  "height": 865
+ },
+ "card-wareureu": {
+  "src": "/art/card-wareureu.png",
+  "width": 600,
+  "height": 864
+ },
+ "nav-ref-1": {
+  "src": "/art/nav-ref-1.png",
+  "width": 1200,
+  "height": 82
+ },
+ "nav-ref-2": {
+  "src": "/art/nav-ref-2.png",
+  "width": 1200,
+  "height": 82
+ },
+ "nav-ref-3": {
+  "src": "/art/nav-ref-3.png",
+  "width": 1200,
+  "height": 82
+ },
+ "nav-ref-4": {
+  "src": "/art/nav-ref-4.png",
+  "width": 1200,
+  "height": 82
+ },
+ "nav-ref-5": {
+  "src": "/art/nav-ref-5.png",
+  "width": 1200,
+  "height": 185
+ },
+ "nav-ref-6": {
+  "src": "/art/nav-ref-6.png",
+  "width": 1200,
+  "height": 186
+ },
+ "nav-ref-7": {
+  "src": "/art/nav-ref-7.png",
+  "width": 1200,
+  "height": 187
+ },
+ "nav-ref-8": {
+  "src": "/art/nav-ref-8.png",
+  "width": 1200,
+  "height": 187
+ },
+ "btn-start-default": {
+  "src": "/art/btn-start-default.png",
+  "width": 640,
+  "height": 124
+ },
+ "btn-pick-photo-pressed": {
+  "src": "/art/btn-pick-photo-pressed.png",
+  "width": 640,
+  "height": 126
+ },
+ "btn-pick-photo-loading": {
+  "src": "/art/btn-pick-photo-loading.png",
+  "width": 640,
+  "height": 125
+ },
+ "btn-pick-photo-disabled": {
+  "src": "/art/btn-pick-photo-disabled.png",
+  "width": 640,
+  "height": 124
+ },
+ "btn-menu-default": {
+  "src": "/art/btn-menu-default.png",
+  "width": 640,
+  "height": 126
+ },
+ "btn-menu-pressed": {
+  "src": "/art/btn-menu-pressed.png",
+  "width": 640,
+  "height": 126
+ },
+ "btn-menu-loading": {
+  "src": "/art/btn-menu-loading.png",
+  "width": 640,
+  "height": 125
+ },
+ "btn-menu-disabled": {
+  "src": "/art/btn-menu-disabled.png",
+  "width": 640,
+  "height": 126
+ },
+ "btn-choose-default": {
+  "src": "/art/btn-choose-default.png",
+  "width": 640,
+  "height": 125
+ },
+ "btn-choose-pressed": {
+  "src": "/art/btn-choose-pressed.png",
+  "width": 640,
+  "height": 126
+ },
+ "btn-choose-loading": {
+  "src": "/art/btn-choose-loading.png",
+  "width": 640,
+  "height": 126
+ },
+ "btn-start-pressed": {
+  "src": "/art/btn-start-pressed.png",
+  "width": 640,
+  "height": 126
+ },
+ "btn-choose-disabled": {
+  "src": "/art/btn-choose-disabled.png",
+  "width": 640,
+  "height": 125
+ },
+ "btn-get-coupon-default": {
+  "src": "/art/btn-get-coupon-default.png",
+  "width": 640,
+  "height": 126
+ },
+ "btn-get-coupon-pressed": {
+  "src": "/art/btn-get-coupon-pressed.png",
+  "width": 640,
+  "height": 126
+ },
+ "btn-get-coupon-loading": {
+  "src": "/art/btn-get-coupon-loading.png",
+  "width": 640,
+  "height": 126
+ },
+ "btn-get-coupon-disabled": {
+  "src": "/art/btn-get-coupon-disabled.png",
+  "width": 640,
+  "height": 126
+ },
+ "btn-use-default": {
+  "src": "/art/btn-use-default.png",
+  "width": 640,
+  "height": 126
+ },
+ "btn-use-pressed": {
+  "src": "/art/btn-use-pressed.png",
+  "width": 640,
+  "height": 126
+ },
+ "btn-use-loading": {
+  "src": "/art/btn-use-loading.png",
+  "width": 640,
+  "height": 125
+ },
+ "btn-use-disabled": {
+  "src": "/art/btn-use-disabled.png",
+  "width": 640,
+  "height": 126
+ },
+ "btn-start-loading": {
+  "src": "/art/btn-start-loading.png",
+  "width": 640,
+  "height": 125
+ },
+ "btn-start-disabled": {
+  "src": "/art/btn-start-disabled.png",
+  "width": 640,
+  "height": 125
+ },
+ "btn-shoot-default": {
+  "src": "/art/btn-shoot-default.png",
+  "width": 640,
+  "height": 126
+ },
+ "btn-shoot-pressed": {
+  "src": "/art/btn-shoot-pressed.png",
+  "width": 640,
+  "height": 126
+ },
+ "btn-shoot-loading": {
+  "src": "/art/btn-shoot-loading.png",
+  "width": 640,
+  "height": 125
+ },
+ "btn-shoot-disabled": {
+  "src": "/art/btn-shoot-disabled.png",
+  "width": 640,
+  "height": 125
+ },
+ "btn-pick-photo-default": {
+  "src": "/art/btn-pick-photo-default.png",
+  "width": 640,
+  "height": 125
+ },
+ "how-1": {
+  "src": "/art/how-1.png",
+  "width": 800,
+  "height": 700
+ },
+ "how-2": {
+  "src": "/art/how-2.png",
+  "width": 800,
+  "height": 791
+ },
+ "how-3": {
+  "src": "/art/how-3.png",
+  "width": 800,
+  "height": 670
+ },
+ "logo": {
+  "src": "/art/logo.png",
+  "width": 600,
+  "height": 494
+ },
+ "shoot-guide-1": {
+  "src": "/art/shoot-guide-1.png",
+  "width": 700,
+  "height": 825
+ },
+ "shoot-guide-2": {
+  "src": "/art/shoot-guide-2.png",
+  "width": 700,
+  "height": 837
+ },
+ "shoot-guide-3": {
+  "src": "/art/shoot-guide-3.png",
+  "width": 700,
+  "height": 825
+ },
+ "choose-confirm": {
+  "src": "/art/choose-confirm.png",
+  "width": 800,
+  "height": 605
+ },
+ "coupon-issued": {
+  "src": "/art/coupon-issued.png",
+  "width": 800,
+  "height": 551
+ },
+ "coupon-used": {
+  "src": "/art/coupon-used.png",
+  "width": 700,
+  "height": 241
+ },
+ "hero-graphic": {
+  "src": "/art/hero-graphic.png",
+  "width": 1148,
+  "height": 1022
+ },
+ "vip-symbol": {
+  "src": "/art/vip-symbol.png",
+  "width": 600,
+  "height": 426
+ },
+ "vip-card": {
+  "src": "/art/vip-card.png",
+  "width": 900,
+  "height": 515
+ },
+ "vip-coupon": {
+  "src": "/art/vip-coupon.png",
+  "width": 900,
+  "height": 281
+ },
+ "kakao-share": {
+  "src": "/art/kakao-share.png",
+  "width": 1200,
+  "height": 818
+ },
+ "banner-frame": {
+  "src": "/art/banner-frame.png",
+  "width": 1256,
+  "height": 728
+ },
+ "fx-01": {
+  "src": "/art/fx-01.png",
+  "width": 400,
+  "height": 179
+ },
+ "fx-10": {
+  "src": "/art/fx-10.png",
+  "width": 400,
+  "height": 174
+ },
+ "fx-11": {
+  "src": "/art/fx-11.png",
+  "width": 400,
+  "height": 175
+ },
+ "fx-12": {
+  "src": "/art/fx-12.png",
+  "width": 400,
+  "height": 179
+ },
+ "fx-13": {
+  "src": "/art/fx-13.png",
+  "width": 400,
+  "height": 175
+ },
+ "fx-14": {
+  "src": "/art/fx-14.png",
+  "width": 400,
+  "height": 175
+ },
+ "fx-15": {
+  "src": "/art/fx-15.png",
+  "width": 400,
+  "height": 167
+ },
+ "fx-16": {
+  "src": "/art/fx-16.png",
+  "width": 400,
+  "height": 172
+ },
+ "fx-17": {
+  "src": "/art/fx-17.png",
+  "width": 400,
+  "height": 397
+ },
+ "fx-18": {
+  "src": "/art/fx-18.png",
+  "width": 400,
+  "height": 398
+ },
+ "fx-19": {
+  "src": "/art/fx-19.png",
+  "width": 400,
+  "height": 399
+ },
+ "fx-02": {
+  "src": "/art/fx-02.png",
+  "width": 400,
+  "height": 179
+ },
+ "fx-20": {
+  "src": "/art/fx-20.png",
+  "width": 400,
+  "height": 398
+ },
+ "fx-21": {
+  "src": "/art/fx-21.png",
+  "width": 400,
+  "height": 399
+ },
+ "fx-22": {
+  "src": "/art/fx-22.png",
+  "width": 400,
+  "height": 399
+ },
+ "fx-23": {
+  "src": "/art/fx-23.png",
+  "width": 400,
+  "height": 400
+ },
+ "fx-24": {
+  "src": "/art/fx-24.png",
+  "width": 400,
+  "height": 398
+ },
+ "fx-25": {
+  "src": "/art/fx-25.png",
+  "width": 400,
+  "height": 401
+ },
+ "fx-26": {
+  "src": "/art/fx-26.png",
+  "width": 400,
+  "height": 401
+ },
+ "fx-27": {
+  "src": "/art/fx-27.png",
+  "width": 400,
+  "height": 401
+ },
+ "fx-28": {
+  "src": "/art/fx-28.png",
+  "width": 400,
+  "height": 401
+ },
+ "fx-29": {
+  "src": "/art/fx-29.png",
+  "width": 400,
+  "height": 400
+ },
+ "fx-03": {
+  "src": "/art/fx-03.png",
+  "width": 400,
+  "height": 180
+ },
+ "fx-30": {
+  "src": "/art/fx-30.png",
+  "width": 400,
+  "height": 401
+ },
+ "fx-31": {
+  "src": "/art/fx-31.png",
+  "width": 400,
+  "height": 401
+ },
+ "fx-32": {
+  "src": "/art/fx-32.png",
+  "width": 400,
+  "height": 401
+ },
+ "fx-04": {
+  "src": "/art/fx-04.png",
+  "width": 400,
+  "height": 179
+ },
+ "fx-05": {
+  "src": "/art/fx-05.png",
+  "width": 400,
+  "height": 179
+ },
+ "fx-06": {
+  "src": "/art/fx-06.png",
+  "width": 400,
+  "height": 179
+ },
+ "fx-07": {
+  "src": "/art/fx-07.png",
+  "width": 400,
+  "height": 180
+ },
+ "fx-08": {
+  "src": "/art/fx-08.png",
+  "width": 400,
+  "height": 179
+ },
+ "fx-09": {
+  "src": "/art/fx-09.png",
+  "width": 400,
+  "height": 176
+ },
+ "phone-input": {
+  "src": "/art/phone-input.png",
+  "width": 900,
+  "height": 1143
+ },
+ "upload-area-1": {
+  "src": "/art/upload-area-1.png",
+  "width": 900,
+  "height": 989
+ },
+ "upload-area-2": {
+  "src": "/art/upload-area-2.png",
+  "width": 900,
+  "height": 982
+ },
+ "envelope": {
+  "src": "/art/envelope.png",
+  "width": 800,
+  "height": 298
+ },
+ "stamp-used": {
+  "src": "/art/stamp-used.png",
+  "width": 279,
+  "height": 116
+ },
+ "confirm-frame": {
+  "src": "/art/confirm-frame.png",
+  "width": 640,
+  "height": 587
+ }
+}

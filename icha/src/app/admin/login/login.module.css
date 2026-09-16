@@ -1,0 +1,48 @@
+.page {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+.bar {
+  background: #1a1714;
+  color: #f3eee4;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  font-weight: 700;
+  gap: 8px;
+}
+.bar span { font-weight: 500; opacity: 0.72; font-size: 14px; }
+.barLogo { height: 28px; width: auto; margin-right: 2px; }
+.center {
+  display: grid;
+  place-items: start center;
+  padding: 40px 16px 24px;
+}
+.card {
+  width: min(100%, 400px);
+  background: #fff;
+  border: 1px solid #d9dde2;
+  border-radius: 6px;
+  padding: 26px 22px 20px;
+  box-shadow: 0 1px 2px rgba(22, 24, 27, 0.06);
+}
+.brand { display: grid; justify-items: center; text-align: center; gap: 6px; margin-bottom: 18px; }
+.brand img { display: block; }
+.title { font-size: 21px; font-weight: 700; margin: 4px 0 0; }
+.desc { font-size: 14px; color: #5f666e; margin: 0; }
+.badges {
+  list-style: none; margin: 20px 0 0; padding: 14px 0 0;
+  border-top: 1px solid #eaedf0;
+  display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 10px;
+}
+.badges li { display: flex; }
+.badges img { display: block; }
+.foot {
+  text-align: center;
+  font-size: 14px;
+  color: #5f666e;
+  padding: 16px;
+}
+.foot a { text-decoration: underline; text-underline-offset: 3px; }

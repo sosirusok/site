@@ -1,0 +1,19 @@
+.card { position: relative; width: 100%; max-width: 440px; container-type: inline-size; line-height: 1; }
+.card img { width: 100%; height: auto; display: block; }
+
+/* VIP 카드(900×515): 회원번호 선 위, 누적 결제금액 옆, 혜택 보기 버튼 자리 */
+.vipNo { position: absolute; left: 21%; top: 72.2%; color: #ece6d6; font-size: max(15px, 4cqw); font-weight: 600; letter-spacing: 0.04em; }
+.vipAmt { position: absolute; left: 29.5%; top: 83%; color: #ece6d6; font-size: max(15px, 4cqw); font-weight: 600; }
+.vipTier { position: absolute; left: 27%; top: 19%; color: #ece6d6; font-family: var(--font-display); font-size: max(15px, 4.6cqw); }
+.vipLink { position: absolute; left: 78%; top: 77.5%; width: 17%; height: 11.5%; border-radius: 999px; }
+.vipLink:focus-visible { outline: 3px solid #ece6d6; }
+
+/* 진행 프레임(800×459): 남색이 차오른 쪽에는 밝은 글자, 아이보리 쪽에는 목탄 글자 */
+.frameText { position: absolute; bottom: 9%; display: grid; gap: max(4px, 1.4cqw); }
+.frameText[data-side="right"] { right: 8%; text-align: right; justify-items: end; }
+.frameText[data-side="left"] { left: 8%; text-align: left; justify-items: start; }
+.frameText[data-ink="dark"] { color: var(--fg); }
+.frameText[data-ink="light"] { color: #ece6d6; }
+.frameTier { font-family: var(--font-display); font-size: max(20px, 6.4cqw); }
+.frameAmt { font-size: max(16px, 5cqw); font-weight: 600; }
+.frameNo { font-size: max(15px, 3.6cqw); opacity: 0.9; }

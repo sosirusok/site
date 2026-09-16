@@ -1,0 +1,41 @@
+{
+  "name": "icha",
+  "private": true,
+  "version": "0.1.0",
+  "description": "서면 2차 연합 — 영수증 인증 무료 사이드 쿠폰 사이트 (조선칼국수 · 도쿄스탠드 · 와르르맨숀 서면점)",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test src/**/*.test.ts",
+    "seed": "tsx scripts/seed.ts",
+    "admin:create": "tsx scripts/create-admin.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "0.126.0",
+    "@electric-sql/pglite": "0.5.8",
+    "jose": "6.2.12",
+    "leaflet": "^1.9.4",
+    "next": "16.3.5",
+    "pg": "8.23.0",
+    "qrcode": "1.5.4",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "sharp": "0.35.4",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9.22",
+    "@types/node": "22.20.3",
+    "@types/pg": "8.23.1",
+    "@types/qrcode": "1.5.6",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "tsx": "4.23.13",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
