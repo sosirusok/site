@@ -113,7 +113,7 @@ export default async function ReceiptDetailPage({ params }: { params: Promise<{ 
                 </p>
               ) : r.status === "approved" ? (
                 <p className={ui.help} style={{ marginTop: 10 }}>
-                  승인됨. 회원이 아직 사이드 메뉴를 고르지 않았습니다.
+                  승인됨. 회원이 아직 증정 품목을 고르지 않았습니다.
                 </p>
               ) : null}
             </div>

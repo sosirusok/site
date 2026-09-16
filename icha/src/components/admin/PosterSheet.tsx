@@ -1,12 +1,13 @@
 import QRCode from "qrcode";
-import { BRAND, SITE_URL } from "@/lib/config";
+import { SITE_URL } from "@/lib/config";
 import type { Rules } from "@/lib/config";
-import { STORES, giftStoresFor, naverPlaceUrl, type Store } from "@/lib/stores";
+import { giftStoresFor, naverPlaceUrl, type Store } from "@/lib/stores";
 import { LOCATIONS } from "@/lib/locations";
-import { joinWithJosa } from "@/components/admin/format";
+import { Art } from "@/components/art/Art";
+import { joinWithJosa, josa } from "@/components/admin/format";
 import s from "@/app/admin/(shell)/poster/poster.module.css";
 
-async function qrSvg(text: string, color: string): Promise<string> {
+export async function qrSvg(text: string, color: string): Promise<string> {
   const svg = await QRCode.toString(text, { type: "svg", errorCorrectionLevel: "M", margin: 0, color: { dark: color, light: "#00000000" } });
   return svg.replace(/<svg /, '<svg role="img" aria-label="QR 코드" ');
 }
@@ -16,115 +17,109 @@ export function isPlaceholderSiteUrl(url: string = SITE_URL): boolean {
   return /example\.com|localhost|127\.0\.0\.1|0\.0\.0\.0/i.test(url);
 }
 
+/** 매장별 증정 품목 이름 (DB is_gift 항목). 비어 있으면 대표 술 이름으로 대신한다. */
+export type GiftNames = Partial<Record<string, string[]>>;
+export function giftLabel(store: Store, gifts: GiftNames): string {
+  const names = gifts[store.id] ?? [];
+  return names.length ? names.join("·") : store.drink;
+}
+
+export const won = (n: number) => `${n.toLocaleString("ko-KR")}원`;
+
 /**
- * A4 한 장짜리 매장 포스터 (서버 컴포넌트, 인쇄용). 매장에 붙이는 인쇄물이며 손님 사이트에는 나오지 않는다.
- * 흰 종이에 검정 활자, 빨강 한 줄. 표어 없이 사실만.
+ * A4 세로 한 장짜리 매장 포스터 (서버 컴포넌트, 인쇄용).
+ * 흰 종이 위에 사장님 그림(poster-art) 크게, 매장 배지·로고, 사실 문장 제목, 규칙 한 줄, 이용 순서 3줄, QR 두 개.
+ * 남색 강조·14px 둥근 모서리. 통색 띠 없이 선만 써서 잉크를 아낀다.
  */
-export async function PosterSheet({ store, rules }: { store: Store; rules: Rules }) {
+export async function PosterSheet({ store, rules, gifts }: { store: Store; rules: Rules; gifts: GiftNames }) {
   const others = giftStoresFor(store.id);
-  const otherNames = joinWithJosa(others.map((o) => o.shortName), "이나");
+  const [a, b] = others;
   const verifyUrl = `${SITE_URL}/verify?from=${store.id}`;
   const placeUrl = naverPlaceUrl(store);
-  const [qrSite, qrPlace] = await Promise.all([qrSvg(verifyUrl, "#111111"), placeUrl ? qrSvg(placeUrl, "#111111") : Promise.resolve(null)]);
-  const no = String(STORES.findIndex((x) => x.id === store.id) + 1).padStart(2, "0");
-  const won = (n: number) => `${n.toLocaleString("ko-KR")}원`;
+  const [qrSite, qrPlace] = await Promise.all([qrSvg(verifyUrl, "#1f2d40"), placeUrl ? qrSvg(placeUrl, "#24211d") : Promise.resolve(null)]);
+
+  const giftSentence =
+    a && b
+      ? `${a.shortName} ${josa(giftLabel(a, gifts), "이나")} ${b.shortName} ${giftLabel(b, gifts)} 중 하나를 무료로 드려요.`
+      : "나머지 두 곳에서 그 집 술 한 잔을 무료로 드려요.";
+
+  const steps = [
+    { art: "how-1", text: "계산하고 받은 영수증을 찍어 올려요" },
+    { art: "how-2", text: "옆집 두 곳 중 마시고 싶은 쪽을 골라요" },
+    { art: "how-3", text: "그 집에서 직원에게 쿠폰 화면을 보여 줘요" },
+  ];
 
   return (
-    <div className={s.sheet}>
+    <div className={`${s.sheet} ${s.poster}`} data-store={store.id}>
       {isPlaceholderSiteUrl() ? <p className={s.warn}>배포 주소가 아닙니다 — 이 포스터는 붙이지 마세요 (NEXT_PUBLIC_SITE_URL: {SITE_URL})</p> : null}
+
       <div className={s.head}>
-        <span className={s.headBrand}>
-          {BRAND.name} {BRAND.hanja}
-          <small>{BRAND.unionName}</small>
-        </span>
-        <span className={s.headStore}>
-          <b>{no}</b>
-          {store.shortName}
-          <span>{store.drink}</span>
-        </span>
+        <Art name={`badge-${store.id}`} alt={store.shortName} className={s.headBadge} sizes="240px" />
+        <span className={s.headHere}>여기서 계산하셨나요?</span>
+        <Art name="logo" alt="이차" className={s.headLogo} sizes="80px" />
+      </div>
+
+      <div className={s.artWrap}>
+        <Art name={`poster-art-${store.id}`} alt="" className={s.art} sizes="640px" priority />
       </div>
 
       <h1 className={s.title}>
-        {store.shortName} 영수증 인증 시
+        이 집 영수증으로
         <br />
-        {otherNames}에서
-        <br />
-        사이드 메뉴 1개 <em>무료</em>
+        옆집에서 <em>한 잔 더</em> 받아요
       </h1>
+
       <p className={s.sub}>
-        {BRAND.ruleOneLiner}
-        <br />
-        앱 설치·회원 가입·인증번호 없이 휴대폰 번호만 입력하면 됩니다.
+        {store.shortName}에서 계산한 영수증 사진을 올리면 {giftSentence} 앱 설치나 가입 없이 전화번호만 넣으면 돼요.
       </p>
 
-      <table className={s.steps}>
-        <tbody>
-          <tr>
-            <th>1</th>
-            <td>
-              <b>{store.shortName}에서 결제</b>
-              <span>카드·현금 모두 됩니다. 영수증(카드 매출전표·현금영수증)을 받아 두세요.</span>
-            </td>
-          </tr>
-          <tr>
-            <th>2</th>
-            <td>
-              <b>아래 QR로 들어가 영수증 사진 인증</b>
-              <span>
-                결제 후 {rules.receiptValidHours}시간 안
-                {rules.minAmount > 0 ? ` · ${won(rules.minAmount)} 이상 결제` : ""} · 하루 {rules.dailyLimitPerMember}장까지 · 승인번호가 보이게 찍어 주세요
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <th>3</th>
-            <td>
-              <b>{otherNames} 사이드 메뉴 중 1개 선택</b>
-              <span>승인일부터 {rules.couponValidDays}일 안에 고르면 쿠폰이 전화번호 쿠폰함에 들어갑니다.</span>
-            </td>
-          </tr>
-          <tr>
-            <th>4</th>
-            <td>
-              <b>그 매장에서 직원 확인 후 쿠폰 사용</b>
-              <span>쿠폰 유효 기간 {rules.couponValidDays}일 · 1회 사용 · 현금으로 바꿀 수 없습니다.</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <p className={s.rule}>{store.shortName} 영수증은 {store.shortName}에서 쓸 수 없습니다. 쿠폰은 {otherNames}에서만 사용됩니다.</p>
+      <p className={s.ruleLine}>
+        결제 후 <b>{rules.receiptValidHours}시간</b> 안에 올린{rules.minAmount > 0 ? <> <b>{won(rules.minAmount)}</b> 이상</> : null} 영수증이면 돼요 · 하루 {rules.dailyLimitPerMember}장까지 · 쿠폰은 받은 날부터 {rules.couponValidDays}일 안에 써요
+      </p>
+
+      <ol className={s.steps}>
+        {steps.map((st, i) => (
+          <li key={st.art} className={s.step}>
+            <Art name={st.art} alt="" className={s.stepArt} sizes="150px" />
+            <span className={s.stepNo}>{i + 1}</span>
+            <span className={s.stepText}>{st.text}</span>
+          </li>
+        ))}
+      </ol>
 
       <div className={s.qrs}>
-        <div className={s.qrBox}>
+        <div className={`${s.qrBox} ${s.qrBoxMain}`}>
           <div className={s.qrImg} dangerouslySetInnerHTML={{ __html: qrSite }} />
-          <div>
-            <p className={s.qrLabel}>영수증 인증</p>
-            <p className={s.qrHint}>카메라를 대면 인증 화면이 열립니다.</p>
+          <div className={s.qrText}>
+            <p className={s.qrLabel}>영수증 올리기</p>
+            <p className={s.qrHint}>휴대폰 카메라로 찍으면 바로 열려요.</p>
             <p className={s.qrUrl}>{verifyUrl.replace(/^https?:\/\//, "")}</p>
           </div>
         </div>
         <div className={s.qrBox}>
           {qrPlace ? <div className={s.qrImg} dangerouslySetInnerHTML={{ __html: qrPlace }} /> : <div className={s.qrMissing}>네이버 플레이스 주소 미등록</div>}
-          <div>
+          <div className={s.qrText}>
             <p className={s.qrLabel}>네이버 플레이스</p>
-            <p className={s.qrHint}>{store.shortName} 메뉴·영업시간·리뷰</p>
+            <p className={s.qrHint}>{store.shortName} 메뉴와 영업시간이 열려요.</p>
             {placeUrl ? <p className={s.qrUrl}>{placeUrl.replace(/^https?:\/\//, "")}</p> : null}
           </div>
         </div>
       </div>
 
       <div className={s.foot}>
+        <p className={s.footRule}>
+          {store.shortName} 영수증은 {store.shortName}에서는 쓸 수 없고, 쿠폰은 {joinWithJosa(others.map((o) => o.shortName), "과와")}에서만 써요.
+        </p>
         <ul className={s.footStores}>
-          {STORES.map((st, i) => (
-            <li key={st.id} className={st.id === store.id ? s.footHere : ""}>
-              <b>{String(i + 1).padStart(2, "0")}</b>
-              {st.shortName}
-              <span>{st.drink}</span>
-              <small>{LOCATIONS[st.id].subway} · {LOCATIONS[st.id].floor}</small>
+          {others.map((o) => (
+            <li key={o.id}>
+              <Art name={`badge-${o.id}`} alt={o.shortName} className={s.footBadge} sizes="150px" />
+              <span>
+                {LOCATIONS[o.id].subway} · {LOCATIONS[o.id].floor}
+              </span>
             </li>
           ))}
         </ul>
-        <p className={s.footNote}>영수증 사진은 부정 사용 확인에만 쓰고 매장 관리자 외에는 볼 수 없습니다. 궁금한 점은 직원에게 물어보세요.</p>
       </div>
     </div>
   );

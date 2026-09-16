@@ -94,7 +94,7 @@ export async function decideReceiptAction(_prev: ActionState, fd: FormData): Pro
     await audit(s.adminId, approve ? "receipt.approve" : "receipt.reject", receiptId, { storeId: r.storeId, amount: r.amount, note });
     return {
       message: approve
-        ? `승인했습니다. 회원이 쿠폰함에서 ${josa(getStore(r.storeId ?? "")?.shortName ?? "해당 매장", "을를")} 제외한 두 매장의 사이드를 고를 수 있습니다.`
+        ? `승인했습니다. 회원이 쿠폰함에서 ${josa(getStore(r.storeId ?? "")?.shortName ?? "해당 매장", "을를")} 제외한 두 매장의 증정 품목을 고를 수 있습니다.`
         : "반려했습니다. 회원 쿠폰함에는 반려로 표시됩니다.",
       data: { status: r.status },
     };
@@ -254,7 +254,7 @@ export async function toggleMenuGiftAction(_prev: ActionState, fd: FormData): Pr
     const isGift = !item.isGift;
     await upsertMenuItem({ ...item, id: item.id, isGift });
     await audit(s.adminId, "menu.gift", String(id), { name: item.name, isGift });
-    return { message: isGift ? `'${item.name}' 을(를) 무료 사이드로 넣었습니다.` : `'${item.name}' 을(를) 무료 사이드에서 뺐습니다.` };
+    return { message: isGift ? `'${item.name}' 을(를) 무료 증정 품목으로 넣었습니다.` : `'${item.name}' 을(를) 무료 증정에서 뺐습니다.` };
   });
 }
 
@@ -298,7 +298,7 @@ export async function deleteMenuAction(_prev: ActionState, fd: FormData): Promis
     if (!item || !id) throw new ActionError("메뉴를 찾을 수 없습니다.");
     const removed = await deleteMenuItem(id);
     await audit(s.adminId, "menu.delete", String(id), { name: item.name, hard: removed });
-    return { message: removed ? `'${item.name}' 을(를) 삭제했습니다.` : `'${item.name}' 은(는) 발급된 쿠폰이 있어 삭제 대신 숨김·무료 사이드 해제 처리했습니다.` };
+    return { message: removed ? `'${item.name}' 을(를) 삭제했습니다.` : `'${item.name}' 은(는) 발급된 쿠폰이 있어 삭제 대신 숨김·무료 증정 해제 처리했습니다.` };
   });
 }
 

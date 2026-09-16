@@ -25,6 +25,9 @@
   --a-shadow: 0 1px 2px rgba(22, 24, 27, 0.06);
 
   min-height: 100dvh;
+  /* 손님 사이트용 body 하단 여백(탭바 높이)을 덮어 관리자 화면 아래에 종이색 띠가 남지 않게 한다 */
+  margin-bottom: calc(-1 * (var(--tabbar-h, 0px) + env(safe-area-inset-bottom, 0px)));
+  padding-bottom: calc(var(--tabbar-h, 0px) + env(safe-area-inset-bottom, 0px));
   background: var(--a-bg);
   color: var(--a-ink);
   font-family: var(--font-sans);
@@ -52,7 +55,8 @@
   gap: 12px;
   min-width: 0;
 }
-.brand { display: inline-flex; flex: none; white-space: nowrap; align-items: baseline; gap: 8px; color: var(--a-bar-ink); font-weight: 700; font-size: 16px; }
+.brand { display: inline-flex; flex: none; white-space: nowrap; align-items: center; gap: 8px; color: var(--a-bar-ink); font-weight: 700; font-size: 16px; }
+.brand .brandLogo { height: 28px; width: auto; display: block; }
 .brand .brandSub { font-weight: 500; font-size: 14px; opacity: 0.72; }
 .topbarSpacer { flex: 1; }
 .who { display: inline-flex; flex: none; white-space: nowrap; align-items: center; gap: 8px; font-size: 14px; color: var(--a-bar-ink); }

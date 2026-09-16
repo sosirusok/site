@@ -86,7 +86,7 @@ export function SettingsForm({ rules }: { rules: Rules }) {
                   <input id="st-days" name="couponValidDays" type="number" min={1} max={365} className={`${ui.input} ${ui.inputMono}`} defaultValue={rules.couponValidDays} required />
                   <span>일 (발급일부터, 그날 23:59까지)</span>
                 </div>
-                <span className={ui.help}>승인된 영수증으로 사이드를 고를 수 있는 기간도 같습니다(승인일부터).</span>
+                <span className={ui.help}>승인된 영수증으로 증정 품목을 고를 수 있는 기간도 같습니다(승인일부터).</span>
               </div>
             </div>
           </section>

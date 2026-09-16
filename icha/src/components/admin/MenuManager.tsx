@@ -42,7 +42,7 @@ export function MenuManager({ storeId, storeName, items }: { storeId: string; st
           메뉴 <b>{items.length}</b>개
         </span>
         <span>
-          무료 사이드 <b>{gifts}</b>개
+          무료 증정 <b>{gifts}</b>개
         </span>
         {hidden ? (
           <span>
@@ -68,7 +68,7 @@ export function MenuManager({ storeId, storeName, items }: { storeId: string; st
                 <th>이름</th>
                 <th className={ui.right}>가격</th>
                 <th>설명</th>
-                <th>무료 사이드</th>
+                <th>무료 증정</th>
                 <th>노출</th>
                 <th>순서</th>
                 <th></th>
@@ -125,9 +125,9 @@ export function MenuManager({ storeId, storeName, items }: { storeId: string; st
                         aria-pressed={m.isGift}
                         disabled={pending && busyId === m.id}
                         onClick={() => call(toggleMenuGiftAction, fdOf({ id: String(m.id) }), m.id)}
-                        title={m.isGift ? "누르면 무료 사이드에서 뺍니다" : "누르면 무료 사이드로 넣습니다"}
+                        title={m.isGift ? "누르면 무료 증정에서 뺍니다" : "누르면 무료 증정으로 넣습니다"}
                       >
-                        {m.isGift ? "무료 사이드" : "해당 없음"}
+                        {m.isGift ? "무료 증정" : "해당 없음"}
                       </button>
                     </td>
                     <td>
@@ -208,7 +208,7 @@ function MenuEditForm({ storeId, item, onDone, onCancel, onMessage }: { storeId:
       </div>
       <div className={s.editBtns}>
         <label className={ui.check}>
-          <input type="checkbox" name="isGift" defaultChecked={item?.isGift ?? false} /> 무료 사이드로 고를 수 있음
+          <input type="checkbox" name="isGift" defaultChecked={item?.isGift ?? false} /> 무료 증정으로 고를 수 있음
         </label>
         <label className={ui.check}>
           <input type="checkbox" name="active" value="on" defaultChecked={item?.active ?? true} /> 손님 화면에 노출

@@ -22,7 +22,7 @@ export default async function MenusPage({ searchParams }: { searchParams: Promis
       <div className={ui.pageHead}>
         <div>
           <h1 className={ui.pageTitle}>메뉴</h1>
-          <p className={ui.pageDesc}>"무료 사이드"로 표시한 메뉴만 손님이 쿠폰으로 고를 수 있습니다. 매장별로 3~6개가 적당합니다.</p>
+          <p className={ui.pageDesc}>"무료 증정"으로 표시한 메뉴만 손님이 쿠폰으로 고를 수 있습니다. 매장당 그 집 술 한 잔(막걸리·생맥주·소주) 1개가 기본이고, 늘려도 됩니다.</p>
         </div>
       </div>
       <div className={s.tabs} role="tablist" aria-label="매장">

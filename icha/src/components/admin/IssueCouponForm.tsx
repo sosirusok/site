@@ -104,13 +104,13 @@ export function IssueCouponForm({
               </option>
             ))}
           </select>
-          {options.length === 0 ? <span className={ui.help}>이 매장에 무료 사이드로 표시된 메뉴가 없습니다. 메뉴 화면에서 정하거나 직접 적으세요.</span> : null}
+          {options.length === 0 ? <span className={ui.help}>이 매장에 무료 증정으로 표시된 메뉴가 없습니다. 메뉴 화면에서 정하거나 직접 적으세요.</span> : null}
         </div>
         <div className={ui.field}>
           <label className={ui.label} htmlFor="ic-name">
             직접 입력 시 메뉴 이름
           </label>
-          <input id="ic-name" name="menuName" className={ui.input} placeholder="예: 사이드 한 접시" disabled={menuItemId !== ""} maxLength={40} />
+          <input id="ic-name" name="menuName" className={ui.input} placeholder="예: 생맥주 한 잔" disabled={menuItemId !== ""} maxLength={40} />
         </div>
       </div>
 

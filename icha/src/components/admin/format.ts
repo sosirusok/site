@@ -73,7 +73,7 @@ export const COUPON_STATUS: Record<string, { label: string; tone: "ok" | "warn" 
   void: { label: "취소", tone: "bad" },
 };
 export const COUPON_KIND: Record<string, string> = {
-  side: "영수증 사이드",
+  side: "영수증 증정",
   vip: "등급 혜택",
   manual: "수동 발급",
 };
@@ -88,7 +88,7 @@ export const AUDIT_ACTION: Record<string, string> = {
   "member.memo": "회원 메모 수정",
   "menu.save": "메뉴 저장",
   "menu.delete": "메뉴 삭제",
-  "menu.gift": "무료 사이드 변경",
+  "menu.gift": "무료 증정 변경",
   "menu.active": "메뉴 노출 변경",
   "menu.sort": "메뉴 순서 변경",
   "menu.image": "메뉴 사진 변경",

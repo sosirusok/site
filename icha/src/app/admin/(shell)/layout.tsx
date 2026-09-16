@@ -5,6 +5,7 @@ import { getStore } from "@/lib/stores";
 import { requireAdminPage } from "@/components/admin/guard";
 import { AdminNav, type NavItem } from "@/components/admin/AdminNav";
 import { logoutAction } from "@/app/admin/actions";
+import { Art } from "@/components/art/Art";
 import ui from "@/app/admin/admin.module.css";
 
 export default async function AdminShellLayout({ children }: { children: React.ReactNode }) {
@@ -22,11 +23,11 @@ export default async function AdminShellLayout({ children }: { children: React.R
           { href: "/admin/members", label: "회원" },
           { href: "/admin/menus", label: "메뉴" },
           { href: "/admin/settings", label: "설정" },
-          { href: "/admin/poster", label: "포스터" },
+          { href: "/admin/poster", label: "인쇄물" },
           { href: "/admin/staff", label: "직원 계정" },
           { href: "/admin/log", label: "로그" },
         ]
-      : [{ href: "/admin/poster", label: "포스터" }]),
+      : [{ href: "/admin/poster", label: "인쇄물" }]),
   ];
 
   return (
@@ -34,6 +35,7 @@ export default async function AdminShellLayout({ children }: { children: React.R
       <header className={ui.topbar}>
         <div className={ui.topbarInner}>
           <Link href="/admin" className={ui.brand}>
+            <Art name="logo" alt="" className={ui.brandLogo} sizes="40px" />
             {BRAND.name}
             <span className={ui.brandSub}>관리자</span>
           </Link>
