@@ -1,14 +1,6 @@
-.root { display: grid; gap: 22px; }
+.root { display: grid; gap: 14px; }
 .empty { font-size: 16.5px; color: var(--fg-2); }
 .link { font-weight: 700; border-bottom: 2px solid var(--outline); }
-
-/* 사진 있는 메뉴 몇 개 — 작은 정사각 격자 */
-.thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px 8px; }
-.thumb { display: grid; gap: 4px; }
-.thumbBox { position: relative; aspect-ratio: 1; overflow: hidden; border-radius: var(--radius-sm); border: 1.5px solid var(--outline); background: var(--panel-2); }
-.photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.thumbName { font-size: 15px; font-weight: 700; line-height: 1.4; }
-.thumbPrice { font-size: 15px; color: var(--fg-2); font-variant-numeric: tabular-nums; }
 
 /* 점선 이음줄 메뉴판 */
 .list { display: grid; gap: 9px; }
@@ -19,15 +11,11 @@
 .price { flex: none; white-space: nowrap; font-variant-numeric: tabular-nums; display: inline-flex; align-items: baseline; gap: 6px; }
 .price s { color: var(--fg-3); font-size: 15px; }
 .ask { color: var(--fg-3); font-size: 15px; }
-.more { display: grid; gap: 10px; }
+.more { display: grid; gap: 12px; }
 .moreBtn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 20px; border-radius: 12px; border: 2px solid var(--outline); background: var(--panel); font-weight: 700; font-size: 16px; cursor: pointer; list-style: none; user-select: none; }
 .moreBtn::-webkit-details-marker { display: none; }
 .moreBtn::after { content: " ↓"; font-weight: 400; }
 .more[open] .moreBtn::after { content: " ↑"; }
-.note { font-size: 16px; line-height: 1.8; color: var(--fg-2); max-width: 44em; }
-.note :global(.tag) { vertical-align: 1px; }
 @media (min-width: 760px) {
-  .thumbs { gap: 12px; }
-  .list { grid-template-columns: 1fr 1fr; column-gap: 36px; }
-  .more .list { grid-template-columns: 1fr 1fr; }
+  .more .list { grid-template-columns: 1fr 1fr; column-gap: 36px; }
 }

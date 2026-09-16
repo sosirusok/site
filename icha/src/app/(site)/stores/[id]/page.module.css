@@ -1,40 +1,30 @@
-.page { max-width: 800px; padding-bottom: clamp(40px, 6vw, 72px); }
-.section { padding-top: clamp(40px, 7vw, 64px); scroll-margin-top: calc(var(--header-h) + 8px); }
-.h { margin-bottom: 16px; }
+.page { max-width: 800px; padding-bottom: 8px; }
+.section { padding-top: 30px; scroll-margin-top: calc(var(--header-h) + 8px); }
+.section :global(.sec-head) { margin-bottom: 12px; }
+.h { margin-bottom: 12px; }
 
-/* 이 집에서 받는 것 */
-.gift { display: grid; gap: 14px; margin-top: clamp(32px, 6vw, 48px); padding: 22px 18px 24px; background: var(--panel-2); border: 2px solid var(--outline); border-radius: var(--radius); }
-.gift :global(.sec-head) { margin-bottom: 0; }
-.ticket { width: min(72vw, 360px); margin: 2px 0 0; }
+/* 무료 한 잔 */
+.gift { display: grid; gap: 10px; margin-top: 16px; padding: 14px 16px 16px; background: var(--panel-2); border: 2px solid var(--outline); border-radius: var(--radius); }
+.ticket { width: min(54vw, 300px); }
 .ticket img { width: 100%; height: auto; transform: rotate(-1.2deg); }
-.giftList { display: grid; gap: 8px; }
-.giftRow { display: flex; align-items: baseline; gap: 8px; font-size: 17px; }
-.giftName { font-weight: 700; }
-.giftDots { flex: 1; min-width: 20px; border-bottom: 2px dotted #b9b1a1; transform: translateY(-5px); }
-.giftPrice { white-space: nowrap; }
-.giftPrice s { color: var(--fg-3); margin-right: 6px; font-size: 15.5px; }
-.giftPrice b { color: var(--red); font-family: var(--font-display); font-size: 20px; }
-.giftEmpty { color: var(--fg-2); }
-.giftText { font-size: 16.5px; line-height: 1.8; color: var(--fg-2); max-width: 40em; }
-.giftActions { display: grid; gap: 12px; justify-items: start; margin-top: 4px; }
-.textLink { font-weight: 700; border-bottom: 2px solid var(--outline); padding-bottom: 2px; }
+.giftBody { display: grid; gap: 6px; justify-items: start; }
+.giftRow { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; font-size: 17px; }
+.giftRow s { color: var(--fg-3); font-size: 15.5px; }
+.giftRow em { font-style: normal; color: var(--red); font-family: var(--font-display); font-size: 20px; }
+.giftText { font-size: 16.5px; line-height: 1.7; color: var(--fg-2); }
+.giftBody :global(a) { margin-top: 4px; }
 
 /* 소개 */
-.intro { display: grid; gap: 14px; max-width: 40em; }
-.intro p { font-size: 17px; line-height: 1.85; color: var(--fg-2); }
+.intro { font-size: 17px; line-height: 1.8; color: var(--fg-2); max-width: 40em; }
 
 /* 나머지 두 집 */
-.others { padding-bottom: 8px; }
-.othersText { font-size: 16.5px; line-height: 1.8; color: var(--fg-2); margin-bottom: 16px; max-width: 40em; }
-.badges { display: grid; gap: 14px; }
-.badge { display: grid; gap: 4px; justify-items: start; }
-.badge img { width: 170px; height: auto; transition: transform 0.15s; }
+.others { padding-bottom: 0; }
+.badges { display: flex; flex-wrap: wrap; gap: 10px; }
+.badge img { width: 165px; height: auto; transition: transform 0.15s; }
 .badge:hover img { transform: translateY(-2px); }
-.badgeMeta { font-size: 15.5px; color: var(--fg-2); padding-left: 6px; }
 
 @media (min-width: 760px) {
-  .page { padding-top: 0; }
-  .gift { padding: 28px 28px 30px; grid-template-columns: 1fr; }
-  .giftActions { grid-template-columns: auto auto; align-items: center; gap: 12px 24px; }
-  .badges { grid-template-columns: repeat(2, max-content); gap: 20px 40px; }
+  .section { padding-top: 40px; }
+  .gift { grid-template-columns: 300px 1fr; gap: 16px 28px; align-items: center; padding: 24px 28px; }
+  .badges { gap: 24px; }
 }

@@ -1,1 +1,5 @@
 .notice { background: var(--navy); color: #fff; text-align: center; padding: 10px var(--gutter); font-weight: 700; font-size: 15.5px; }
+/* 데스크톱도 한 단(최대 820px) */
+.col :global(.wrap) { max-width: 820px; }
+.more { padding: 8px 0 36px; font-weight: 700; }
+.more a { border-bottom: 2px solid var(--outline); padding-bottom: 2px; }
