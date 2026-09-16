@@ -1,12 +1,10 @@
-/* 사진 다섯 장 — 큰 둘(윗줄, 맨 앞), 작은 셋(아랫줄, 윗줄 아래로 살짝 들어가 있음).
-   윗줄이 앞이라 윗줄 캡션은 다 보이고, 아랫줄은 사진 윗부분만 조금 가려진다. 아랫줄끼리는 겹치지 않는다 */
-.root { display: grid; gap: 4px; }
-.fan { position: relative; aspect-ratio: 358 / 396; }
+/* 사진 다섯 장 — 큰 둘(윗줄, 맨 앞), 작은 셋(아랫줄, 윗줄 아래로 살짝 들어가 있음). 캡션 없음. 아랫줄끼리는 겹치지 않는다 */
+.root { display: grid; gap: 8px; }
+.fan { position: relative; aspect-ratio: 358 / 340; }
 .pola { position: absolute; }
 .g0 { left: 0; top: 0; width: 50%; z-index: 4; }
 .g1 { left: 48%; top: 10px; width: 52%; z-index: 5; }
-.g2 { left: 0; top: 56%; width: 34%; z-index: 1; }
-.g3 { left: 33%; top: 58%; width: 34%; z-index: 2; }
-.g4 { left: 66%; top: 55.5%; width: 34%; z-index: 3; }
-.g2 :global(.cap), .g3 :global(.cap), .g4 :global(.cap) { font-size: 16px; }
+.g2 { left: 0; top: 57%; width: 34%; z-index: 1; }
+.g3 { left: 33%; top: 59%; width: 34%; z-index: 2; }
+.g4 { left: 66%; top: 56.5%; width: 34%; z-index: 3; }
 .more { justify-self: end; }

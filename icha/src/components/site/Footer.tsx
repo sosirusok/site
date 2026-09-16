@@ -10,7 +10,7 @@ const SEARCH_QUERY = "서면 알콜부시기";
 
 /**
  * 모든 손님 화면 맨 아래 — 포스터 마지막 줄 조각 아래 어두운 띠.
- * 세 가게(차수·상호·주소·전화), 작은 링크 한 줄, 저작권 한 줄. Pretendard 13px 크림색. 진짜 가게가 운영하는 사이트의 발.
+ * 세 매장(차수·상호·주소·전화), 작은 링크 한 줄, 저작권 한 줄. Pretendard 13px 크림색. 실제 매장이 운영하는 사이트의 발.
  */
 export function Footer() {
   const ordered = [...STORES].sort((a, b) => a.course.n - b.course.n);
@@ -33,7 +33,7 @@ export function Footer() {
             </li>
           ))}
         </ul>
-        <nav className={styles.links} aria-label="바닥 링크">
+        <nav className={styles.links} aria-label="하단 링크">
           <Link href="/guide" className={styles.link}>이용 안내</Link>
           <span className={styles.sep} aria-hidden="true">·</span>
           <Link href="/wallet" className={styles.link}>쿠폰함</Link>
@@ -42,7 +42,7 @@ export function Footer() {
         </nav>
         <p className={styles.copy}>
           <span>© 2026 {BRAND.name} · {BRAND.unionName}</span>
-          <Link href="/admin/login" className={styles.staff}>사장님·직원</Link>
+          <Link href="/admin/login" className={styles.staff}>관리자</Link>
         </p>
       </div>
     </footer>

@@ -1,6 +1,6 @@
-/* 다음 집 — 크림 메모(빨간 손글씨) + 모서리에 테이프로 붙인 작은 간판 조각 */
-.sec { padding: 30px var(--gutter) 10px; }
-.note { display: flex; align-items: flex-start; gap: 8px; padding: 14px 10px 12px 16px; }
-.text { flex: 1; min-width: 0; font-size: 25px; line-height: 1.12; padding-top: 4px; }
-.plateLink { position: relative; display: block; flex: none; width: 118px; margin: -26px -2px -4px 0; }
-.plate { width: 100%; --r: 5deg; }
+/* 다음 매장 — 크림 종이 한 줄: 간판 조각 작게 + 본문 글꼴 한 줄 + 꺾쇠. 줄 전체가 링크 */
+.sec { padding: 22px var(--gutter) 8px; }
+.row { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 10px 14px 10px 10px; }
+.plate { flex: none; width: 76px; box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.4); }
+.text { flex: 1; min-width: 0; font-size: 15px; font-weight: 700; line-height: 1.4; }
+.arrow { flex: none; font-family: var(--font-display); font-size: 22px; margin-left: -4px; line-height: 1; color: var(--ink-2); }

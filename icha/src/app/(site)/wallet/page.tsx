@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import type { CSSProperties } from "react";
+import { DotLine } from "@/components/flow/kit";
 import { LogoutButton } from "@/components/flow/LogoutButton";
 import { ActiveCoupons, EmptyWallet, PastCoupons, RelayCards, type WalletCoupon, type WalletRelay } from "@/components/flow/WalletSections";
 import { PlaceButton } from "@/components/site/PlaceButton";
@@ -38,7 +39,8 @@ async function menuPhotoIndex(): Promise<(storeId: StoreId, menuItemId: number |
 }
 
 /**
- * 쿠폰함 — 번호 하나에 담긴 종이 쿠폰 더미. 위에서부터: 받은 쿠폰(아직 어디서 쓸지 안 고름) → 쓸 수 있는 쿠폰 → 지난 쿠폰.
+ * 쿠폰함 — 번호 하나에 담긴 쿠폰 더미. 위에서부터: 받은 쿠폰(아직 사용 매장을 안 고름) → 사용 가능 쿠폰 → 지난 쿠폰.
+ * 안내·규칙 줄은 보케 위 어두운 띠에 본문 글꼴로(손글씨·해요체 없음), 관리자 공지는 크림 종이.
  * 사진·등급·누적 금액은 없다(사장님 결정).
  */
 export default async function WalletPage() {
@@ -76,14 +78,14 @@ export default async function WalletPage() {
   return (
     <div className={styles.page}>
       {rules.notice && (
-        <div className={`scrap ${styles.notice}`} style={{ "--r": "1deg" } as CSSProperties}>
-          <p className={`scrap-in hand ${styles.noticeIn}`}>{rules.notice}</p>
+        <div className={`paper paper-r ${styles.notice}`} style={{ "--r": "0.6deg" } as CSSProperties}>
+          <p className={styles.noticeIn}><b className={`disp ${styles.noticeTag}`}>공지</b> {rules.notice}</p>
         </div>
       )}
 
       <header className={styles.top}>
         <h1 className={`plate plate-yellow ${styles.h1}`}>쿠폰함</h1>
-        <p className={`hand hand-w ${styles.sub}`}>쓸 때 직원에게 이 화면을 보여 주세요.</p>
+        <p className={`${styles.strip} ${styles.sub}`}>사용 시 직원에게 이 화면 제시</p>
       </header>
 
       {nothing ? (
@@ -96,9 +98,9 @@ export default async function WalletPage() {
 
           <section className={styles.sec} aria-labelledby="wallet-active">
             <div className="sec-h">
-              <h2 id="wallet-active" className="plate plate-red">쓸 수 있는 쿠폰{active.length > 0 && <span className={styles.count}> {active.length}</span>}</h2>
+              <h2 id="wallet-active" className="plate plate-red">사용 가능 쿠폰{active.length > 0 && <span className={styles.count}> {active.length}</span>}</h2>
             </div>
-            {active.length > 0 ? <ActiveCoupons coupons={active} /> : <p className={`hand hand-w ${styles.none}`}>{relays.length > 0 ? "위에서 어디서 쓸지 고르면 여기에 들어와요." : "지금 쓸 수 있는 쿠폰이 없어요."}</p>}
+            {active.length > 0 ? <ActiveCoupons coupons={active} /> : <p className={`${styles.strip} ${styles.none}`}>{relays.length > 0 ? "받은 쿠폰에서 사용 매장을 선택하면 표시됩니다" : "사용 가능한 쿠폰이 없습니다"}</p>}
           </section>
 
           {past.length > 0 && <PastCoupons coupons={past} />}
@@ -107,7 +109,7 @@ export default async function WalletPage() {
 
       <footer className={`${styles.sec} ${styles.foot}`}>
         {!nothing && <PlaceButton stores={places} className="btn btn-naver btn-block">예약하기</PlaceButton>}
-        <p className={`hand hand-w ${styles.rule}`}>{ruleLine(rules)} · {BRAND.condition}</p>
+        <p className={`${styles.strip} ${styles.rule}`}><DotLine items={[ruleLine(rules), BRAND.condition]} /></p>
         <LogoutButton className="link link-w" />
       </footer>
     </div>

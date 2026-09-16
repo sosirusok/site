@@ -8,6 +8,7 @@
 .kbtn:disabled .kbtnImg { opacity: 0.6; transform: none; filter: drop-shadow(var(--kit-btn-shadow, 4px 4px 0 #000)); }
 .sm { min-height: 44px; --kh: 44px; }
 .block { display: flex; width: 100%; --kh: 60px; }
+.block .kbtnImg { width: 100%; height: auto; max-height: 72px; object-fit: contain; }
 
 /* 그림 제목 — 판(.plate) 자리. 높이 46px(큰 제목 60px) */
 .klabel { display: inline-block; transform: rotate(var(--r, -1.5deg)); }

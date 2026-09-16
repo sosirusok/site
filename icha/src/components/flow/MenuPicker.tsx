@@ -4,7 +4,7 @@ import { useId, useState, type CSSProperties } from "react";
 import { Piece, plateOf } from "@/components/site/Poster";
 import { formatWon } from "@/lib/config";
 import { fmtMD } from "./format";
-import { StickerButton } from "./kit";
+import { DotLine, StickerButton } from "./kit";
 import { Ticket } from "./Ticket";
 import type { ApiFail, IssueApiOk } from "./types";
 import styles from "./MenuPicker.module.css";
@@ -40,7 +40,7 @@ function Thumb({ item }: { item: PickItem }) {
   return <Image src={item.image.src} alt="" width={56} height={56} sizes="56px" className={cut ? styles.thumbCut : styles.thumb} unoptimized={!item.image.local} />;
 }
 
-/** 어디서 받을지 고르기 — 가게마다 종이 한 장(포스터 간판 조각 + 품목 라디오 + 초록 예약하기 하나), 아래 고정 노란 스티커. 받고 나면 종이 쿠폰. */
+/** 사용 매장 선택 — 매장마다 종이 한 장(포스터 간판 조각 + 품목 라디오 + 초록 예약하기 하나), 아래 고정 노란 스티커. 발급되면 쿠폰 한 장. */
 export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: string; stores: PickStore[]; couponValidDays: number }) {
   const id = useId();
   const [selected, setSelected] = useState<Selected | null>(null);
@@ -56,7 +56,7 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
   async function issue() {
     if (busy) return;
     if (!selected) {
-      setError("받을 곳을 먼저 골라 주세요.");
+      setError("사용할 매장과 혜택을 선택해 주세요.");
       return;
     }
     setBusy(true);
@@ -71,8 +71,8 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
       if (!res.ok || !data || !data.ok) {
         setError(
           res.status === 401
-            ? "로그인이 풀렸어요. 다시 로그인하면 쿠폰함에서 이어서 고를 수 있어요."
-            : (data && !data.ok && data.error) || "쿠폰을 만들지 못했어요. 잠시 뒤에 다시 눌러 주세요.",
+            ? "로그인이 만료되었습니다. 다시 로그인 후 쿠폰함에서 선택해 주세요."
+            : (data && !data.ok && data.error) || "쿠폰 발급에 실패했습니다. 잠시 후 다시 시도해 주세요.",
         );
         setBusy(false);
         return;
@@ -80,20 +80,20 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
       setIssued({ store: selected.store, item: selected.item, coupon: data.coupon });
       window.scrollTo(0, 0);
     } catch {
-      setError("연결이 끊겼어요. 다시 눌러 주세요.");
+      setError("네트워크 연결을 확인해 주세요.");
       setBusy(false);
     }
   }
 
-  /* 발급 완료 — 종이 쿠폰 한 장, 손글씨 한 줄, 쿠폰 보기(노랑) + 그 매장 예약하기(초록 하나) */
+  /* 발급 완료 — 쿠폰 한 장, 초록 간판 한 줄, 어두운 띠에 매장·품목·기한, 쿠폰 보기(노랑) + 그 매장 예약하기(초록 하나) */
   if (issued) {
     const { store, item, coupon } = issued;
     return (
       <div className={styles.issued} aria-live="polite" data-store={store.id}>
         <span className={`stamp stamp-green ${styles.issuedStamp}`}>발급 완료</span>
         <Ticket t={{ storeId: store.id, storeName: store.shortName, menuName: coupon.menuName, code: coupon.code, expiresAt: coupon.expiresAt, image: item.image }} size="lg" rotate={-1.5} />
-        <h2 className={`hand hand-w ${styles.issuedTitle}`}>쿠폰이 들어왔어요!</h2>
-        <p className={`hand hand-w ${styles.issuedSub}`}>{store.shortName} · {coupon.menuName} · {fmtMD(coupon.expiresAt)}까지</p>
+        <h2 className={`plate plate-green ${styles.issuedTitle}`}>쿠폰이 발급되었습니다</h2>
+        <p className={`${styles.strip} ${styles.issuedSub}`}><DotLine items={[store.shortName, coupon.menuName, `유효기간 ${fmtMD(coupon.expiresAt)}까지`]} /></p>
         <div className={styles.issuedBtns}>
           <StickerButton kind="wallet" href={`/coupons/${coupon.id}`} block>쿠폰 보기</StickerButton>
           {store.placeBooking && <StickerButton kind="book" href={store.placeBooking} block rotate={1}>{store.shortName} 예약하기</StickerButton>}
@@ -104,7 +104,7 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
 
   return (
     <div className={styles.root}>
-      <div className={styles.cards} role="radiogroup" aria-label="쿠폰을 받을 매장">
+      <div className={styles.cards} role="radiogroup" aria-label="사용 매장 선택">
         {stores.map((s, i) => {
           const on = selected?.store.id === s.id;
           const none = s.items.length === 0;
@@ -115,7 +115,7 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
                 <span className="sr-only">{s.course.n}차 {s.shortName}</span>
               </div>
               {none ? (
-                <p className={`hand ${styles.none}`}>어떤 혜택을 드릴지 정하고 있어요. 다른 매장을 골라 주세요.</p>
+                <p className={styles.none}>혜택 준비 중입니다. 다른 매장을 선택해 주세요.</p>
               ) : (
                 <ul className={styles.items}>
                   {s.items.map((it) => {
@@ -143,13 +143,13 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
           );
         })}
       </div>
-      <p className={`hand hand-w ${styles.note}`}>쿠폰 하나에 한 곳이에요. 받은 뒤에는 바꿀 수 없고, {couponValidDays}일 동안 써요.</p>
+      <p className={`${styles.strip} ${styles.note}`}><DotLine items={["쿠폰 1장당 매장 1곳", "발급 후 변경 불가", `유효기간 ${couponValidDays}일`]} /></p>
 
       {/* 하단 고정 스티커(탭 위) */}
       <div className={`fixed-col sticky-cta ${styles.sticky}`}>
         {error && <p id={`${id}-err`} className={`error ${styles.err}`} role="alert">{error}</p>}
         <StickerButton kind="get" block onClick={issue} disabled={busy}>
-          {busy ? "받는 중" : selected ? `${selected.store.shortName}에서 받기` : "이 쿠폰 받기"}
+          {busy ? "발급 중" : selected ? `${selected.store.shortName} 쿠폰 발급` : "쿠폰 발급"}
         </StickerButton>
       </div>
     </div>

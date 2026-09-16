@@ -1,8 +1,11 @@
-/* 번호로 시작 — 간판 제목, 손글씨 한 줄, 종이 카드 위 입력 하나. 화면을 채워서 푸터가 가운데로 올라오지 않게 */
+/* 로그인 — 간판 제목, 어두운 띠 안내 한 줄, 종이 카드 위 입력 하나. 화면을 채워서 푸터가 가운데로 올라오지 않게 */
 .page { display: grid; gap: 18px; align-content: start; padding: 18px var(--gutter) 40px; min-height: calc(100dvh - var(--header-h) - var(--tabbar-h) - 40px); }
-.top { position: relative; display: grid; gap: 12px; justify-items: start; padding-right: 110px; }
+.top { position: relative; display: grid; gap: 12px; justify-items: start; }
 .h1 { font-size: 28px; padding: 12px 18px 10px; }
-.sub { font-size: 23px; line-height: 1.15; }
+/* 보케 위 정보 줄 — 어두운 띠(#14111a 90%) 위 본문 글꼴 */
+.strip { background: rgba(20, 17, 26, 0.9); color: #fff; font-family: var(--font-sans); font-size: 15px; line-height: 1.5; padding: 10px 14px; border-radius: 4px; }
+/* 안내 줄은 오른쪽 메모 조각(약 60px 높이) 아래로 */
+.sub { font-weight: 700; margin-top: 8px; }
 .note { position: absolute; right: -4px; top: 0; width: 104px; }
 .card { display: grid; gap: 16px; padding: 22px 18px 18px; margin-top: 8px; }
-.help { border-top: 1px dashed var(--paper-line); padding-top: 10px; }
+.help { border-top: 1px dashed var(--paper-line); padding-top: 10px; font-size: 13.5px; line-height: 1.5; }

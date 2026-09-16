@@ -32,7 +32,7 @@ export function StoreVisit({ store }: { store: Store }) {
           <dt>오는 길</dt>
           <dd>{loc.directions}</dd>
         </dl>
-        {links && <a href={links.directions} target="_blank" rel="noreferrer" className={`link ${styles.way}`}>네이버 지도로 길찾기</a>}
+        {links && <a href={links.directions} target="_blank" rel="noreferrer" className={`link ${styles.way}`}>네이버 지도 길찾기</a>}
       </div>
     </div>
   );

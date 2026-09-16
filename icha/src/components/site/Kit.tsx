@@ -46,6 +46,7 @@ type ButtonProps = {
 export function StickerButton({ kind, href, onClick, type = "button", disabled, size = "md", block = false, tilt = -1, secondary = false, className = "", style, children, id, ...rest }: ButtonProps) {
   const k = kitPiece(`btn-${kind}`);
   const label = rest["aria-label"];
+  const aria = Object.fromEntries(Object.entries(rest).filter(([k]) => k.startsWith("aria-") && k !== "aria-label"));
   const tiltStyle = tilt === -1 ? {} : ({ "--r": `${tilt}deg` } as CSSProperties);
   let cls: string;
   let inner: ReactNode;
@@ -64,11 +65,11 @@ export function StickerButton({ kind, href, onClick, type = "button", disabled, 
   const st = { ...tiltStyle, ...style };
   if (href) {
     if (href.startsWith("/")) {
-      return <Link id={id} href={href} className={cls} style={st} aria-label={label} onClick={onClick}>{inner}</Link>;
+      return <Link id={id} href={href} className={cls} style={st} aria-label={label} onClick={onClick} {...aria}>{inner}</Link>;
     }
-    return <a id={id} href={href} className={cls} style={st} aria-label={label} target="_blank" rel="noreferrer" onClick={onClick}>{inner}</a>;
+    return <a id={id} href={href} className={cls} style={st} aria-label={label} target="_blank" rel="noreferrer" onClick={onClick} {...aria}>{inner}</a>;
   }
-  return <button id={id} type={type} className={cls} style={st} aria-label={label} onClick={onClick} disabled={disabled}>{inner}</button>;
+  return <button id={id} type={type} className={cls} style={st} aria-label={label} onClick={onClick} disabled={disabled} {...aria}>{inner}</button>;
 }
 
 export type LabelKind = "benefit" | "menu" | "map" | "review" | "howto" | "faq" | "wallet" | "guide";

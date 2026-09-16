@@ -1,12 +1,15 @@
 .root { display: grid; gap: 16px; }
 .cards { display: grid; gap: 20px; }
 
+/* 보케 위 정보 줄 — 어두운 띠(#14111a 90%) 위 본문 글꼴 */
+.strip { background: rgba(20, 17, 26, 0.9); color: #fff; font-family: var(--font-sans); font-size: 15px; line-height: 1.5; padding: 10px 14px; border-radius: 4px; }
+
 /* 매장 종이 — 고르면 그 집 색 테두리가 굵게 */
 .card { display: grid; gap: 10px; padding: 14px 16px 16px; border: 2px solid transparent; transition: border-color 0.15s; }
 .card[data-on] { border-color: var(--store); }
 .cardHead { display: flex; align-items: center; }
 .plate { width: 64%; max-width: 230px; margin: -26px 0 2px -4px; }
-.none { font-size: 21px; color: var(--ink-2); padding-bottom: 4px; }
+.none { font-size: 15px; line-height: 1.5; color: var(--ink-2); padding-bottom: 4px; }
 /* 가게마다 초록 버튼은 예약하기 하나 */
 .book { justify-self: end; margin-top: 4px; }
 
@@ -20,7 +23,8 @@
 .item[aria-checked="true"] .radio::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #fff; }
 .name { display: block; }
 .price { display: block; }
-.note { font-size: 21px; }
+/* 규칙 줄 — 고정 스티커 뒤로 숨지 않게 위 여백을 조금 둔다 */
+.note { font-weight: 700; margin-top: 2px; }
 
 /* 하단 고정 — 위로 번지는 어두운 그림자를 깔아, 스티커 뒤로 내용이 더 이어진다는 걸 보여 준다 */
 .sticky { display: grid; gap: 8px; }
@@ -28,8 +32,9 @@
 .err { background: var(--cream); padding: 6px 10px; border-radius: 4px; box-shadow: 2px 2px 0 #000; justify-self: start; }
 
 /* 발급 완료 */
-.issued { position: relative; display: grid; gap: 10px; padding-top: 14px; }
+.issued { position: relative; display: grid; gap: 12px; justify-items: start; padding-top: 14px; }
 .issuedStamp { position: absolute; right: 8px; top: -8px; z-index: 2; font-size: 26px; background: rgba(244, 233, 210, 0.85); }
-.issuedTitle { font-size: 32px; margin-top: 12px; }
-.issuedSub { font-size: 22px; }
+.issued > :global(.stk), .issued > [data-store] { justify-self: stretch; }
+.issuedTitle { font-size: 22px; margin-top: 12px; }
+.issuedSub { justify-self: stretch; font-weight: 700; }
 .issuedBtns { display: grid; gap: 14px; width: 100%; margin-top: 14px; }

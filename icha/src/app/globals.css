@@ -197,3 +197,17 @@ summary.btn { list-style: none; }
 .leaflet-container .leaflet-attribution-flag { display: none; }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+
+/* ── 정보 문구 받침 (v9.1) ──
+   보케 위의 정보 글자(영업시간·혜택·다음 매장·규칙·안내)는 반드시 받침 위에 놓는다: 어두운 띠 .info 또는 크림 종이 .paper.
+   글꼴은 본문 Pretendard 15px, 문구는 명사구·합니다체. 손글씨·노란 글자를 보케 위에 바로 놓지 않는다. */
+.info { display: block; background: rgba(20, 17, 26, 0.88); color: var(--cream); font-family: var(--font-sans); font-size: 15px; font-weight: 500; line-height: 1.5; padding: 10px 14px; border-radius: 4px; }
+.info b { font-weight: 700; color: #fff; }
+.info-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; }
+.star { color: var(--yellow); font-weight: 700; }
+/* 상태 칩 — 크림 알약, Pretendard 13px 굵게. 문구 4종: 영업 중 / 영업 전 · 17:00 오픈 / 영업 종료 / 휴무. 영업 상태 칩은 앞에 점(초록=영업 중) */
+.chip { display: inline-flex; align-items: center; gap: 6px; min-height: 26px; padding: 0 10px; background: var(--cream); color: var(--ink); font-family: var(--font-sans); font-size: 13px; font-weight: 700; line-height: 1.2; border: 1.5px solid #111; border-radius: 999px; box-shadow: 1px 2px 0 rgba(0, 0, 0, 0.35); }
+.chip-on::before, .chip-off::before { content: ""; flex: none; width: 7px; height: 7px; border-radius: 50%; background: #8a8078; }
+.chip-on::before { background: var(--naver); }
+/* 어두운 받침 위 밑줄 글자 — 보케 위 작은 이동(더보기, 리뷰 작성). 44px 터치 */
+.link-d { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; background: rgba(20, 17, 26, 0.88); color: var(--cream); font-family: var(--font-sans); font-size: 14px; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; border-radius: 4px; }

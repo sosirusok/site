@@ -6,9 +6,9 @@ import { Piece } from "@/components/site/Poster";
 import { getMemberSession } from "@/lib/auth/session";
 import styles from "./login.module.css";
 
-export const metadata: Metadata = { title: "번호로 시작" };
+export const metadata: Metadata = { title: "로그인" };
 
-/** 번호 하나로 시작 — 계산할 때 직원에게 말한 번호를 넣으면 그 번호의 쿠폰함이 열린다. 폼은 종이 카드 위에. */
+/** 로그인 — 계산 시 직원에게 말한 휴대폰 번호를 넣으면 그 번호의 쿠폰함이 열린다. 폼은 종이 카드 위에, 안내 줄은 어두운 띠에 본문 글꼴. */
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const sp = await searchParams;
   const next = safeNext(sp.next, "/wallet");
@@ -18,13 +18,13 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   return (
     <div className={styles.page}>
       <header className={styles.top} aria-labelledby="login-title">
-        <h1 id="login-title" className={`plate plate-blue ${styles.h1}`}>번호로 시작</h1>
-        <p className={`hand hand-w ${styles.sub}`}>계산할 때 말한 번호 그대로 넣으면 쿠폰이 보여요.</p>
+        <h1 id="login-title" className={`plate plate-blue ${styles.h1}`}>로그인</h1>
+        <p className={`${styles.strip} ${styles.sub}`}>계산 시 말씀하신 휴대폰 번호로 로그인합니다</p>
         <Piece name="note-today" rotate={5} sizes="110px" className={styles.note} />
       </header>
       <section className={`paper paper-l ${styles.card}`}>
         <PhoneForm next={next} />
-        <p className={`help ${styles.help}`}>문자는 보내지 않아요. 번호는 쿠폰을 찾는 데만 써요.</p>
+        <p className={`help ${styles.help}`}>휴대폰 번호는 쿠폰 확인 용도로만 사용하며 문자는 발송하지 않습니다.</p>
       </section>
     </div>
   );

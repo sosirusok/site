@@ -5,7 +5,7 @@ import type { PlaceSheetStore } from "@/components/site/PlaceSheet";
 import { Piece } from "@/components/site/Poster";
 import type { StoreId } from "@/lib/config";
 import { daysLeft, fmtMD, fmtMDHM } from "./format";
-import { KitCut, StickerButton } from "./kit";
+import { DotLine, KitCut, StickerButton } from "./kit";
 import { Ticket } from "./Ticket";
 import styles from "./WalletSections.module.css";
 
@@ -40,20 +40,19 @@ function kindText(c: Pick<WalletCoupon, "kind">): string | null {
   return c.kind === "side" ? null : "매장 쿠폰";
 }
 
-/* 받은 쿠폰 — 넣어 준 매장 색 판이 붙은 종이 한 장씩, 노란 스티커로 고르러 간다 */
+/* 받은 쿠폰 — 발급 매장 색 판이 붙은 종이 한 장씩, 노란 스티커로 사용 매장을 고르러 간다 */
 export function RelayCards({ relays }: { relays: WalletRelay[] }) {
   return (
     <section className={styles.sec} aria-labelledby="wallet-relay">
       <div className="sec-h">
         <h2 id="wallet-relay" className="plate plate-blue">받은 쿠폰</h2>
-        <p className={`hand hand-w ${styles.lead}`}>어디서 쓸지 골라요</p>
       </div>
       <ul className={styles.relays}>
         {relays.map((r, i) => (
           <li key={r.id} className={`paper ${styles.relay}`} data-store={r.store.id} style={{ "--r": `${i % 2 ? 1 : -1}deg` } as CSSProperties}>
-            <p className={styles.relayHead}><span className="plate plate-store plate-sm">{r.store.shortName}</span><span className={`disp ${styles.relayTitle}`}>에서 받은 쿠폰</span></p>
-            <p className={styles.relaySub}>{r.giftNames.join("·")} 중 한 곳에서 써요 · {fmtMD(r.deadline)}까지</p>
-            <StickerButton kind="pick" href={`/pick/${r.id}`} small>어디서 쓸지 고르기</StickerButton>
+            <p className={styles.relayHead}><span className="plate plate-store plate-sm">{r.store.shortName}</span><span className={`disp ${styles.relayTitle}`}>발급 쿠폰</span></p>
+            <p className={styles.relaySub}><DotLine items={[`사용 매장 ${r.giftNames.join("·")} 중 1곳`, `${fmtMD(r.deadline)}까지 선택`]} /></p>
+            <StickerButton kind="pick" href={`/pick/${r.id}`} small>사용 매장 선택</StickerButton>
           </li>
         ))}
       </ul>
@@ -61,7 +60,7 @@ export function RelayCards({ relays }: { relays: WalletRelay[] }) {
   );
 }
 
-/* 쓸 수 있는 쿠폰 — 쿠폰 더미(번갈아 기울여 쌓인다). 종이인지 네온인지는 키트 파일이 정한다(Ticket) */
+/* 사용 가능 쿠폰 — 쿠폰 더미(번갈아 기울여 쌓인다). 종이인지 네온인지는 키트 파일이 정한다(Ticket) */
 export function ActiveCoupons({ coupons }: { coupons: WalletCoupon[] }) {
   const now = new Date();
   return (
@@ -70,7 +69,7 @@ export function ActiveCoupons({ coupons }: { coupons: WalletCoupon[] }) {
         const left = daysLeft(c.expiresAt, now);
         return (
           <li key={c.id} className={styles.stackItem}>
-            <Link href={`/coupons/${c.id}`} className={styles.ticketLink} aria-label={`${c.store?.shortName ?? "매장"} ${c.menuName} 쿠폰 보기`}>
+            <Link href={`/coupons/${c.id}`} className={styles.ticketLink} aria-label={`${c.store?.shortName ?? "매장"} ${c.menuName} 쿠폰`}>
               <Ticket
                 t={{ storeId: c.store?.id ?? "joseon", storeName: c.store?.shortName ?? "매장", menuName: c.menuName, code: c.code, expiresAt: c.expiresAt, image: c.image, kindLabel: kindText(c) }}
                 rotate={i % 2 ? 1 : -1}
@@ -84,15 +83,15 @@ export function ActiveCoupons({ coupons }: { coupons: WalletCoupon[] }) {
   );
 }
 
-/* 지난 쿠폰: 사용 / 만료 / 취소 — 접어 둔다. 누르는 줄(summary) 자체가 44px 이상 */
+/* 지난 쿠폰: 사용 / 만료 / 취소 — 접어 둔다. 누르는 줄(summary)은 어두운 띠, 44px 이상 */
 export function PastCoupons({ coupons }: { coupons: WalletCoupon[] }) {
   return (
     <details id="wallet-past" className={styles.past}>
-      <summary className={`hand hand-w ${styles.pastSummary}`}>지난 쿠폰 {coupons.length}장 <span className={styles.pastArrow} aria-hidden="true">▾</span></summary>
+      <summary className={`${styles.strip} ${styles.pastSummary}`}>지난 쿠폰 {coupons.length}장 <span className={styles.pastArrow} aria-hidden="true">▾</span></summary>
       <ul className={styles.stack}>
         {coupons.map((c, i) => (
           <li key={c.id} className={styles.stackItem}>
-            <Link href={`/coupons/${c.id}`} className={styles.ticketLink} aria-label={`${c.store?.shortName ?? ""} ${c.menuName} — ${c.status === "used" ? "사용한 쿠폰" : c.status === "expired" ? "기간이 지난 쿠폰" : "취소된 쿠폰"}`}>
+            <Link href={`/coupons/${c.id}`} className={styles.ticketLink} aria-label={`${c.store?.shortName ?? ""} ${c.menuName} — ${c.status === "used" ? "사용 완료" : c.status === "expired" ? "기간 만료" : "취소"}`}>
               <Ticket
                 t={{ storeId: c.store?.id ?? "joseon", storeName: c.store?.shortName ?? "매장", menuName: c.menuName, code: c.code, expiresAt: c.expiresAt, image: c.image, kindLabel: kindText(c) }}
                 rotate={i % 2 ? 1 : -1}
@@ -109,16 +108,14 @@ export function PastCoupons({ coupons }: { coupons: WalletCoupon[] }) {
   );
 }
 
-/* 아무것도 없을 때 — 손글씨 메모 한 장, 옆에 키트의 빈 영수증 꽂이(오려 낸 그림, 그림자 없음 — 없으면 포스터 메모 조각), 초록 스티커(예약하기) 하나 */
+/* 아무것도 없을 때 — 크림 종이 한 장(본문 글꼴), 옆에 키트의 빈 영수증 꽂이(오려 낸 그림, 그림자 없음 — 없으면 포스터 메모 조각), 초록 스티커(예약하기) 하나 */
 export function EmptyWallet({ stores }: { stores: PlaceSheetStore[] }) {
   return (
     <div className={styles.empty}>
       <div className={styles.emptyRow}>
-        <div className={`scrap ${styles.emptyScrap}`} style={{ "--r": "-1.5deg" } as CSSProperties}>
-          <div className="scrap-in">
-            <p className={`hand ${styles.emptyTitle}`}>아직 쿠폰이 없어요</p>
-            <p className={styles.emptyText}>한 매장에서 계산할 때 휴대폰 번호를 말해 주세요. 여기로 들어와요.</p>
-          </div>
+        <div className={`paper paper-l ${styles.emptyPaper}`}>
+          <p className={`disp ${styles.emptyTitle}`}>받은 쿠폰이 없습니다</p>
+          <p className={styles.emptyText}>계산 시 휴대폰 번호를 말씀하시면 쿠폰이 발급됩니다</p>
         </div>
         <span className={styles.spikeBox}>
           <KitCut name="empty-wallet" width={240} className={styles.emptySpike} fallback={<Piece name="note-good" rotate={6} sizes="100px" className={styles.emptyNote} />} />

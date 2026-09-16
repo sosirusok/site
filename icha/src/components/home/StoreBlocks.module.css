@@ -1,4 +1,4 @@
-/* 1차·2차·3차 블록 — 간판 조각, 폴라로이드 부채, 혜택 조각, 손글씨, 초록 스티커 하나 */
+/* 1차·2차·3차 블록 — 간판 조각, 폴라로이드 부채(캡션 없음), 혜택 조각, 정보 종이(상태 칩·시간·혜택·공지), 초록 스티커 하나 */
 .list { padding: 22px var(--gutter) 4px; display: grid; gap: 4px; }
 .block { position: relative; display: grid; gap: 0; }
 
@@ -10,8 +10,8 @@
 .noteAgain { position: absolute; right: -4px; top: -16px; width: 104px; z-index: 2; }
 .noteToday { position: absolute; left: -2px; top: -12px; width: 116px; z-index: 2; }
 
-/* 폴라로이드 부채 — 가운데 장이 위(맨 앞), 양옆 장은 60px 아래. 가운데 장의 아랫변이 양옆 캡션보다 위에 있어 캡션이 다 보인다 */
-.fan { position: relative; aspect-ratio: 358 / 276; margin: 8px 0 0; }
+/* 폴라로이드 부채 — 가운데 장이 위(맨 앞), 양옆 장은 60px 아래. 흰 테두리만, 캡션은 없다 */
+.fan { position: relative; aspect-ratio: 358 / 254; margin: 8px 0 0; }
 .pola { position: absolute; width: 46%; }
 .p0 { left: 0; top: 60px; z-index: 1; }
 .p1 { left: 27%; top: 0; z-index: 3; }
@@ -19,31 +19,27 @@
 .flip .p0 { left: 54%; }
 .flip .p2 { left: 0; }
 
-/* 혜택 조각 + 손글씨 영업시간 */
-.under { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+/* 혜택 조각 + 오려 낸 술(장식) */
+.under { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-top: 12px; }
 .flip .under { flex-direction: row-reverse; }
 .benefit { flex: 0 0 58%; max-width: 240px; }
-.today { flex: 1; min-width: 0; font-size: 22px; line-height: 1.1; }
-.flip .today { text-align: right; }
+.mug { flex: none; width: 66px; margin: 0 8px -10px; z-index: 2; }
 
-/* 노란 손글씨 한 줄(다른 집 쿠폰 보여 주면 ○○ 무료!) — 1차는 오른쪽 아래에 포스터 맥주잔 */
-.giftRow { display: flex; align-items: flex-end; gap: 10px; margin-top: 8px; }
-.flip .giftRow { flex-direction: row-reverse; }
-.gift { flex: 1; min-width: 0; font-size: 24px; line-height: 1.1; }
-.flip .gift { text-align: right; }
-.mug { flex: none; width: 66px; margin: -18px 0 -6px; z-index: 2; }
+/* 정보 종이 — 영업 상태 칩 + 시간, 혜택 한 줄(굵게), 공지. 본문 글꼴 15px, 잉크색 */
+.info { margin-top: 16px; padding: 12px 16px; display: grid; gap: 8px; }
+.hoursRow { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; font-size: 15px; line-height: 1.4; }
+.chip { flex: none; }
+.hours { font-weight: 500; }
+.giftLine { font-size: 15px; font-weight: 700; line-height: 1.45; }
+.notice { font-size: 14px; line-height: 1.5; border-top: 1px dashed var(--paper-line); padding-top: 8px; }
+.noticeDay { font-weight: 700; margin-right: 6px; }
 
-/* 오늘 소식(관리자가 적음) — 찢은 종이 */
-.notice { margin-top: 12px; align-self: start; max-width: 92%; }
-.noticeIn { font-size: 22px; padding: 10px 16px 12px; }
-.noticeDay { color: var(--red); font-weight: 400; }
-
-/* 초록 스티커 하나 + 작은 글자 링크 */
+/* 초록 스티커 하나 + 어두운 받침 위 작은 글자 링크 */
 .cta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; }
 .flip .cta { flex-direction: row-reverse; }
 
 /* 마지막(3차) 블록 아래 — 키트 장식 선(sign-wareureu), 가운데 60% */
 .sign { margin-top: 22px; }
 
-/* 블록 사이 — 다음 집 크림 메모(가로 여백은 .list 가 이미 준다) */
-.walk { padding: 26px 0 12px; }
+/* 블록 사이 — 다음 매장 종이 한 줄(가로 여백은 .list 가 이미 준다) */
+.walk { padding: 22px 0 10px; }

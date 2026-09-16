@@ -7,7 +7,7 @@ export type FaqItem = {
   a: ReactNode;
 };
 
-/** 자주 묻는 질문 — 종이 카드 한 장씩(번갈아 1도 기울임), 스크립트 없이 여닫는 details. 질문은 Do Hyeon, 답은 본문 글꼴. */
+/** 자주 묻는 질문 — 종이 카드 한 장씩(번갈아 1도 기울임), 스크립트 없이 여닫는 details. 질문은 명사구(Do Hyeon), 답은 합니다체 본문 글꼴 15px. */
 export function GuideFaq({ items }: { items: FaqItem[] }) {
   return (
     <ul className={styles.list}>

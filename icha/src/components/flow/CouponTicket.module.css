@@ -1,25 +1,28 @@
 .root { display: grid; gap: 18px; padding-top: 6px; }
 
+/* 보케 위 정보 줄 — 어두운 띠(#14111a 90%) 위 본문 글꼴. 손글씨·노란 글자는 보케에 직접 놓지 않는다 */
+.strip { background: rgba(20, 17, 26, 0.9); color: #fff; font-family: var(--font-sans); font-size: 15px; line-height: 1.5; padding: 10px 14px; border-radius: 4px; }
+
 /* 상태 */
 .state { display: grid; gap: 12px; justify-items: start; }
 .h1 { font-size: 26px; padding: 12px 18px 10px; }
-.stateSub { font-size: 22px; line-height: 1.15; }
+.stateSub { justify-self: stretch; }
 .ticketWrap { position: relative; }
 .bigStamp { position: absolute; right: 14px; top: 50%; transform: translateY(-50%) rotate(-14deg); font-size: 32px; padding: 8px 14px 6px; border-width: 4px; background: rgba(244, 233, 210, 0.75); }
 
-/* 쿠폰 정보 — 손글씨 */
-.info { display: grid; gap: 4px; }
-.how { font-size: 24px; }
-.when { font-size: 21px; }
-.soon { color: var(--yellow); }
+/* 쿠폰 정보 — 조건 · 유효기간 · 발급 시각 */
+.info { display: grid; gap: 4px; padding: 12px 14px; }
+.how { font-weight: 700; }
+.when { color: rgba(244, 233, 210, 0.92); font-variant-numeric: tabular-nums; }
+.soon { color: var(--yellow); font-weight: 700; }
 
 /* 사용 */
 .use { display: grid; gap: 12px; justify-items: center; padding-top: 4px; }
 /* 한 줄 가득 스티커는 가운데 정렬 격자 안에서도 옆으로 늘린다 */
 .stretch { justify-self: stretch; }
-.useCap { font-size: 20px; text-align: center; }
+.useCap { justify-self: stretch; font-size: 14px; text-align: center; color: rgba(244, 233, 210, 0.92); }
 .err { background: var(--cream); padding: 6px 10px; border-radius: 4px; box-shadow: 2px 2px 0 #000; justify-self: start; }
-.hint { font-size: 20px; }
+.hint { font-size: 14px; color: rgba(244, 233, 210, 0.92); }
 /* 사용 완료 아래 — 노란 스티커 하나 + 작은 밑줄 링크(44px 터치) */
 .actions { display: grid; gap: 8px; justify-items: center; }
 
@@ -30,12 +33,13 @@
 .sheet { display: grid; gap: 8px; background: var(--cream); color: var(--ink); border-top: 3px solid #111; box-shadow: 0 -6px 0 rgba(0, 0, 0, 0.35); padding: 22px var(--gutter) calc(18px + env(safe-area-inset-bottom)); animation: up 0.22s var(--ease-out); }
 @keyframes up { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
 .sheetTitle { margin-top: -36px; }
-.sheetSub { font-size: 26px; margin-top: 8px; }
-.sheetCap { font-size: 13.5px; color: var(--ink-2); }
+.sheetTitle :global(.plate) { font-size: 20px; }
+.sheetSub { font-size: 17px; font-weight: 700; margin-top: 8px; }
+.sheetCap { font-size: 14px; color: var(--ink-2); }
 .sheetBtns { display: grid; grid-template-columns: 1fr 1.5fr; gap: 14px; margin-top: 16px; }
 
 /* 사용 완료 시계 — 종이 위 큰 숫자 */
 .clock { display: grid; gap: 2px; justify-items: center; text-align: center; padding: 14px 16px; }
-.clockCap { font-size: 22px; color: var(--ink-2); }
+.clockCap { font-size: 13px; font-weight: 700; color: var(--ink-2); }
 .clockTime { font-size: 46px; line-height: 1.1; color: var(--green); letter-spacing: 0.04em; }
 .clockDate { font-size: 13px; color: var(--ink-2); }

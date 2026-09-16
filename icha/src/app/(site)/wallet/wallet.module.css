@@ -1,12 +1,16 @@
 .page { display: grid; padding-bottom: 8px; }
-.notice { margin: 14px var(--gutter) 0; }
-.noticeIn { font-size: 22px; padding: 10px 16px 12px; }
+/* 보케 위 정보 줄 — 어두운 띠(#14111a 90%) 위 본문 글꼴 */
+.strip { background: rgba(20, 17, 26, 0.9); color: #fff; font-family: var(--font-sans); font-size: 15px; line-height: 1.5; padding: 10px 14px; border-radius: 4px; }
+/* 관리자 공지 — 크림 종이, 앞에 '공지' 라벨 */
+.notice { margin: 14px var(--gutter) 0; padding: 12px 16px; }
+.noticeIn { font-size: 15px; line-height: 1.5; }
+.noticeTag { font-size: 15px; margin-right: 6px; color: var(--red); }
 .top { display: grid; gap: 12px; justify-items: start; padding: 18px var(--gutter) 6px; }
 .h1 { font-size: 28px; padding: 12px 18px 10px; }
-.sub { font-size: 23px; line-height: 1.15; }
+.sub { font-weight: 700; }
 .sec { padding: 22px var(--gutter) 6px; }
 .count { color: var(--yellow); }
-.none { font-size: 22px; }
+.none { color: rgba(244, 233, 210, 0.92); }
 .foot { display: grid; gap: 14px; justify-items: start; padding-top: 30px; }
 .foot :global(.btn-block) { justify-self: stretch; }
-.rule { font-size: 21px; }
+.rule { justify-self: stretch; font-size: 14px; color: rgba(244, 233, 210, 0.92); }

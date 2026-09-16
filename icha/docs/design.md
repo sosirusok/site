@@ -15,8 +15,8 @@
 - **배경**: 포스터의 밤거리 보케 한 장(`/images/poster/bokeh.jpg`)이 화면 전체에 고정되고(`.app::before`, `position: fixed`) 그 위에 35% 미만의 어두운 겹 하나. 스크롤해도 배경은 그대로고 내용만 지나간다. 배경을 섹션마다 바꾸지 않는다.
 - **조각 스티커**: 포스터에서 오려 낸 PNG(`/images/poster/*.png` — hero-top, title, title-tight, plate-*, benefit-*, ribbon-event, steps, step-1..4, pill-condition, note-*, mug, footer-line)를 `<Piece name=…>`(`src/components/site/Poster.tsx`)로 그대로 붙인다. 다시 그리지 않고, 글자가 든 조각은 alt 에 그 글자를 그대로 적는다. 기본은 `.stk`(모서리 6px, 딱딱한 그림자, `--r` 기울기 ±1~6°), 모서리 테이프는 `.tape*`. 매장 이름은 언제나 그 집의 포스터 간판 조각(`plateOf(id)`), 혜택은 `benefitOf(id)`.
 - **종이**: 크림색(`--cream`) 종이 카드 `.paper`(살짝 기울임 `.paper-l`/`.paper-r`), 찢은 메모 `.scrap > .scrap-in`, 종이 위 목록 `.row`, 정보표 `.kv`. 종이 위 글자는 잉크색 `--ink`, 보조는 `--ink-2`, 구분선은 점선 `--paper-line`. 쿠폰은 종이 티켓(`src/components/flow/PaperTicket.tsx`: 위아래 구멍, 점선으로 뜯는 반쪽, Do Hyeon 코드). 안내·자주 묻는 질문·입력 폼도 모두 종이 위에 놓는다.
-- **사진**: 진짜 매장 사진만 폴라로이드(`.pola`, 손글씨 캡션)로. 사진이 없는 자리는 비우거나 포스터 조각을 쓴다.
-- **손글씨**: 화면 곳곳의 한 줄 메모(부제, 안내, 남은 날짜)는 Nanum Pen Script(`.hand`). 보케 위에서는 `.hand-w`(흰 글자 + 검은 그림자), 강조는 `.hand-y`. 종이 위에서는 잉크색 그대로.
+- **사진**: 진짜 매장 사진만 폴라로이드(`.pola`, 흰 테두리)로. **사진 밑에 설명(캡션)을 적지 않는다** — 실제 매장 사이트는 사진에 말을 붙이지 않는다. 사진 설명은 `alt` 로만. 사진이 없는 자리는 비우거나 포스터 조각을 쓴다.
+- **손글씨**: 놀이 문구는 사장님 포스터 조각(이미지) 안에만 있다. 화면 글자로 손글씨(`.hand`)를 정보에 쓰지 않는다(아래 "문구 규칙"). 굳이 쓴다면 6단어 이하의 짧은 강조뿐이고, 그것도 크림 종이(잉크 `--ink` 또는 빨강 `--red`)나 어두운 띠(흰색) 위에만 — 보케 위에 바로 놓지 않는다.
 - **글자**: 제목·간판·버튼·코드 = Do Hyeon(`.disp`, `.plate`, `.outl`, `.mono`), 손글씨 = Nanum Pen Script(`.hand`), 본문 = Pretendard(`--font-sans`). Do Hyeon 과 Nanum Pen Script 는 `src/app/fonts.css` 에서 자체 호스팅한다(`@fontsource/*` 의 한글 한 파일 + 라틴 한 파일) — Google Fonts 를 기다리는 동안 대체 글꼴이 보이거나, 유니코드 조각이 따로 도착해 한 단어 안에서 글꼴이 섞이는 일(막걸 → 막+걸)이 없다. Pretendard 는 layout.tsx 의 CDN 링크(가변 서브셋) 그대로.
 - **색 간판**: 섹션 제목과 상태 제목은 글자로 그린 판 `.plate`(`.plate-blue/-red/-green/-yellow/-cream`, 매장색은 `[data-store]` 안에서 `.plate-store`). 검은 테두리 2px, 잉크 그림자, 살짝 기울임. 작은 판은 `.plate-sm`.
 - **버튼 규칙**: 버튼은 스티커다 — `.btn`: 노랑, 검은 테두리 2px, 4px 잉크 그림자, 살짝 기울임(`--r`), Do Hyeon 20px, 높이 52px(작은 것 `.btn-sm` 44px), 누르면 그림자 쪽으로 눌린다. **초록(`.btn-naver`)은 가게마다 네이버 "예약하기" 하나뿐**(`placeLinks(store).booking`). 한 화면에 같은 가게의 초록 버튼이 둘 이상 보이면 잘못이다. 그 밖의 모든 행동(쿠폰 받기, 사용하기, 쿠폰 보기, 리뷰 남기기, 쿠폰함 보기, 홈으로, 번호로 시작)은 노란 스티커. 크림 `.btn-secondary` 는 노란 버튼 바로 옆의 보조(확인 시트의 취소)에만. 작은 이동(쿠폰함으로, 리뷰, 길찾기, 로그아웃)은 버튼이 아니라 밑줄 글자 `.link`(44px 터치, 보케 위 `.link-w`). 화면 아래 떠 있는 스티커 `.sticky-cta` 는 판 없이 스티커만 뜨고, 그 아래 내용은 `padding-bottom ≥ 96px` 로 비워 가려지지 않게 한다.
@@ -25,10 +25,21 @@
 - **동선은 1차 → 2차 → 3차**(`store.course.n`, 도쿄스탠드 → 조선칼국수 → 와르르맨숀). 거리·도보는 `src/lib/locations.ts` 값만 쓴다.
 - **사장님이 채우는 한 줄 두 가지**(관리자 → 설정): 매장 소식(`Rules.storeNotices`)과 리뷰 이벤트(`Rules.reviewBenefit`). 비우면 그 줄이 사라진다.
 - **쿠폰은 카운터에서만 나온다.** 계산할 때 직원이 `/admin/counter` 에 손님 번호를 넣는다. 영수증 사진·자동 인식·등급(VIP)·누적 금액·반려 사유는 손님 화면에 없다.
-- **글**: 해요체, 제목 2~8자, 문단은 390px 에서 두 줄 안. 표어는 `BRAND` 상수에 있는 것만. 이모지·개발 용어·작은 회색 군더더기 금지. 관리자 화면만 합쇼체.
+- **글**: 아래 "문구 규칙"을 따른다 — 정보 문구는 명사구·합니다체. 제목 2~8자, 문단은 390px 에서 두 줄 안. 표어는 `BRAND` 상수에 있는 것만. 이모지·개발 용어·작은 회색 군더더기 금지.
 - **터치 44px 이상**, 가로 스크롤 없음(390px 에서 `document.documentElement.scrollWidth === 390`), 첫 화면에 핵심 한 줄과 버튼 하나.
 
-토큰·유틸(globals.css): 색 `--yellow --red --blue --green --cream --cream-2 --ink --ink-2 --naver`, 매장색 `[data-store]` → `--store`, 글꼴 `--font-display --font-hand --font-sans`, 그림자 `--shadow-hard --shadow-ink`. 스티커 `.stk .tape .tape-tl .tape-tr`, 종이 `.paper .paper-l .paper-r .scrap .scrap-in .row .kv`, 간판 `.plate .plate-* .plate-sm`, 폴라로이드 `.pola`, 버튼 `.btn .btn-naver .btn-secondary .btn-block .btn-sm .btn-r .btn-0 .link .link-w`, 도장·꼬리표 `.stamp .stamp-green .tag .tag-free .tag-store`, 검은 띠 `.marq`, 지도 종이 `.map-paper`, 고정 스티커 `.fixed-col .sticky-cta`, 입력 `.field .label .input .help .error`.
+### 문구 규칙 (v9.1 — 사장님 피드백 반영)
+기준은 손님이 매일 보는 실제 매장 페이지(네이버 스마트플레이스 매장 정보, 배달의민족 매장 상세, 캐치테이블 매장 페이지)다. 문구 표는 `scratchpad/copy-table.json`, 공용 문구는 `src/lib/copy.ts`·`src/lib/config.ts`(BRAND, REASONS).
+- **정보 문구는 합니다체·명사형.** 영업시간·상태·혜택·다음 매장·규칙·주소·안내·오류·FAQ 답은 짧은 명사구("도보 1분", "1일 3장 · 유효기간 30일") 또는 합니다체("쿠폰이 발급됩니다"). 해요체(~요/~어요/~죠)·느낌표·의문형 제목·이모지·"여기서/저기서/이 집/다른 집/가게" 금지 → "매장", "다른 매장".
+- **손글씨 금지(정보).** 손글씨(`.hand`, `.hand-w`, `.hand-y`, `.hand-r`)와 찢은 메모로 정보를 쓰지 않는다. 놀이 문구는 포스터 조각(이미지)에만 남는다.
+- **사진 설명 없음.** 폴라로이드·갤러리에 캡션을 달지 않는다(`storePhotos.ts` 에 캡션 필드 없음).
+- **받침 없는 글자 없음.** 보케 위 글자는 어두운 띠 `.info`(#14111a 88%, 크림 Pretendard 15px) 또는 크림 종이 `.paper` 위에만. 노란 글자는 검은 띠(`.marq`)나 `.info` 안에서만. 종이 위 빨강(`--red`)은 Pretendard 작은 글자에 쓰지 않는다(대비 3.9:1) — 잉크색으로. 모든 글자는 뒤에 실제로 있는 색과 4.5:1 이상.
+- **고정형**: 영업 상태 칩 `.chip` 4종 — 영업 중 / 영업 전 · 17:00 오픈 / 영업 종료 / 휴무 (뒤에 시간 "15:00~09:00"). 혜택 "다른 매장 쿠폰 제시 시 {품목} 무료". 다음 매장 "다음 매장 · 3차 와르르맨숀 · 도보 1분". 거리 "서면역 6번 출구 도보 N분", "50m 이내". 규칙 "1일 N장 · 유효기간 N일".
+- **라벨은 명사**: 섹션 제목(영업시간·주소·전화·메뉴·오시는 길·리뷰·특별 혜택·이용 방법·자주 묻는 질문), 버튼(예약하기·쿠폰함·사용하기·길찾기·로그인·홈·더보기·리뷰 작성·매장 정보). 제목 옆 손글씨 리드(궁금한 것, 다녀온 사람들, ○○의 밤)는 없다. 로딩 중 라벨은 처리 중/확인 중/발급 중.
+- **문장은 줄바꿈**: 컬럼을 넘어가는 줄이 없어야 한다(`white-space: nowrap` 은 칩·버튼·간판에만).
+- **사실값 유지**: 영업시간·가격·주소·rules 숫자·템플릿 변수는 바꾸지 않는다. 포스터 조각 alt 와 `BRAND.name/eventTag/course/condition/slogan/unionName`, `stores.ts` 의 course.line/benefitLabel/quotes/alt/hoursNote 는 포스터 원문이라 그대로.
+
+토큰·유틸(globals.css): 색 `--yellow --red --blue --green --cream --cream-2 --ink --ink-2 --naver`, 매장색 `[data-store]` → `--store`, 글꼴 `--font-display --font-hand --font-sans`, 그림자 `--shadow-hard --shadow-ink`. 스티커 `.stk .tape .tape-tl .tape-tr`, 종이 `.paper .paper-l .paper-r .scrap .scrap-in .row .kv`, 간판 `.plate .plate-* .plate-sm`, 폴라로이드 `.pola`, 정보 받침 `.info .info-row .star`, 상태 칩 `.chip .chip-on .chip-off`, 버튼 `.btn .btn-naver .btn-secondary .btn-block .btn-sm .btn-r .btn-0 .link .link-d`(`.link-w` 는 보케 위 받침 없는 글자라 더 쓰지 않는다), 도장·꼬리표 `.stamp .stamp-green .tag .tag-free .tag-store`, 검은 띠 `.marq`, 지도 종이 `.map-paper`, 고정 스티커 `.fixed-col .sticky-cta`, 입력 `.field .label .input .help .error`.
 
 
 ## 3. 이미 있는 것 (수정 금지, 사용만)

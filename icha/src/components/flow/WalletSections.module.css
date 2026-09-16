@@ -1,12 +1,14 @@
 .sec { padding: 22px var(--gutter) 6px; }
-.lead { font-size: 22px; line-height: 1.1; padding-bottom: 2px; }
+
+/* 보케 위 정보 줄 — 어두운 띠(#14111a 90%) 위 본문 글꼴 */
+.strip { background: rgba(20, 17, 26, 0.9); color: #fff; font-family: var(--font-sans); font-size: 15px; line-height: 1.5; padding: 10px 14px; border-radius: 4px; }
 
 /* 받은 쿠폰 — 종이 한 장씩 */
 .relays { display: grid; gap: 16px; }
 .relay { display: grid; gap: 8px; justify-items: start; padding: 16px 16px 18px; }
-.relayHead { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.relayHead { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .relayTitle { font-size: 20px; }
-.relaySub { font-size: 13px; color: var(--ink-2); }
+.relaySub { font-size: 15px; line-height: 1.5; color: var(--ink-2); }
 .relay :global(.btn) { margin-top: 8px; }
 
 /* 종이 쿠폰 더미 */
@@ -16,18 +18,18 @@
 .soon { position: absolute; right: 100px; top: -12px; font-size: 16px; padding: 4px 8px 3px; background: rgba(244, 233, 210, 0.85); }
 .pastStamp { position: absolute; left: 14px; bottom: -8px; font-size: 16px; padding: 4px 8px 3px; background: rgba(244, 233, 210, 0.9); }
 
-/* 지난 쿠폰 — 손글씨 줄을 누르면 펼쳐진다 */
+/* 지난 쿠폰 — 띠를 누르면 펼쳐진다 */
 .past { padding: 8px var(--gutter) 6px; }
-.pastSummary { display: flex; align-items: center; gap: 8px; min-height: 48px; font-size: 24px; margin-bottom: 8px; }
-.pastArrow { font-family: var(--font-sans); font-size: 18px; transition: transform 0.15s; }
+.pastSummary { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 48px; font-weight: 700; margin-bottom: 12px; }
+.pastArrow { font-size: 16px; transition: transform 0.15s; }
 .past[open] .pastArrow { transform: rotate(180deg); }
 
-/* 빈 쿠폰함 — 메모 옆에 키트의 빈 영수증 꽂이(투명 PNG, 그림자 없음). 꽂이는 그림의 가운데 1/3 이라 메모와 살짝 겹쳐도 된다 */
+/* 빈 쿠폰함 — 종이 옆에 키트의 빈 영수증 꽂이(투명 PNG, 그림자 없음). 꽂이는 그림의 가운데 1/3 이라 종이와 살짝 겹쳐도 된다 */
 .empty { position: relative; display: grid; gap: 22px; padding: 10px 0 8px; }
 .emptyRow { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 96px; gap: 6px; align-items: end; }
-.emptyScrap { max-width: 100%; z-index: 1; }
-.emptyTitle { font-size: 30px; }
-.emptyText { margin-top: 6px; font-size: 14px; line-height: 1.55; color: var(--ink-2); }
+.emptyPaper { max-width: 100%; z-index: 1; display: grid; gap: 8px; padding: 18px 18px 20px; }
+.emptyTitle { font-size: 22px; }
+.emptyText { font-size: 15px; line-height: 1.5; color: var(--ink-2); }
 /* 꽂이 그림(360px)은 가운데 29% 만 물체라, 240px 로 키우고 물체 둘레(70x155)만 보이도록 상자로 자른다 — 그림자 없음 */
 .spikeBox { display: block; width: 92px; height: 164px; overflow: hidden; justify-self: end; margin-bottom: -6px; }
 .emptySpike { max-width: none; margin: -42px 0 0 -74px; }

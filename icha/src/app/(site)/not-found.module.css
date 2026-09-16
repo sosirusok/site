@@ -2,7 +2,10 @@
 .wrap { display: grid; justify-items: center; align-content: center; text-align: center; gap: 14px; padding: 48px var(--gutter); min-height: calc(100dvh - var(--header-h) - var(--tabbar-h)); }
 /* 쓰러진 소주잔 — 그림의 위아래 여백만큼 당겨서 간판에 붙인다 */
 .cut { margin: -24px 0 -30px; }
-.h1 { font-size: 26px; padding: 12px 18px 10px; }
-.sub { font-size: 23px; }
+/* 간판은 줄이 길어도 칸 밖으로 나가지 않게 — 13자까지 한 줄, 넘치면 줄바꿈 */
+.h1 { font-size: 22px; padding: 12px 18px 10px; white-space: normal; max-width: 100%; line-height: 1.2; }
+/* 보케 위 정보 줄 — 어두운 띠(#14111a 90%) 위 본문 글꼴 */
+.strip { background: rgba(20, 17, 26, 0.9); color: #fff; font-family: var(--font-sans); font-size: 15px; line-height: 1.5; padding: 10px 14px; border-radius: 4px; }
+.sub { font-weight: 700; }
 .btn { margin-top: 12px; min-width: 170px; }
 .retry { margin-top: 2px; }

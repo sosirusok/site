@@ -1,12 +1,11 @@
-/* 리뷰 — 손글씨 별점, 찢은 종이 위 인용, 작은 글자 링크 */
+/* 리뷰 — 어두운 띠 위 별점, 찢은 종이 위 인용, 어두운 받침 위 링크 */
 .root { display: grid; gap: 14px; }
-.rating { font-size: 24px; }
-.score { color: var(--yellow); font-size: 30px; }
+.rating { justify-self: start; font-size: 15px; font-weight: 600; }
 .list { display: grid; gap: 14px; }
 .quote { max-width: 94%; }
 .quoteL { justify-self: start; }
 .quoteR { justify-self: end; }
 .text { font-size: 14.5px; line-height: 1.6; color: var(--ink); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
-.meta { margin-top: 6px; font-size: 19px; color: var(--ink-2); text-align: right; }
-.benefit { font-size: 24px; }
-.links { display: flex; gap: 22px; }
+.meta { margin-top: 6px; font-size: 13px; color: var(--ink-2); text-align: right; }
+.benefit { justify-self: start; font-size: 15px; }
+.links { display: flex; gap: 10px; }

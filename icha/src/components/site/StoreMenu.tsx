@@ -5,7 +5,7 @@ import { menuImageUrl } from "@/lib/menu-image";
 import type { Store } from "@/lib/stores";
 import styles from "./StoreMenu.module.css";
 
-/** 처음에 보이는 줄 수. 나머지는 '메뉴 더 보기' 안에. */
+/** 처음에 보이는 줄 수. 나머지는 '메뉴 더보기' 안에. */
 const VISIBLE = 8;
 
 /** 메뉴 사진 — 배경을 뺀 PNG(도쿄스탠드)는 종이 위에 그대로, 사진(JPG)은 작은 폴라로이드처럼 흰 테두리. 없으면 아무것도 안 그린다. */
@@ -43,22 +43,22 @@ export function StoreMenu({ store, items, menuUrl }: { store: Store; items: Menu
     <div className={`paper paper-l ${styles.board}`}>
       <p className={styles.head}>
         <span className="plate plate-red plate-sm">MENU</span>
-        <span className={`hand ${styles.headHand}`}>{store.shortName} 메뉴판</span>
+        <span className={styles.headText}>{store.shortName} 메뉴판</span>
       </p>
       {items.length === 0 ? (
-        <p className={`hand ${styles.empty}`}>{store.shortName} 메뉴는 정리 중이에요.</p>
+        <p className={styles.empty}>메뉴 준비 중</p>
       ) : (
         <>
           <ul className={styles.list}>{head.map((m) => <Row key={m.id} m={m} />)}</ul>
           {rest.length > 0 && (
             <details className={styles.more}>
-              <summary className={`btn btn-secondary btn-sm btn-block btn-0 ${styles.moreBtn}`}>메뉴 더 보기 · {rest.length}개</summary>
+              <summary className={`btn btn-secondary btn-sm btn-block btn-0 ${styles.moreBtn}`}>메뉴 더보기 · {rest.length}개</summary>
               <ul className={styles.list}>{rest.map((m) => <Row key={m.id} m={m} />)}</ul>
             </details>
           )}
         </>
       )}
-      {menuUrl && <a className={`link ${styles.naver}`} href={menuUrl} target="_blank" rel="noreferrer">네이버에서 메뉴 전체 보기</a>}
+      {menuUrl && <a className={`link ${styles.naver}`} href={menuUrl} target="_blank" rel="noreferrer">전체 메뉴 · 네이버 플레이스</a>}
     </div>
   );
 }

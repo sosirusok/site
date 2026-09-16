@@ -1,4 +1,4 @@
-/* 가게 첫 화면 — 밤 사진 한 장 화면 폭 그대로, 아래 모서리에 간판 조각 */
+/* 매장 첫 화면 — 밤 사진 한 장 화면 폭 그대로, 아래 모서리에 간판 조각 */
 .hero { position: relative; margin-top: 4px; }
 .shotWrap { position: relative; height: 62vw; min-height: 220px; max-height: 300px; overflow: hidden; box-shadow: 0 6px 0 rgba(0, 0, 0, 0.45); background: #1a1520; }
 .shot { object-fit: cover; }
@@ -7,9 +7,8 @@
 /* 간판 아래 장식 선(키트 sign-<id>) — 가운데 60% */
 .sign { margin-top: 14px; }
 
-/* 사진 아래 — 손글씨 한 줄, 종이 한 장 */
+/* 사진 아래 — 어두운 띠 한 줄(상태 칩·오늘 시간·별점), 종이 한 장 */
 .facts { padding: 16px var(--gutter) 0; display: grid; gap: 14px; }
-.now { font-size: 24px; line-height: 1.15; }
-.rating { color: var(--yellow); }
+.now { font-size: 15px; }
 .factPaper { padding: 12px 16px; }
 .tel { min-height: 44px; margin: -8px 0; }

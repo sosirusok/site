@@ -7,10 +7,10 @@ import { HERO_POS } from "./storePhotos";
 import styles from "./StoreHero.module.css";
 
 /**
- * 가게 첫 화면 — 그 집 밤 외관 사진을 화면 폭 그대로, 아래 모서리에 포스터 간판 조각이 겹쳐 붙는다.
+ * 매장 첫 화면 — 그 매장 밤 외관 사진을 화면 폭 그대로, 아래 모서리에 포스터 간판 조각이 겹쳐 붙는다.
  * 보이는 이름은 간판 조각이고 읽히는 이름(h1)은 눈에 안 보이게 같이 둔다.
- * 사진 아래에는 손글씨 한 줄(지금 영업 중·오늘 시간·별점)과 종이 한 장(영업·주소·전화).
- * 키트에 그 집 장식 선(sign-<id>.png, 지금은 와르르맨숀의 민트 네온 선)이 있으면 간판 조각 아래 가늘게 한 줄 — 글자·테두리에 네온은 없다.
+ * 사진 아래에는 어두운 띠 한 줄(상태 칩 · 오늘 영업시간 · 별점)과 종이 한 장(영업시간·주소·전화). 손글씨는 쓰지 않는다.
+ * 키트에 그 매장 장식 선(sign-<id>.png)이 있으면 간판 조각 아래 가늘게 한 줄.
  */
 export function StoreHero({ store }: { store: Store }) {
   const st = openStatus(store);
@@ -20,8 +20,8 @@ export function StoreHero({ store }: { store: Store }) {
   const otherDays = parseHours(store)
     .filter((l) => !l.dayset.has(dow))
     .map((l) => `${l.days} ${l.openText}~${l.closeText}`);
-  const today = st.today === "휴무" ? "오늘 쉬어요" : `오늘 ${st.today.replace(/\s*–\s*/, "~").replace("다음날 ", "")}`;
-  const state = st.today === "휴무" ? "오늘 쉬어요" : nowText(st);
+  const today = st.today === "휴무" ? "" : `오늘 ${st.today.replace(/\s*–\s*/, "~").replace("다음날 ", "")}`;
+  const state = st.today === "휴무" ? "휴무" : nowText(st);
   const sub = [st.lastOrder ? `주문 마감 ${st.lastOrder}` : null, ...otherDays].filter(Boolean).join(" · ");
 
   return (
@@ -38,13 +38,14 @@ export function StoreHero({ store }: { store: Store }) {
       </header>
 
       <div className={styles.facts}>
-        <p className={`hand hand-w ${styles.now}`}>
-          {state} · {today}
-          {r && <span className={styles.rating}> · ★ {r.score.toFixed(2)} ({r.count.toLocaleString("ko-KR")})</span>}
+        <p className={`info info-row ${styles.now}`}>
+          <span className={`chip ${st.open ? "chip-on" : "chip-off"}`}>{state}</span>
+          {today && <span className="num">{today}</span>}
+          {r && <span className="num"><span className="star">★ {r.score.toFixed(2)}</span> ({r.count.toLocaleString("ko-KR")})</span>}
         </p>
         <div className={`paper paper-r ${styles.factPaper}`}>
           <dl className="kv">
-            {sub && (<><dt>영업</dt><dd className="num">{sub}</dd></>)}
+            {sub && (<><dt>영업시간</dt><dd className="num">{sub}</dd></>)}
             <dt>주소</dt>
             <dd>{store.address}</dd>
             {store.phone && (

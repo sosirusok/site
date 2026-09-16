@@ -1,27 +1,28 @@
-/* 이용 안내 — 간판 제목, 순서 조각, 종이 카드 */
+/* 이용 안내 — 간판 제목, 순서 조각, 종이 카드. 보케 위 글자는 흰 Do Hyeon 외곽선(.outl, 20px 이상)만 */
 .page { padding-bottom: 8px; }
 .top { position: relative; display: grid; gap: 14px; justify-items: start; padding: 18px var(--gutter) 6px; }
 .h1 { --r: -1.5deg; }
-.brand { font-size: 24px; }
+/* 브랜드 줄은 오른쪽 메모 조각(약 60px 높이) 아래로 — 간판 60px + 간격이면 겹치지 않는다 */
+.brand { font-size: 20px; margin-top: 4px; }
 .note { position: absolute; right: var(--gutter); top: 8px; width: 104px; }
 
 .sec { padding: 24px var(--gutter) 6px; }
-.lead { font-size: 22px; line-height: 1.1; padding-bottom: 2px; }
+.lead { font-size: 20px; padding-bottom: 4px; }
 .strip { margin-bottom: 22px; }
 
-/* 순서 넷 — 종이 위에 노란 번호 판 */
+/* 이용 방법 넷 — 종이 위에 노란 번호 판 */
 .stepPaper { display: grid; gap: 10px; padding: 14px 16px 12px; }
 .steps { display: grid; }
 .step { display: flex; align-items: flex-start; gap: 14px; padding: 10px 0; border-bottom: 1px dashed var(--paper-line); }
 .step:last-child { border-bottom: 0; }
 .num { flex: none; min-width: 34px; text-align: center; --r: -4deg; }
 .stepT { flex: 1; min-width: 0; font-size: 15px; line-height: 1.5; font-weight: 600; padding-top: 3px; }
-.rule { font-size: 12.5px; color: var(--ink-2); border-top: 1px dashed var(--paper-line); padding-top: 8px; }
+.rule { font-size: 14px; line-height: 1.5; color: var(--ink-2); border-top: 1px dashed var(--paper-line); padding-top: 8px; }
 
-/* 답 속 예약 스티커 세 개 — 가게마다 한 줄: 그 집 색 판(N차 이름) + 초록 [예약하기] */
+/* 답 속 예약 스티커 세 개 — 매장마다 한 줄: 그 집 색 판(N차 이름) + 초록 [예약하기] */
 .bookRow { display: grid; gap: 12px; margin-top: 12px; }
 .bookItem { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .bookName { --r: -2deg; }
-/* 리뷰 이벤트 — 가게 이름은 그 집 색 판 */
+/* 리뷰 이벤트 — 매장 이름은 그 집 색 판 */
 .revList { display: grid; gap: 10px; }
 .revList li { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; line-height: 1.5; }

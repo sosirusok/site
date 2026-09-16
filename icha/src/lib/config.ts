@@ -8,11 +8,11 @@ export const BRAND = {
   name: "알콜부시기",
   hanja: "",
   /** 한 줄 설명 */
-  tagline: "소주·맥주·막걸리, 서면 3가게 콜라보. 한 매장에서 마시고 영수증 들고 50m 안 다른 매장으로 가면 특별 혜택.",
+  tagline: "소주·맥주·막걸리, 서면 3개 매장 콜라보. 한 매장 이용 후 50m 내 다른 매장에서 메인안주 1개 주문 시 매장별 특별 혜택을 드립니다.",
   /** 연합 설명 */
   unionName: "서면 3가게 콜라보",
   /** 짧은 규칙 문구 */
-  ruleOneLiner: "한 매장에서 계산할 때 휴대폰 번호를 말하면 쿠폰이 들어와요. 50m 안 다른 매장에서 메인안주 1개 주문하면 매장별 특별 혜택을 드려요.",
+  ruleOneLiner: "계산 시 휴대폰 번호를 말씀하시면 쿠폰이 발급됩니다. 50m 내 다른 매장에서 메인안주 1개 주문 시 매장별 특별 혜택을 드립니다.",
   /** 포스터 문구 */
   eventTag: "영수증 릴레이 EVENT",
   course: "50m 안에서 즐기는 1차·2차·3차",
@@ -31,7 +31,7 @@ export type Rules = {
   sameDayOnly: boolean;
   /** 매장별 오늘의 소식(관리자가 적음, 비우면 숨김) */
   storeNotices: Record<StoreId, string>;
-  /** 네이버 리뷰 이벤트: 매장별 혜택 문구(비우면 숨김). 예: "리뷰 보여 주면 소주 1병" */
+  /** 네이버 리뷰 이벤트: 매장별 혜택 문구(비우면 숨김). 예: "네이버 리뷰 작성 시 소주 1병" */
   reviewBenefit: Record<StoreId, string>;
   /** 발급된 쿠폰의 유효 기간(일). 승인된 영수증으로 증정 쿠폰을 고를 수 있는 기간도 같다 */
   couponValidDays: number;
@@ -79,36 +79,36 @@ export const DEFAULT_RULES: Rules = {
   notice: "",
 };
 
-/** 영수증 판정 사유 코드 (DB receipts.reasons 에 저장). 손님·관리자 화면 모두 이 문장을 그대로 쓴다 — 합쇼체. */
+/** 영수증 판정 사유 코드 (DB receipts.reasons 에 저장). 손님·관리자 화면 모두 이 문장을 그대로 쓴다 — 합니다체, 상태 + 조치. */
 export const REASONS = {
-  NOT_RECEIPT: "영수증으로 보이지 않는 사진이에요.",
-  STORE_MISMATCH: "참여 매장의 영수증이 아니에요.",
-  STORE_UNKNOWN: "매장명을 읽지 못해서 직원이 확인해요.",
-  BIZNO_MISMATCH: "사업자등록번호가 등록된 매장과 달라서 직원이 확인해요.",
-  DATE_UNREADABLE: "결제 일시를 읽지 못해서 직원이 확인해요.",
-  EXPIRED: "결제하고 인정 시간이 지났어요.",
-  FUTURE_DATE: "결제 일시가 지금보다 뒤예요.",
-  MIN_AMOUNT: "최소 결제 금액에 못 미쳐요.",
-  AMOUNT_TOO_HIGH: "결제 금액이 커서 직원이 확인해요.",
-  NO_APPROVAL_NO: "승인번호가 없거나 흐려서 직원이 확인해요.",
-  CANCELLED: "결제가 취소된 전표예요.",
-  DUPLICATE_IMAGE: "이미 올린 사진이에요.",
-  SIMILAR_IMAGE: "이미 올린 영수증과 아주 비슷한 사진이에요.",
-  DUPLICATE_RECEIPT: "이미 쓴 영수증이에요(승인번호 일치).",
-  DUPLICATE_FINGERPRINT: "같은 매장·시각·금액의 영수증이 이미 있어요.",
-  DAILY_LIMIT: "오늘 인증할 수 있는 횟수를 다 썼어요.",
-  SCREEN_PHOTO: "화면을 다시 찍은 사진으로 보여요.",
-  REPRINT: "재출력 영수증으로 보여요.",
-  ORDER_SLIP: "결제 영수증이 아니라 주문서(빌지)로 보여요.",
-  SUSPICIOUS_TEXT: "영수증에 이상한 문구가 있어서 직원이 확인해요.",
-  LOW_CONFIDENCE: "일부 항목이 흐려서 직원이 확인해요.",
-  OCR_UNAVAILABLE: "지금은 직원이 사진을 직접 확인해요.",
-  OCR_ERROR: "사진을 읽지 못해서 직원이 확인해요.",
-  EVENT_INACTIVE: "지금은 이벤트 기간이 아니에요.",
-  PICK_EXPIRED: "무료 증정 쿠폰을 고를 수 있는 기간이 지났어요.",
-  MANUAL_APPROVED: "직원이 확인하고 승인했어요.",
-  COUNTER: "매장 카운터에서 직접 넣어 준 쿠폰이에요.",
-  MANUAL_REJECTED: "직원이 확인하고 반려했어요.",
+  NOT_RECEIPT: "영수증으로 확인되지 않는 사진입니다.",
+  STORE_MISMATCH: "참여 매장의 영수증이 아닙니다.",
+  STORE_UNKNOWN: "매장명을 읽을 수 없어 직원이 확인합니다.",
+  BIZNO_MISMATCH: "사업자등록번호가 등록 매장과 달라 직원이 확인합니다.",
+  DATE_UNREADABLE: "결제 일시를 읽을 수 없어 직원이 확인합니다.",
+  EXPIRED: "결제 후 인정 시간이 지났습니다.",
+  FUTURE_DATE: "결제 일시가 현재 시각 이후입니다.",
+  MIN_AMOUNT: "최소 결제 금액 미만입니다.",
+  AMOUNT_TOO_HIGH: "결제 금액이 커 직원이 확인합니다.",
+  NO_APPROVAL_NO: "승인번호가 없거나 흐려 직원이 확인합니다.",
+  CANCELLED: "결제가 취소된 전표입니다.",
+  DUPLICATE_IMAGE: "이미 등록된 사진입니다.",
+  SIMILAR_IMAGE: "이미 등록된 영수증과 유사한 사진입니다.",
+  DUPLICATE_RECEIPT: "이미 사용된 영수증입니다(승인번호 일치).",
+  DUPLICATE_FINGERPRINT: "같은 매장·시각·금액의 영수증이 이미 등록되어 있습니다.",
+  DAILY_LIMIT: "오늘 인증 가능 횟수를 초과했습니다.",
+  SCREEN_PHOTO: "화면을 재촬영한 사진으로 판단됩니다.",
+  REPRINT: "재출력 영수증으로 판단됩니다.",
+  ORDER_SLIP: "결제 영수증이 아닌 주문서(빌지)로 판단됩니다.",
+  SUSPICIOUS_TEXT: "영수증에 확인이 필요한 문구가 있어 직원이 확인합니다.",
+  LOW_CONFIDENCE: "일부 항목이 흐려 직원이 확인합니다.",
+  OCR_UNAVAILABLE: "현재 직원이 사진을 직접 확인합니다.",
+  OCR_ERROR: "사진을 읽을 수 없어 직원이 확인합니다.",
+  EVENT_INACTIVE: "이벤트 기간이 아닙니다.",
+  PICK_EXPIRED: "쿠폰 선택 기간이 지났습니다.",
+  MANUAL_APPROVED: "직원 확인 후 승인되었습니다.",
+  COUNTER: "매장 카운터에서 발급된 쿠폰입니다.",
+  MANUAL_REJECTED: "직원 확인 후 반려되었습니다.",
 } as const;
 
 export type ReasonCode = keyof typeof REASONS;

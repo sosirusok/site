@@ -13,8 +13,8 @@ function pretty(digits: string): string {
   return `${d.slice(0, 3)}-${d.slice(3, 7)}-${d.slice(7)}`;
 }
 
-/** 번호 하나로 들어가는 폼 — 계산할 때 직원에게 말한 번호 그대로. 성공하면 next 로 전체 이동한다(상단 바까지 로그인 상태로). */
-export function PhoneForm({ next, label = "쿠폰함 열기" }: { next: string; label?: string }) {
+/** 휴대폰 번호 하나로 로그인하는 폼 — 계산 시 직원에게 말한 번호 그대로. 성공하면 next 로 전체 이동한다(상단 바까지 로그인 상태로). */
+export function PhoneForm({ next, label = "로그인" }: { next: string; label?: string }) {
   const id = useId();
   const [digits, setDigits] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +29,7 @@ export function PhoneForm({ next, label = "쿠폰함 열기" }: { next: string; 
     e.preventDefault();
     const phone = normalizePhone(digits);
     if (!phone) {
-      setError("010으로 시작하는 11자리 번호를 넣어 주세요.");
+      setError("휴대폰 번호를 정확히 입력해 주세요.");
       return;
     }
     setBusy(true);
@@ -41,13 +41,13 @@ export function PhoneForm({ next, label = "쿠폰함 열기" }: { next: string; 
       });
       const data = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
       if (!res.ok || !data?.ok) {
-        setError(res.status === 429 ? "너무 자주 눌렀어요. 잠시 뒤에 다시 해 주세요." : data?.error ?? "지금은 들어갈 수 없어요. 잠시 뒤에 다시 해 주세요.");
+        setError(res.status === 429 ? "요청이 너무 많습니다. 잠시 후 다시 시도해 주세요." : data?.error ?? "로그인할 수 없습니다. 잠시 후 다시 시도해 주세요.");
         setBusy(false);
         return;
       }
       window.location.assign(next);
     } catch {
-      setError("연결이 끊겼어요. 다시 눌러 주세요.");
+      setError("네트워크 연결을 확인해 주세요.");
       setBusy(false);
     }
   }
@@ -73,7 +73,7 @@ export function PhoneForm({ next, label = "쿠폰함 열기" }: { next: string; 
         {error && <p id={`${id}-err`} className="error" role="alert">{error}</p>}
       </div>
       <StickerButton kind="wallet" type="submit" block disabled={busy}>
-        {busy ? "잠시만요" : label}
+        {busy ? "확인 중" : label}
       </StickerButton>
     </form>
   );

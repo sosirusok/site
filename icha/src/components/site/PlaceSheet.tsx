@@ -14,7 +14,7 @@ export type PlaceSheetStore = { id: string; shortName: string; course: { n: numb
 
 /**
  * 예약 시트 — 하단 탭 "플레이스"와 예약 버튼에서 연다. 아래에서 올라오는 크림색 종이 한 장.
- * 가게마다 포스터 간판 조각 하나 + 초록 스티커 [예약하기] 하나. 리뷰·길찾기는 작은 글자.
+ * 매장마다 포스터 간판 조각 하나 + 초록 스티커 [예약하기] 하나. 리뷰·길찾기는 작은 글자. 안내는 본문 글꼴 한 줄.
  */
 export function PlaceSheet({ stores, open, onClose }: { stores: PlaceSheetStore[]; open: boolean; onClose: () => void }) {
   const [mounted, setMounted] = useState(false);
@@ -30,8 +30,8 @@ export function PlaceSheet({ stores, open, onClose }: { stores: PlaceSheetStore[
   return createPortal(
     <div className={styles.backdrop} onClick={onClose} role="presentation">
       <div className={styles.sheet} role="dialog" aria-modal="true" aria-label="예약하기" onClick={(e) => e.stopPropagation()}>
-        <p className={styles.title}><span className="plate plate-red">어디부터 갈까요?</span></p>
-        <p className={`hand ${styles.sub}`}>네이버 예약으로 이어져요. 자리 있는지 보고 가면 편해요.</p>
+        <p className={styles.title}><span className="plate plate-red">매장 예약</span></p>
+        <p className={styles.sub}>네이버 예약으로 연결됩니다</p>
         <ul className={styles.list}>
           {stores.map((s, i) => (
             <li key={s.id} className={styles.item} data-store={s.id}>
@@ -48,7 +48,7 @@ export function PlaceSheet({ stores, open, onClose }: { stores: PlaceSheetStore[
           ))}
         </ul>
         <div className={styles.foot}>
-          <a className="link" href={naverSearchUrl(SEARCH_QUERY)} target="_blank" rel="noreferrer">네이버에서 ‘{SEARCH_QUERY}’ 검색</a>
+          <a className="link" href={naverSearchUrl(SEARCH_QUERY)} target="_blank" rel="noreferrer">네이버 검색 · {SEARCH_QUERY}</a>
           <StickerButton kind="close" size="sm" tilt={1} secondary onClick={onClose}>닫기</StickerButton>
         </div>
       </div>

@@ -1,3 +1,6 @@
 /* 오려 낸 그림(투명 PNG) — 그림자·모서리 없이 정해진 폭으로 */
 .cut { display: block; max-width: 100%; }
 .cut img { display: block; width: 100%; height: auto; }
+
+/* 정보 줄 항목 — 줄바꿈은 항목 사이에서만 */
+.dotItem { display: inline-block; max-width: 100%; }

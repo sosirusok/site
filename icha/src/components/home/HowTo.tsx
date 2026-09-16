@@ -6,11 +6,11 @@ import type { Rules } from "@/lib/config";
 import { ruleLine } from "@/lib/copy";
 import s from "./home.module.css";
 
-/** 영수증 릴레이 EVENT — 포스터 리본, 순서 네 칸, 손글씨 메모 한 장(번호 말하면 쿠폰 — 키트 note-phone 이 오면 그 그림), 조건 알약 조각. */
+/** 영수증 릴레이 EVENT — 포스터 리본, 순서 네 칸, 안내 종이 한 장(번호 → 쿠폰 발급 — 키트 note-phone 이 오면 그 그림), 조건 알약 조각 + 규칙 한 줄(어두운 띠). */
 export function HowTo({ rules, loggedIn }: { rules: Rules; loggedIn: boolean }) {
   return (
     <section className={s.how} aria-labelledby="how-title">
-      <h2 id="how-title" className="sr-only">영수증 릴레이 EVENT — 이렇게 받아요</h2>
+      <h2 id="how-title" className="sr-only">영수증 릴레이 EVENT 이용 방법</h2>
       <Piece name="ribbon-event" rotate={-1.5} className={`tape ${s.ribbon}`} />
       <StepsStrip className={s.steps} />
       <div className={s.noteRow}>
@@ -19,17 +19,13 @@ export function HowTo({ rules, loggedIn }: { rules: Rules; loggedIn: boolean }) 
           rotate={-2}
           sizes="260px"
           className={s.note}
-          fallback={
-            <div className={`scrap ${s.note}`} style={{ "--r": "-2deg" } as CSSProperties}>
-              <p className={`scrap-in hand ${s.noteIn}`}>계산할 때 휴대폰 번호를 말하면 쿠폰이 들어와요</p>
-            </div>
-          }
+          fallback={<p className={`paper ${s.note} ${s.noteIn}`} style={{ "--r": "-1deg" } as CSSProperties}>계산 시 휴대폰 번호를 말씀하시면 쿠폰이 발급됩니다</p>}
         />
-        <StickerButton kind="wallet" href={loggedIn ? "/wallet" : "/login"} tilt={1} className={s.walletBtn}>내 쿠폰함 열기</StickerButton>
+        <StickerButton kind="wallet" href={loggedIn ? "/wallet" : "/login"} tilt={1} className={s.walletBtn}>쿠폰함</StickerButton>
       </div>
       <div className={s.pillRow}>
         <Piece name="pill-condition" rotate={1} sizes="340px" className={s.pill} />
-        <p className={`hand hand-w ${s.rule}`}>{ruleLine(rules)}</p>
+        <p className={`info ${s.rule}`}>{ruleLine(rules)}</p>
       </div>
     </section>
   );
