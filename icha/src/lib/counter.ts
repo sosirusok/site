@@ -19,13 +19,13 @@ export async function issueCounterPass(p: { phone: string; storeId: StoreId; amo
   const phone = normalizePhone(p.phone);
   if (!phone) throw new CouponError("휴대폰 번호를 확인해 주세요.");
   const rules = await getRules();
-  if (!rules.eventActive) throw new CouponError("지금은 이벤트 기간이 아니에요.");
+  if (!rules.eventActive) throw new CouponError("이벤트 기간이 아닙니다.");
   const member = await findOrCreateMember(phone);
   const today = await query<{ n: number }>(
     `select count(*)::int as n from receipts where member_id=$1 and store_id=$2 and status='approved' and created_at > now() - interval '1 day'`,
     [member.id, p.storeId],
   );
-  if ((today[0]?.n ?? 0) >= rules.dailyLimitPerMember) throw new CouponError(`이 번호는 오늘 ${rules.dailyLimitPerMember}장까지만 받을 수 있어요.`);
+  if ((today[0]?.n ?? 0) >= rules.dailyLimitPerMember) throw new CouponError(`이 번호는 오늘 ${rules.dailyLimitPerMember}장까지 발급됩니다.`);
   const now = new Date();
   const receiptId = await tx(async (q) => {
     const rows = await q.query<{ id: string }>(
@@ -68,7 +68,7 @@ export async function counterState(phone: string, storeId: StoreId | null): Prom
 /** B 매장 카운터에서 릴레이를 이 매장 혜택으로 바꿔 바로 사용 처리 */
 export async function counterRedeemPending(p: { receiptId: string; memberId: string; menuItemId: number; adminId: string; storeId: StoreId }): Promise<Coupon> {
   const coupon = await issueSideCoupon({ memberId: p.memberId, receiptId: p.receiptId, menuItemId: p.menuItemId });
-  if (coupon.useStoreId !== p.storeId) throw new CouponError("이 매장 혜택이 아니에요.");
+  if (coupon.useStoreId !== p.storeId) throw new CouponError("이 매장 혜택이 아닙니다.");
   return redeemCoupon({ couponId: coupon.id, by: { adminId: p.adminId, storeId: p.storeId } });
 }
 

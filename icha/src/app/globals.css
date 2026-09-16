@@ -11,7 +11,7 @@
   --yellow: #FFD400;
   --red: #D9332B;
   --blue: #1E48C8;
-  --green: #1B8A46;
+  --green: #156e38;
   --cream: #F4E9D2;
   --cream-2: #E7D9B9;      /* 종이 위 선·눌린 면 */
   --ink: #111;
@@ -123,15 +123,15 @@ details > summary::-webkit-details-marker { display: none; }
 .paper .row b { font-family: var(--font-display); font-weight: 400; font-size: 15px; }
 .paper .val { font-variant-numeric: tabular-nums; font-weight: 600; }
 
-/* ── 색 간판(글자로 그린 판) — 섹션 제목 ── */
-.plate { display: inline-block; background: var(--plate, var(--ink)); color: #fff; font-family: var(--font-display); font-weight: 400; font-size: 22px; line-height: 1; padding: 10px 14px 9px; border: 2px solid #111; border-radius: 5px; box-shadow: var(--shadow-ink); text-shadow: 2px 2px 0 #000; transform: rotate(var(--r, -1.5deg)); white-space: nowrap; }
+/* ── 색 간판(글자로 그린 판) — 섹션 제목. 흰 글자에 검은 외곽선 1px + 잉크 그림자(포스터 간판 글자) ── */
+.plate { display: inline-block; background: var(--plate, var(--ink)); color: #fff; font-family: var(--font-display); font-weight: 400; font-size: 22px; line-height: 1; padding: 10px 14px 9px; border: 2px solid #111; border-radius: 5px; box-shadow: var(--shadow-ink); text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 2px 2px 0 #000; transform: rotate(var(--r, -1.5deg)); white-space: nowrap; }
 .plate-blue { --plate: var(--blue); }
 .plate-red { --plate: var(--red); }
 .plate-green { --plate: var(--green); }
 .plate-yellow { --plate: var(--yellow); color: #111; text-shadow: none; }
 .plate-cream { --plate: var(--cream); color: #111; text-shadow: none; }
 .plate-store { --plate: var(--store, var(--ink)); }
-.plate-sm { font-size: 16px; padding: 7px 10px 6px; border-width: 2px; box-shadow: 3px 3px 0 #000; text-shadow: 1px 1px 0 #000; }
+.plate-sm { font-size: 16px; padding: 7px 10px 6px; border-width: 2px; box-shadow: 3px 3px 0 #000; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }
 
 /* ── 폴라로이드: 진짜 사진 ── */
 .pola { display: block; position: relative; background: #fff; padding: 7px 7px 20px; box-shadow: 0 6px 0 rgba(0, 0, 0, 0.42), 0 2px 8px rgba(0, 0, 0, 0.35); transform: rotate(var(--r, 0deg)); color: #111; }
@@ -142,7 +142,8 @@ details > summary::-webkit-details-marker { display: none; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; padding: 0 22px; background: var(--yellow); color: var(--ink); font-family: var(--font-display); font-weight: 400; font-size: 20px; line-height: 1; border: 2px solid #111; border-radius: 6px; box-shadow: var(--shadow-ink); transform: rotate(var(--r, -1deg)); white-space: nowrap; user-select: none; transition: transform 0.08s, box-shadow 0.08s, opacity 0.12s; }
 .btn:active { transform: rotate(var(--r, -1deg)) translate(3px, 3px); box-shadow: 1px 1px 0 #000; }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: rotate(var(--r, -1deg)); box-shadow: var(--shadow-ink); }
-.btn-naver { background: var(--naver); color: #fff; text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.45); }
+/* 초록 예약 스티커 — 흰 글자에 검은 외곽선 1px(포스터의 초록 간판 글자와 같은 처리): 초록 바탕만으로는 흰 글자 대비가 2.3:1 이라 외곽선으로 읽힌다 */
+.btn-naver { background: var(--naver); color: #111; text-shadow: none; }
 .btn-secondary { background: var(--cream); color: var(--ink); }
 .btn-block { display: flex; width: 100%; }
 .btn-sm { min-height: 44px; font-size: 17px; padding: 0 16px; box-shadow: 3px 3px 0 #000; }

@@ -1,3 +1,5 @@
 .form { display: grid; gap: 18px; }
 /* 번호 입력 — 본문 글꼴 그대로, 숫자만 고정폭(tabular)으로 크게. 종이 위 흰 입력 상자(.input) */
+/* 오류 — 크림 종이 위 짙은 빨강(4.5:1 이상) */
+.form .err { color: #b8221b; }
 .phone { height: 58px; font-size: 22px; font-variant-numeric: tabular-nums; letter-spacing: 0.06em; }

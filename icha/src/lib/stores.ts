@@ -191,7 +191,7 @@ export const STORES: Store[] = [
       { name: "보늬밤막걸리", price: 6000 },
       { name: "지평 생막걸리", price: 5000 },
       { name: "느린마을막걸리(방울톡)", price: 6000, image: `${J}/menu/neurinmaeul-makgeolli.jpg` },
-      { name: "복사주", price: 14000, description: "복분자에 사이다와 각얼음을 넣은 이 집 칵테일" },
+      { name: "복사주", price: 14000, description: "복분자·사이다·각얼음 칵테일" },
       { name: "복분자", price: 13000 },
       { name: "크림생맥주 500cc", price: 5000 },
       { name: "크림생맥주 1,700cc", price: 15000 },
@@ -264,7 +264,7 @@ export const STORES: Store[] = [
       { name: "도쿄 윗 비어", price: 8900, description: "직접 만든 호가든 스타일 밀맥주. 오렌지 슬라이스를 올려 냅니다" },
       { name: "코젤다크 생맥주", price: 10900, description: "카라멜 풍미의 체코 흑맥주" },
       // 콜드햄
-      { name: "시그니처 콜드햄 플레이트", price: 13900, description: "비어슁켄·약드부어스트·본레스 세 가지 수제 햄 12조각. 이 집 대표 안주", image: `${T}/menu/signature-cold-ham-plate.png` },
+      { name: "시그니처 콜드햄 플레이트", price: 13900, description: "비어슁켄·약드부어스트·본레스 수제 햄 12조각 · 대표 메뉴", image: `${T}/menu/signature-cold-ham-plate.png` },
       { name: "시그니처 햄세트", price: 28900, description: "생맥주 2잔 + 시그니처 콜드햄 플레이트", image: `${T}/menu/signature-ham-set.png` }, // 네이버 메뉴 기준(매장 메뉴판에는 없음)
       { name: "콜드햄 플레이트(비어슁켄)", price: 8900, description: "독일식 햄 한 종류 6조각", image: `${T}/menu/cold-ham-plate.png` },
       { name: "콜드햄 플레이트(약드부어스트)", price: 8900, description: "한 종류 6조각", image: `${T}/menu/cold-ham-plate.png` },
@@ -369,7 +369,7 @@ export const STORES: Store[] = [
       { name: "한우대창묵도리탕(묵은지)", price: 27900, description: "묵은지·한우대창·닭고기를 넣은 닭도리탕", image: `${W}/menu/daechang-dakdoritang.jpg` },
       { name: "얼큰토마토해장빼쉐", price: 19900, description: "조개를 넣은 얼큰한 토마토 국물" },
       // 전골류
-      { name: "와르르반점 크림짬뽕", price: 19900, description: "크림에 짬뽕의 매운맛. 이 집 대표 메뉴", image: `${W}/menu/cream-jjamppong.jpg` },
+      { name: "와르르반점 크림짬뽕", price: 19900, description: "크림 베이스 매운 짬뽕 · 대표 메뉴", image: `${W}/menu/cream-jjamppong.jpg` },
       { name: "맨숀밀푀유나베", price: 21900, description: "간장 베이스의 맑은 국물" },
       { name: "돈짬(돈까스짬뽕탕)", price: 20900, description: "짬뽕탕 위에 돈까스" },
       { name: "와르르꼬꼬야끼", price: 21900, description: "닭고기와 차돌을 넣은 얼큰한 닭 전골" },

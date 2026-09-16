@@ -225,10 +225,10 @@ export function StoreMap({ stores, focusId, height = 440, compact = false, hideP
         {engine === "loading" && <div className={styles.loading}>지도를 불러오는 중…</div>}
         {engine === "error" && (
           <div className={styles.loading}>
-            지도를 불러오지 못했어요.{" "}
+            지도를 불러올 수 없습니다.{" "}
             {active && (
               <a href={naverWalkUrl({ lat: active.lat, lng: active.lng, name: active.name })} target="_blank" rel="noreferrer">
-                네이버 지도로 보기 ↗
+                네이버 지도 보기
               </a>
             )}
           </div>

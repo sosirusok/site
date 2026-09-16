@@ -1,14 +1,15 @@
 /* 네온 쿠폰 — 그림(880:290)은 next/image 가 폭에 맞춰 비율 그대로, 글자는 그 위에 절대 위치.
    치수는 그림 기준: 노치가 x≤53/880 이라 글자는 8.2% 부터, 오른쪽 실루엣이 x≥665/880 이라 72% 까지(폭 64%). */
 .wrap { position: relative; container-type: inline-size; transform: rotate(var(--r, 0deg)); filter: drop-shadow(0 5px 0 rgba(0, 0, 0, 0.42)); color: #fff; }
-.dim { opacity: 0.55; filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.3)); }
+/* 지난 쿠폰 — 흐리되 글자 뒤 바탕은 남긴다(보케의 밝은 띠 위에서도 대비 4.5:1 이상) */
+.dim { opacity: 0.82; filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.3)) grayscale(0.4); }
 .img { display: block; width: 100%; height: auto; }
 .text { position: absolute; left: 8.2%; top: 3.5%; bottom: 3.5%; width: 64%; display: flex; flex-direction: column; justify-content: center; gap: 3px; gap: 0.9cqw; min-width: 0; }
 .text > p { min-width: 0; }
 
-/* 각 매장의 네온색 — 그림 테두리에서 그대로 딴 값(어두운 바탕 위 코드 글자). 포스터색(--store)보다 밝다 */
-[data-store="tokyo"].wrap { --neon: #4c8dff; }
-[data-store="joseon"].wrap { --neon: #ff4d3d; }
+/* 각 매장의 네온색 — 그림 테두리에서 딴 값을 어두운 티켓 바탕 위 대비 4.5:1 이 되도록 한 단계 밝게(코드 글자). 포스터색(--store)보다 밝다 */
+[data-store="tokyo"].wrap { --neon: #6ea2ff; }
+[data-store="joseon"].wrap { --neon: #ff6a5c; }
 [data-store="wareureu"].wrap { --neon: #2ee59d; }
 
 .store { font-size: 13px; font-size: max(12px, 3.6cqw); line-height: 1.1; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

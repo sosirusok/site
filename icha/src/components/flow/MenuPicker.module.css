@@ -23,18 +23,20 @@
 .item[aria-checked="true"] .radio::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #fff; }
 .name { display: block; }
 .price { display: block; }
+/* 지운 원래 가격 — 크림 위 4.5:1 이상 */
+.price :global(.strike) { color: #5f5648; }
 /* 규칙 줄 — 고정 스티커 뒤로 숨지 않게 위 여백을 조금 둔다 */
 .note { font-weight: 700; margin-top: 2px; }
 
 /* 하단 고정 — 위로 번지는 어두운 그림자를 깔아, 스티커 뒤로 내용이 더 이어진다는 걸 보여 준다 */
 .sticky { display: grid; gap: 8px; }
 .sticky::before { content: ""; position: absolute; left: 0; right: 0; top: -48px; bottom: -10px; z-index: -1; pointer-events: none; background: linear-gradient(to bottom, rgba(12, 8, 20, 0) 0%, rgba(12, 8, 20, 0.42) 45%, rgba(12, 8, 20, 0.6) 100%); }
-.err { background: var(--cream); padding: 6px 10px; border-radius: 4px; box-shadow: 2px 2px 0 #000; justify-self: start; }
+.err { background: var(--cream); color: #b8221b; padding: 6px 10px; border-radius: 4px; box-shadow: 2px 2px 0 #000; justify-self: start; }
 
 /* 발급 완료 */
 .issued { position: relative; display: grid; gap: 12px; justify-items: start; padding-top: 14px; }
-.issuedStamp { position: absolute; right: 8px; top: -8px; z-index: 2; font-size: 26px; background: rgba(244, 233, 210, 0.85); }
+.issuedStamp { position: absolute; right: 8px; top: -8px; z-index: 2; font-size: 26px; background: rgba(244, 233, 210, 0.95); opacity: 1; color: #156e38; border-color: #156e38; }
 .issued > :global(.stk), .issued > [data-store] { justify-self: stretch; }
-.issuedTitle { font-size: 22px; margin-top: 12px; }
+.issuedTitle { font-size: 22px; margin-top: 12px; --plate: #156e38; }
 .issuedSub { justify-self: stretch; font-weight: 700; }
 .issuedBtns { display: grid; gap: 14px; width: 100%; margin-top: 14px; }

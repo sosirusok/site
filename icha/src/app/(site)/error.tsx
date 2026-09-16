@@ -15,7 +15,7 @@ export default function SiteError({ error, retry }: { error: Error & { digest?: 
       <h1 className={`plate plate-red ${styles.h1}`}>일시적인 오류입니다</h1>
       <p className={`${styles.strip} ${styles.sub}`}>잠시 후 다시 시도해 주세요</p>
       <Link href="/" className={`btn ${styles.btn}`}>홈</Link>
-      <button type="button" className={`link link-w ${styles.retry}`} onClick={() => retry()}>다시 시도</button>
+      <button type="button" className={`link link-w ${styles.retry} ${styles.pill}`} onClick={() => retry()}>다시 시도</button>
     </div>
   );
 }

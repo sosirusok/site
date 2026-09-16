@@ -70,7 +70,7 @@ export function PhoneForm({ next, label = "로그인" }: { next: string; label?:
           disabled={busy}
           autoFocus
         />
-        {error && <p id={`${id}-err`} className="error" role="alert">{error}</p>}
+        {error && <p id={`${id}-err`} className={`error ${styles.err}`} role="alert">{error}</p>}
       </div>
       <StickerButton kind="wallet" type="submit" block disabled={busy}>
         {busy ? "확인 중" : label}

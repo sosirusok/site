@@ -9,3 +9,5 @@
 .sub { font-weight: 700; }
 .btn { margin-top: 12px; min-width: 170px; }
 .retry { margin-top: 2px; }
+/* 보케 위 밑줄 링크 — 어두운 알약 위에 */
+.pill { background: rgba(20, 17, 26, 0.9); padding: 0 12px; border-radius: 4px; }

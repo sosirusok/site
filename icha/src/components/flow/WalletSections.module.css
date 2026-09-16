@@ -10,13 +10,17 @@
 .relayTitle { font-size: 20px; }
 .relaySub { font-size: 15px; line-height: 1.5; color: var(--ink-2); }
 .relay :global(.btn) { margin-top: 8px; }
+/* 3차 초록 판은 흰 글자 대비를 위해 한 단계 짙게 */
+.relay[data-store="wareureu"] :global(.plate-store) { --plate: #156e38; }
 
 /* 종이 쿠폰 더미 */
 .stack { display: grid; gap: 18px; }
 .stackItem { position: relative; }
 .ticketLink { display: block; position: relative; }
-.soon { position: absolute; right: 100px; top: -12px; font-size: 16px; padding: 4px 8px 3px; background: rgba(244, 233, 210, 0.85); }
-.pastStamp { position: absolute; left: 14px; bottom: -8px; font-size: 16px; padding: 4px 8px 3px; background: rgba(244, 233, 210, 0.9); }
+/* 도장 — 크림 92% 위에 짙은 빨강/초록(대비 4.5:1 이상) */
+.soon { position: absolute; right: 100px; top: -12px; font-size: 16px; padding: 4px 8px 3px; background: rgba(244, 233, 210, 0.95); opacity: 1; color: #b8221b; border-color: #b8221b; }
+.pastStamp { position: absolute; left: 14px; bottom: -8px; font-size: 16px; padding: 4px 8px 3px; background: rgba(244, 233, 210, 0.95); opacity: 1; color: #b8221b; border-color: #b8221b; }
+.pastStamp:global(.stamp-green) { color: #156e38; border-color: #156e38; }
 
 /* 지난 쿠폰 — 띠를 누르면 펼쳐진다 */
 .past { padding: 8px var(--gutter) 6px; }

@@ -79,7 +79,7 @@ export default async function WalletPage() {
     <div className={styles.page}>
       {rules.notice && (
         <div className={`paper paper-r ${styles.notice}`} style={{ "--r": "0.6deg" } as CSSProperties}>
-          <p className={styles.noticeIn}><b className={`disp ${styles.noticeTag}`}>공지</b> {rules.notice}</p>
+          <p className={styles.noticeIn}><b className={`tag ${styles.noticeTag}`}>공지</b>{rules.notice}</p>
         </div>
       )}
 
@@ -110,7 +110,7 @@ export default async function WalletPage() {
       <footer className={`${styles.sec} ${styles.foot}`}>
         {!nothing && <PlaceButton stores={places} className="btn btn-naver btn-block">예약하기</PlaceButton>}
         <p className={`${styles.strip} ${styles.rule}`}><DotLine items={[ruleLine(rules), BRAND.condition]} /></p>
-        <LogoutButton className="link link-w" />
+        <LogoutButton className={`link link-w ${styles.pill}`} />
       </footer>
     </div>
   );

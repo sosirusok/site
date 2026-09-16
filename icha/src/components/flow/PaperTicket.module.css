@@ -1,6 +1,6 @@
 /* 종이 쿠폰 — 그림자는 바깥(wrap)에서, 구멍은 mask 로 뚫는다 */
 .wrap { filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.45)); transform: rotate(var(--r, 0deg)); }
-.dim { opacity: 0.55; filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.3)) grayscale(0.4); }
+.dim { opacity: 0.82; filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.3)) grayscale(0.4); }
 .ticket { display: grid; grid-template-columns: 1fr var(--stub, 96px); background: var(--cream); color: var(--ink); border-radius: 6px; overflow: hidden;
   -webkit-mask: radial-gradient(circle 10px at calc(100% - var(--stub, 96px)) 0, transparent 9.5px, #000 10.5px), radial-gradient(circle 10px at calc(100% - var(--stub, 96px)) 100%, transparent 9.5px, #000 10.5px);
   -webkit-mask-composite: source-in; mask-composite: intersect;

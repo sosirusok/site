@@ -118,7 +118,7 @@ export default async function GuidePage() {
 
       <section className={styles.sec} aria-labelledby="faq-title">
         <div className="sec-h">
-          <SectionLabel kind="faq" color="green" id="faq-title">자주 묻는 질문</SectionLabel>
+          <SectionLabel kind="faq" color="green" id="faq-title" className={styles.faqLabel}>자주 묻는 질문</SectionLabel>
         </div>
         <GuideFaq items={items} />
       </section>

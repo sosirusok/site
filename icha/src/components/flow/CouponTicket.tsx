@@ -124,7 +124,7 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
     return (
       <article className={styles.root} data-status="used" aria-live="polite">
         <div className={styles.state}>
-          <h1 className={`plate plate-green ${styles.h1}`}>{fresh ? "사용 처리 완료" : "사용된 쿠폰"}</h1>
+          <h1 className={`plate plate-green ${styles.plateGreen} ${styles.h1}`}>{fresh ? "사용 처리 완료" : "사용된 쿠폰"}</h1>
         </div>
         <div className={styles.ticketWrap}>
           <Ticket t={ticketData} size="lg" rotate={-1.5} dim />
@@ -141,7 +141,7 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
         {/* 기록 종이 아래 — 노란 리뷰 스티커 하나, 쿠폰함은 작은 밑줄 글자 */}
         <div className={styles.actions}>
           {store.placeReview && <StickerButton kind="review" href={store.placeReview} block className={styles.stretch}>네이버 리뷰 작성</StickerButton>}
-          <Link href="/wallet" className="link link-w">쿠폰함</Link>
+          <Link href="/wallet" className={`link link-w ${styles.pill}`}>쿠폰함</Link>
         </div>
       </article>
     );
@@ -156,7 +156,7 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
           <p className={`${styles.strip} ${styles.stateSub}`}>
             {expired
               ? `${fmtMD(coupon.expiresAt)}까지 사용 가능했던 쿠폰입니다. 다음 계산 시 휴대폰 번호를 말씀하시면 새 쿠폰이 발급됩니다.`
-              : `매장에서 취소한 쿠폰입니다.${coupon.note ? ` (${coupon.note})` : ""} 문의는 해당 매장에 해 주세요.`}
+              : "매장에서 취소한 쿠폰입니다. 문의는 해당 매장으로 부탁드립니다."}
           </p>
         </div>
         <div className={styles.ticketWrap}>

@@ -9,6 +9,8 @@
 .sec { padding: 24px var(--gutter) 6px; }
 .lead { font-size: 20px; padding-bottom: 4px; }
 .strip { margin-bottom: 22px; }
+/* 초록 간판은 흰 글자 대비를 위해 한 단계 짙게 */
+.faqLabel { --plate: #156e38; }
 
 /* 이용 방법 넷 — 종이 위에 노란 번호 판 */
 .stepPaper { display: grid; gap: 10px; padding: 14px 16px 12px; }
@@ -23,6 +25,8 @@
 .bookRow { display: grid; gap: 12px; margin-top: 12px; }
 .bookItem { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .bookName { --r: -2deg; }
+/* 3차 초록 판은 흰 글자 대비를 위해 한 단계 짙게 */
+.bookItem[data-store="wareureu"] .bookName { --plate: #156e38; }
 /* 리뷰 이벤트 — 매장 이름은 그 집 색 판 */
 .revList { display: grid; gap: 10px; }
 .revList li { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; line-height: 1.5; }
