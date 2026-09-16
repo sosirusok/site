@@ -60,7 +60,23 @@ npx tsx scripts/create-admin.ts 아이디 비밀번호 이름 [joseon|tokyo|ware
 npx tsx scripts/export-schema.ts               # supabase/schema.sql 갱신
 ```
 
-## 배포 (Vercel + Supabase, 30분)
+## 한 번에 배포 (Vercel 버튼, 5분)
+
+이 폴더가 `main` 브랜치에 있으면(PR 머지 후) 아래 버튼 하나로 GitHub 계정에 새 저장소 `icha` 가 만들어지고, Vercel 프로젝트와 무료 Neon Postgres 가 같이 생긴다.
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fsosirusok%2Fsite%2Ftree%2Fmain%2Ficha&project-name=icha&repository-name=icha&env=SESSION_SECRET,ADMIN_INITIAL_PASSWORD,CRON_SECRET&envDescription=SESSION_SECRET%C2%B7CRON_SECRET%3A%20%EC%95%84%EB%AC%B4%20%EA%B8%B4%20%EB%AC%B4%EC%9E%91%EC%9C%84%20%EB%AC%B8%EC%9E%90%EC%97%B4(32%EC%9E%90%20%EC%9D%B4%EC%83%81).%20ADMIN_INITIAL_PASSWORD%3A%20%EA%B4%80%EB%A6%AC%EC%9E%90%20%EC%B2%AB%20%EB%B9%84%EB%B0%80%EB%B2%88%ED%98%B8(10%EC%9E%90%20%EC%9D%B4%EC%83%81%2C%20admin1234%20%EA%B0%99%EC%9D%80%20%ED%9D%94%ED%95%9C%20%EA%B0%92%20%EB%B6%88%EA%B0%80).%20%EC%98%81%EC%88%98%EC%A6%9D%20%EC%9E%90%EB%8F%99%20%EC%9D%B8%EC%8B%9D%EC%9D%80%20%EB%B0%B0%ED%8F%AC%20%EB%92%A4%20ANTHROPIC_API_KEY%20%EB%A5%BC%20%EC%B6%94%EA%B0%80%ED%95%98%EB%A9%B4%20%EC%BC%9C%EC%A0%B8%EC%9A%94.&envLink=https%3A%2F%2Fgithub.com%2Fsosirusok%2Fsite%2Fblob%2Fmain%2Ficha%2FREADME.md&stores=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%2C%22protocol%22%3A%22storage%22%7D%5D&products=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%2C%22protocol%22%3A%22storage%22%7D%5D)
+
+1. 버튼을 누르고 Vercel 에 GitHub 으로 로그인한다.
+2. **Create Git Repository**: 저장소 이름은 `icha` 그대로 두고 Create.
+3. **Add Storage**: Neon(Postgres) 이 선택돼 있으면 Free 플랜으로 Create. (이 단계가 안 보이면 배포 뒤 프로젝트 → Storage → Create Database → Neon 을 골라 연결하면 `DATABASE_URL` 이 자동으로 들어간다.)
+4. **Environment Variables** 세 개를 채운다. `SESSION_SECRET` 과 `CRON_SECRET` 은 아무 긴 무작위 문자열(32자 이상), `ADMIN_INITIAL_PASSWORD` 는 관리자 첫 비밀번호(10자 이상, 흔한 값 불가). Deploy.
+5. 2~3분 뒤 `https://icha-xxxx.vercel.app` 같은 주소가 나온다. `/admin/login` 에 `owner` / 방금 정한 비밀번호로 들어가 비밀번호부터 바꾼다.
+6. 영수증 **자동 인식**을 켜려면 Vercel 프로젝트 → Settings → Environment Variables 에 `ANTHROPIC_API_KEY` 를 추가하고 Redeploy 한다. 키가 없어도 사이트는 동작하고, 올라온 영수증은 전부 "직원 확인 대기"로 들어가 관리자 화면에서 사진을 보고 승인한다.
+7. 포스터 QR 에 들어갈 주소는 Vercel 이 준 운영 도메인을 자동으로 쓴다. 직접 산 도메인을 붙였다면 `NEXT_PUBLIC_SITE_URL` 에 그 주소를 넣고 Redeploy.
+
+알아 둘 것: Vercel Hobby(무료)는 약관상 비상업용이라 매장 홍보용으로 계속 쓰려면 Pro(월 $20)로 올려야 한다. Neon Free 는 0.5 GB·월 100 컴퓨트시간이라 이 규모에는 충분하고, 5분 쉬면 잠들었다가 첫 요청에 1~2초 걸려 깨어난다. 사진 업로드는 휴대폰에서 1600px 로 줄여 보내므로 Vercel 의 4.5 MB 요청 한도에 걸리지 않는다.
+
+## 직접 배포 (Vercel + Supabase, 30분)
 
 1. **Supabase** 프로젝트 생성(Region: Northeast Asia/Seoul) → Project Settings → Database → *Connection string* 의 **Transaction pooler**(포트 6543) 주소를 복사. 비밀번호를 넣어 `DATABASE_URL` 로 쓴다. 스키마는 앱이 첫 요청에서 자동 생성한다(미리 만들려면 SQL Editor 에서 `supabase/schema.sql` 실행).
 2. **Anthropic** 콘솔에서 API 키 발급 → `ANTHROPIC_API_KEY`. 모델은 기본 `claude-opus-5`(가장 정확). 비용을 줄이려면 `RECEIPT_MODEL=claude-sonnet-5`. 인식 한 번이 곧 비용이므로 관리자 → 설정의 "사이트 전체 하루 자동 인식 상한"(기본 500회)을 매장 규모에 맞춘다.
