@@ -2,6 +2,7 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { TabBar } from "@/components/site/TabBar";
 import { getMemberSession } from "@/lib/auth/session";
+import { placeSheetStores } from "@/lib/place-stores";
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const session = await getMemberSession();
@@ -10,7 +11,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       <Header loggedIn={Boolean(session)} phone={session?.phone ?? null} />
       <main id="main">{children}</main>
       <Footer />
-      <TabBar loggedIn={Boolean(session)} />
+      <TabBar stores={placeSheetStores()} />
     </div>
   );
 }

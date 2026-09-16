@@ -2,12 +2,10 @@
 import { formatWon, type Rules } from "./config";
 
 /** 포스터의 "영수증 릴레이" 순서 — 한 매장 이용 후 영수증 지참 → 50m 안 다른 매장 방문 → 메인안주 1개 주문 → 매장별 특별 혜택 */
-export const STEP_LINES = ["한 매장에서 계산하고 영수증을 찍어 올려요", "50m 안 다른 매장으로 가요", "메인안주 1개 주문하고 쿠폰을 보여 줘요", "그 매장의 특별 혜택을 받아요"] as const;
+export const STEP_LINES = ["한 매장에서 마시고 계산할 때 휴대폰 번호를 말해요", "쿠폰이 번호로 들어와요 (쿠폰함에서 확인)", "50m 안 다른 매장으로 가서 메인안주 1개를 주문해요", "쿠폰을 보여 주고 그 매장의 특별 혜택을 받아요"] as const;
 
 export function ruleLine(rules: Rules): string {
   return [
-    rules.sameDayOnly ? "당일 영수증만" : `계산하고 ${rules.receiptValidHours}시간 안`,
-    rules.minAmount > 0 ? `${formatWon(rules.minAmount)} 이상` : null,
     `하루 ${rules.dailyLimitPerMember}장`,
     `쿠폰 ${rules.couponValidDays}일`,
   ].filter(Boolean).join(" · ");

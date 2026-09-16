@@ -1,16 +1,12 @@
 import Link from "next/link";
 import { BRAND, maskPhone } from "@/lib/config";
-import { Art } from "@/components/art/Art";
 import styles from "./Header.module.css";
 
-/** 앱 상단 바 — 왼쪽 로고, 오른쪽 로그인 상태. 화면 폭 480px 한 단에 고정. */
+/** 앱 상단 바 — 왼쪽 이벤트 이름(네온), 오른쪽 로그인 상태 */
 export function Header({ loggedIn, phone }: { loggedIn: boolean; phone: string | null }) {
   return (
     <header className={`fixed-col ${styles.header}`}>
-      <Link href="/" className={styles.brand} aria-label={`${BRAND.name} 홈`}>
-        <Art name="logo" alt="" width={26} priority />
-        <span>{BRAND.name}</span>
-      </Link>
+      <Link href="/" className={styles.brand} aria-label={`${BRAND.name} 홈`}>{BRAND.name}</Link>
       {loggedIn && phone ? (
         <Link href="/wallet" className={styles.me}>{maskPhone(phone)}</Link>
       ) : (

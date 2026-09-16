@@ -1,0 +1,10 @@
+.backdrop { position: fixed; inset: 0; z-index: 60; background: rgba(0,0,0,0.6); display: flex; align-items: flex-end; justify-content: center; }
+.sheet { width: min(100%, var(--app-max)); max-height: 86dvh; overflow-y: auto; background: var(--bg-2); border-radius: 20px 20px 0 0; padding: 10px var(--gutter) calc(16px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line-2); display: grid; gap: 10px; }
+.handle { width: 40px; height: 4px; border-radius: 2px; background: var(--line-2); margin: 0 auto 6px; }
+.title { color: var(--naver); }
+.list { display: grid; gap: 10px; margin-top: 6px; }
+.item { padding: 12px; border-radius: var(--radius-lg); background: var(--bg-3); display: grid; gap: 10px; }
+.head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.name { font-weight: 800; font-size: 16px; }
+.btns { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 8px; }
+.close { margin-top: 4px; }

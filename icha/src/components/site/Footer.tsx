@@ -13,7 +13,7 @@ export function Footer() {
         ))}
       </ul>
       <p className={styles.links}><Link href="/guide">이용 안내</Link><Link href="/admin/login">사장님·직원 페이지</Link></p>
-      <p>영수증 사진은 부정 사용 확인에만 쓰고, 보관 기간이 지나면 지웁니다.</p>
+      <p className={styles.slogan}>{BRAND.slogan}</p>
     </footer>
   );
 }
