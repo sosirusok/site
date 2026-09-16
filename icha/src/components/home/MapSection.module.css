@@ -1,0 +1,6 @@
+.intro { font-size: 17px; color: var(--fg-2); margin-bottom: 20px; max-width: 44em; }
+.mapWrap { border: 2px solid var(--outline); border-radius: var(--radius); padding: 14px; background: var(--panel); }
+.table { margin-top: 20px; }
+.table th { width: 110px; font-family: var(--font-display); font-weight: 700; }
+.table td p { margin: 0; }
+.parking { color: var(--fg-3); font-size: 15px; }

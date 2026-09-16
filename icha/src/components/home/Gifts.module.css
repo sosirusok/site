@@ -1,0 +1,21 @@
+.section { background: var(--panel-2); border-top: 2px solid var(--outline); border-bottom: 2px solid var(--outline); }
+.intro { font-size: 17px; color: var(--fg-2); margin-bottom: 24px; max-width: 44em; }
+.list { display: grid; gap: 32px; }
+.store { display: grid; gap: 12px; }
+.ticket { display: block; width: min(88vw, 340px); }
+.ticket img { width: 100%; height: auto; transition: transform 0.15s; }
+.ticket:hover img { transform: rotate(-1.5deg); }
+.menu { display: grid; gap: 8px; }
+.row { display: flex; align-items: center; gap: 10px; font-size: 16.5px; }
+.thumb { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; border: 1.5px solid var(--outline); flex: none; }
+.rowName { font-weight: 700; }
+.dots { flex: 1; border-bottom: 2px dotted #b9b1a1; transform: translateY(4px); min-width: 24px; }
+.price { white-space: nowrap; }
+.price s { color: var(--fg-3); margin-right: 6px; font-size: 15px; }
+.price b { color: var(--red); font-family: var(--font-display); font-size: 18px; }
+.empty { color: var(--fg-3); }
+.note { font-size: 15px; color: var(--fg-3); }
+@media (min-width: 760px) {
+  .list { grid-template-columns: repeat(3, 1fr); gap: 28px; align-items: start; }
+  .ticket { width: 100%; }
+}

@@ -144,7 +144,7 @@ export const STORES: Store[] = [
       { name: "조선 황태칼국수", price: 7000 },
       { name: "조선 황태수제비", price: 7000 },
       { name: "조선 물냉면", price: 7500, description: "주문이 가장 많은 메뉴", image: `${J}/menu/mul-naengmyeon.jpg` },
-      { name: "조선 만두", price: 6000, description: "찐만두 8개", image: `${J}/menu/mandu.jpg`, gift: true },
+      { name: "조선 만두", price: 6000, description: "찐만두 8개", image: `${J}/menu/mandu.jpg` },
       { name: "계란 추가", price: 700 },
       // 식사류(밥)
       { name: "조선 야채참치비빔밥", price: 8000 },
@@ -153,15 +153,15 @@ export const STORES: Store[] = [
       { name: "조선 고추장불고기비빔밥(돌솥)", price: 8000 },
       { name: "공기밥", price: 1000 },
       // 안주류
-      { name: "조선 계란말이", price: 7000, description: "두툼하게 말아 썰어 내는 계란말이", gift: true },
+      { name: "조선 계란말이", price: 7000, description: "두툼하게 말아 썰어 내는 계란말이" },
       { name: "조선 해물파전", price: 14000, description: "쪽파와 해물을 넣은 큰 파전", image: `${J}/menu/haemul-pajeon.jpg` }, // 매장 메뉴판 14,000원(네이버 13,500원은 이전 가격)
-      { name: "조선 반반전(김치+정구지)", price: 12000, description: "김치전 반, 정구지(부추)전 반", image: `${J}/menu/banban-jeon.jpg`, gift: true },
-      { name: "조선 김치전", price: 12000, image: `${J}/menu/kimchi-jeon.jpg`, gift: true },
+      { name: "조선 반반전(김치+정구지)", price: 12000, description: "김치전 반, 정구지(부추)전 반", image: `${J}/menu/banban-jeon.jpg` },
+      { name: "조선 김치전", price: 12000, image: `${J}/menu/kimchi-jeon.jpg` },
       { name: "조선 땡초정구지전", price: 12000, description: "청양고추를 넣은 부추전" },
-      { name: "조선 호박전", price: 12000, image: `${J}/menu/hobak-jeon.jpg`, gift: true }, // 매장 메뉴판 12,000원(네이버 11,500원은 이전 가격)
+      { name: "조선 호박전", price: 12000, image: `${J}/menu/hobak-jeon.jpg` }, // 매장 메뉴판 12,000원(네이버 11,500원은 이전 가격)
       { name: "조선 빈대떡", price: 12000, description: "녹두 빈대떡", image: `${J}/menu/bindaetteok.jpg` },
       { name: "조선 모듬전", price: 14000, description: "김치전·호박전·빈대떡·감자전·땡초정구지전 다섯 가지", image: `${J}/menu/modeum-jeon.jpg` },
-      { name: "조선 두부김치", price: 11500, image: `${J}/menu/dubu-kimchi.jpg`, gift: true },
+      { name: "조선 두부김치", price: 11500, image: `${J}/menu/dubu-kimchi.jpg` },
       { name: "조선 순대볶음", price: 11500, image: `${J}/menu/sundae-bokkeum.jpg` },
       { name: "조선 두루치기", price: 11500, image: `${J}/menu/duruchigi.jpg` },
       { name: "조선 골뱅이소면무침", price: 13000, image: `${J}/menu/golbaengi-somyeon.jpg` },
@@ -175,10 +175,10 @@ export const STORES: Store[] = [
       { name: "조선 부대찌개", price: 12500 },
       { name: "조선 김치두부삼겹살", price: 13000, image: `${J}/menu/kimchi-dubu-samgyeop.jpg` },
       { name: "조선 김치묵사발", price: 10500, description: "냉면 육수에 도토리묵과 김치", image: `${J}/menu/kimchi-muksabal.jpg` },
-      { name: "조선 도토리묵", price: 10500, gift: true },
+      { name: "조선 도토리묵", price: 10500 },
       { name: "사리 추가(라면·당면·소면)", price: 1500 },
       // 주류·음료
-      { name: "조선막걸리 1통", price: 5500, description: "양은 통에 담아 내는 하우스 막걸리", image: `${J}/menu/joseon-makgeolli.jpg` },
+      { name: "조선막걸리 1통", price: 5500, description: "양은 통에 담아 내는 하우스 막걸리", image: `${J}/menu/joseon-makgeolli.jpg`, gift: true },
       { name: "조선막걸리 2통 1반", price: 11500, description: "막걸리 2통에 사이다 1병을 섞어 큰 사발에", image: `${J}/menu/makgeolli-2tong1ban.jpg` },
       { name: "칵테일막걸리", price: 9000, description: "딸기·바나나·망고·키위·살구·복분자", image: `${J}/menu/cocktail-makgeolli.jpg` },
       { name: "꿀막걸리", price: 7500, image: `${J}/menu/honey-makgeolli.jpg` },
@@ -250,7 +250,7 @@ export const STORES: Store[] = [
     // 가격: 네이버 등록 메뉴(2026-09-10)와 매장 메뉴판 사진(2026-09-11) 일치.
     menu: [
       // 맥주
-      { name: "산토리 크리미 생맥주", price: 8900, description: "풍성한 크림 거품. 처음이라면 이 잔부터", image: `${T}/menu/suntory-creamy.jpg` },
+      { name: "산토리 크리미 생맥주", price: 8900, description: "풍성한 크림 거품. 처음이라면 이 잔부터", image: `${T}/menu/suntory-creamy.jpg`, gift: true },
       { name: "산토리 소프트 생맥주", price: 8900, description: "쫀쫀한 거품에 탄산이 또렷한 잔", image: `${T}/menu/suntory-soft.jpg` },
       { name: "산토리 밀코 생맥주", price: 8900, description: "우유처럼 하얀 거품이 잔을 덮는 생맥주", image: `${T}/menu/suntory-milko.jpg` },
       { name: "도쿄 윗 비어", price: 8900, description: "직접 만든 호가든 스타일 밀맥주. 오렌지 슬라이스를 올려 냅니다" },
@@ -263,12 +263,12 @@ export const STORES: Store[] = [
       { name: "콜드햄 플레이트(본레스)", price: 8900, description: "훈연 향이 있는 본레스햄 6조각", image: `${T}/menu/cold-ham-plate.jpg` },
       { name: "그릴부어스트 소시지", price: 9900, description: "수제 소시지에 스위트칠리 소스", image: `${T}/menu/grill-wurst.jpg` },
       // 가벼운 안주
-      { name: "콜드햄 샐러드", price: 6900, description: "수제 햄을 올린 샐러드", image: `${T}/menu/cold-ham-salad.jpg`, gift: true },
-      { name: "유자토마토", price: 5900, description: "유자 드레싱을 뿌린 토마토", image: `${T}/menu/yuzu-tomato.jpg`, gift: true },
-      { name: "오이사라다", price: 5900, description: "특제 소스에 버무린 오이", image: `${T}/menu/oi-salad.jpg`, gift: true },
-      { name: "계란볶음밥", price: 5900, description: "고슬하게 볶은 볶음밥", image: `${T}/menu/egg-fried-rice.jpg`, gift: true },
-      { name: "테바사키 윙", price: 7900, description: "일본식 닭날개 튀김", image: `${T}/menu/tebasaki.jpg`, gift: true },
-      { name: "트러플 감자튀김", price: 7900, description: "트러플 마요를 뿌린 감자튀김", image: `${T}/menu/truffle-fries.jpg`, gift: true },
+      { name: "콜드햄 샐러드", price: 6900, description: "수제 햄을 올린 샐러드", image: `${T}/menu/cold-ham-salad.jpg` },
+      { name: "유자토마토", price: 5900, description: "유자 드레싱을 뿌린 토마토", image: `${T}/menu/yuzu-tomato.jpg` },
+      { name: "오이사라다", price: 5900, description: "특제 소스에 버무린 오이", image: `${T}/menu/oi-salad.jpg` },
+      { name: "계란볶음밥", price: 5900, description: "고슬하게 볶은 볶음밥", image: `${T}/menu/egg-fried-rice.jpg` },
+      { name: "테바사키 윙", price: 7900, description: "일본식 닭날개 튀김", image: `${T}/menu/tebasaki.jpg` },
+      { name: "트러플 감자튀김", price: 7900, description: "트러플 마요를 뿌린 감자튀김", image: `${T}/menu/truffle-fries.jpg` },
       { name: "토마토 달걀볶음", price: 9900, description: "방울토마토·베이컨을 넣은 달걀 볶음", image: `${T}/menu/tomato-egg.jpg` },
       // 면
       { name: "나폴리탄", price: 9900, description: "케첩 소스의 일본식 스파게티", image: `${T}/menu/napolitan.jpg` },
@@ -382,13 +382,13 @@ export const STORES: Store[] = [
       // 튀김류
       { name: "통모짜렐라튀김(2pcs)+웨지감자", price: 10900, description: "매콤한 양념의 통모짜렐라 튀김에 웨지감자" },
       { name: "뿌링통모짜(2pcs)+뿌링감자", price: 10900 },
-      { name: "와르르 쫀득감자", price: 8900, description: "2026년 신메뉴. 쫀득한 감자볼에 소스 두 가지", image: `${W}/potato-balls.jpg`, gift: true },
+      { name: "와르르 쫀득감자", price: 8900, description: "2026년 신메뉴. 쫀득한 감자볼에 소스 두 가지", image: `${W}/potato-balls.jpg` },
       { name: "김치피자탕수육", price: 18500, description: "탕수육에 김치와 치즈. 줄여서 '김피탕'", image: `${W}/menu/kimchi-pizza-tangsuyuk.jpg` },
       { name: "감자크림탕수육", price: 17500 },
       { name: "수제등심탕수육", price: 17500 },
       { name: "오지치즈프라이", price: 13500 },
       { name: "불고기프렌치프라이", price: 12500 },
-      { name: "버터갈릭프라이", price: 8900, gift: true },
+      { name: "버터갈릭프라이", price: 8900 },
       { name: "매콤똥집튀김", price: 13900 },
       { name: "종갓집양념순살치킨", price: 12500 },
       { name: "뿌륑순살치킨", price: 12500 },
@@ -396,8 +396,8 @@ export const STORES: Store[] = [
       { name: "모듬감자튀김", price: 12500 },
       { name: "와르르 우유튀김", price: 11500 }, // 네이버 메뉴 기준(7월 메뉴판에는 없음)
       { name: "키다리고구마치즈스틱", price: 11500 },
-      { name: "와르르 오코노미야끼", price: 8900, gift: true },
-      { name: "와르르 타코야끼", price: 7900, gift: true },
+      { name: "와르르 오코노미야끼", price: 8900 },
+      { name: "와르르 타코야끼", price: 7900 },
       // 파스타·피자
       { name: "와르르황제에디션크로와상피자", price: 24000, description: "크로와상 도우에 페퍼로니·새우·베이컨", image: `${W}/menu/croissant-pizza.jpg` },
       { name: "베이컨쉬림프크로와상피자", price: 23000 },
@@ -419,11 +419,11 @@ export const STORES: Store[] = [
       // 사이드·마른안주
       { name: "바삭바삭먹태", price: 13500 },
       { name: "계란식빵토스트", price: 11000 },
-      { name: "꿀버터 반건오징어", price: 9900, gift: true },
+      { name: "꿀버터 반건오징어", price: 9900 },
       { name: "도리토스나쵸칩", price: 7900 }, // 매장 메뉴판 7,900원(네이버 7,500원)
       { name: "와르르 잔치국수", price: 7500 },
-      { name: "콘치이이이즈", price: 7500, description: "콘치즈", gift: true },
-      { name: "통실통실물만두", price: 7500, gift: true },
+      { name: "콘치이이이즈", price: 7500, description: "콘치즈" },
+      { name: "통실통실물만두", price: 7500 },
       { name: "계란후라이", price: 5000 }, // 매장 메뉴판 5,000원(네이버 5,500원)
       { name: "혜자간장순두부", price: 4000 },
       { name: "간장버터계란밥", price: 3500 },
@@ -432,7 +432,7 @@ export const STORES: Store[] = [
       { name: "공기밥", price: 1500 },
       // 주류 — 공식 메뉴판에 없어 확인된 것만. 가격이 없는 항목은 매장에서 확인.
       { name: "생맥주 600cc", price: null, description: "가격은 매장에서 확인" },
-      { name: "소주", price: null, description: "좋은데이·진로 등" },
+      { name: "소주 1병", price: 5000, description: "좋은데이·진로 중 선택", gift: true },
       { name: "와르르 복소사", price: 16000, description: "세종복분자주 1병 + 소주 1병 + 사이다 1병, 1,100ml" },
       { name: "와르르 복막사", price: 16000, description: "세종복분자주 + 국순당 생막걸리 + 사이다, 1,400ml" },
     ],

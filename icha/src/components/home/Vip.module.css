@@ -1,0 +1,12 @@
+.section { padding-top: 40px; }
+.body { display: grid; gap: 20px; }
+.card { width: min(80vw, 360px); }
+.card img { width: 100%; height: auto; }
+.text { display: grid; gap: 14px; font-size: 16.5px; line-height: 1.8; color: var(--fg-2); }
+.tiers { display: grid; gap: 8px; max-width: 420px; }
+.tiers li { display: flex; align-items: baseline; gap: 10px; }
+.tierName { font-family: var(--font-display); font-size: 18px; color: var(--fg); }
+.dots { flex: 1; border-bottom: 2px dotted #b9b1a1; transform: translateY(-4px); }
+.tierAmt { font-weight: 700; color: var(--fg); }
+.small { font-size: 15px; color: var(--fg-3); }
+@media (min-width: 760px) { .body { grid-template-columns: 360px 1fr; gap: 40px; align-items: center; } }

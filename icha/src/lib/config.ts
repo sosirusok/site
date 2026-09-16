@@ -8,11 +8,11 @@ export const BRAND = {
   name: "이차",
   hanja: "二次",
   /** 한 줄 설명 */
-  tagline: "참여 매장 영수증을 인증하면 다른 참여 매장에서 사이드 메뉴 1개를 무료로 드립니다.",
+  tagline: "한 곳에서 계산한 영수증을 올리면, 나머지 두 곳에서 그 집 술 한 잔(막걸리·맥주·소주)을 무료로 드려요.",
   /** 연합 설명 */
   unionName: "서면 2차 연합",
   /** 짧은 규칙 문구 */
-  ruleOneLiner: "세 매장 중 한 곳의 영수증을 인증하면, 나머지 두 매장에서 사이드 메뉴 1개 무료.",
+  ruleOneLiner: "세 매장 중 한 곳의 영수증으로 나머지 두 곳에서 막걸리·맥주·소주 중 하나가 무료예요.",
 } as const;
 
 export type StoreId = "joseon" | "tokyo" | "wareureu";
@@ -22,7 +22,7 @@ export const STORE_IDS: StoreId[] = ["joseon", "tokyo", "wareureu"];
 export type Rules = {
   /** 영수증 결제 시각으로부터 인정되는 시간(시간 단위) */
   receiptValidHours: number;
-  /** 발급된 쿠폰의 유효 기간(일). 승인된 영수증으로 사이드를 고를 수 있는 기간도 같다 */
+  /** 발급된 쿠폰의 유효 기간(일). 승인된 영수증으로 증정 쿠폰을 고를 수 있는 기간도 같다 */
   couponValidDays: number;
   /** 인정 최소 결제 금액(원). 0이면 제한 없음 */
   minAmount: number;
@@ -91,7 +91,7 @@ export const REASONS = {
   OCR_UNAVAILABLE: "자동 인식이 잠시 중단되어 직원이 확인합니다.",
   OCR_ERROR: "자동 인식 중 오류가 나서 직원이 확인합니다.",
   EVENT_INACTIVE: "지금은 이벤트 기간이 아닙니다.",
-  PICK_EXPIRED: "사이드 메뉴를 고를 수 있는 기간이 지났습니다.",
+  PICK_EXPIRED: "무료 증정 쿠폰을 고를 수 있는 기간이 지났습니다.",
   MANUAL_APPROVED: "직원이 확인 후 승인했습니다.",
   MANUAL_REJECTED: "직원이 확인 후 반려했습니다.",
 } as const;

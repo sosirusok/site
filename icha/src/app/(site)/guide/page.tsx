@@ -4,7 +4,7 @@ import { BRAND, formatWon } from "@/lib/config";
 import { getRules } from "@/lib/settings";
 import { STORES } from "@/lib/stores";
 import { GuideFaq, type FaqItem } from "@/components/site/GuideFaq";
-import { HomeSteps } from "@/components/site/HomeSteps";
+import { Steps as HomeSteps } from "@/components/home/Steps";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";

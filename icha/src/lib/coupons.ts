@@ -65,7 +65,7 @@ export async function issueSideCoupon(p: { memberId: string; receiptId: string; 
   if (isPickExpired(receipt, rules, now)) throw new CouponError(REASONS.PICK_EXPIRED);
   const item = await getMenuItem(p.menuItemId);
   if (!item || !item.active || !item.isGift) throw new CouponError("고를 수 없는 메뉴입니다.");
-  if (!giftStoresFor(receipt.storeId).some((s) => s.id === item.storeId)) throw new CouponError("영수증을 받은 매장에서는 쿠폰을 쓸 수 없습니다. 다른 두 매장의 메뉴를 선택해 주십시오.");
+  if (!giftStoresFor(receipt.storeId).some((s) => s.id === item.storeId)) throw new CouponError("영수증을 받은 매장에서는 쿠폰을 쓸 수 없습니다. 다른 두 매장의 쿠폰을 골라 주세요.");
   const code = await uniqueCode();
   const expires = expiresAtKst(now, rules.couponValidDays);
   const id = await tx(async (q) => {
