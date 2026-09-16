@@ -1,7 +1,12 @@
-.page { display: grid; }
-.notice { background: var(--bg-2); color: var(--fg-2); font-size: 13px; padding: 10px var(--gutter); }
-.top { display: grid; gap: 4px; padding-block: 24px 20px; }
-.sec { padding-block: 24px; }
-.count { color: var(--accent); margin-left: 6px; }
-.foot { display: grid; gap: 14px; justify-items: start; }
+.page { display: grid; padding-bottom: 8px; }
+.notice { margin: 14px var(--gutter) 0; }
+.noticeIn { font-size: 22px; padding: 10px 16px 12px; }
+.top { display: grid; gap: 12px; justify-items: start; padding: 18px var(--gutter) 6px; }
+.h1 { font-size: 28px; padding: 12px 18px 10px; }
+.sub { font-size: 23px; line-height: 1.15; }
+.sec { padding: 22px var(--gutter) 6px; }
+.count { color: var(--yellow); }
+.none { font-size: 22px; }
+.foot { display: grid; gap: 14px; justify-items: start; padding-top: 30px; }
 .foot :global(.btn-block) { justify-self: stretch; }
+.rule { font-size: 21px; }

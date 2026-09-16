@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
-import { Art } from "@/components/art/Art";
 import { daysLeft, fmtDate, fmtDateTimeSec, fmtMD, fmtMDHM, fmtTime } from "./format";
+import { PaperTicket } from "./PaperTicket";
 import type { ApiFail, RedeemApiOk } from "./types";
 import styles from "./CouponTicket.module.css";
 
@@ -23,10 +23,8 @@ export type TicketStore = {
   shortName: string;
   name: string;
   address: string;
-  /** 대표 술 — 품목명에 이 말이 들어갈 때만 매장 쿠폰 티켓 그림을 쓴다 */
-  drink?: string;
-  /** 품목 사진(있으면 티켓 대신) */
-  image?: string | null;
+  /** 품목 사진(있으면 종이 쿠폰 반쪽에) */
+  image?: { src: string; local: boolean } | null;
   /** 네이버 플레이스 — 사용 완료 뒤 리뷰 남기기(플레이스 트래픽) */
   placeReview?: string | null;
   placeHome?: string | null;
@@ -37,7 +35,7 @@ export type TicketStore = {
 /** 이 시간 안에 사용한 쿠폰은 '방금 사용' 화면(흐르는 시계)을 보여 준다 */
 const FRESH_MS = 3 * 60 * 1000;
 
-/** 화면 캡처 재사용을 막는 현재 시각 — 마운트 뒤에만 그린다(서버와 불일치 방지) */
+/** 화면 캡처 재사용을 막는 현재 시각 — 마운트 뒤에만 그린다(서버와 불일치 방지). 종이 위 Do Hyeon 숫자. */
 function LiveClock() {
   const [now, setNow] = useState<Date | null>(null);
   useEffect(() => {
@@ -46,10 +44,10 @@ function LiveClock() {
     return () => clearInterval(t);
   }, []);
   return (
-    <div className={`card-soft ${styles.clock}`} role="timer" aria-live="off">
-      <p className="cap">지금 시각</p>
-      <p className={`mono ${styles.clockTime}`}>{now ? fmtTime(now) : "--:--:--"}</p>
-      <p className="cap">{now ? fmtDate(now) : ""}</p>
+    <div className={`paper paper-r ${styles.clock}`} role="timer" aria-live="off">
+      <p className={`hand ${styles.clockCap}`}>지금 시각</p>
+      <p className={`disp num ${styles.clockTime}`}>{now ? fmtTime(now) : "--:--:--"}</p>
+      <p className={styles.clockDate}>{now ? fmtDate(now) : ""}</p>
     </div>
   );
 }
@@ -60,8 +58,8 @@ function kindText(c: Pick<TicketCoupon, "kind">): string | null {
 }
 
 /**
- * 쿠폰 한 장 — 티켓(또는 품목 사진), 품목명, 매장, 코드, 사용 버튼.
- * 사용 = 직원 앞에서 버튼 → 바닥 시트 확인 → 사용 완료(초록 상태, 초 단위 시계, 기록표, 리뷰 버튼).
+ * 쿠폰 한 장 — 종이 쿠폰, 노란 사용하기 스티커, 초록 예약하기 하나.
+ * 사용 = 직원 앞에서 버튼 → 크림 종이 확인 시트 → 사용 완료(초록 도장, 초 단위 시계, 기록 종이, 리뷰 스티커).
  */
 export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: TicketStore }) {
   const id = useId();
@@ -117,37 +115,30 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
   const left = daysLeft(coupon.expiresAt);
   const usedMs = usedAt ? Date.now() - new Date(usedAt).getTime() : Number.POSITIVE_INFINITY;
   const fresh = justUsed || usedMs < FRESH_MS;
-  const kind = kindText(coupon);
-  const drinkTicket = !store.drink || coupon.menuName.includes(store.drink);
-  const ticket = drinkTicket ? (
-    <Art name={`coupon-${store.id}`} alt={`${store.shortName} ${coupon.menuName} 쿠폰`} sizes="(min-width: 480px) 440px, 92vw" priority className={styles.ticket} />
-  ) : store.image ? (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img src={store.image} alt={`${store.shortName} ${coupon.menuName}`} className={styles.photo} />
-  ) : (
-    <div className={styles.plain}><span className="tag tag-neon">{store.shortName}</span><b className="neon">{coupon.menuName}</b></div>
-  );
+  const ticketData = { storeId: store.id, storeName: store.shortName, menuName: coupon.menuName, code: coupon.code, expiresAt: coupon.expiresAt, image: store.image ?? null, kindLabel: kindText(coupon) };
 
   /* 사용한 쿠폰 */
   if (status === "used") {
     return (
       <article className={styles.root} data-status="used" aria-live="polite">
         <div className={styles.state}>
-          <p className="status-ok">사용 완료</p>
-          <h1 className="h1-event">{fresh ? "잘 썼어요" : "이미 쓴 쿠폰"}</h1>
+          <h1 className={`plate plate-green ${styles.h1}`}>{fresh ? "잘 썼어요" : "이미 쓴 쿠폰"}</h1>
         </div>
-        {store.placeReview && <a href={store.placeReview} target="_blank" rel="noreferrer" className="btn btn-naver btn-block">이 매장 네이버 리뷰 남기기</a>}
-        <div className={styles.dim}>{ticket}</div>
+        <div className={styles.ticketWrap}>
+          <PaperTicket t={ticketData} size="lg" rotate={-1.5} dim />
+          <span className={`stamp stamp-green ${styles.bigStamp}`}>사용 완료</span>
+        </div>
         {fresh && <LiveClock />}
-        <div className="paper">
-          <div className="row"><b>사용 시각</b><span className="val mono">{usedAt ? fmtDateTimeSec(usedAt) : "방금"}</span></div>
+        <div className="paper paper-l">
+          <div className="row"><b>사용 시각</b><span className="val num">{usedAt ? fmtDateTimeSec(usedAt) : "방금"}</span></div>
           <div className="row"><b>매장</b><span className="val">{store.shortName}</span></div>
           <div className="row"><b>품목</b><span className="val">{coupon.menuName}</span></div>
           <div className="row"><b>코드</b><span className="val mono">{coupon.code}</span></div>
         </div>
-        {fresh && <p className="cap">직원은 위 시계가 지금 시각과 같은지만 봐 주세요. 캡처한 화면은 시계가 멈춰 있어요.</p>}
+        {fresh && <p className={`hand hand-w ${styles.hint}`}>직원은 위 시계가 지금 시각과 같은지만 봐 주세요. 캡처한 화면은 시계가 멈춰 있어요.</p>}
         <div className={styles.actions}>
-          <Link href="/wallet" className="btn btn-secondary btn-block">쿠폰함으로</Link>
+          {store.placeReview && <a href={store.placeReview} target="_blank" rel="noreferrer" className="btn btn-block">이 매장 네이버 리뷰 남기기</a>}
+          <Link href="/wallet" className="btn btn-secondary btn-block btn-r">쿠폰함으로</Link>
         </div>
       </article>
     );
@@ -157,22 +148,19 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
     const expired = status === "expired";
     return (
       <article className={styles.root} data-status={status}>
-        <div className={styles.dim}>{ticket}</div>
         <div className={styles.state}>
-          <p className="status-no">{expired ? "기간 지남" : "취소됨"}</p>
-          <h1 className="h1-event">{expired ? "기간이 지났어요" : "취소된 쿠폰"}</h1>
-          <p className="cap">
+          <h1 className={`plate plate-red ${styles.h1}`}>{expired ? "기간이 지났어요" : "취소된 쿠폰"}</h1>
+          <p className={`hand hand-w ${styles.stateSub}`}>
             {expired
               ? `${fmtMD(coupon.expiresAt)}까지 쓸 수 있었어요. 다음에 계산할 때 번호를 말하면 다시 받아요.`
               : `매장에서 취소했어요.${coupon.note ? ` (${coupon.note})` : ""} 궁금한 점은 직원에게 물어봐 주세요.`}
           </p>
         </div>
-        <div className="paper">
-          <div className="row"><b>매장</b><span className="val">{store.shortName}</span></div>
-          <div className="row"><b>품목</b><span className="val">{coupon.menuName}</span></div>
-          <div className="row"><b>코드</b><span className="val mono">{coupon.code}</span></div>
+        <div className={styles.ticketWrap}>
+          <PaperTicket t={ticketData} size="lg" rotate={1} dim />
+          <span className={`stamp ${styles.bigStamp}`}>{expired ? "기간 지남" : "취소됨"}</span>
         </div>
-        {error && <p className="error" role="alert">{error}</p>}
+        {error && <p className={`error ${styles.err}`} role="alert">{error}</p>}
         <div className={styles.actions}>
           <Link href="/wallet" className="btn btn-secondary btn-block">쿠폰함으로</Link>
         </div>
@@ -183,26 +171,22 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
   /* 쓸 수 있는 쿠폰 */
   return (
     <article className={styles.root} data-status="active">
-      {ticket}
+      <PaperTicket t={ticketData} size="lg" rotate={-1.5} />
 
       <div className={styles.info}>
-        {kind && <span className={`tag ${styles.kind}`}>{kind}</span>}
-        <h1 className={`h1-event ${styles.name}`}>{coupon.menuName}</h1>
-        <p className={`neon ${styles.store}`}>{store.name}</p>
-        <p className={`mono ${styles.code}`} aria-label={`쿠폰 코드 ${coupon.code.split("").join(" ")}`}>{coupon.code}</p>
-        <p className={`cap ${styles.how}`}>메인안주 1개 주문 시 · 직원에게 보여 주세요</p>
-        <p className="cap">
+        <p className={`hand hand-w ${styles.how}`}>메인안주 1개 주문 시 · 직원에게 보여 주세요</p>
+        <p className={`hand hand-w ${styles.when}`}>
           {fmtMD(coupon.expiresAt)}까지{left <= 7 && <span className={styles.soon}> · {Math.max(left, 0)}일 남음</span>} · {fmtMDHM(coupon.issuedAt)}에 받음
         </p>
-        {coupon.note && coupon.kind !== "side" && <p className="cap">{coupon.note}</p>}
+        {coupon.note && coupon.kind !== "side" && <p className={`hand hand-w ${styles.when}`}>{coupon.note}</p>}
       </div>
 
       <div className={styles.use}>
-        {error && <p className="error" role="alert">{error}</p>}
+        {error && <p className={`error ${styles.err}`} role="alert">{error}</p>}
         <button type="button" className="btn btn-block" onClick={() => { setError(null); setConfirming(true); }}>직원 앞에서 사용하기</button>
-        <p className="cap">직원이 확인한 뒤에 눌러 주세요. 한 번 쓰면 되돌릴 수 없어요.</p>
+        <p className={`hand hand-w ${styles.useCap}`}>직원이 확인한 뒤에 눌러 주세요. 한 번 쓰면 되돌릴 수 없어요.</p>
         {store.placeBooking && (
-          <a href={store.placeBooking} target="_blank" rel="noreferrer" className="btn btn-naver btn-sm btn-block">이 매장 예약하기</a>
+          <a href={store.placeBooking} target="_blank" rel="noreferrer" className="btn btn-naver btn-sm btn-r">{store.shortName} 예약하기</a>
         )}
       </div>
 
@@ -210,13 +194,12 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
         <div className={styles.overlay} onClick={() => !busy && setConfirming(false)}>
           <div className={`fixed-col ${styles.sheetCol}`}>
             <div className={styles.sheet} role="dialog" aria-modal="true" aria-labelledby={`${id}-confirm`} onClick={(e) => e.stopPropagation()}>
-              <div className={styles.handle} aria-hidden="true" />
-              <p id={`${id}-confirm`} className="h2-event">지금 사용할까요?</p>
-              <p className={styles.sheetSub}><span className="neon">{store.shortName}</span> · {coupon.menuName} 무료</p>
-              <p className="cap">직원이 보고 있을 때만 눌러 주세요. 되돌릴 수 없어요.</p>
+              <p id={`${id}-confirm`} className={styles.sheetTitle}><span className="plate plate-red">지금 사용할까요?</span></p>
+              <p className={`hand ${styles.sheetSub}`}>{store.shortName} · {coupon.menuName} 무료</p>
+              <p className={styles.sheetCap}>직원이 보고 있을 때만 눌러 주세요. 되돌릴 수 없어요.</p>
               {error && <p className="error" role="alert">{error}</p>}
               <div className={styles.sheetBtns}>
-                <button ref={cancelRef} type="button" className="btn btn-secondary" onClick={() => setConfirming(false)} disabled={busy}>취소</button>
+                <button ref={cancelRef} type="button" className="btn btn-secondary btn-r" onClick={() => setConfirming(false)} disabled={busy}>취소</button>
                 <button type="button" className="btn" onClick={redeem} disabled={busy} aria-busy={busy}>{busy ? "잠시만요" : "사용하기"}</button>
               </div>
             </div>

@@ -1,5 +1,3 @@
-.page { padding-block: 6px 40px; display: grid; gap: 8px; }
+.page { padding: 8px var(--gutter) 40px; display: grid; gap: 8px; }
 /* 뒤로 가기 — 글자는 작아도 누르는 영역은 44px */
-.back { display: inline-flex; align-items: center; gap: 2px; min-height: 44px; padding: 0 10px 0 2px; margin-left: -4px; border-radius: 8px; font-size: 14px; font-weight: 600; color: var(--fg-2); }
-.back:active { background: var(--bg-2); }
-.back svg { transform: rotate(180deg); }
+.back { font-size: 15px; padding-right: 8px; }

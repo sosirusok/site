@@ -1,0 +1,4 @@
+/* 포스터 머리 — 화면 폭 그대로, 아래에 딱딱한 그림자만 */
+.hero { position: relative; margin-top: 2px; }
+.img { display: block; box-shadow: 0 6px 0 rgba(0, 0, 0, 0.45); }
+.img img { width: 100%; height: auto; }

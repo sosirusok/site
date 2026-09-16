@@ -1,0 +1,41 @@
+/* 1차·2차·3차 블록 — 간판 조각, 폴라로이드 부채, 혜택 조각, 손글씨, 초록 스티커 하나 */
+.list { padding: 22px var(--gutter) 4px; display: grid; gap: 4px; }
+.block { position: relative; display: grid; gap: 0; }
+
+/* 간판 조각 — 왼쪽 정렬, 짝수 블록은 오른쪽 */
+.top { position: relative; display: flex; align-items: flex-start; }
+.flip .top { justify-content: flex-end; }
+.plateLink { display: block; width: 76%; max-width: 300px; }
+.plate { width: 100%; }
+.noteAgain { position: absolute; right: -4px; top: -16px; width: 104px; z-index: 2; }
+.noteToday { position: absolute; left: -2px; top: -12px; width: 116px; z-index: 2; }
+
+/* 폴라로이드 부채 — 세 장이 조금씩 겹친다 */
+.fan { position: relative; aspect-ratio: 358 / 226; margin: 8px 0 0; }
+.pola { position: absolute; width: 46%; }
+.p0 { left: 0; top: 6%; z-index: 1; }
+.p1 { left: 27%; top: 0; z-index: 3; }
+.p2 { left: 54%; top: 7%; z-index: 2; }
+.flip .p0 { left: 54%; }
+.flip .p2 { left: 0; }
+.mug { position: absolute; right: -4px; bottom: -10px; width: 68px; z-index: 4; }
+
+/* 혜택 조각 + 손글씨 영업시간 */
+.under { display: flex; align-items: center; gap: 12px; margin-top: -4px; }
+.flip .under { flex-direction: row-reverse; }
+.benefit { flex: 0 0 58%; max-width: 240px; }
+.today { flex: 1; min-width: 0; font-size: 22px; line-height: 1.1; }
+.flip .today { text-align: right; }
+
+/* 오늘 소식(관리자가 적음) — 찢은 종이 */
+.notice { margin-top: 12px; align-self: start; max-width: 92%; }
+.noticeIn { font-size: 22px; padding: 10px 16px 12px; }
+.noticeDay { color: var(--red); font-weight: 400; }
+
+/* 초록 스티커 하나 + 작은 글자 링크 */
+.cta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; }
+.flip .cta { flex-direction: row-reverse; }
+
+/* 블록 사이 — 손글씨 화살표 메모 */
+.walk { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 18px 8px 14px; font-size: 27px; transform: rotate(-2deg); }
+.walkArrow { flex: none; transform: rotate(20deg); }

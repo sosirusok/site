@@ -1,29 +1,27 @@
-import Image from "next/image";
-import { STEP_LINES, ruleLine } from "@/lib/copy";
+import Link from "next/link";
+import type { CSSProperties } from "react";
+import { Piece } from "@/components/site/Poster";
+import { StepsStrip } from "@/components/site/StepsStrip";
 import type { Rules } from "@/lib/config";
+import { ruleLine } from "@/lib/copy";
 import s from "./home.module.css";
 
-/** 이렇게 받아요 — 어두운 가게 안 사진 위에 번호 네 줄. 상자 없이 가는 선으로만 나눈다. */
-export function HowTo({ rules }: { rules: Rules }) {
+/** 영수증 릴레이 EVENT — 포스터 리본, 순서 네 칸, 손글씨 메모 한 장(번호 말하면 쿠폰), 조건 알약 조각. */
+export function HowTo({ rules, loggedIn }: { rules: Rules; loggedIn: boolean }) {
   return (
-    <section className={`frame ${s.how}`} aria-labelledby="how-title">
-      <Image src="/images/stores/tokyo/interior-counter.jpg" alt="" aria-hidden="true" fill sizes="(min-width: 480px) 480px, 100vw" className={s.howBg} />
-      <span className={`vignette ${s.howLayer}`} aria-hidden="true" />
-      <span className={`grain ${s.howLayer}`} aria-hidden="true" />
-      <div className={`wrap ${s.howBody}`}>
-        <div className={s.head}>
-          <p className={`kicker ${s.kick}`}>영수증 릴레이</p>
-          <h2 id="how-title" className={`tube ${s.title}`}>이렇게 받아요</h2>
+    <section className={s.how} aria-labelledby="how-title">
+      <h2 id="how-title" className="sr-only">영수증 릴레이 EVENT — 이렇게 받아요</h2>
+      <Piece name="ribbon-event" rotate={-1.5} className={`tape ${s.ribbon}`} />
+      <StepsStrip className={s.steps} />
+      <div className={s.noteRow}>
+        <div className={`scrap ${s.note}`} style={{ "--r": "-2deg" } as CSSProperties}>
+          <p className={`scrap-in hand ${s.noteIn}`}>계산할 때 휴대폰 번호를 말하면 쿠폰이 들어와요</p>
         </div>
-        <ol className={s.steps}>
-          {STEP_LINES.map((line, i) => (
-            <li key={line} className={s.step}>
-              <span className={s.stepN} aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
-              <p className={s.stepT}><span className="sr-only">{i + 1}. </span>{line}</p>
-            </li>
-          ))}
-        </ol>
-        <p className={s.ruleCap}>{ruleLine(rules)}</p>
+        <Link href={loggedIn ? "/wallet" : "/login"} className={`btn btn-r ${s.walletBtn}`}>내 쿠폰함 열기</Link>
+      </div>
+      <div className={s.pillRow}>
+        <Piece name="pill-condition" rotate={1} sizes="340px" className={s.pill} />
+        <p className={`hand hand-w ${s.rule}`}>{ruleLine(rules)}</p>
       </div>
     </section>
   );

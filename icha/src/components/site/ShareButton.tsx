@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { Chevron } from "@/components/ui/Chevron";
 
 type Props = {
   title: string;
@@ -8,8 +7,8 @@ type Props = {
   url?: string;
   className?: string;
   children?: React.ReactNode;
-  /** "row" 면 목록 행 모양(왼쪽 글, 오른쪽 꺾쇠)으로 그린다 */
-  variant?: "button" | "row";
+  /** "link" 면 밑줄 글자 링크 모양, "button" 이면 노란 스티커 */
+  variant?: "button" | "link";
 };
 
 /** 친구에게 보내기 — 휴대폰이면 공유 시트(카카오톡 등), 아니면 링크 복사 */
@@ -29,16 +28,9 @@ export function ShareButton({ title, text, url, className, children = "친구에
       /* 사용자가 취소 */
     }
   }
-  if (variant === "row") {
-    return (
-      <button type="button" className={className ?? "row"} onClick={share} aria-live="polite">
-        <span className="body"><span className="title">{done ?? children}</span></span>
-        <Chevron />
-      </button>
-    );
-  }
+  const cls = className ?? (variant === "link" ? "link" : "btn btn-block");
   return (
-    <button type="button" className={className ?? "btn btn-secondary btn-block"} onClick={share} aria-live="polite">
+    <button type="button" className={cls} onClick={share} aria-live="polite">
       {done ?? children}
     </button>
   );

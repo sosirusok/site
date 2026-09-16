@@ -1,7 +1,12 @@
-/* 맨 아래 — 검은 바탕에 가는 선, 작은 글자. 간판 불이 꺼진 자리. */
-.footer { margin-top: 24px; padding: 22px var(--gutter) 26px; background: #050409; border-top: 1px solid var(--line); font-size: 12px; line-height: 1.6; color: var(--fg-3); display: grid; gap: 8px; }
-.brand { font-family: var(--font-display); font-weight: 400; font-size: 17px; color: var(--yellow); text-shadow: 0 0 14px rgba(255, 210, 63, 0.35); }
+/* 맨 아래 — 영수증처럼 좁고 긴 크림 종이, 옆에 포스터 메모, 끝에 포스터 마지막 줄 */
+.footer { margin-top: 34px; padding: 0 var(--gutter) 6px; display: grid; gap: 22px; }
+.receiptRow { display: grid; grid-template-columns: 1fr 92px; align-items: end; gap: 6px; }
+.receipt { padding: 14px 16px 6px; font-size: 12.5px; line-height: 1.55; display: grid; gap: 8px; }
+.brand { font-size: 18px; }
 .stores { display: grid; gap: 2px; }
-.links { display: flex; gap: 18px; margin-top: 2px; }
-.links a { display: inline-flex; align-items: center; min-height: 44px; font-size: 12.5px; font-weight: 700; color: var(--fg-2); text-decoration: underline; text-underline-offset: 4px; }
-.slogan { letter-spacing: 0.06em; font-weight: 600; color: #6b6685; }
+.store { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px dashed var(--paper-line); padding: 3px 0; }
+.storeName { font-weight: 700; }
+.tel { display: inline-flex; align-items: center; min-height: 28px; text-decoration: underline; text-underline-offset: 3px; }
+.links { display: flex; flex-wrap: wrap; gap: 0 16px; }
+.noteGood { width: 92px; margin-bottom: 8px; }
+.line { width: 100%; --r: 0deg; }

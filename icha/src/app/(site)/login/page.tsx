@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { redirect } from "next/navigation";
 import { PhoneForm } from "@/components/flow/PhoneForm";
 import { safeNext } from "@/components/flow/format";
+import { Piece } from "@/components/site/Poster";
 import { getMemberSession } from "@/lib/auth/session";
 import styles from "./login.module.css";
 
 export const metadata: Metadata = { title: "번호로 시작" };
 
-/** 번호 하나로 시작 — 계산할 때 직원에게 말한 번호를 넣으면 그 번호의 쿠폰함이 열린다. */
+/** 번호 하나로 시작 — 계산할 때 직원에게 말한 번호를 넣으면 그 번호의 쿠폰함이 열린다. 폼은 종이 카드 위에. */
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const sp = await searchParams;
   const next = safeNext(sp.next, "/wallet");
@@ -16,22 +16,16 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   if (session) redirect(next);
 
   return (
-    <>
-      <header className={`frame bleed-top ${styles.top}`} aria-labelledby="login-title">
-        <Image src="/images/stores/wareureu/interior-stained-glass.jpg" alt="" aria-hidden="true" fill priority sizes="(min-width: 480px) 480px, 100vw" className={styles.shot} />
-        <span className={`vignette ${styles.layer}`} aria-hidden="true" />
-        <span className={`scrim ${styles.layer}`} aria-hidden="true" />
-        <span className={`grain ${styles.layer}`} aria-hidden="true" />
-        <div className={styles.topBody}>
-          <p className="kicker on-photo">쿠폰함</p>
-          <h1 id="login-title" className={`tube ${styles.h1}`}>번호로 시작</h1>
-          <p className={`on-photo ${styles.sub}`}>계산할 때 말한 번호 그대로 넣으면 쿠폰이 보여요.</p>
-        </div>
+    <div className={styles.page}>
+      <header className={styles.top} aria-labelledby="login-title">
+        <h1 id="login-title" className={`plate plate-blue ${styles.h1}`}>번호로 시작</h1>
+        <p className={`hand hand-w ${styles.sub}`}>계산할 때 말한 번호 그대로 넣으면 쿠폰이 보여요.</p>
+        <Piece name="note-today" rotate={5} sizes="110px" className={styles.note} />
       </header>
-      <section className={`wrap ${styles.page}`}>
+      <section className={`paper paper-l ${styles.card}`}>
         <PhoneForm next={next} />
-        <p className={styles.note}>문자는 보내지 않아요. 번호는 쿠폰을 찾는 데만 써요.</p>
+        <p className={`help ${styles.help}`}>문자는 보내지 않아요. 번호는 쿠폰을 찾는 데만 써요.</p>
       </section>
-    </>
+    </div>
   );
 }

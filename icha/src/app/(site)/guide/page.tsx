@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { GuideFaq, type FaqItem } from "@/components/site/GuideFaq";
-import { PlaceButton } from "@/components/site/PlaceButton";
-import { StickyCta } from "@/components/site/StickyCta";
+import { Piece } from "@/components/site/Poster";
+import { StepsStrip } from "@/components/site/StepsStrip";
 import { BRAND } from "@/lib/config";
 import { STEP_LINES, ruleLine } from "@/lib/copy";
 import { LOCATIONS } from "@/lib/locations";
 import { placeLinks } from "@/lib/naver";
-import { placeSheetStores } from "@/lib/place-stores";
 import { getRules } from "@/lib/settings";
 import { STORES } from "@/lib/stores";
 import styles from "./page.module.css";
@@ -33,7 +31,7 @@ function walkLine(): string {
   return `서면역 ${exits}번 출구에서 걸어서 ${lo === hi ? `${lo}분` : `${lo}~${hi}분`}`;
 }
 
-/** 이용 안내 — 제목, 순서 넷, 규칙 한 줄, 자주 묻는 질문 일곱. 아래 고정 버튼은 플레이스 시트. */
+/** 이용 안내 — 간판 제목, 포스터 순서 조각 + 종이에 적은 순서 넷, 자주 묻는 질문은 종이 카드. 아래 고정 버튼 없음(탭에 플레이스). */
 export default async function GuidePage() {
   const rules = await getRules();
   const days = rules.couponValidDays;
@@ -49,11 +47,11 @@ export default async function GuidePage() {
         <>
           <p>네이버 예약으로 받아요.</p>
           <p className={styles.bookRow}>
-            {ORDERED.map((s) => {
+            {ORDERED.map((s, i) => {
               const l = placeLinks(s);
               return l ? (
-                <a key={s.id} href={l.booking} target="_blank" rel="noopener noreferrer" className="btn btn-naver btn-sm">
-                  {s.course.n}차 {s.shortName}
+                <a key={s.id} href={l.booking} target="_blank" rel="noopener noreferrer" className={`btn btn-naver btn-sm ${i % 2 ? "btn-r" : ""}`}>
+                  {s.course.n}차 {s.shortName} 예약하기
                 </a>
               ) : null;
             })}
@@ -61,7 +59,7 @@ export default async function GuidePage() {
         </>
       ),
     },
-    { id: "use", q: "다른 매장에서 어떻게 써요?", a: <p><Link href="/wallet">쿠폰함</Link>에서 갈 매장의 혜택을 고르고, 그 매장에서 메인안주 1개 주문할 때 직원에게 보여 줘요.</p> },
+    { id: "use", q: "다른 매장에서 어떻게 써요?", a: <p><Link href="/wallet" className="link">쿠폰함</Link>에서 갈 매장의 혜택을 고르고, 그 매장에서 메인안주 1개 주문할 때 직원에게 보여 줘요.</p> },
     { id: "when", q: "쿠폰은 언제까지?", a: <p>받은 날부터 {days}일 안에 써요. 한 번호로 하루 {limit}장까지 받을 수 있어요.</p> },
     { id: "near", q: "세 매장은 얼마나 떨어져 있어요?", a: <p>모두 50m 안이에요. {walkLine()}.</p> },
     reviews.length > 0
@@ -72,7 +70,7 @@ export default async function GuidePage() {
             <ul className={styles.revList}>
               {reviews.map(({ s, text }) => (
                 <li key={s.id} data-store={s.id}>
-                  <b className="tube-store">{s.shortName}</b> {text}
+                  <span className="plate plate-store plate-sm">{s.shortName}</span> {text}
                 </li>
               ))}
             </ul>
@@ -86,44 +84,38 @@ export default async function GuidePage() {
 
   return (
     <div className={styles.page}>
-      <header className={`frame bleed-top ${styles.top}`}>
-        <Image src="/images/stores/joseon/entrance-garden.jpg" alt="" aria-hidden="true" fill priority sizes="(min-width: 480px) 480px, 100vw" className={styles.topShot} />
-        <span className={`vignette ${styles.topLayer}`} aria-hidden="true" />
-        <span className={`scrim ${styles.topLayer}`} aria-hidden="true" />
-        <span className={`grain ${styles.topLayer}`} aria-hidden="true" />
-        <div className={styles.topBody}>
-          <p className={`kicker on-photo ${styles.brand}`}>{BRAND.name} · {BRAND.eventTag}</p>
-          <h1 className={`tube ${styles.h1}`}>이용 안내</h1>
-        </div>
+      <header className={styles.top}>
+        <h1 className={`plate plate-red ${styles.h1}`}>이용 안내</h1>
+        <p className={`hand hand-w ${styles.brand}`}>{BRAND.name} · {BRAND.eventTag}</p>
+        <Piece name="note-again" rotate={6} sizes="110px" className={styles.note} />
       </header>
 
-      <section className={`wrap ${styles.sec}`} aria-labelledby="steps-title">
-        <div className={styles.head}>
-          <p className={`kicker ${styles.kick}`}>{BRAND.course}</p>
-          <h2 id="steps-title" className={`tube ${styles.title}`}>순서</h2>
+      <section className={styles.sec} aria-labelledby="steps-title">
+        <div className="sec-h">
+          <h2 id="steps-title" className="plate plate-blue">순서</h2>
+          <p className={`hand hand-w ${styles.lead}`}>{BRAND.course}</p>
         </div>
-        <ol className={styles.steps}>
-          {STEP_LINES.map((text, i) => (
-            <li key={text} className={styles.step}>
-              <span className={styles.num} aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
-              <p className={styles.stepT}><span className="sr-only">{i + 1}. </span>{text}</p>
-            </li>
-          ))}
-        </ol>
-        <p className={styles.rule}>{ruleLine(rules)} · {BRAND.condition}</p>
+        <StepsStrip className={styles.strip} />
+        <div className={`paper paper-l ${styles.stepPaper}`}>
+          <ol className={styles.steps}>
+            {STEP_LINES.map((text, i) => (
+              <li key={text} className={styles.step}>
+                <span className={`plate plate-yellow plate-sm ${styles.num}`} aria-hidden="true">{i + 1}</span>
+                <p className={styles.stepT}><span className="sr-only">{i + 1}. </span>{text}</p>
+              </li>
+            ))}
+          </ol>
+          <p className={styles.rule}>{ruleLine(rules)} · {BRAND.condition}</p>
+        </div>
       </section>
 
-      <section className={`wrap ${styles.sec}`} aria-labelledby="faq-title">
-        <div className={styles.head}>
-          <p className={`kicker ${styles.kick}`}>궁금한 것</p>
-          <h2 id="faq-title" className={`tube ${styles.title}`}>자주 묻는 질문</h2>
+      <section className={styles.sec} aria-labelledby="faq-title">
+        <div className="sec-h">
+          <h2 id="faq-title" className="plate plate-green">자주 묻는 질문</h2>
+          <p className={`hand hand-w ${styles.lead}`}>궁금한 것</p>
         </div>
         <GuideFaq items={items} />
       </section>
-
-      <StickyCta>
-        <PlaceButton stores={placeSheetStores()} className="btn btn-naver btn-block">예약하기</PlaceButton>
-      </StickyCta>
     </div>
   );
 }

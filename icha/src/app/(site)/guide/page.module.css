@@ -1,30 +1,25 @@
-/* 이용 안내 — 사진 한 장으로 문을 열고, 아래는 가는 선과 글자만 */
+/* 이용 안내 — 간판 제목, 순서 조각, 종이 카드 */
 .page { padding-bottom: 8px; }
+.top { position: relative; display: grid; gap: 14px; justify-items: start; padding: 18px var(--gutter) 6px; }
+.h1 { font-size: 30px; padding: 12px 18px 10px; }
+.brand { font-size: 24px; }
+.note { position: absolute; right: var(--gutter); top: 8px; width: 104px; }
 
-.top { display: block; min-height: 38svh; }
-.topShot { object-fit: cover; object-position: 50% 55%; }
-.topLayer { position: absolute; inset: 0; z-index: 1; }
-.topBody { position: relative; z-index: 2; display: grid; gap: 6px; align-content: end; min-height: 38svh; padding: calc(var(--header-h) + 22px) var(--gutter) 20px; }
-.h1 { font-family: var(--font-display); font-weight: 400; font-size: 34px; line-height: 1.1; }
-.brand { font-size: 13px; font-weight: 700; color: var(--fg-2); }
+.sec { padding: 24px var(--gutter) 6px; }
+.lead { font-size: 22px; line-height: 1.1; padding-bottom: 2px; }
+.strip { margin-bottom: 22px; }
 
-.sec { padding-block: 24px 20px; }
-.head { display: grid; gap: 6px; margin-bottom: 12px; }
-.kick { display: flex; align-items: center; gap: 9px; }
-.kick::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, var(--line-2), transparent); }
-.title { font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: 1.15; }
-
-/* 순서 넷 — 번호는 속 빈 글자 */
+/* 순서 넷 — 종이 위에 노란 번호 판 */
+.stepPaper { display: grid; gap: 10px; padding: 14px 16px 12px; }
 .steps { display: grid; }
-.step { display: flex; align-items: flex-start; gap: 14px; padding-block: 13px; border-top: 1px solid var(--line); }
-.step:last-child { border-bottom: 1px solid var(--line); }
-.num { flex: none; width: 34px; font-family: var(--font-display); font-weight: 400; font-size: 22px; line-height: 1.2; color: transparent; -webkit-text-stroke: 1px var(--yellow); text-shadow: 0 0 16px rgba(255, 210, 63, 0.45); }
-.stepT { flex: 1; min-width: 0; font-size: 14.5px; line-height: 1.5; font-weight: 600; }
-.rule { margin-top: 12px; font-size: 12.5px; color: var(--fg-3); }
+.step { display: flex; align-items: flex-start; gap: 14px; padding: 10px 0; border-bottom: 1px dashed var(--paper-line); }
+.step:last-child { border-bottom: 0; }
+.num { flex: none; min-width: 34px; text-align: center; --r: -4deg; }
+.stepT { flex: 1; min-width: 0; font-size: 15px; line-height: 1.5; font-weight: 600; padding-top: 3px; }
+.rule { font-size: 12.5px; color: var(--ink-2); border-top: 1px dashed var(--paper-line); padding-top: 8px; }
 
-/* 답 속 예약 버튼 세 개 — 가게마다 하나씩, 좁은 화면에서는 줄바꿈 */
-.bookRow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-/* 리뷰 이벤트 — 가게 이름은 그 집 네온색 */
-.revList { display: grid; gap: 8px; }
-.revList li { line-height: 1.5; }
-.revList b { font-weight: 800; margin-right: 6px; }
+/* 답 속 예약 스티커 세 개 — 가게마다 하나씩 */
+.bookRow { display: flex; flex-wrap: wrap; gap: 12px 10px; margin-top: 12px; }
+/* 리뷰 이벤트 — 가게 이름은 그 집 색 판 */
+.revList { display: grid; gap: 10px; }
+.revList li { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; line-height: 1.5; }

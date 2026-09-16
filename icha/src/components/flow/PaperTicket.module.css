@@ -1,0 +1,24 @@
+/* 종이 쿠폰 — 그림자는 바깥(wrap)에서, 구멍은 mask 로 뚫는다 */
+.wrap { filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.45)); transform: rotate(var(--r, 0deg)); }
+.dim { opacity: 0.55; filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.3)) grayscale(0.4); }
+.ticket { display: grid; grid-template-columns: 1fr var(--stub, 96px); background: var(--cream); color: var(--ink); border-radius: 6px; overflow: hidden;
+  -webkit-mask: radial-gradient(circle 10px at calc(100% - var(--stub, 96px)) 0, transparent 9.5px, #000 10.5px), radial-gradient(circle 10px at calc(100% - var(--stub, 96px)) 100%, transparent 9.5px, #000 10.5px);
+  -webkit-mask-composite: source-in; mask-composite: intersect;
+  mask: radial-gradient(circle 10px at calc(100% - var(--stub, 96px)) 0, transparent 9.5px, #000 10.5px), radial-gradient(circle 10px at calc(100% - var(--stub, 96px)) 100%, transparent 9.5px, #000 10.5px); }
+.md { --stub: 92px; }
+.lg { --stub: 118px; }
+.main { display: grid; gap: 4px; padding: 14px 14px 14px 16px; min-width: 0; }
+.lg .main { padding: 20px 16px 20px 20px; gap: 6px; }
+.store { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+.name { font-size: 20px; line-height: 1.2; }
+.lg .name { font-size: 26px; }
+.code { font-size: 22px; line-height: 1.2; color: var(--ink); }
+.lg .code { font-size: 34px; margin-top: 4px; }
+.meta { font-size: 12.5px; color: var(--ink-2); }
+.lg .meta { font-size: 13.5px; }
+.stub { position: relative; display: grid; place-items: center; padding: 12px 8px; border-left: 2px dashed rgba(17, 17, 17, 0.4); background: rgba(255, 255, 255, 0.35); }
+.stubPhoto { width: 68px; height: 68px; object-fit: cover; background: #fff; padding: 3px; box-shadow: 1px 2px 0 rgba(0, 0, 0, 0.3); transform: rotate(4deg); }
+.lg .stubPhoto { width: 90px; height: 90px; }
+.stubCut { width: 74px; height: 74px; object-fit: contain; filter: drop-shadow(2px 3px 0 rgba(0, 0, 0, 0.28)); }
+.lg .stubCut { width: 96px; height: 96px; }
+.stubText { writing-mode: vertical-rl; font-size: 20px; letter-spacing: 0.12em; color: var(--ink-2); }

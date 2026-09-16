@@ -1,13 +1,12 @@
-.root { display: grid; gap: 12px; }
-.rating { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-size: 14px; color: var(--fg-3); }
-.score { font-family: var(--font-display); font-weight: 400; font-size: 26px; color: var(--yellow); text-shadow: 0 0 16px rgba(255, 210, 63, 0.4); }
-/* 인용 — 상자 대신 그 집 색 세로선 하나 */
-.list { display: grid; gap: 14px; margin-top: 2px; }
-.quote { padding-left: 14px; border-left: 2px solid color-mix(in srgb, var(--store, var(--yellow)) 70%, transparent); }
-.text { font-size: 14px; line-height: 1.6; color: var(--fg); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.meta { margin-top: 5px; font-size: 12px; color: var(--fg-3); }
-/* 리뷰 링크 둘 — 초록 버튼은 예약하기 하나뿐이라 여기선 글자 링크 */
-.btns { display: flex; gap: 20px; border-top: 1px solid var(--line); margin-top: 2px; }
-.link { display: inline-flex; align-items: center; min-height: 48px; font-size: 13px; font-weight: 700; color: var(--naver); text-decoration: underline; text-underline-offset: 4px; }
-/* 매장이 적어 둔 리뷰 혜택 한 줄(비면 숨김) */
-.benefit { font-size: 13.5px; font-weight: 700; color: var(--yellow); }
+/* 리뷰 — 손글씨 별점, 찢은 종이 위 인용, 작은 글자 링크 */
+.root { display: grid; gap: 14px; }
+.rating { font-size: 24px; }
+.score { color: var(--yellow); font-size: 30px; }
+.list { display: grid; gap: 14px; }
+.quote { max-width: 94%; }
+.quoteL { justify-self: start; }
+.quoteR { justify-self: end; }
+.text { font-size: 14.5px; line-height: 1.6; color: var(--ink); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.meta { margin-top: 6px; font-size: 19px; color: var(--ink-2); text-align: right; }
+.benefit { font-size: 24px; }
+.links { display: flex; gap: 22px; }

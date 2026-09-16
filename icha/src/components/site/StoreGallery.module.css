@@ -1,8 +1,10 @@
-/* 사진 띠 — 모서리 없는 사각 사진이 옆으로 흘러간다. 맨 끝은 네이버 사진으로 가는 칸. */
-.strip { gap: 6px; padding-bottom: 2px; }
-.cell { position: relative; width: 74%; max-width: 340px; height: 232px; overflow: hidden; background: #08070f; }
-.img { object-fit: cover; }
-.shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(6, 5, 12, 0.5), transparent 46%); pointer-events: none; }
-.more { display: grid; place-items: center; height: 100%; border: 1px solid color-mix(in srgb, var(--store, var(--yellow)) 55%, transparent); background: color-mix(in srgb, var(--store, var(--yellow)) 7%, #08070f); }
-.more:active { background: color-mix(in srgb, var(--store, var(--yellow)) 14%, #08070f); }
-.moreText { color: var(--store, var(--yellow)); font-size: 14px; font-weight: 700; text-align: center; line-height: 1.5; text-decoration: underline; text-underline-offset: 4px; }
+/* 사진 다섯 장 — 큰 둘(윗줄), 작은 셋(아랫줄, 윗줄 아래를 조금 덮는다) */
+.root { display: grid; gap: 4px; }
+.fan { position: relative; aspect-ratio: 358 / 372; }
+.pola { position: absolute; }
+.g0 { left: 0; top: 0; width: 50%; z-index: 1; }
+.g1 { left: 47%; top: 4%; width: 53%; z-index: 2; }
+.g2 { left: 1%; top: 52%; width: 36%; z-index: 3; }
+.g3 { left: 32%; top: 58%; width: 36%; z-index: 4; }
+.g4 { left: 64%; top: 53%; width: 36%; z-index: 3; }
+.more { justify-self: end; }

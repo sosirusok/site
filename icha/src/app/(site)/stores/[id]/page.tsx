@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import type { CSSProperties } from "react";
 import { NextStop } from "@/components/site/NextStop";
+import { benefitOf, Piece } from "@/components/site/Poster";
 import { StoreGallery } from "@/components/site/StoreGallery";
 import { StoreHero } from "@/components/site/StoreHero";
 import { MenuThumb, StoreMenu } from "@/components/site/StoreMenu";
@@ -27,7 +29,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-/** 가게 화면 — 밤 사진과 네온 간판, 오늘 소식, 특별 혜택, 사진, 메뉴, 위치, 리뷰, 다음 집. 초록 버튼은 아래 고정 예약하기 하나. */
+/**
+ * 가게 화면 — 밤 사진 위에 포스터 간판 조각, 손글씨 영업 한 줄, 종이(주소·전화),
+ * 특별 혜택(포스터 혜택 조각 + 찢은 종이), 사진(폴라로이드 다섯), 메뉴판(크림 종이), 오시는 길(테이프 지도), 리뷰(종이 조각), 다음 집(손글씨 화살표).
+ * 초록 버튼은 아래 고정 [예약하기] 하나.
+ */
 export default async function StorePage({ params }: Props) {
   const { id } = await params;
   const store = getStore(id);
@@ -47,72 +53,73 @@ export default async function StorePage({ params }: Props) {
       <StoreHero store={store} />
 
       {notice && (
-        <p className={styles.notice}>
-          <span className={styles.noticeDay}>오늘</span>
-          {notice}
-        </p>
+        <div className={`scrap ${styles.notice}`} style={{ "--r": "1deg" } as CSSProperties}>
+          <p className={`scrap-in hand ${styles.noticeIn}`}><b className={styles.noticeDay}>오늘</b> {notice}</p>
+        </div>
       )}
 
-      <section className={`wrap ${styles.sec}`} aria-labelledby="gift-title">
-        <div className={styles.head}>
-          <p className={`kicker ${styles.kick}`}>다른 집 쿠폰으로</p>
-          <h2 id="gift-title" className={`tube ${styles.title}`}>여기서 받는 것</h2>
+      <section className={styles.sec} aria-labelledby="gift-title">
+        <div className="sec-h">
+          <h2 id="gift-title" className="plate plate-red">특별 혜택</h2>
+          <p className={`hand hand-w ${styles.lead}`}>다른 집 쿠폰으로 여기서 받는 것</p>
         </div>
-        {gifts.length === 0 ? (
-          <p className={styles.giftEmpty}>어떤 혜택을 드릴지 정하고 있어요.</p>
-        ) : (
-          <div className={styles.gifts}>
-            {gifts.map((g) => (
-              <div key={g.id} className={styles.giftRow}>
-                <div className={styles.giftBody}>
-                  <p className={styles.giftName}>{g.name}</p>
-                  {g.description && <p className={styles.giftDesc}>{g.description}</p>}
-                </div>
-                <span className={`num ${styles.giftPrice}`}>
-                  {g.price != null && <s className="strike">{formatWon(g.price)}</s>}
-                  <span className={styles.giftFree}>무료</span>
-                </span>
-                <MenuThumb m={g} />
-              </div>
-            ))}
+        <div className={styles.giftRow}>
+          <Piece name={benefitOf(store.id)} rotate={-2} sizes="250px" className={`tape-tl ${styles.benefit}`} />
+          <div className={`scrap ${styles.giftScrap}`} style={{ "--r": "1.5deg" } as CSSProperties}>
+            <div className={`scrap-in ${styles.giftIn}`}>
+              {gifts.length === 0 ? (
+                <p className={`hand ${styles.giftEmpty}`}>어떤 혜택을 드릴지 정하고 있어요.</p>
+              ) : (
+                gifts.map((g) => (
+                  <div key={g.id} className={styles.gift}>
+                    <MenuThumb m={g} size={64} />
+                    <div className={styles.giftBody}>
+                      <p className={styles.giftName}>{g.name}</p>
+                      {g.description && <p className={styles.giftDesc}>{g.description}</p>}
+                      <p className={styles.giftPrice}>
+                        {g.price != null && <s className="strike num">{formatWon(g.price)}</s>}
+                        <span className={`stamp ${styles.giftFree}`}>무료</span>
+                      </p>
+                    </div>
+                  </div>
+                ))
+              )}
+              {gifts.length > 1 && <p className={`hand ${styles.giftPick}`}>둘 중 하나를 골라요</p>}
+              <p className={styles.giftRule}>다른 매장에서 받은 쿠폰으로 · {BRAND.condition}</p>
+            </div>
           </div>
-        )}
-        {gifts.length > 1 && <p className={styles.giftPick}>둘 중 하나를 골라요.</p>}
-        <div className={styles.giftRule}>
-          <p>다른 매장에서 받은 쿠폰으로 받아요</p>
-          <p>{BRAND.condition}</p>
         </div>
       </section>
 
-      <section className={styles.secTight} aria-labelledby="photo-title">
-        <div className={`wrap ${styles.head}`}>
-          <p className={`kicker ${styles.kick}`}>{store.shortName}의 밤</p>
-          <h2 id="photo-title" className={`tube ${styles.title}`}>사진</h2>
+      <section className={styles.sec} aria-labelledby="photo-title">
+        <div className="sec-h">
+          <h2 id="photo-title" className="plate plate-blue">사진</h2>
+          <p className={`hand hand-w ${styles.lead}`}>{store.shortName}의 밤</p>
         </div>
         <StoreGallery store={store} photoUrl={links?.photo ?? null} />
       </section>
 
-      <section className={`wrap ${styles.sec} ${styles.anchor}`} id="menu" aria-labelledby="menu-title">
-        <div className={styles.head}>
-          <p className={`kicker ${styles.kick}`}>{menu.length > 0 ? `${menu.length}가지` : "정리 중"}</p>
-          <h2 id="menu-title" className={`tube ${styles.title}`}>메뉴</h2>
+      <section className={`${styles.sec} ${styles.anchor}`} id="menu" aria-labelledby="menu-title">
+        <div className="sec-h">
+          <h2 id="menu-title" className="plate plate-yellow">메뉴</h2>
+          <p className={`hand hand-w ${styles.lead}`}>{menu.length > 0 ? `${menu.length}가지` : "정리 중"}</p>
         </div>
         <StoreMenu store={store} items={menu} menuUrl={links?.menu ?? null} />
       </section>
 
-      <section className={`wrap ${styles.sec} ${styles.anchor}`} id="visit" aria-labelledby="visit-title">
-        <div className={styles.head}>
-          <p className={`kicker ${styles.kick}`}>서면 50m 안</p>
-          <h2 id="visit-title" className={`tube ${styles.title}`}>오시는 길</h2>
+      <section className={`${styles.sec} ${styles.anchor}`} id="visit" aria-labelledby="visit-title">
+        <div className="sec-h">
+          <h2 id="visit-title" className="plate plate-blue">오시는 길</h2>
+          <p className={`hand hand-w ${styles.lead}`}>서면 50m 안</p>
         </div>
         <StoreVisit store={store} />
       </section>
 
       {(store.quotes.length > 0 || store.naverRating) && (
-        <section className={`wrap ${styles.sec}`} aria-labelledby="reviews-title">
-          <div className={styles.head}>
-            <p className={`kicker ${styles.kick}`}>다녀온 사람들</p>
-            <h2 id="reviews-title" className={`tube ${styles.title}`}>리뷰</h2>
+        <section className={styles.sec} aria-labelledby="reviews-title">
+          <div className="sec-h">
+            <h2 id="reviews-title" className="plate plate-green">리뷰</h2>
+            <p className={`hand hand-w ${styles.lead}`}>다녀온 사람들</p>
           </div>
           <StoreReviews store={store} limit={2} reviewUrl={links?.review ?? null} benefit={reviewBenefit || null} />
         </section>

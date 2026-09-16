@@ -1,24 +1,13 @@
-/* 가게 첫 화면 — 그 집 밤 사진 한 장 위에 네온 간판. 이름은 간판이 대신한다. */
-.hero { display: block; min-height: 58svh; }
-.shot { object-fit: cover; object-position: 50% 48%; }
-.layer { position: absolute; inset: 0; z-index: 1; }
+/* 가게 첫 화면 — 밤 사진 한 장 화면 폭 그대로, 아래 모서리에 간판 조각 */
+.hero { position: relative; margin-top: 4px; }
+.shotWrap { position: relative; height: 62vw; min-height: 220px; max-height: 300px; overflow: hidden; box-shadow: 0 6px 0 rgba(0, 0, 0, 0.45); background: #1a1520; }
+.shot { object-fit: cover; }
+.plateWrap { position: relative; z-index: 2; margin: -46px var(--gutter) 0; }
+.plate { width: 80%; max-width: 320px; }
 
-.body { position: relative; z-index: 2; display: grid; gap: 8px; align-content: end; min-height: 58svh; padding: calc(var(--header-h) + 22px) var(--gutter) 20px; }
-.kick { display: flex; align-items: center; gap: 8px; letter-spacing: 0.08em; }
-.no { font-family: var(--font-display); font-weight: 400; font-size: 17px; color: transparent; -webkit-text-stroke: 1.2px var(--store); }
-.kickText { font-size: 11.5px; font-weight: 700; letter-spacing: 0.06em; color: var(--fg-2); }
-.sign { width: 80%; max-width: 340px; height: auto; margin-block: 2px 4px; filter: drop-shadow(0 0 18px color-mix(in srgb, var(--store) 45%, transparent)) drop-shadow(0 6px 14px rgba(0, 0, 0, 0.6)); }
-.line { font-size: 14px; font-weight: 700; color: var(--fg); }
-.meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-size: 13px; color: var(--fg-2); }
-.open { font-weight: 800; color: var(--green); }
-.closed { font-weight: 800; color: var(--fg-3); }
-.rating { font-weight: 700; color: var(--yellow); }
-
-/* 사진 아래 — 가는 선으로만 나눈 사실 몇 줄 */
-.facts { display: grid; padding-block: 2px 4px; }
-.fact { display: flex; align-items: flex-start; gap: 14px; padding-block: 12px; border-top: 1px solid var(--line); font-size: 14px; }
-.fact:last-child { border-bottom: 1px solid var(--line); }
-.factK { flex: none; width: 52px; font-size: 12.5px; font-weight: 700; color: var(--fg-3); padding-top: 1px; }
-.factV { flex: 1; min-width: 0; color: var(--fg); line-height: 1.5; }
-.factSub { display: block; margin-top: 3px; font-size: 12.5px; color: var(--fg-3); }
-.tel { display: inline-flex; align-items: center; min-height: 32px; text-decoration: underline; text-underline-offset: 3px; }
+/* 사진 아래 — 손글씨 한 줄, 종이 한 장 */
+.facts { padding: 16px var(--gutter) 0; display: grid; gap: 14px; }
+.now { font-size: 24px; line-height: 1.15; }
+.rating { color: var(--yellow); }
+.factPaper { padding: 12px 16px; }
+.tel { min-height: 32px; }

@@ -1,4 +1,7 @@
-.bar { bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(4, 1fr); height: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: rgba(11, 10, 18, 0.96); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--line); }
-.item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--fg-3); font-size: 11px; font-weight: 500; }
-.active { color: var(--yellow); font-weight: 700; }
-.naver { color: var(--naver); font-weight: 700; }
+/* 하단 탭 — 크림색 종이 띠, 위쪽은 검은 선 한 줄. 글자는 Do Hyeon 검정 */
+.bar { bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(4, 1fr); height: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: var(--cream); border-top: 3px solid #111; box-shadow: 0 -5px 0 rgba(0, 0, 0, 0.35); }
+.item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 44px; color: #111; font-family: var(--font-display); font-size: 13px; line-height: 1; }
+.item:active { background: rgba(17, 17, 17, 0.06); }
+.label { display: inline-block; padding: 3px 5px 2px; border-radius: 3px; }
+/* 고른 탭 — 노란 형광펜 자국 */
+.active .label { background: var(--yellow); box-shadow: 2px 2px 0 #111; transform: rotate(-2deg); }

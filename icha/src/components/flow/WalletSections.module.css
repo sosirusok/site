@@ -1,31 +1,31 @@
-.sec { padding-block: 24px; }
+.sec { padding: 22px var(--gutter) 6px; }
+.lead { font-size: 22px; line-height: 1.1; padding-bottom: 2px; }
 
-/* 받은 쿠폰 — 매장색 네온 카드 */
-.relays { display: grid; gap: 12px; }
-.relay { display: grid; gap: 8px; justify-items: start; padding: 18px 16px 16px; }
-.relayTitle { text-wrap: balance; }
-.relay .btn { margin-top: 8px; }
+/* 받은 쿠폰 — 종이 한 장씩 */
+.relays { display: grid; gap: 16px; }
+.relay { display: grid; gap: 8px; justify-items: start; padding: 16px 16px 18px; }
+.relayHead { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.relayTitle { font-size: 20px; }
+.relaySub { font-size: 13px; color: var(--ink-2); }
+.relay :global(.btn) { margin-top: 8px; }
 
-/* 쿠폰 행 */
-.link:active { background: var(--bg-2); }
-.ticket { width: 56px; height: 56px; flex: none; object-fit: contain; border-radius: 10px; background: var(--bg-3); padding: 5px; }
-/* 제목 글줄과 종류 칩은 나란히 — 칩이 제목 글 안에 섞이지 않게 */
-.titleRow { display: flex; align-items: center; gap: 6px; min-width: 0; }
-.titleRow .title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.sub { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.storeName { color: var(--store, var(--fg-2)); font-weight: 600; }
-.soon { color: var(--accent); font-weight: 600; }
+/* 종이 쿠폰 더미 */
+.stack { display: grid; gap: 18px; }
+.stackItem { position: relative; }
+.ticketLink { display: block; position: relative; }
+.soon { position: absolute; right: 100px; top: -12px; font-size: 16px; padding: 4px 8px 3px; background: rgba(244, 233, 210, 0.85); }
+.pastStamp { position: absolute; left: 14px; bottom: -8px; font-size: 16px; padding: 4px 8px 3px; background: rgba(244, 233, 210, 0.9); }
 
-/* 지난 쿠폰 — 여백을 summary 에 둬서 누르는 줄이 통째로 44px 이상 */
-.past { padding-block: 0; }
-.pastSummary { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; padding-block: 22px; color: var(--fg-2); }
-.pastSummary:active { background: var(--bg-2); }
-.pastChev { color: var(--fg-3); transition: transform 0.15s; }
-.past[open] .pastChev { transform: rotate(90deg); }
-.pastList { padding-bottom: 20px; }
-.dim { opacity: 0.5; }
+/* 지난 쿠폰 — 손글씨 줄을 누르면 펼쳐진다 */
+.past { padding: 8px var(--gutter) 6px; }
+.pastSummary { display: flex; align-items: center; gap: 8px; min-height: 48px; font-size: 24px; margin-bottom: 8px; }
+.pastArrow { font-family: var(--font-sans); font-size: 18px; transition: transform 0.15s; }
+.past[open] .pastArrow { transform: rotate(180deg); }
 
 /* 빈 쿠폰함 */
-.empty { display: grid; gap: 10px; justify-items: center; text-align: center; padding: 28px 0 8px; }
-.emptyTitle { margin-top: 6px; }
-.emptyBtn { margin-top: 14px; }
+.empty { position: relative; display: grid; gap: 22px; padding: 10px 0 8px; }
+.emptyScrap { max-width: 84%; }
+.emptyTitle { font-size: 30px; }
+.emptyText { margin-top: 6px; font-size: 14px; line-height: 1.55; color: var(--ink-2); }
+.emptyNote { position: absolute; right: 0; top: -6px; width: 96px; }
+.emptyBtn { margin-top: 6px; }

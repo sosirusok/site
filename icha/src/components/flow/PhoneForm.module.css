@@ -1,3 +1,3 @@
-.form { display: grid; gap: 16px; }
-/* 번호 입력 — 본문 글꼴 그대로, 숫자만 고정폭(tabular)으로 크게. 어두운 바탕 위 입력 상자(.input) */
-.phone { height: 56px; font-size: 20px; font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+.form { display: grid; gap: 18px; }
+/* 번호 입력 — 본문 글꼴 그대로, 숫자만 고정폭(tabular)으로 크게. 종이 위 흰 입력 상자(.input) */
+.phone { height: 58px; font-size: 22px; font-variant-numeric: tabular-nums; letter-spacing: 0.06em; }

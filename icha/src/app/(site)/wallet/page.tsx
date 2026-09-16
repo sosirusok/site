@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import type { CSSProperties } from "react";
 import { LogoutButton } from "@/components/flow/LogoutButton";
 import { ActiveCoupons, EmptyWallet, PastCoupons, RelayCards, type WalletCoupon, type WalletRelay } from "@/components/flow/WalletSections";
 import { PlaceButton } from "@/components/site/PlaceButton";
@@ -15,7 +16,7 @@ import styles from "./wallet.module.css";
 
 export const metadata: Metadata = { title: "쿠폰함" };
 
-/** 쿠폰 행 썸네일용 메뉴 사진 — 품목 번호로 먼저, 없으면 매장+품목 이름으로 찾는다 */
+/** 쿠폰 티켓용 메뉴 사진 — 품목 번호로 먼저, 없으면 매장+품목 이름으로 찾는다 */
 async function menuPhotoIndex(): Promise<(storeId: StoreId, menuItemId: number | null, menuName: string) => WalletCoupon["image"]> {
   const byId = new Map<number, MenuItem>();
   const byName = new Map<string, MenuItem>();
@@ -37,7 +38,7 @@ async function menuPhotoIndex(): Promise<(storeId: StoreId, menuItemId: number |
 }
 
 /**
- * 쿠폰함 — 번호 하나에 담긴 쿠폰. 위에서부터: 받은 쿠폰(아직 어디서 쓸지 안 고름) → 쓸 수 있는 쿠폰 → 지난 쿠폰.
+ * 쿠폰함 — 번호 하나에 담긴 종이 쿠폰 더미. 위에서부터: 받은 쿠폰(아직 어디서 쓸지 안 고름) → 쓸 수 있는 쿠폰 → 지난 쿠폰.
  * 사진·등급·누적 금액은 없다(사장님 결정).
  */
 export default async function WalletPage() {
@@ -74,48 +75,40 @@ export default async function WalletPage() {
 
   return (
     <div className={styles.page}>
-      {rules.notice && <p className={styles.notice}>{rules.notice}</p>}
+      {rules.notice && (
+        <div className={`scrap ${styles.notice}`} style={{ "--r": "1deg" } as CSSProperties}>
+          <p className={`scrap-in hand ${styles.noticeIn}`}>{rules.notice}</p>
+        </div>
+      )}
 
-      <section className={`wrap ${styles.top}`}>
-        <h1 className="h1-event">쿠폰함</h1>
-        <p className="cap">쓸 때 직원에게 이 화면을 보여 주세요.</p>
-      </section>
+      <header className={styles.top}>
+        <h1 className={`plate plate-yellow ${styles.h1}`}>쿠폰함</h1>
+        <p className={`hand hand-w ${styles.sub}`}>쓸 때 직원에게 이 화면을 보여 주세요.</p>
+      </header>
 
       {nothing ? (
-        <section className="wrap" aria-label="빈 쿠폰함">
+        <section className={styles.sec} aria-label="빈 쿠폰함">
           <EmptyWallet stores={places} />
         </section>
       ) : (
         <>
-          {relays.length > 0 && (
-            <>
-              <div className="band" />
-              <RelayCards relays={relays} />
-            </>
-          )}
+          {relays.length > 0 && <RelayCards relays={relays} />}
 
-          <div className="band" />
-          <section className={`wrap ${styles.sec}`} aria-labelledby="wallet-active">
-            <div className="section-h">
-              <h2 id="wallet-active" className="h2-event">쓸 수 있는 쿠폰{active.length > 0 && <span className={styles.count}>{active.length}</span>}</h2>
+          <section className={styles.sec} aria-labelledby="wallet-active">
+            <div className="sec-h">
+              <h2 id="wallet-active" className="plate plate-red">쓸 수 있는 쿠폰{active.length > 0 && <span className={styles.count}> {active.length}</span>}</h2>
             </div>
-            {active.length > 0 ? <ActiveCoupons coupons={active} /> : <p className="cap">{relays.length > 0 ? "위에서 어디서 쓸지 고르면 여기에 들어와요." : "지금 쓸 수 있는 쿠폰이 없어요."}</p>}
+            {active.length > 0 ? <ActiveCoupons coupons={active} /> : <p className={`hand hand-w ${styles.none}`}>{relays.length > 0 ? "위에서 어디서 쓸지 고르면 여기에 들어와요." : "지금 쓸 수 있는 쿠폰이 없어요."}</p>}
           </section>
 
-          {past.length > 0 && (
-            <>
-              <div className="band" />
-              <PastCoupons coupons={past} />
-            </>
-          )}
+          {past.length > 0 && <PastCoupons coupons={past} />}
         </>
       )}
 
-      <div className="band" />
-      <footer className={`wrap ${styles.sec} ${styles.foot}`}>
+      <footer className={`${styles.sec} ${styles.foot}`}>
         {!nothing && <PlaceButton stores={places} className="btn btn-naver btn-block">예약하기</PlaceButton>}
-        <p className="cap">{ruleLine(rules)} · {BRAND.condition}</p>
-        <LogoutButton className="btn btn-secondary btn-sm" />
+        <p className={`hand hand-w ${styles.rule}`}>{ruleLine(rules)} · {BRAND.condition}</p>
+        <LogoutButton className="link link-w" />
       </footer>
     </div>
   );

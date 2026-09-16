@@ -1,5 +1,4 @@
-import type { ReactNode } from "react";
-import { Chevron } from "@/components/ui/Chevron";
+import type { CSSProperties, ReactNode } from "react";
 import styles from "./GuideFaq.module.css";
 
 export type FaqItem = {
@@ -8,16 +7,16 @@ export type FaqItem = {
   a: ReactNode;
 };
 
-/** 자주 묻는 질문 — 스크립트 없이 여닫는 details 목록. 질문은 굵게, 답은 두 줄 안에. */
+/** 자주 묻는 질문 — 종이 카드 한 장씩(번갈아 1도 기울임), 스크립트 없이 여닫는 details. 질문은 Do Hyeon, 답은 본문 글꼴. */
 export function GuideFaq({ items }: { items: FaqItem[] }) {
   return (
     <ul className={styles.list}>
-      {items.map((it) => (
-        <li key={it.id} className={styles.item}>
+      {items.map((it, i) => (
+        <li key={it.id} className={`paper ${styles.item}`} style={{ "--r": `${i % 2 ? 1 : -1}deg` } as CSSProperties}>
           <details className={styles.details} id={it.id}>
             <summary className={styles.summary}>
-              <span className={styles.q}>{it.q}</span>
-              <Chevron className={styles.chev} />
+              <span className={`disp ${styles.q}`}>{it.q}</span>
+              <span className={styles.plus} aria-hidden="true" />
             </summary>
             <div className={styles.a}>{it.a}</div>
           </details>

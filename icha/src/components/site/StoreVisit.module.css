@@ -1,5 +1,5 @@
-.block { display: grid; gap: 14px; }
-.way { display: inline-flex; align-items: center; min-height: 48px; font-size: 13px; font-weight: 700; color: var(--naver); text-decoration: underline; text-underline-offset: 4px; }
-.map { overflow: hidden; border: 1px solid var(--line); }
-.map :global(.leaflet-container) { background: var(--bg-2); }
+.block { display: grid; gap: 18px; }
+.map { --r: -1deg; margin: 4px 2px; }
 .map :global(.leaflet-control-zoom) { display: none; }
+.paper { display: grid; gap: 10px; padding: 14px 16px 8px; }
+.way { justify-self: start; }

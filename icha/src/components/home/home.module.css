@@ -1,44 +1,32 @@
-/* 홈 — 사진과 가는 선으로만 나눈다. 카드·둥근 상자 없음. */
+/* 홈 — 보케 위에 붙인 조각·종이·스티커. 상자 없음. */
 
-/* 섹션 공통: 위에 작은 머리글, 아래에 큰 제목 */
-.sec { padding-block: 26px 22px; }
-.head { display: grid; gap: 6px; margin-bottom: 14px; }
-.kick { display: flex; align-items: center; gap: 9px; }
-.kick::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, var(--line-2), transparent); }
-.title { font-family: var(--font-display); font-weight: 400; font-size: 27px; line-height: 1.15; }
-.lead { font-size: 14px; line-height: 1.55; color: var(--fg-2); }
-
-/* ── 이렇게 받아요 — 어두운 가게 안 사진 위에 번호 네 줄 ── */
-.how { position: relative; padding-block: 28px 26px; }
-.howBg { object-fit: cover; opacity: 0.3; }
-.howLayer { position: absolute; inset: 0; z-index: 1; }
-.howBody { position: relative; z-index: 2; }
-.steps { margin-top: 4px; }
-.step { display: flex; align-items: flex-start; gap: 14px; padding-block: 13px; border-top: 1px solid var(--line); }
-.step:last-child { border-bottom: 1px solid var(--line); }
-.stepN { flex: none; width: 34px; font-family: var(--font-display); font-weight: 400; font-size: 22px; line-height: 1.2; color: transparent; -webkit-text-stroke: 1px var(--yellow); text-shadow: 0 0 16px rgba(255, 210, 63, 0.45); }
-.stepT { flex: 1; min-width: 0; font-size: 14.5px; line-height: 1.5; font-weight: 600; color: var(--fg); }
-.ruleCap { margin-top: 12px; font-size: 12.5px; letter-spacing: 0.06em; color: var(--fg-3); }
-
-/* ── 다녀온 뒤에 — 가게 이름과 작은 리뷰 링크 ── */
-.reviews { margin-top: 2px; }
-.revRow { display: flex; align-items: center; gap: 12px; min-height: 56px; padding-block: 10px; border-top: 1px solid var(--line); }
-.revRow:last-child { border-bottom: 1px solid var(--line); }
-.revName { flex: none; font-size: 15px; font-weight: 800; }
-.revBenefit { flex: 1; min-width: 0; font-size: 13px; color: var(--fg-2); }
-.revLink { flex: none; margin-left: auto; display: inline-flex; align-items: center; min-height: 44px; font-size: 13px; font-weight: 700; color: var(--store); text-decoration: underline; text-underline-offset: 4px; }
+/* ── 영수증 릴레이 EVENT ── */
+.how { padding: 26px var(--gutter) 8px; display: grid; gap: 22px; }
+.ribbon { width: 100%; }
+.steps { margin-top: 2px; }
+.noteRow { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 6px; margin-top: 2px; }
+.note { min-width: 0; }
+.noteIn { font-size: 24px; line-height: 1.1; padding: 12px 16px 14px; }
+.walletBtn { --r: 2deg; margin-top: 8px; }
+.pillRow { display: grid; justify-items: center; gap: 10px; margin-top: 4px; }
+.pill { width: 92%; max-width: 360px; }
+.rule { font-size: 22px; }
 
 /* ── 오시는 길 ── */
-.mapBox { margin-top: 12px; overflow: hidden; border: 1px solid var(--line); }
-.mapBox :global(.leaflet-control-zoom) { display: none; }
-.addrs { margin-top: 14px; }
-.addrRow { display: flex; align-items: center; gap: 12px; min-height: 56px; padding-block: 10px; border-top: 1px solid var(--line); }
-.addrRow:last-child { border-bottom: 1px solid var(--line); }
-.addrDot { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--store); box-shadow: 0 0 10px var(--store); }
+.dir { padding: 26px var(--gutter) 6px; display: grid; gap: 18px; }
+.dirHead { display: grid; gap: 12px; justify-items: start; }
+.dirLead { font-size: 24px; line-height: 1.1; }
+.mapWrap { position: relative; padding: 6px 2px 10px; }
+.mapWrap :global(.leaflet-control-zoom) { display: none; }
+.mapNote { position: absolute; right: -6px; bottom: -14px; width: 112px; z-index: 1001; }
+.addrPaper { margin-top: 6px; padding: 6px 16px; }
+.addrs { display: grid; }
+.addrRow { display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 8px 0; border-bottom: 1px dashed var(--paper-line); }
+.addrRow:last-child { border-bottom: 0; }
+.addrNo { flex: none; }
 .addrBody { flex: 1; min-width: 0; }
-.addrName { font-size: 14.5px; font-weight: 700; }
-.addrSub { margin-top: 2px; font-size: 12.5px; color: var(--fg-3); }
-.addrLink { flex: none; display: inline-flex; align-items: center; min-height: 44px; font-size: 13px; font-weight: 700; color: var(--fg-2); text-decoration: underline; text-underline-offset: 4px; }
-/* 네이버 검색 — 둥근 상자 대신 납작한 테두리 한 줄 */
-.search { margin-top: 16px; border-radius: 0; background: transparent; box-shadow: inset 0 0 0 1px var(--line-2); color: var(--fg); font-size: 14px; letter-spacing: 0.01em; }
-.search:active { background: #0f0d1a; }
+.addrName { font-family: var(--font-display); font-size: 18px; line-height: 1.2; }
+.addrSub { margin-top: 2px; font-size: 12.5px; color: var(--ink-2); }
+.addrLink { flex: none; }
+.searchRow { display: flex; align-items: center; gap: 14px; margin-top: 4px; }
+.searchHint { font-size: 22px; }

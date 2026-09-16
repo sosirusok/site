@@ -1,5 +1,6 @@
 /* 가운데 한 줄 — 화면을 채워서 푸터가 위로 올라오지 않게 */
-.wrap { display: grid; justify-items: center; align-content: center; text-align: center; gap: 6px; padding-block: 48px; min-height: calc(100dvh - var(--header-h) - var(--tabbar-h)); }
-.btn { margin-top: 16px; min-width: 160px; }
-.btns { display: flex; gap: 8px; margin-top: 16px; }
-.btns > * { min-width: 120px; }
+.wrap { display: grid; justify-items: center; align-content: center; text-align: center; gap: 14px; padding: 48px var(--gutter); min-height: calc(100dvh - var(--header-h) - var(--tabbar-h)); }
+.h1 { font-size: 26px; padding: 12px 18px 10px; }
+.sub { font-size: 23px; }
+.btn { margin-top: 12px; min-width: 170px; }
+.retry { margin-top: 2px; }

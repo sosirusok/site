@@ -1,5 +1,6 @@
-/* 상단 바 — 사진 위에 뜬다. 판이 아니라 위에서 내려오는 그늘 한 겹. */
-.header { top: 0; z-index: 40; height: calc(var(--header-h) + 14px); display: flex; align-items: flex-start; justify-content: space-between; padding: 12px var(--gutter) 0; background: linear-gradient(to bottom, rgba(5, 4, 10, 0.94) 0%, rgba(5, 4, 10, 0.82) 46%, rgba(5, 4, 10, 0) 100%); pointer-events: none; }
-.header > * { pointer-events: auto; }
-.brand { font-family: var(--font-display); font-size: 21px; letter-spacing: 0; color: var(--yellow); text-shadow: 0 0 2px rgba(255, 255, 255, 0.5), 0 0 12px rgba(255, 210, 63, 0.6), 0 0 30px rgba(255, 179, 3, 0.35); padding: 4px 0 12px; }
-.me { font-size: 13px; font-weight: 700; color: var(--fg-2); padding: 9px 0 12px; font-variant-numeric: tabular-nums; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9); }
+/* 맨 위 한 줄 — 투명. 제목 조각은 작은 스티커, 로그인은 종이 꼬리표 */
+.header { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: var(--header-h); padding: 10px var(--gutter) 4px; }
+.brand { display: inline-flex; align-items: center; min-height: 44px; }
+.brandImg { width: auto; height: 26px; border-radius: 3px; box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.5); transform: rotate(-2deg); }
+.me { display: inline-flex; align-items: center; min-height: 44px; }
+.meTag { display: inline-flex; align-items: center; min-height: 34px; padding: 0 12px; background: var(--cream); color: var(--ink); font-family: var(--font-display); font-size: 15px; line-height: 1; border: 2px solid #111; border-radius: 4px; box-shadow: 2px 2px 0 #000; transform: rotate(2deg); font-variant-numeric: tabular-nums; }

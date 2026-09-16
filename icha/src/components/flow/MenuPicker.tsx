@@ -1,10 +1,11 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useId, useState } from "react";
-import { Art } from "@/components/art/Art";
+import { useId, useState, type CSSProperties } from "react";
+import { Piece, plateOf } from "@/components/site/Poster";
 import { formatWon } from "@/lib/config";
 import { fmtMD } from "./format";
+import { PaperTicket } from "./PaperTicket";
 import type { ApiFail, IssueApiOk } from "./types";
 import styles from "./MenuPicker.module.css";
 
@@ -35,16 +36,17 @@ type Selected = { store: PickStore; item: PickItem };
 
 function Thumb({ item }: { item: PickItem }) {
   if (!item.image) return null;
-  return <Image src={item.image.src} alt="" width={56} height={56} sizes="56px" className="thumb" unoptimized={!item.image.local} />;
+  const cut = item.image.local && /\.png$/i.test(item.image.src);
+  return <Image src={item.image.src} alt="" width={56} height={56} sizes="56px" className={cut ? styles.thumbCut : styles.thumb} unoptimized={!item.image.local} />;
 }
 
-/** 어디서 받을지 고르기 — 매장 네온 카드 두 장, 품목 라디오 행, 아래 고정 버튼. 받고 나면 티켓과 예약 버튼. */
+/** 어디서 받을지 고르기 — 가게마다 종이 한 장(포스터 간판 조각 + 품목 라디오 + 초록 예약하기 하나), 아래 고정 노란 스티커. 받고 나면 종이 쿠폰. */
 export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: string; stores: PickStore[]; couponValidDays: number }) {
   const id = useId();
   const [selected, setSelected] = useState<Selected | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [issued, setIssued] = useState<{ store: PickStore; coupon: IssueApiOk["coupon"] } | null>(null);
+  const [issued, setIssued] = useState<{ store: PickStore; item: PickItem; coupon: IssueApiOk["coupon"] } | null>(null);
 
   function pick(store: PickStore, item: PickItem) {
     setError(null);
@@ -75,7 +77,7 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
         setBusy(false);
         return;
       }
-      setIssued({ store: selected.store, coupon: data.coupon });
+      setIssued({ store: selected.store, item: selected.item, coupon: data.coupon });
       window.scrollTo(0, 0);
     } catch {
       setError("연결이 끊겼어요. 다시 눌러 주세요.");
@@ -83,17 +85,18 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
     }
   }
 
-  /* 발급 완료 — 티켓 한 장, 제목 하나, 쿠폰 보기 + 그 매장 예약하기 */
+  /* 발급 완료 — 종이 쿠폰 한 장, 손글씨 한 줄, 쿠폰 보기(노랑) + 그 매장 예약하기(초록 하나) */
   if (issued) {
-    const { store, coupon } = issued;
+    const { store, item, coupon } = issued;
     return (
       <div className={styles.issued} aria-live="polite" data-store={store.id}>
-        <Art name={`coupon-${store.id}`} alt={`${store.shortName} ${coupon.menuName} 쿠폰`} sizes="(min-width: 480px) 440px, 92vw" className={styles.issuedTicket} />
-        <h2 className="h1-event">쿠폰이 들어왔어요</h2>
-        <p className="cap">{store.shortName} · {coupon.menuName} · {fmtMD(coupon.expiresAt)}까지</p>
+        <span className={`stamp stamp-green ${styles.issuedStamp}`}>발급 완료</span>
+        <PaperTicket t={{ storeId: store.id, storeName: store.shortName, menuName: coupon.menuName, code: coupon.code, expiresAt: coupon.expiresAt, image: item.image }} size="lg" rotate={-1.5} />
+        <h2 className={`hand hand-w ${styles.issuedTitle}`}>쿠폰이 들어왔어요!</h2>
+        <p className={`hand hand-w ${styles.issuedSub}`}>{store.shortName} · {coupon.menuName} · {fmtMD(coupon.expiresAt)}까지</p>
         <div className={styles.issuedBtns}>
           <Link href={`/coupons/${coupon.id}`} className="btn btn-block">쿠폰 보기</Link>
-          {store.placeBooking && <a href={store.placeBooking} target="_blank" rel="noreferrer" className="btn btn-naver btn-block">{store.shortName} 예약하기</a>}
+          {store.placeBooking && <a href={store.placeBooking} target="_blank" rel="noreferrer" className="btn btn-naver btn-block btn-r">{store.shortName} 예약하기</a>}
         </div>
       </div>
     );
@@ -102,18 +105,17 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
   return (
     <div className={styles.root}>
       <div className={styles.cards} role="radiogroup" aria-label="쿠폰을 받을 매장">
-        {stores.map((s) => {
+        {stores.map((s, i) => {
           const on = selected?.store.id === s.id;
           const none = s.items.length === 0;
           return (
-            <div key={s.id} className={`card-neon ${styles.card}`} data-on={on || undefined} data-store={s.id}>
+            <div key={s.id} className={`paper ${styles.card}`} data-on={on || undefined} data-store={s.id} style={{ "--r": `${i % 2 ? 1 : -1}deg` } as CSSProperties}>
               <div className={styles.cardHead}>
-                <span className="tag tag-neon">{s.course.n}차</span>
-                <p className={`h2-event neon ${styles.cardName}`}>{s.shortName}</p>
+                <Piece name={plateOf(s.id)} rotate={i % 2 ? 2 : -2} sizes="220px" className={styles.plate} />
+                <span className="sr-only">{s.course.n}차 {s.shortName}</span>
               </div>
-              <p className={`cap ${styles.cardLine}`}>{s.course.line}</p>
               {none ? (
-                <p className={`cap ${styles.none}`}>어떤 혜택을 드릴지 정하고 있어요. 다른 매장을 골라 주세요.</p>
+                <p className={`hand ${styles.none}`}>어떤 혜택을 드릴지 정하고 있어요. 다른 매장을 골라 주세요.</p>
               ) : (
                 <ul className={styles.items}>
                   {s.items.map((it) => {
@@ -135,17 +137,17 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
                 </ul>
               )}
               {s.placeBooking && (
-                <a className={`btn btn-naver btn-sm btn-block ${styles.book}`} href={s.placeBooking} target="_blank" rel="noreferrer">예약하기<span className="sr-only"> — {s.shortName}</span></a>
+                <a className={`btn btn-naver btn-sm ${styles.book}`} href={s.placeBooking} target="_blank" rel="noreferrer">예약하기<span className="sr-only"> — {s.shortName}</span></a>
               )}
             </div>
           );
         })}
       </div>
-      <p className="cap">쿠폰 하나에 한 곳이에요. 받은 뒤에는 바꿀 수 없고, {couponValidDays}일 동안 써요.</p>
+      <p className={`hand hand-w ${styles.note}`}>쿠폰 하나에 한 곳이에요. 받은 뒤에는 바꿀 수 없고, {couponValidDays}일 동안 써요.</p>
 
-      {/* 하단 고정 버튼(탭 위) */}
+      {/* 하단 고정 스티커(탭 위) */}
       <div className={`fixed-col sticky-cta ${styles.sticky}`}>
-        {error && <p id={`${id}-err`} className="error" role="alert">{error}</p>}
+        {error && <p id={`${id}-err`} className={`error ${styles.err}`} role="alert">{error}</p>}
         <button type="button" className="btn btn-block" onClick={issue} disabled={busy} aria-describedby={error ? `${id}-err` : undefined}>
           {busy ? "받는 중" : selected ? `${selected.store.shortName}에서 받기` : "이 쿠폰 받기"}
         </button>

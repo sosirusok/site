@@ -1,30 +1,25 @@
-/* 가게 화면 — 사진과 가는 선. 상자는 쓰지 않는다. */
+/* 가게 화면 — 보케 위에 붙인 조각·종이. 섹션 제목은 색 간판, 옆에 손글씨 한 줄 */
 .page { padding-bottom: 8px; }
+.sec { padding: 26px var(--gutter) 6px; }
+.anchor { scroll-margin-top: 8px; }
+.lead { font-size: 22px; line-height: 1.1; padding-bottom: 2px; }
 
-/* 오늘 소식 한 줄 */
-.notice { display: flex; align-items: baseline; gap: 8px; padding: 12px var(--gutter); background: #000; border-block: 1px solid var(--line); font-size: 13.5px; line-height: 1.5; color: var(--fg-2); }
-.noticeDay { flex: none; font-weight: 800; color: var(--yellow); }
+/* 오늘 소식 — 찢은 종이 */
+.notice { margin: 16px var(--gutter) 0; max-width: 92%; }
+.noticeIn { font-size: 22px; padding: 10px 16px 12px; }
+.noticeDay { color: var(--red); font-weight: 400; }
 
-/* 섹션 공통 */
-.sec { padding-block: 26px 20px; }
-.secTight { padding-block: 22px 12px; }
-.head { display: grid; gap: 6px; margin-bottom: 14px; }
-.kick { display: flex; align-items: center; gap: 9px; }
-.kick::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, var(--line-2), transparent); }
-.title { font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: 1.15; }
-.anchor { scroll-margin-top: calc(var(--header-h) + 8px); }
-
-/* 특별 혜택 — 그 집 색 가는 선 위에 품목 줄 */
-.gifts { display: grid; }
-.giftRow { display: flex; align-items: center; gap: 12px; padding-block: 12px; border-top: 1px solid var(--line); }
-.giftRow:last-child { border-bottom: 1px solid var(--line); }
-/* 메뉴 사진은 정사각 56px — 전역 .thumb 크기는 목록 행 안에서만 걸린다 */
-.giftRow :global(.thumb) { flex: none; width: 56px; height: 56px; object-fit: cover; background: #08070f; }
+/* 특별 혜택 — 포스터 혜택 조각 위에 찢은 종이가 겹친다 */
+.giftRow { display: grid; gap: 0; }
+.benefit { width: 66%; max-width: 250px; z-index: 2; }
+.giftScrap { margin: -14px 0 0 8%; }
+.giftIn { display: grid; gap: 10px; padding: 22px 18px 16px; }
+.gift { display: flex; align-items: center; gap: 12px; }
 .giftBody { flex: 1; min-width: 0; }
-.giftName { font-size: 15px; font-weight: 700; }
-.giftDesc { margin-top: 3px; font-size: 12.5px; line-height: 1.5; color: var(--fg-3); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
-.giftPrice { flex: none; display: inline-flex; flex-direction: column; align-items: flex-end; gap: 3px; font-size: 12.5px; }
-.giftFree { font-weight: 800; color: var(--accent); }
-.giftEmpty { font-size: 14px; color: var(--fg-3); padding-block: 10px; }
-.giftRule { margin-top: 12px; display: grid; gap: 3px; font-size: 12.5px; line-height: 1.5; color: var(--fg-3); }
-.giftPick { margin-top: 10px; font-size: 13px; font-weight: 700; color: var(--yellow); }
+.giftName { font-size: 16px; font-weight: 700; line-height: 1.35; }
+.giftDesc { margin-top: 2px; font-size: 12.5px; line-height: 1.45; color: var(--ink-2); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+.giftPrice { display: flex; align-items: center; gap: 12px; margin-top: 4px; font-size: 14px; }
+.giftFree { font-size: 20px; padding: 4px 8px 3px; }
+.giftEmpty { font-size: 22px; color: var(--ink-2); }
+.giftPick { font-size: 22px; color: var(--red); }
+.giftRule { font-size: 12.5px; line-height: 1.5; color: var(--ink-2); border-top: 1px dashed var(--paper-line); padding-top: 8px; }

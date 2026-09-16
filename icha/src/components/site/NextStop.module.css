@@ -1,19 +1,6 @@
-/* 다음 집 — 그 집 밤 사진 한 장, 네온 간판, 초록 버튼 하나 */
-.sec { padding-block: 22px 8px; }
-.head { display: grid; gap: 6px; margin-bottom: 12px; }
-.kick { display: flex; align-items: center; gap: 9px; }
-.kick::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, var(--line-2), transparent); }
-.title { font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: 1.15; }
-
-.shot { display: block; position: relative; width: 100%; aspect-ratio: 3 / 2; overflow: hidden; background: #05040a; }
-.img { object-fit: cover; }
-.layer { position: absolute; inset: 0; z-index: 1; }
-.signWrap { position: absolute; z-index: 2; left: var(--gutter); right: var(--gutter); bottom: 14px; }
-.sign { width: 72%; max-width: 300px; height: auto; filter: drop-shadow(0 0 16px color-mix(in srgb, var(--store) 45%, transparent)) drop-shadow(0 6px 14px rgba(0, 0, 0, 0.6)); }
-
-.under { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px var(--gutter) 4px; }
-.line { flex: 1 1 auto; min-width: 0; font-size: 13px; line-height: 1.45; color: var(--fg-2); }
-.lineB { display: block; font-weight: 700; color: var(--fg); }
-.cta { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px var(--gutter) 0; }
-.cta :global(.btn) { flex: 0 0 auto; min-width: 180px; }
-.way { flex: 1 1 auto; display: inline-flex; align-items: center; justify-content: flex-end; min-height: 44px; font-size: 12.5px; font-weight: 600; color: var(--fg-3); text-decoration: underline; text-underline-offset: 4px; }
+/* 다음 집 — 손글씨 메모 + 다음 가게 간판 조각(작게, 오른쪽) */
+.sec { padding: 26px var(--gutter) 8px; display: grid; gap: 10px; justify-items: end; }
+.note { display: flex; align-items: center; gap: 6px; justify-self: start; font-size: 25px; line-height: 1.1; transform: rotate(-2deg); }
+.arrow { flex: none; transform: rotate(20deg); }
+.plateLink { display: block; width: 66%; max-width: 250px; }
+.plate { width: 100%; }

@@ -1,4 +1,0 @@
-.btn { display: inline-block; max-width: 100%; border-radius: 12px; line-height: 0; -webkit-tap-highlight-color: transparent; user-select: none; }
-.btn img { width: 100%; height: auto; }
-.btn:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; }
-.btn[aria-disabled="true"] { pointer-events: none; }
