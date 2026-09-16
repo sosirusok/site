@@ -1,6 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="10" fill="#f3eee4"/>
-  <circle cx="32" cy="32" r="24" fill="none" stroke="#b8312a" stroke-width="3.5"/>
-  <circle cx="32" cy="32" r="19.5" fill="none" stroke="#b8312a" stroke-width="1.4"/>
-  <text x="32" y="41" text-anchor="middle" font-family="'Noto Serif KR','Apple SD Gothic Neo',serif" font-weight="900" font-size="24" fill="#b8312a">二次</text>
+  <!-- 알콜부시기 앱 아이콘 — kit/icon.png 과 같은 표시: 어두운 둥근 사각형 위 노란 네온 맥주잔 -->
+  <rect width="64" height="64" rx="12" fill="#141221"/>
+  <rect x="2" y="2" width="60" height="60" rx="10" fill="none" stroke="#2e2a44" stroke-width="1"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 27v13a6 6 0 0 0 6 6h8a6 6 0 0 0 6-6V27" stroke="#ffd400" stroke-width="4.2"/>
+    <path d="M40 30h3.5a4.5 4.5 0 0 1 0 9H40" stroke="#ffd400" stroke-width="4.2"/>
+    <path d="M18.5 27a5 5 0 0 1 2.5-9.5 6 6 0 0 1 11-3 5.5 5.5 0 0 1 8.5 3.5 4.5 4.5 0 0 1 1.5 9" stroke="#ffd400" stroke-width="4.2"/>
+    <path d="M20 27v13a6 6 0 0 0 6 6h8a6 6 0 0 0 6-6V27" stroke="#fff5b8" stroke-width="1.4"/>
+    <path d="M40 30h3.5a4.5 4.5 0 0 1 0 9H40" stroke="#fff5b8" stroke-width="1.4"/>
+    <path d="M18.5 27a5 5 0 0 1 2.5-9.5 6 6 0 0 1 11-3 5.5 5.5 0 0 1 8.5 3.5 4.5 4.5 0 0 1 1.5 9" stroke="#fff5b8" stroke-width="1.4"/>
+  </g>
 </svg>

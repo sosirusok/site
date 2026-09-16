@@ -1,0 +1,42 @@
+{
+ "empty-wallet": {
+  "src": "/images/kit/empty-wallet.png",
+  "w": 360,
+  "h": 360
+ },
+ "icon": {
+  "src": "/images/kit/icon.png",
+  "w": 512,
+  "h": 512
+ },
+ "notfound": {
+  "src": "/images/kit/notfound.png",
+  "w": 360,
+  "h": 360
+ },
+ "share": {
+  "src": "/images/kit/share.jpg",
+  "w": 1200,
+  "h": 630
+ },
+ "sign-wareureu": {
+  "src": "/images/kit/sign-wareureu.png",
+  "w": 440,
+  "h": 100
+ },
+ "ticket-joseon": {
+  "src": "/images/kit/ticket-joseon.png",
+  "w": 880,
+  "h": 290
+ },
+ "ticket-tokyo": {
+  "src": "/images/kit/ticket-tokyo.png",
+  "w": 880,
+  "h": 290
+ },
+ "ticket-wareureu": {
+  "src": "/images/kit/ticket-wareureu.png",
+  "w": 880,
+  "h": 290
+ }
+}
