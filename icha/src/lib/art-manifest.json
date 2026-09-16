@@ -708,5 +708,20 @@
   "src": "/art/upload-area-2.png",
   "width": 900,
   "height": 982
+ },
+ "envelope": {
+  "src": "/art/envelope.png",
+  "width": 800,
+  "height": 298
+ },
+ "stamp-used": {
+  "src": "/art/stamp-used.png",
+  "width": 279,
+  "height": 116
+ },
+ "confirm-frame": {
+  "src": "/art/confirm-frame.png",
+  "width": 640,
+  "height": 587
  }
 }

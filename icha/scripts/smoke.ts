@@ -131,7 +131,7 @@ async function main() {
     insertReceipt(q, { memberId: m.id, storeId: "joseon", status: "approved", reasons: [], image, imageMime: "image/jpeg", sha256: "f".repeat(64), dhash: "0123456789abcdac", ocr: null, receiptAt: now, amount: 20000, approvalNo: "22222222", cardLast4: null }),
   );
   await query(`update receipts set created_at=now() - interval '40 days' where id=$1`, [oldRid]);
-  await assert.rejects(issueSideCoupon({ memberId: m.id, receiptId: oldRid, menuItemId: id1 }), /기간이 지났습니다/);
+  await assert.rejects(issueSideCoupon({ memberId: m.id, receiptId: oldRid, menuItemId: id1 }), /기간이 지났어요/);
 
   // 설정
   const rules = await getRules();

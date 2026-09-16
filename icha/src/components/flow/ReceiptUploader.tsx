@@ -1,6 +1,10 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useId, useRef, useState, type ChangeEvent } from "react";
+import { Art } from "@/components/art/Art";
+import { ArtButton } from "@/components/art/ArtButton";
+import { Fx } from "@/components/art/Fx";
+import { formatWon } from "@/lib/config";
 import { ReceiptResult } from "./ReceiptResult";
 import type { ApiFail, ReceiptApiOk, StoreLite, UploadRules } from "./types";
 import styles from "./ReceiptUploader.module.css";
@@ -12,19 +16,15 @@ type Phase =
   | { kind: "done"; file: File; url: string; result: ReceiptApiOk }
   | { kind: "error"; file: File; url: string; message: string; status: number };
 
-/** 서버가 처리하는 순서 그대로. 접수(전송)만 실제 진행을 알 수 있고 나머지는 응답이 올 때까지 순서대로 넘어간다. */
-const STEPS = ["접수", "판독", "매장 대조", "중복 확인"] as const;
+export type RetryMode = "camera" | "album" | null;
+
+/** 서버가 하는 일 순서. 응답이 올 때까지 이 세 줄을 돌려 가며 보여 준다. */
+const STEPS = ["영수증 읽는 중", "매장 대조 중", "중복 확인 중"] as const;
 const MAX_BYTES = 15 * 1024 * 1024;
 /** 결과가 너무 빨리 튀어나오지 않도록 최소 표시 시간 */
-const MIN_WAIT_MS = 1200;
+const MIN_WAIT_MS = 1400;
 /** 브라우저에서 미리 줄여 보내는 긴 변 크기(서버 규격과 같음) */
 const MAX_EDGE = 1600;
-
-function fileLabel(f: File): string {
-  const mb = f.size / (1024 * 1024);
-  const name = f.name.length > 28 ? `${f.name.slice(0, 26)}…` : f.name;
-  return `${name} · ${mb >= 1 ? `${mb.toFixed(1)}MB` : `${Math.max(1, Math.round(f.size / 1024))}KB`}`;
-}
 
 /** 사진을 브라우저에서 JPEG 로 다시 인코딩한다(HEIC 변환·용량 축소). 실패하면 원본을 그대로 보낸다. */
 async function toJpeg(file: File): Promise<File> {
@@ -48,13 +48,11 @@ async function toJpeg(file: File): Promise<File> {
   }
 }
 
-/** 전송 완료 시점을 알 수 있도록 XMLHttpRequest 로 보낸다 */
-function post(fd: FormData, onUploaded: () => void): Promise<{ status: number; data: ReceiptApiOk | ApiFail | null }> {
+function post(fd: FormData): Promise<{ status: number; data: ReceiptApiOk | ApiFail | null }> {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "/api/receipts");
     xhr.responseType = "json";
-    xhr.upload.onload = () => onUploaded();
     xhr.onload = () => resolve({ status: xhr.status, data: (xhr.response as ReceiptApiOk | ApiFail | null) ?? null });
     xhr.onerror = () => reject(new Error("network"));
     xhr.onabort = () => reject(new Error("abort"));
@@ -62,14 +60,17 @@ function post(fd: FormData, onUploaded: () => void): Promise<{ status: number; d
   });
 }
 
-export function ReceiptUploader({ rules, stores }: { rules: UploadRules; stores: StoreLite[] }) {
+export function ReceiptUploader({ rules, stores, totalSpend }: { rules: UploadRules; stores: StoreLite[]; totalSpend: number }) {
   const id = useId();
   const [phase, setPhase] = useState<Phase>({ kind: "idle" });
   const [pickError, setPickError] = useState<string | null>(null);
   const [previewBroken, setPreviewBroken] = useState(false);
   const [step, setStep] = useState(0);
+  /** 이 화면에서 승인된 금액을 더해 가며 '누적 인정 금액'을 보여 준다 */
+  const [spent, setSpent] = useState(totalSpend);
   const urlRef = useRef<string | null>(null);
-  const timersRef = useRef<number[]>([]);
+  const camRef = useRef<HTMLInputElement>(null);
+  const albumRef = useRef<HTMLInputElement>(null);
 
   // 이전 미리보기 URL 정리
   useEffect(() => {
@@ -77,23 +78,23 @@ export function ReceiptUploader({ rules, stores }: { rules: UploadRules; stores:
     if (urlRef.current && urlRef.current !== url) URL.revokeObjectURL(urlRef.current);
     urlRef.current = url;
   }, [phase]);
-  useEffect(() => () => {
-    if (urlRef.current) URL.revokeObjectURL(urlRef.current);
-    timersRef.current.forEach((t) => clearTimeout(t));
-  }, []);
+  useEffect(() => () => { if (urlRef.current) URL.revokeObjectURL(urlRef.current); }, []);
 
-  function clearTimers() {
-    timersRef.current.forEach((t) => clearTimeout(t));
-    timersRef.current = [];
-  }
+  // 올리는 동안 진행 줄을 순환시킨다
+  useEffect(() => {
+    if (phase.kind !== "uploading") return;
+    setStep(0);
+    const t = window.setInterval(() => setStep((s) => (s + 1) % STEPS.length), 1600);
+    return () => window.clearInterval(t);
+  }, [phase.kind]);
 
   function onPick(e: ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
     e.target.value = "";
     if (!f) return;
     const looksImage = f.type.startsWith("image/") || /\.(heic|heif|jpe?g|png|webp)$/i.test(f.name);
-    if (!looksImage) { setPickError("사진 파일만 올릴 수 있습니다."); return; }
-    if (f.size > MAX_BYTES) { setPickError("사진 용량이 너무 큽니다. 15MB 이하 사진을 올려 주십시오."); return; }
+    if (!looksImage) { setPickError("사진 파일만 올릴 수 있어요."); return; }
+    if (f.size > MAX_BYTES) { setPickError("사진 용량이 너무 커요. 15MB 이하 사진으로 올려 주세요."); return; }
     setPickError(null);
     setPreviewBroken(false);
     setPhase({ kind: "preview", file: f, url: URL.createObjectURL(f) });
@@ -103,8 +104,6 @@ export function ReceiptUploader({ rules, stores }: { rules: UploadRules; stores:
     if (phase.kind !== "preview" && phase.kind !== "error") return;
     const { file, url } = phase;
     const startedAt = Date.now();
-    clearTimers();
-    setStep(0);
     setPhase({ kind: "uploading", file, url });
 
     const sendFile = await toJpeg(file);
@@ -112,125 +111,148 @@ export function ReceiptUploader({ rules, stores }: { rules: UploadRules; stores:
     fd.append("file", sendFile, sendFile.name || "receipt.jpg");
 
     let res: { status: number; data: ReceiptApiOk | ApiFail | null } | null = null;
-    let uploaded = false;
-    const onUploaded = () => {
-      if (uploaded) return;
-      uploaded = true;
-      // 전송이 끝나면 서버 처리 순서대로 넘어간다(응답이 오면 전부 완료 처리)
-      setStep(1);
-      timersRef.current.push(window.setTimeout(() => setStep(2), 2500));
-      timersRef.current.push(window.setTimeout(() => setStep(3), 4500));
-    };
-    // 일부 환경에서는 전송 완료 이벤트가 오지 않는다 — 줄인 사진은 몇 초면 올라가므로 그 뒤에는 다음 단계로 본다
-    timersRef.current.push(window.setTimeout(onUploaded, 3000));
     try {
-      res = await post(fd, onUploaded);
+      res = await post(fd);
     } catch {
       res = null;
     }
-    clearTimers();
     const remain = MIN_WAIT_MS - (Date.now() - startedAt);
     if (remain > 0) await new Promise((r) => setTimeout(r, remain));
 
     if (!res) {
-      setPhase({ kind: "error", file, url, message: "연결이 끊겨 사진을 보내지 못했습니다. 통신 상태를 확인한 뒤 다시 시도해 주십시오.", status: 0 });
+      setPhase({ kind: "error", file, url, message: "연결이 끊겨서 사진을 보내지 못했어요. 통신 상태를 확인한 뒤 다시 보내 주세요.", status: 0 });
       return;
     }
     const { status, data } = res;
     if (status < 200 || status >= 300 || !data || !data.ok) {
       const serverMsg = data && !data.ok ? data.error : null;
       const message =
-        status === 401 ? "로그인이 만료되었습니다. 다시 로그인하면 이어서 진행할 수 있습니다."
-        : status === 429 ? serverMsg || "요청이 너무 많습니다. 잠시 후 다시 시도해 주십시오."
-        : status === 413 ? "사진 용량이 너무 큽니다. 다른 사진으로 다시 시도해 주십시오."
-        : serverMsg || "접수 중 오류가 발생했습니다. 잠시 후 다시 시도해 주십시오.";
+        status === 401 ? "로그인이 풀렸어요. 다시 로그인하면 이어서 올릴 수 있어요."
+        : status === 429 ? "지금 요청이 너무 잦아요. 잠시 뒤에 다시 올려 주세요."
+        : status === 413 || /용량/.test(serverMsg ?? "") ? "사진 용량이 너무 커요. 다른 사진으로 다시 올려 주세요."
+        : serverMsg || "접수 중에 문제가 생겼어요. 잠시 뒤에 다시 올려 주세요.";
       setPhase({ kind: "error", file, url, message, status });
       return;
     }
-    setStep(STEPS.length);
+    if (data.receipt.status === "approved" && data.receipt.amount) setSpent((s) => s + (data.receipt.amount ?? 0));
     setPhase({ kind: "done", file, url, result: data });
   }
 
   function reset() {
-    clearTimers();
     setStep(0);
     setPhase({ kind: "idle" });
   }
 
+  /** 결과 화면에서 '다시 찍기' — 처음으로 돌아간 뒤 바로 카메라/앨범을 연다 */
+  function retry(mode: RetryMode) {
+    reset();
+    if (mode) window.requestAnimationFrame(() => (mode === "camera" ? camRef : albumRef).current?.click());
+  }
+
+  const minAmountText = rules.minAmount > 0 ? `${formatWon(rules.minAmount)} 이상 결제한 영수증만 되고, ` : "";
+
   return (
     <div className={styles.root} data-phase={phase.kind}>
+      {/* 파일 입력은 어느 단계에서든 열 수 있게 항상 둔다 */}
+      <input ref={camRef} id={`${id}-camera`} className="sr-only" type="file" accept="image/*" capture="environment" onChange={onPick} tabIndex={-1} aria-hidden="true" />
+      <input ref={albumRef} id={`${id}-album`} className="sr-only" type="file" accept="image/*" onChange={onPick} />
+
       {phase.kind === "idle" && (
-        <div className={styles.pickers}>
-          <label className="btn btn-red btn-lg btn-block" htmlFor={`${id}-camera`}>
-            카메라로 촬영
-            <input id={`${id}-camera`} className="sr-only" type="file" accept="image/*" capture="environment" onChange={onPick} />
+        <>
+          <label className={`panel ${styles.drop}`} htmlFor={`${id}-album`}>
+            <span className={styles.dropArt} aria-hidden="true">
+              <Art name="upload-area-1" sizes="(min-width: 760px) 200px, 42vw" priority />
+            </span>
+            <span className={styles.dropText}>
+              <b>여기를 눌러</b> 영수증 사진을 올려 주세요.
+              <span className={styles.dropSub}>계산하고 받은 종이 영수증 한 장이면 돼요.</span>
+            </span>
           </label>
-          <label className="btn btn-outline btn-lg btn-block" htmlFor={`${id}-album`}>
-            앨범에서 선택
-            <input id={`${id}-album`} className="sr-only" type="file" accept="image/*" onChange={onPick} />
-          </label>
-          {pickError && <p className="error" role="alert">{pickError}</p>}
-          <div className={styles.hints}>
-            <p className={styles.hintsTitle}>촬영 안내</p>
-            <ul>
-              <li>영수증을 평평하게 펴고 네 귀퉁이가 모두 나오도록 촬영합니다.</li>
-              <li>상호, 결제 일시, 금액, 승인번호가 또렷해야 자동으로 판독됩니다.</li>
-              <li>화면 캡처, 재출력본, 주문서(빌지)는 인정하지 않습니다.</li>
-            </ul>
+          <div className={styles.buttons}>
+            <ArtButton kind="shoot" width={380} onClick={() => camRef.current?.click()} />
+            <ArtButton kind="pick-photo" width={380} onClick={() => albumRef.current?.click()} />
           </div>
-        </div>
+          {pickError && <p className="error" role="alert">{pickError}</p>}
+
+          <section className={styles.guide} aria-labelledby={`${id}-guide`}>
+            <h2 id={`${id}-guide`} className="h3">이렇게 찍어 주세요</h2>
+            <ul className={styles.guides}>
+              <li>
+                <Art name="shoot-guide-1" alt="영수증 전체가 틀 안에 들어온 좋은 예" sizes="30vw" />
+                <span className={styles.guideOk}>전체가 보이게</span>
+              </li>
+              <li>
+                <Art name="shoot-guide-2" alt="위가 잘린 예" sizes="30vw" />
+                <span className={styles.guideNo}>잘리지 않게</span>
+              </li>
+              <li>
+                <Art name="shoot-guide-3" alt="글자가 흐린 예" sizes="30vw" />
+                <span className={styles.guideNo}>흔들리지 않게</span>
+              </li>
+            </ul>
+            <p className={styles.rules}>
+              결제하고 {rules.receiptValidHours}시간 안에 올려 주세요. {minAmountText}하루 {rules.dailyLimitPerMember}장까지 받아요. 영수증을 받은 집에서는 못 받아요.
+            </p>
+          </section>
+        </>
       )}
 
       {phase.kind === "preview" && (
         <div className={styles.preview}>
-          <figure className={styles.frame}>
+          <figure className={`panel ${styles.frame}`}>
             {previewBroken ? (
-              <figcaption className={styles.frameFallback}>이 형식은 미리보기를 지원하지 않습니다. 인증은 그대로 진행할 수 있습니다.</figcaption>
+              <figcaption className={styles.frameFallback}>이 형식은 미리보기가 안 돼요. 올리는 건 그대로 할 수 있어요.</figcaption>
             ) : (
               /* 방금 고른 로컬 파일 미리보기 — 정적 자산이 아니므로 next/image 를 쓰지 않는다 */
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={phase.url} alt="올릴 영수증 사진 미리보기" onError={() => setPreviewBroken(true)} />
+              <img src={phase.url} alt="올릴 영수증 사진" onError={() => setPreviewBroken(true)} />
             )}
           </figure>
-          <p className={`mono ${styles.fileLabel}`}>{fileLabel(phase.file)}</p>
+          <p className={styles.previewText}>상호, 결제 시각, 금액, 승인번호가 보이면 돼요.</p>
           <div className={styles.actions}>
-            <button type="button" className="btn btn-red btn-lg btn-block" onClick={submit}>이 사진으로 인증</button>
-            <button type="button" className="btn btn-outline btn-block" onClick={reset}>다른 사진 선택</button>
+            <button type="button" className="btn btn-lg btn-block" onClick={submit}>이 사진으로 올릴게요</button>
+            <button type="button" className="btn btn-outline btn-block" onClick={reset}>다른 사진 고르기</button>
           </div>
         </div>
       )}
 
       {phase.kind === "uploading" && (
         <div className={styles.progress} role="status" aria-live="polite">
-          <p className={styles.progressTitle}>영수증을 확인하고 있습니다.</p>
+          <div className={styles.progressArt} aria-hidden="true">
+            <Art name="status-checking" sizes="(min-width: 760px) 200px, 45vw" />
+          </div>
+          <div className={styles.progressHead}>
+            <Fx seq="spin" loop width={56} />
+            <p className="h3">영수증을 확인하고 있어요</p>
+          </div>
           <ol className={styles.steps}>
-            {STEPS.map((label, i) => {
-              const state = i < step ? "done" : i === step ? "now" : "todo";
-              return (
-                <li key={label} className={styles.step} data-state={state}>
-                  <span className={styles.stepName}>{i + 1}. {label}</span>
-                  <span className={styles.stepState}>{state === "done" ? "완료" : state === "now" ? "진행 중" : "대기"}</span>
-                </li>
-              );
-            })}
+            {STEPS.map((label, i) => (
+              <li key={label} className={styles.step} data-state={i === step ? "now" : i < step ? "done" : "todo"}>
+                <span className={styles.stepDot} aria-hidden="true" />
+                <span>{label}</span>
+              </li>
+            ))}
           </ol>
-          <p className="small">보통 10초 안에 끝납니다. 화면을 닫지 마십시오.</p>
+          <p className={styles.progressNote}>보통 10초 안에 끝나요. 화면을 닫지 말고 잠깐만 기다려 주세요.</p>
         </div>
       )}
 
-      {phase.kind === "done" && <ReceiptResult result={phase.result} stores={stores} rules={rules} onRetry={reset} />}
+      {phase.kind === "done" && <ReceiptResult result={phase.result} stores={stores} rules={rules} totalSpend={spent} onRetry={retry} />}
 
       {phase.kind === "error" && (
-        <div className={styles.failed}>
-          <p className={styles.failedTitle}>접수되지 않았습니다.</p>
-          <p className="error" role="alert">{phase.message}</p>
+        <div className={styles.failed} role="alert">
+          <div className={styles.failedArt} aria-hidden="true">
+            <Art name="retry" sizes="(min-width: 760px) 160px, 36vw" />
+          </div>
+          <p className="h2">아직 못 받았어요</p>
+          <p className={styles.failedText}>{phase.message}</p>
           <div className={styles.actions}>
             {phase.status === 401 ? (
-              <Link href="/login?next=/verify" className="btn btn-red btn-lg btn-block">다시 로그인</Link>
+              <Link href="/login?next=/verify" className="btn btn-lg btn-block">다시 로그인</Link>
             ) : (
-              <button type="button" className="btn btn-red btn-lg btn-block" onClick={submit}>같은 사진으로 다시 시도</button>
+              <button type="button" className="btn btn-lg btn-block" onClick={submit}>같은 사진으로 다시 보낼게요</button>
             )}
-            <button type="button" className="btn btn-outline btn-block" onClick={reset}>다른 사진 선택</button>
+            <button type="button" className="btn btn-outline btn-block" onClick={reset}>다른 사진 고르기</button>
           </div>
         </div>
       )}

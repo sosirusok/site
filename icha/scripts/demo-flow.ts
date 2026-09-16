@@ -1,5 +1,5 @@
 /**
- * 손님 흐름 시연 데이터 — 회원(01012345678), 승인/대기/반려 영수증, 활성/사용/만료/취소 쿠폰.
+ * 손님 흐름 시연 데이터 — 회원(01012345678, VIP), 승인(아직 안 고름)/대기/반려 영수증, 사용 가능 2장(매장 다름)/사용/만료/취소 쿠폰.
  * 파일 DB 를 쓰는 dev 서버와 같은 PGLITE_DIR 로 실행한다(서버를 잠시 내린 뒤; PGlite 파일 DB 는 한 프로세스만 연다).
  *   PGLITE_DIR=/path/to/pg npx tsx scripts/demo-flow.ts
  * 결과로 화면 확인에 쓸 id 들을 JSON 으로 출력한다.
@@ -16,23 +16,11 @@ import { computeDHash } from "../src/lib/receipt/image";
 
 const PHONE = process.env.DEMO_PHONE ?? "01012345678";
 
-/** 사이드 후보가 없는 매장에만 넣는 시연용 메뉴 (사장님 데이터가 들어오면 그쪽이 우선) */
+/** 증정 품목이 비어 있는 매장에만 넣는 시연용 술 한 잔 (사장님 데이터가 들어오면 그쪽이 우선) */
 const DEMO_GIFTS: Record<StoreId, { name: string; price: number; description: string }[]> = {
-  joseon: [
-    { name: "김치전", price: 12000, description: "묵은지로 부친 전. 통막걸리와 같이 나가는 기본 안주." },
-    { name: "두부김치", price: 13000, description: "따뜻한 두부와 볶은 김치." },
-    { name: "계란말이", price: 9000, description: "두툼하게 말아 썰어 내는 계란말이." },
-  ],
-  tokyo: [
-    { name: "오이사라다", price: 5900, description: "얇게 썬 오이에 참깨 드레싱." },
-    { name: "에다마메", price: 4900, description: "소금 뿌린 삶은 풋콩." },
-    { name: "타코와사비", price: 6900, description: "문어 와사비 절임. 하이볼과." },
-  ],
-  wareureu: [
-    { name: "계란찜", price: 7000, description: "뚝배기에 부풀린 계란찜." },
-    { name: "소시지 야채볶음", price: 11000, description: "소주 안주의 기본." },
-    { name: "골뱅이무침", price: 12000, description: "새콤한 골뱅이무침, 소면 곁들임." },
-  ],
+  joseon: [{ name: "조선막걸리 1통", price: 6000, description: "양은 통에 담아 내는 막걸리." }],
+  tokyo: [{ name: "산토리 생맥주 1잔", price: 8900, description: "산토리 크리미 생맥주 한 잔." }],
+  wareureu: [{ name: "소주 1병", price: 5000, description: "소주 한 병." }],
 };
 
 async function receiptImage(storeName: string, amount: number, when: string, approval: string): Promise<{ buf: Buffer; sha: string; dhash: string }> {
@@ -65,7 +53,7 @@ async function ensureGifts(storeId: StoreId): Promise<MenuItem[]> {
     await upsertMenuItem({ storeId, name: g.name, price: g.price, description: g.description, isGift: true, active: true, sort: sort++ });
   }
   items = await listMenu(storeId, { giftOnly: true });
-  console.error(`[demo] ${storeId}: 무료 사이드 후보가 없어 시연용 메뉴 ${items.length}개를 넣었습니다.`);
+  console.error(`[demo] ${storeId}: 증정 품목이 없어 시연용 술 ${items.length}개를 넣었습니다.`);
   return items;
 }
 
@@ -104,9 +92,19 @@ async function main() {
   const pickGift = (receiptStore: StoreId, i: number): MenuItem => {
     const target = giftStoresFor(receiptStore)[i % 2]!.id;
     const item = gifts[target][0];
-    if (!item) throw new Error(`${target} 에 무료 사이드가 없습니다`);
+    if (!item) throw new Error(`${target} 에 증정 품목이 없습니다`);
     return item;
   };
+
+  // 0) 지난달부터 쌓인 영수증 세 장 (쿠폰은 모두 사용) — 누적 금액이 VIP 기준을 넘도록
+  const olds: [StoreId, number, number, string][] = [["joseon", 96000, 24 * 26, "29811001"], ["wareureu", 88000, 24 * 19, "29855210"], ["tokyo", 64000, 24 * 11, "29901880"]];
+  for (const [sid, amt, h, ap] of olds) {
+    const rid = await approvedReceipt(member.id, sid, amt, hoursAgo(h), ap);
+    const c = await issueSideCoupon({ memberId: member.id, receiptId: rid, menuItemId: pickGift(sid, h % 2).id });
+    await query(`update coupons set issued_at=$2 where id=$1`, [c.id, hoursAgo(h - 1).toISOString()]);
+    await redeemCoupon({ couponId: c.id, by: { memberId: member.id } });
+    await query(`update coupons set used_at=$2 where id=$1`, [c.id, hoursAgo(h - 20).toISOString()]);
+  }
 
   // 1) 조선칼국수 영수증(어제) → 도쿄스탠드 쿠폰, 이미 사용
   const r1 = await approvedReceipt(member.id, "joseon", 32000, hoursAgo(30), "30112345");
@@ -141,18 +139,18 @@ async function main() {
   );
 
   // 6) 만료된 쿠폰 (매장 발급, 유효기간 지남)
-  await issueManualCoupons({ adminId: "owner", target: { memberId: member.id }, useStoreId: "joseon", menuItemId: gifts.joseon[0]?.id ?? null, menuName: gifts.joseon[0]?.name ?? "사이드 한 접시", validDays: 1, note: "오픈 기념", kind: "manual" });
+  await issueManualCoupons({ adminId: "owner", target: { memberId: member.id }, useStoreId: "joseon", menuItemId: gifts.joseon[0]?.id ?? null, menuName: gifts.joseon[0]?.name ?? "막걸리 한 잔", validDays: 1, note: "오픈 기념", kind: "manual" });
   const expiredRow = await query<{ id: string }>(`select id from coupons where member_id=$1 and kind='manual' order by issued_at desc limit 1`, [member.id]);
   const c3 = expiredRow[0]!.id;
   await query(`update coupons set issued_at=$2, expires_at=$3 where id=$1`, [c3, hoursAgo(24 * 20).toISOString(), hoursAgo(24 * 19).toISOString()]);
 
   // 7) 등급 혜택 쿠폰 (사용 가능)
-  await issueManualCoupons({ adminId: "owner", target: { memberId: member.id }, useStoreId: "tokyo", menuItemId: gifts.tokyo[1]?.id ?? null, menuName: gifts.tokyo[1]?.name ?? "사이드 한 접시", validDays: 14, note: "단골 감사 쿠폰", kind: "vip" });
+  await issueManualCoupons({ adminId: "owner", target: { memberId: member.id }, useStoreId: "tokyo", menuItemId: gifts.tokyo[0]?.id ?? null, menuName: gifts.tokyo[0]?.name ?? "생맥주 한 잔", validDays: 14, note: "단골 감사 쿠폰", kind: "vip" });
   const vipRow = await query<{ id: string }>(`select id from coupons where member_id=$1 and kind='vip' order by issued_at desc limit 1`, [member.id]);
   const c4 = vipRow[0]!.id;
 
   // 8) 취소된 쿠폰
-  await issueManualCoupons({ adminId: "owner", target: { memberId: member.id }, useStoreId: "wareureu", menuItemId: null, menuName: "사이드 한 접시", validDays: 7, note: null, kind: "manual" });
+  await issueManualCoupons({ adminId: "owner", target: { memberId: member.id }, useStoreId: "wareureu", menuItemId: gifts.wareureu[0]?.id ?? null, menuName: gifts.wareureu[0]?.name ?? "소주 한 잔", validDays: 7, note: null, kind: "manual" });
   const voidRow = await query<{ id: string }>(`select id from coupons where member_id=$1 and kind='manual' and status='active' order by issued_at desc limit 1`, [member.id]);
   const c5 = await voidCoupon({ couponId: voidRow[0]!.id, adminId: "owner", note: "직원 착오로 이중 발급" });
 

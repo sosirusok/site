@@ -133,3 +133,19 @@ export function joinNames(names: string[]): string {
   const tail = names[names.length - 1]!;
   return `${head.slice(0, -1).join(", ")}${head.length > 1 ? ", " : ""}${josa(head[head.length - 1]!, "과와")} ${tail}`;
 }
+
+/** 9월 16일 */
+export function fmtMD(v: string | Date | null | undefined): string {
+  const d = toDate(v);
+  if (!d) return "-";
+  const p = parts(d);
+  return `${Number(p.m)}월 ${Number(p.d)}일`;
+}
+
+/** 9월 16일 21:34 */
+export function fmtMDHM(v: string | Date | null | undefined): string {
+  const d = toDate(v);
+  if (!d) return "-";
+  const p = parts(d);
+  return `${Number(p.m)}월 ${Number(p.d)}일 ${p.h}:${p.mi}`;
+}

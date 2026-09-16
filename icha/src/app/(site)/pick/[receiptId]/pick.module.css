@@ -1,15 +1,17 @@
-.page { padding: 32px 0 88px; }
-.col { max-width: 880px; margin: 0 auto; display: grid; gap: 28px; }
-.head { display: grid; gap: 10px; padding-bottom: 16px; border-bottom: 2px solid var(--line-strong); }
-.lead { font-size: 15px; color: var(--fg-2); line-height: 1.7; }
-.receipt { padding-bottom: 24px; border-bottom: 1px solid var(--line); }
-
-.notice { display: grid; gap: 12px; }
-.noticeText { font-size: 15px; color: var(--fg-2); line-height: 1.7; }
-.noticeMeta { font-size: 13px; color: var(--fg-3); }
-.actions { display: grid; gap: 10px; max-width: 480px; }
+.page { padding: 16px 0 48px; display: grid; gap: 14px; }
+.scene { width: min(80%, 360px); margin: 0 auto 4px; }
+.scene img { width: 100%; height: auto; }
+.meta { font-size: 16px; color: var(--fg-2); margin-bottom: 6px; }
+.lead { font-size: 17px; line-height: 1.8; color: var(--fg-2); max-width: 34em; }
+.expiredArt { width: min(50%, 220px); }
+.expiredArt img { width: 100%; height: auto; }
+.actions { display: grid; gap: 12px; justify-items: start; }
+.actions > a[aria-label] { width: 100% !important; max-width: 360px; }
 
 @media (min-width: 760px) {
-  .page { padding: 56px 0 120px; }
-  .receipt { grid-template-columns: 120px 1fr 120px 1fr; }
+  .page { padding: 40px 0 96px; grid-template-columns: 360px 1fr; column-gap: 48px; align-items: start; }
+  .scene { grid-column: 1; grid-row: 1 / span 2; margin: 0; width: 360px; }
+  .page > :not(.scene) { grid-column: 2; }
+  .page > .picker { grid-column: 1 / -1; margin-top: 10px; }
+  .actions { grid-template-columns: auto auto; align-items: center; gap: 20px; }
 }
