@@ -1,108 +1,163 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BRAND, formatWon } from "@/lib/config";
+import { Art } from "@/components/art/Art";
+import { ArtButton } from "@/components/art/ArtButton";
+import { GuideFaq, type FaqItem } from "@/components/site/GuideFaq";
+import { joinOr, josa } from "@/components/site/StoreHelpers";
+import { formatWon } from "@/lib/config";
+import { listMenu } from "@/lib/db/queries";
 import { getRules } from "@/lib/settings";
 import { STORES } from "@/lib/stores";
-import { GuideFaq, type FaqItem } from "@/components/site/GuideFaq";
-import { Steps as HomeSteps } from "@/components/home/Steps";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "이용 안내",
-  description: "영수증 인정 기간, 인정되지 않는 경우, 쿠폰 유효기간, 직원 확인 방법, 전화번호 로그인, 개인정보 처리 안내.",
+  description: "영수증을 올리는 방법, 되는 영수증과 안 되는 영수증, 쿠폰을 쓰는 방법, 전화번호와 사진을 다루는 방법을 사장님이 직접 설명해요.",
 };
 
 export default async function GuidePage() {
   const rules = await getRules();
-  const names = STORES.map((s) => s.shortName).join(", ");
-  const tiers = rules.tiers;
+  const gifts = await Promise.all(STORES.map(async (s) => ({ store: s, items: await listMenu(s.id, { giftOnly: true }).catch(() => []) })));
+  const giftLine = gifts
+    .map(({ store, items }) => `${josa(store.shortName, "은는")} ${items.length ? items.map((m) => m.name).join("·") : `${store.drink}(정하는 중)`}`)
+    .join(", ");
+  const giftEnd = /[가-힣]$/.test(giftLine) && (giftLine.charCodeAt(giftLine.length - 1) - 0xac00) % 28 > 0 ? "이에요" : "예요";
+  const names = joinOr(STORES.map((s) => s.shortName));
+  const h = rules.receiptValidHours;
+  const days = rules.couponValidDays;
+
+  const steps = [
+    {
+      art: "how-1",
+      title: "계산하고 영수증을 찍어 올려요",
+      text: "세 집 중 어디서든 좋아요. 영수증을 평평하게 놓고 위에서 아래까지 다 나오게 찍으면 자동으로 확인돼요. 흐리면 직원이 사진을 보고 확인해 줘요.",
+    },
+    {
+      art: "how-2",
+      title: "옆집 두 곳 중 한 곳을 골라요",
+      text: "영수증을 받은 집을 뺀 두 집의 쿠폰이 보여요. 마시고 싶은 쪽을 고르면 쿠폰이 전화번호 쿠폰함에 들어가요.",
+    },
+    {
+      art: "how-3",
+      title: "그 집에서 직원에게 보여 주고 받아요",
+      text: "주문할 때 쿠폰 화면을 보여 주세요. 직원이 확인하면 '사용하기'를 눌러 주면 끝이에요.",
+    },
+  ];
 
   const faq: FaqItem[] = [
     {
       id: "which-receipt",
-      q: "어떤 영수증이 인정됩니까?",
+      icon: "icon-receipt",
+      q: "어떤 영수증이 되나요?",
       a: (
         <>
-          <p>{names} 세 매장의 결제 영수증입니다. 카드 영수증과 현금영수증 모두 인정되며, 결제 시각으로부터 {rules.receiptValidHours}시간 안에 올려야 합니다.</p>
+          <p>{names}에서 계산한 영수증이에요. 카드 매출전표든 현금영수증이든 괜찮아요. 결제하고 {h}시간 안에 올려 주세요.</p>
           <ul>
-            {rules.minAmount > 0 && <li>결제 금액 {formatWon(rules.minAmount)} 이상</li>}
-            <li>1인당 하루 {rules.dailyLimitPerMember}장까지</li>
-            <li>영수증 1장에 쿠폰 1장</li>
+            {rules.minAmount > 0 && <li>{formatWon(rules.minAmount)} 이상 계산한 영수증</li>}
+            <li>한 사람이 하루에 {rules.dailyLimitPerMember}장까지</li>
+            <li>영수증 한 장에 쿠폰 한 장</li>
           </ul>
         </>
       ),
     },
     {
       id: "not-accepted",
-      q: "인정되지 않는 경우는 무엇입니까?",
+      icon: "icon-error",
+      q: "안 되는 경우도 있나요?",
       a: (
         <>
-          <ul>
-            <li>결제 영수증이 아닌 주문서(빌지), 예약 확인 화면</li>
-            <li>재출력 영수증, 다른 휴대폰 화면을 다시 찍은 사진, 화면 캡처</li>
-            <li>이미 등록된 영수증(같은 승인번호 또는 같은 사진)</li>
-            <li>결제 후 {rules.receiptValidHours}시간이 지난 영수증</li>
-            <li>세 매장이 아닌 곳의 영수증</li>
+          <ul className={styles.fails}>
+            <li><Art name="status-photo-fail" width={72} /><span>흐리거나 잘린 사진</span></li>
+            <li><Art name="status-wrong-store" width={72} /><span>세 집이 아닌 곳의 영수증</span></li>
+            <li><Art name="status-used" width={72} /><span>이미 올린 영수증</span></li>
           </ul>
-          <p>글자가 흐리거나 일부가 잘리면 자동 판정이 어려워 직원 확인 대기로 넘어갑니다. 영수증을 평평하게 펴고 위에서 아래까지 전체가 나오게 찍어 주십시오.</p>
-        </>
-      ),
-    },
-    {
-      id: "same-store",
-      q: "영수증을 받은 매장에서는 왜 사용할 수 없습니까?",
-      a: <p>이 혜택은 한 매장에서 결제한 손님이 다른 참여 매장을 한 번 더 방문하도록 만든 것입니다. 결제한 매장에서는 쿠폰을 쓸 수 없고, 나머지 두 매장 중 한 곳에서 사용합니다.</p>,
-    },
-    {
-      id: "coupon-valid",
-      q: "쿠폰은 언제까지 사용할 수 있습니까?",
-      a: <p>발급일부터 {rules.couponValidDays}일입니다. 만료일은 쿠폰마다 표시되며, 만료된 쿠폰은 쿠폰함의 &lsquo;지난 쿠폰&rsquo;에 기록만 남고 사용할 수 없습니다.</p>,
-    },
-    {
-      id: "how-to-use",
-      q: "쿠폰은 매장에서 어떻게 사용합니까?",
-      a: (
-        <>
-          <p>주문할 때 직원에게 쿠폰 화면을 보여 줍니다. 직원이 확인하면 [사용 처리] 버튼을 누르고 확인 창에서 &lsquo;예&rsquo;를 선택합니다. 화면이 &lsquo;사용 완료&rsquo;로 바뀌고 현재 시각이 초 단위로 표시되면 처리가 끝난 것입니다.</p>
-          <p>미리 눌러 두면 사용할 수 없으므로 반드시 직원 앞에서 처리합니다. 직원은 쿠폰의 6자리 코드로 관리자 화면에서도 확인할 수 있습니다.</p>
+          <p>주문서(빌지), 재출력본, 다른 화면을 다시 찍은 사진, 예약 확인 화면은 안 돼요. 결제하고 {h}시간이 지난 영수증도요.</p>
+          <p>글자가 흐리거나 잘려서 자동으로 못 읽으면 반려가 아니라 '직원 확인 대기'로 넘어가요. 매장에서 사진을 보고 승인해 줘요.</p>
         </>
       ),
     },
     {
       id: "review",
-      q: "'직원 확인 대기'는 무엇입니까?",
-      a: <p>자동 인식으로 판정하기 어려운 영수증은 매장 직원이 직접 확인합니다. 결과는 <Link href="/wallet">쿠폰함</Link>의 &lsquo;확인 대기&rsquo; 목록에서 볼 수 있고, 승인되면 그 자리에서 메뉴를 고를 수 있습니다. 보통 영업시간 중에 처리되며 새벽에는 늦어질 수 있습니다.</p>,
+      icon: "status-checking",
+      q: "'직원 확인 대기'는 뭐예요?",
+      a: (
+        <p>
+          자동으로 읽기 어려운 영수증은 직원이 직접 봐요. 보통 영업 중에 몇 분 안에 처리되고, 새벽에는 조금 늦어질 수 있어요.
+          결과는 <Link href="/wallet">쿠폰함</Link>에서 볼 수 있고, 승인되면 그 자리에서 바로 고를 수 있어요.
+        </p>
+      ),
+    },
+    {
+      id: "coupon-valid",
+      icon: "icon-coupon",
+      q: "쿠폰은 언제까지 쓸 수 있어요?",
+      a: <p>받은 날부터 {days}일이에요. 만료일은 쿠폰마다 적혀 있어요. 한 번 쓰면 끝이고, 지난 쿠폰은 쿠폰함 아래쪽에 기록만 남아요.</p>,
+    },
+    {
+      id: "how-to-use",
+      icon: "icon-ok",
+      q: "직원에게 어떻게 보여 주나요?",
+      a: (
+        <>
+          <p>주문할 때 쿠폰 화면을 열어서 보여 주세요. 직원이 확인하면 '사용하기'를 길게 눌러요. 화면이 '사용 완료'로 바뀌고 시계가 초 단위로 흐르면 끝이에요.</p>
+          <p>미리 눌러 두면 못 쓰니까 꼭 직원 앞에서 눌러 주세요. 직원은 쿠폰의 여섯 자리 코드로도 확인할 수 있어요.</p>
+        </>
+      ),
     },
     {
       id: "phone-login",
-      q: "왜 전화번호만으로 로그인합니까?",
+      icon: "icon-phone",
+      q: "왜 전화번호만 받나요?",
       a: (
         <>
-          <p>매장 테이블에서 인증번호 문자를 기다리지 않도록 번호만 입력하면 바로 시작되게 했습니다. 쿠폰은 입력한 번호에 보관되므로 번호를 잘못 입력하면 나중에 쿠폰을 찾을 수 없습니다. 입력 후 한 번 더 확인해 주십시오.</p>
-          <p>다른 기기에서 같은 번호로 접속하면 같은 쿠폰함이 보입니다.</p>
+          <p>테이블에서 인증 문자를 기다리지 않게, 번호만 넣으면 바로 시작되게 했어요. 쿠폰은 그 번호에 보관되니까 번호를 잘못 넣으면 나중에 찾기 어려워요. 넣고 나서 한 번 더 봐 주세요.</p>
+          <p>다른 휴대폰에서 같은 번호로 들어와도 같은 쿠폰함이 보여요.</p>
+        </>
+      ),
+    },
+    {
+      id: "photos",
+      icon: "icon-history",
+      q: "영수증 사진은 어떻게 보관되나요?",
+      a: (
+        <>
+          <p>같은 영수증을 두 번 쓰는지 확인하는 데만 써요. 반려된 사진은 7일, 나머지는 90일 뒤에 지워지고, 매장 관리자 말고는 아무도 볼 수 없어요.</p>
+          <p>받는 건 전화번호, 영수증 사진, 인증과 쿠폰 기록뿐이고 밖으로 내보내지 않아요. 지우고 싶으면 세 집 어디에든 말씀해 주세요. 번호 기준으로 지워 드려요.</p>
         </>
       ),
     },
     {
       id: "tiers",
-      q: "등급은 어떻게 오릅니까?",
+      icon: "icon-vip",
+      q: "자주 오면 뭐가 달라지나요?",
       a: (
         <>
-          <p>승인된 영수증의 결제 금액이 누적됩니다. {tiers.map((t) => `${formatWon(t.minSpend)} 이상 ${t.name}`).join(", ")}. 등급별 추가 쿠폰은 매장이 발급하며 따로 신청할 필요가 없습니다.</p>
-          <p>누적 금액과 다음 등급까지 남은 금액은 <Link href="/wallet">쿠폰함</Link> 상단에 표시됩니다.</p>
+          <p>인증한 영수증의 결제 금액이 번호에 쌓여요. 세 집 어디서 쓰든 합산되고, 기준을 넘으면 등급이 올라가요.</p>
+          <table className={`table ${styles.tiers}`}>
+            <tbody>
+              {rules.tiers.map((t) => (
+                <tr key={t.key}>
+                  <th scope="row">{t.name}</th>
+                  <td>누적 {formatWon(t.minSpend)}부터</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p>등급이 오르면 사장님들이 정한 때에 쿠폰이 따로 들어가요. 신청할 건 없어요. 내 누적 금액은 <Link href="/wallet">쿠폰함</Link> 위쪽에 있어요.</p>
         </>
       ),
     },
     {
       id: "event-period",
-      q: "이벤트는 언제까지입니까?",
+      icon: "icon-store",
+      q: "이벤트가 끝나면요?",
       a: (
         <p>
           {rules.eventActive
-            ? "현재 진행 중입니다. 종료일이 정해지면 홈 상단 공지로 안내합니다. 이미 발급된 쿠폰은 이벤트가 끝나도 만료일까지 사용할 수 있습니다."
-            : "현재 중단 중입니다. 새 영수증 인증은 받지 않지만, 이미 발급된 쿠폰은 만료일까지 사용할 수 있습니다."}
+            ? "지금은 진행 중이에요. 끝나는 날이 정해지면 홈 위쪽에 알려 드릴게요. 이미 받은 쿠폰은 이벤트가 끝나도 만료일까지 쓸 수 있어요."
+            : "지금은 잠시 쉬고 있어요. 새 영수증은 받지 않지만, 이미 받은 쿠폰은 만료일까지 쓸 수 있어요."}
         </p>
       ),
     },
@@ -110,55 +165,53 @@ export default async function GuidePage() {
 
   return (
     <div className={`wrap ${styles.page}`}>
-      <header className={styles.head}>
-        <h1 className="h1">이용 안내</h1>
-        <p className="lead">{BRAND.ruleOneLiner}</p>
+      <header className={styles.hero}>
+        <div className={styles.heroArt}>
+          <Art name="hero-graphic" sizes="(min-width: 760px) 420px, 70vw" priority />
+        </div>
+        <div className={styles.heroText}>
+          <h1 className="display">이렇게 이용해요</h1>
+          <p>
+            세 집 중 어디서든 계산하고 받은 영수증을 사진으로 올리면, 나머지 두 집 가운데 한 곳에서 그 집 술 한 잔을 무료로 드려요.
+            {" "}{giftLine}{giftEnd}.
+          </p>
+          <div className={styles.heroAction}>
+            <ArtButton kind="start" href="/verify" width={280} />
+          </div>
+        </div>
       </header>
+      <p className={styles.rules}>
+        영수증은 결제하고 {h}시간 안에 올려 주세요.
+        {rules.minAmount > 0 ? ` ${formatWon(rules.minAmount)} 이상 계산한 영수증이면 되고,` : ""} 한 사람이 하루에 {rules.dailyLimitPerMember}장까지 받아요.
+        받은 쿠폰은 그날부터 {days}일 동안 쓸 수 있어요. 영수증을 받은 집에서는 쿠폰이 나오지 않으니까 옆집 두 곳 것만 골라요.
+      </p>
 
-      <section className={styles.section} aria-labelledby="how-title">
-        <div className="sec-head">
-          <h2 id="how-title" className="h2">이용 방법</h2>
-        </div>
-        <HomeSteps rules={rules} />
-      </section>
-
-      <section className={styles.section} aria-labelledby="rules-title">
-        <div className="sec-head">
-          <h2 id="rules-title" className="h2">기본 규칙</h2>
-        </div>
-        <table className={`table ${styles.rules}`}>
-          <tbody>
-            <tr><th scope="row">영수증 인정 시간</th><td>결제 후 {rules.receiptValidHours}시간 이내</td></tr>
-            <tr><th scope="row">최소 결제 금액</th><td>{rules.minAmount > 0 ? `${formatWon(rules.minAmount)} 이상` : "제한 없음"}</td></tr>
-            <tr><th scope="row">하루 인증 한도</th><td>1인 {rules.dailyLimitPerMember}장</td></tr>
-            <tr><th scope="row">혜택</th><td>영수증 1장당 다른 참여 매장 사이드 메뉴 1개 무료</td></tr>
-            <tr><th scope="row">쿠폰 유효기간</th><td>발급일부터 {rules.couponValidDays}일</td></tr>
-            <tr><th scope="row">등급</th><td>{tiers.map((t) => `${t.name} ${formatWon(t.minSpend)} 이상`).join(" · ")}</td></tr>
-            <tr><th scope="row">진행 여부</th><td>{rules.eventActive ? "진행 중" : "중단 중 (발급된 쿠폰은 만료일까지 사용 가능)"}</td></tr>
-          </tbody>
-        </table>
+      <section className={styles.section} aria-labelledby="steps-title">
+        <h2 id="steps-title" className={`h2 ${styles.h}`}>순서는 셋뿐이에요</h2>
+        <ol className={styles.steps}>
+          {steps.map((s, i) => (
+            <li key={s.art} className={`${styles.step} rise rise-d${i + 1}`}>
+              <div className={styles.stepArt}>
+                <Art name={s.art} sizes="(min-width: 760px) 150px, 28vw" />
+              </div>
+              <div className={styles.stepText}>
+                <span className={styles.no}>{i + 1}</span>
+                <h3 className="h3">{s.title}</h3>
+                <p>{s.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
       </section>
 
       <section className={styles.section} aria-labelledby="faq-title">
-        <div className="sec-head">
-          <h2 id="faq-title" className="h2">자주 묻는 질문</h2>
-        </div>
+        <h2 id="faq-title" className={`h2 ${styles.h}`}>궁금해하시는 것들</h2>
         <GuideFaq items={faq} />
       </section>
 
-      <section className={styles.section} aria-labelledby="privacy-title">
-        <div className="sec-head">
-          <h2 id="privacy-title" className="h2">개인정보 처리</h2>
-        </div>
-        <p className={styles.privacy}>
-          보관하는 정보는 전화번호, 영수증 사진, 인증·쿠폰 기록입니다. 쿠폰 발급, 중복 확인, 등급 계산에만 사용하며 다른 목적으로 쓰거나 외부에 제공하지 않습니다.
-          영수증 사진은 부정 사용 확인 목적으로만 보관하며 매장 관리자 외에는 열람할 수 없습니다. 삭제를 원하면 참여 매장 어느 곳에든 요청하면 전화번호 기준으로 삭제합니다.
-        </p>
-      </section>
-
-      <div className={styles.actions}>
-        <Link href="/verify" className="btn btn-red">영수증 인증</Link>
-        <Link href="/#stores" className="btn btn-outline">참여 매장 보기</Link>
+      <div className={styles.cta}>
+        <p>영수증이 손에 있으면 지금 바로 해도 돼요. 전화번호만 있으면 돼요.</p>
+        <ArtButton kind="start" href="/verify" width={300} />
       </div>
     </div>
   );

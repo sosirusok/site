@@ -1,20 +1,19 @@
-.hero { display: grid; gap: 20px; }
-.photo { position: relative; aspect-ratio: 4 / 3; background: var(--bg-2); }
+.hero { display: grid; gap: 8px; padding-top: 20px; }
+.badge { width: 170px; margin-bottom: 4px; }
+.badge img { width: 100%; height: auto; }
+.name { font-size: clamp(28px, 7.4vw, 40px); }
+.headline { font-size: 17px; line-height: 1.75; color: var(--fg-2); max-width: 40em; }
+.today { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; font-size: 16.5px; font-weight: 700; margin-top: 4px; }
+.lo { font-weight: 400; color: var(--fg-2); }
+.open { color: var(--red); font-family: var(--font-display); font-weight: 700; }
+.closed { color: var(--fg-2); font-family: var(--font-display); font-weight: 700; }
+.facts { display: grid; gap: 4px; font-size: 16px; color: var(--fg-2); }
+.facts li { display: flex; gap: 12px; align-items: baseline; }
+.k { flex: none; min-width: 52px; font-weight: 700; color: var(--fg); }
+.tel { border-bottom: 2px solid var(--outline); padding-bottom: 1px; color: var(--fg); }
+.photo { position: relative; aspect-ratio: 3 / 2; margin-top: 12px; border-radius: var(--radius); border: 2px solid var(--outline); overflow: hidden; background: var(--panel-2); }
 .img { object-fit: cover; }
-.inner { display: grid; gap: 10px; }
-.crumb { font-size: 13.5px; color: var(--fg-3); font-weight: 600; }
-.crumb a:hover { text-decoration: underline; text-underline-offset: 3px; }
-.name { max-width: 24ch; }
-.meta { grid-template-columns: 72px 1fr; gap: 6px 16px; margin-top: 4px; }
-.open { color: var(--red); font-weight: 700; }
-.closed { color: var(--fg-2); font-weight: 700; }
-.quick { display: grid; margin-top: 8px; border-top: 1px solid var(--line); }
-.quick li { border-bottom: 1px solid var(--line); }
-.quick a { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 12px 0; font-size: 15px; }
-.quick a:hover b { text-decoration: underline; text-underline-offset: 4px; }
-.quick b { white-space: nowrap; font-weight: 700; }
 @media (min-width: 760px) {
-  .hero { gap: 28px; }
-  .photo { aspect-ratio: 21 / 9; max-height: 520px; }
-  .quick { grid-template-columns: 1fr 1fr; gap: 0 32px; }
+  .hero { padding-top: 32px; gap: 12px; }
+  .photo { aspect-ratio: 16 / 9; margin-top: 20px; }
 }

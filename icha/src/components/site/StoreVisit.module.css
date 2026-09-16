@@ -1,26 +1,15 @@
-.grid { display: grid; gap: 32px; }
-.col { display: grid; gap: 12px; align-content: start; }
-.label { font-weight: 800; font-size: 16px; margin-top: 8px; }
-.label:first-child { margin-top: 0; }
-.hours th { width: 96px; }
-.lo { color: var(--fg-3); }
-.open { color: var(--red); font-weight: 700; }
-.closed { color: var(--fg-3); font-weight: 700; }
-.dl { grid-template-columns: 72px 1fr; }
-.sub { display: block; font-size: 13.5px; color: var(--fg-3); }
-.tel { text-decoration: underline; text-underline-offset: 3px; }
-.note { font-size: 14px; color: var(--fg-3); }
-
-/* 공용 StoreMap 의 v2 잔재(둥근 모서리·금색 핀·알약 링크)를 이 페이지 안에서만 v3 로 맞춘다. StoreMap 이 v3 로 바뀌면 지운다. */
-.mapCol > div > div:first-child { border-radius: 0; background: var(--bg-2); }
-.mapCol a { border-radius: 0; text-decoration: underline; text-underline-offset: 3px; padding: 0; border: 0; }
-.mapCol a:hover { background: none; color: var(--fg); }
-.mapCol :global(.sm-pin) { filter: none; }
-.mapCol :global(.sm-pin__body) { background: var(--red); border-color: #fff; }
-.mapCol :global(.sm-pin__num) { color: #fff; }
-.mapCol :global(.sm-pin__label) { border-radius: 0; }
-.mapCol :global(.leaflet-container) { background: var(--bg-2); }
-
+.block { display: grid; gap: 16px; }
+.hours th { width: 92px; font-family: var(--font-display); font-weight: 700; color: var(--fg); }
+.hours td { font-size: 16.5px; }
+.lo { display: block; color: var(--fg-2); font-size: 15.5px; }
+.note { font-size: 16.5px; line-height: 1.75; color: var(--fg-2); max-width: 40em; }
+.where th { width: 84px; font-family: var(--font-display); font-weight: 700; color: var(--fg); }
+.where td { font-size: 16px; line-height: 1.7; }
+.sub { display: block; font-size: 15px; color: var(--fg-3); }
+.mapWrap { border: 2px solid var(--outline); border-radius: var(--radius); padding: 10px; background: var(--panel); }
+.mapWrap :global(.leaflet-container) { background: var(--panel-2); }
+.links { display: flex; flex-wrap: wrap; gap: 8px; }
 @media (min-width: 760px) {
-  .grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); gap: 48px; align-items: start; }
+  .hours th { width: 120px; }
+  .where th { width: 110px; }
 }
