@@ -1,4 +1,4 @@
-/* 포스터 머리 — 화면 폭 그대로, 아래에 딱딱한 그림자만 */
+/* 포스터 머리 — 화면 폭 그대로(390 → 390x152). 키트 그림이라 그림자·모서리 없음 */
 .hero { position: relative; margin-top: 2px; }
-.img { display: block; box-shadow: 0 6px 0 rgba(0, 0, 0, 0.45); }
+.img { display: block; }
 .img img { width: 100%; height: auto; }

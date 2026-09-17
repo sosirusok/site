@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useId, useState, type CSSProperties } from "react";
+import { KitPiece } from "@/components/site/Kit";
 import { Piece, plateOf } from "@/components/site/Poster";
 import { formatWon } from "@/lib/config";
 import { fmtMD } from "./format";
@@ -40,7 +41,7 @@ function Thumb({ item }: { item: PickItem }) {
   return <Image src={item.image.src} alt="" width={56} height={56} sizes="56px" className={cut ? styles.thumbCut : styles.thumb} unoptimized={!item.image.local} />;
 }
 
-/** 사용 매장 선택 — 매장마다 종이 한 장(포스터 간판 조각 + 품목 라디오 + 초록 예약하기 하나), 아래 고정 노란 스티커. 발급되면 쿠폰 한 장. */
+/** 사용 매장 선택 — 매장마다 종이 한 장(키트 간판 230px + 품목 라디오(무료는 키트 도장 stamp-free 44px) + 초록 예약하기 하나), 아래 고정 크림 바의 [이 쿠폰 받기]. 발급되면 키트 티켓 한 장 + [쿠폰함 열기] + [예약하기]. */
 export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: string; stores: PickStore[]; couponValidDays: number }) {
   const id = useId();
   const [selected, setSelected] = useState<Selected | null>(null);
@@ -95,8 +96,8 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
         <h2 className={`plate plate-green ${styles.issuedTitle}`}>쿠폰이 발급되었습니다</h2>
         <p className={`${styles.strip} ${styles.issuedSub}`}><DotLine items={[store.shortName, coupon.menuName, `유효기간 ${fmtMD(coupon.expiresAt)}까지`]} /></p>
         <div className={styles.issuedBtns}>
-          <StickerButton kind="wallet" href={`/coupons/${coupon.id}`} block>쿠폰 보기</StickerButton>
-          {store.placeBooking && <StickerButton kind="book" href={store.placeBooking} block rotate={1}>{store.shortName} 예약하기</StickerButton>}
+          <StickerButton kind="wallet" href="/wallet" block>쿠폰함 열기</StickerButton>
+          {store.placeBooking && <StickerButton kind="book" href={store.placeBooking} block suffix={` — ${store.shortName}`}>예약하기</StickerButton>}
         </div>
       </div>
     );
@@ -129,7 +130,7 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
                             <span className={`title ${styles.name}`}>{it.name}</span>
                             {it.price != null && <span className={`sub ${styles.price}`}><span className="strike">{formatWon(it.price)}</span></span>}
                           </span>
-                          <span className="tag tag-free">무료</span>
+                          <KitPiece name="stamp-free" bare sizes="44px" className={styles.freeStamp} fallback={<span className="tag tag-free">무료</span>} />
                         </button>
                       </li>
                     );
@@ -137,7 +138,7 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
                 </ul>
               )}
               {s.placeBooking && (
-                <StickerButton kind="book" href={s.placeBooking} small className={styles.book}>예약하기<span className="sr-only"> — {s.shortName}</span></StickerButton>
+                <StickerButton kind="book" href={s.placeBooking} small className={styles.book} suffix={` — ${s.shortName}`}>예약하기</StickerButton>
               )}
             </div>
           );
@@ -145,10 +146,10 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
       </div>
       <p className={`${styles.strip} ${styles.note}`}><DotLine items={["쿠폰 1장당 매장 1곳", "발급 후 변경 불가", `유효기간 ${couponValidDays}일`]} /></p>
 
-      {/* 하단 고정 스티커(탭 위) */}
-      <div className={`fixed-col sticky-cta ${styles.sticky}`}>
+      {/* 아래 고정 크림 바(탭 위) — 키트 [이 쿠폰 받기] 64px. 고른 매장 이름은 읽히는 이름 뒤에 */}
+      <div className="fixed-col sticky-bar">
         {error && <p id={`${id}-err`} className={`error ${styles.err}`} role="alert">{error}</p>}
-        <StickerButton kind="get" block onClick={issue} disabled={busy}>
+        <StickerButton kind="get" block onClick={issue} disabled={busy} srText={busy ? "발급 중" : undefined} suffix={selected ? ` — ${selected.store.shortName}` : ""}>
           {busy ? "발급 중" : selected ? `${selected.store.shortName} 쿠폰 발급` : "쿠폰 발급"}
         </StickerButton>
       </div>

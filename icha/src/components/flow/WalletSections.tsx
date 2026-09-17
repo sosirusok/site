@@ -40,7 +40,7 @@ function kindText(c: Pick<WalletCoupon, "kind">): string | null {
   return c.kind === "side" ? null : "매장 쿠폰";
 }
 
-/* 받은 쿠폰 — 발급 매장 색 판이 붙은 종이 한 장씩, 노란 스티커로 사용 매장을 고르러 간다 */
+/* 받은 쿠폰 — 발급 매장 색 판이 붙은 종이 한 장씩, 키트 [어디서 쓸지 고르기](44px)로 사용 매장을 고르러 간다 */
 export function RelayCards({ relays }: { relays: WalletRelay[] }) {
   return (
     <section className={styles.sec} aria-labelledby="wallet-relay">
@@ -52,7 +52,7 @@ export function RelayCards({ relays }: { relays: WalletRelay[] }) {
           <li key={r.id} className={`paper ${styles.relay}`} data-store={r.store.id} style={{ "--r": `${i % 2 ? 1 : -1}deg` } as CSSProperties}>
             <p className={styles.relayHead}><span className="plate plate-store plate-sm">{r.store.shortName}</span><span className={`disp ${styles.relayTitle}`}>발급 쿠폰</span></p>
             <p className={styles.relaySub}><DotLine items={[`사용 매장 ${r.giftNames.join("·")} 중 1곳`, `${fmtMD(r.deadline)}까지 선택`]} /></p>
-            <StickerButton kind="pick" href={`/pick/${r.id}`} small>사용 매장 선택</StickerButton>
+            <StickerButton kind="pick" href={`/pick/${r.id}`} small suffix={` — ${r.store.shortName} 발급 쿠폰`}>어디서 쓸지 고르기</StickerButton>
           </li>
         ))}
       </ul>
@@ -83,7 +83,8 @@ export function ActiveCoupons({ coupons }: { coupons: WalletCoupon[] }) {
   );
 }
 
-/* 지난 쿠폰: 사용 / 만료 / 취소 — 접어 둔다. 누르는 줄(summary)은 어두운 띠, 44px 이상 */
+/* 지난 쿠폰: 사용 / 만료 / 취소 — 접어 둔다. 누르는 줄(summary)은 어두운 띠, 44px 이상.
+   사용한 쿠폰: 표시는 키트 도장(stamp-used 96px, -12도) 하나뿐이고 사용 시각은 티켓의 조건 줄 자리에 글자로("9월 17일 08:58 사용"). 만료·취소는 키트 도장이 없어 CSS 도장 글자 */
 export function PastCoupons({ coupons }: { coupons: WalletCoupon[] }) {
   return (
     <details id="wallet-past" className={styles.past}>
@@ -93,13 +94,15 @@ export function PastCoupons({ coupons }: { coupons: WalletCoupon[] }) {
           <li key={c.id} className={styles.stackItem}>
             <Link href={`/coupons/${c.id}`} className={styles.ticketLink} aria-label={`${c.store?.shortName ?? ""} ${c.menuName} — ${c.status === "used" ? "사용 완료" : c.status === "expired" ? "기간 만료" : "취소"}`}>
               <Ticket
-                t={{ storeId: c.store?.id ?? "joseon", storeName: c.store?.shortName ?? "매장", menuName: c.menuName, code: c.code, expiresAt: c.expiresAt, image: c.image, kindLabel: kindText(c) }}
+                t={{ storeId: c.store?.id ?? "joseon", storeName: c.store?.shortName ?? "매장", menuName: c.menuName, code: c.code, expiresAt: c.expiresAt, image: c.image, kindLabel: kindText(c), meta: c.status === "used" ? `${fmtMDHM(c.usedAt)} 사용` : null }}
                 rotate={i % 2 ? 1 : -1}
                 dim
               />
-              <span className={`stamp ${c.status === "used" ? "stamp-green" : ""} ${styles.pastStamp}`}>
-                {c.status === "used" ? `${fmtMDHM(c.usedAt)} 사용` : c.status === "expired" ? `${fmtMD(c.expiresAt)} 만료` : "취소됨"}
-              </span>
+              {c.status === "used" ? (
+                <KitCut name="stamp-used" width={96} className={styles.usedStamp} fallback={<span className={`stamp stamp-green ${styles.pastStamp}`}>{fmtMDHM(c.usedAt)} 사용</span>} />
+              ) : (
+                <span className={`stamp ${styles.pastStamp}`}>{c.status === "expired" ? `${fmtMD(c.expiresAt)} 만료` : "취소됨"}</span>
+              )}
             </Link>
           </li>
         ))}
@@ -108,20 +111,16 @@ export function PastCoupons({ coupons }: { coupons: WalletCoupon[] }) {
   );
 }
 
-/* 아무것도 없을 때 — 크림 종이 한 장(본문 글꼴), 옆에 키트의 빈 영수증 꽂이(오려 낸 그림, 그림자 없음 — 없으면 포스터 메모 조각), 초록 스티커(예약하기) 하나 */
+/* 아무것도 없을 때 — 키트의 빈 봉투(empty-wallet 160px, 그림자 없음; 없으면 포스터 메모 조각) 위에, 크림 종이 한 장(본문 글꼴), 초록 스티커(예약하기) 하나 */
 export function EmptyWallet({ stores }: { stores: PlaceSheetStore[] }) {
   return (
     <div className={styles.empty}>
-      <div className={styles.emptyRow}>
-        <div className={`paper paper-l ${styles.emptyPaper}`}>
-          <p className={`disp ${styles.emptyTitle}`}>받은 쿠폰이 없습니다</p>
-          <p className={styles.emptyText}>계산 시 휴대폰 번호를 말씀하시면 쿠폰이 발급됩니다</p>
-        </div>
-        <span className={styles.spikeBox}>
-          <KitCut name="empty-wallet" width={240} className={styles.emptySpike} fallback={<Piece name="note-good" rotate={6} sizes="100px" className={styles.emptyNote} />} />
-        </span>
+      <KitCut name="empty-wallet" width={160} className={styles.envelope} fallback={<Piece name="note-good" rotate={6} sizes="100px" className={styles.emptyNote} />} />
+      <div className={`paper paper-l ${styles.emptyPaper}`}>
+        <p className={`disp ${styles.emptyTitle}`}>받은 쿠폰이 없습니다</p>
+        <p className={styles.emptyText}>계산 시 휴대폰 번호를 말씀하시면 쿠폰이 발급됩니다</p>
       </div>
-      <PlaceButton stores={stores} className={`btn btn-naver btn-block ${styles.emptyBtn}`}>예약하기</PlaceButton>
+      <PlaceButton stores={stores} className={styles.emptyBtn} />
     </div>
   );
 }

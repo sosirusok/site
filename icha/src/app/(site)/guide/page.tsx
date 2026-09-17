@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { DotLine } from "@/components/flow/kit";
 import { GuideFaq, type FaqItem } from "@/components/site/GuideFaq";
-import { SectionLabel, StickerButton } from "@/components/site/Kit";
-import { Piece } from "@/components/site/Poster";
-import { StepsStrip } from "@/components/site/StepsStrip";
+import { KitPiece, SectionLabel, StickerButton } from "@/components/site/Kit";
 import { BRAND } from "@/lib/config";
 import { STEP_LINES, ruleLine } from "@/lib/copy";
 import { LOCATIONS } from "@/lib/locations";
@@ -34,9 +32,8 @@ function walkLine(): string {
 }
 
 /**
- * 이용 안내 — 간판 제목, 포스터 순서 조각 + 종이에 적은 이용 방법 넷, 자주 묻는 질문은 종이 카드.
- * 보케 위 글자는 흰 Do Hyeon 외곽선(.outl)뿐, 정보는 모두 크림 종이 위 본문 글꼴. 아래 고정 버튼 없음(탭에 플레이스).
- * 제목 셋은 키트 label-guide/howto/faq 가 오면 그 그림.
+ * 이용 안내 — 키트 큰 제목판(label-guide 60px) + 손글씨 메모(note-again 140px, 획 그림자 + 가장자리 없는 어둠) + 어두운 띠 한 줄, 이렇게 받아요(label-howto) + 순서 네 칸(2×2) + 종이에 적은 이용 방법 넷,
+ * 자주 묻는 질문(label-faq)은 종이 카드. 보케 위 글자는 어두운 띠 위 본문 글꼴뿐. 아래 고정 버튼 없음(탭에 플레이스).
  */
 export default async function GuidePage() {
   const rules = await getRules();
@@ -58,7 +55,7 @@ export default async function GuidePage() {
               return l ? (
                 <li key={s.id} className={styles.bookItem} data-store={s.id}>
                   <span className={`plate plate-store plate-sm ${styles.bookName}`}>{s.course.n}차 {s.shortName}</span>
-                  <StickerButton kind="book" size="sm" tilt={i % 2 ? 1 : -1} href={l.booking}>예약하기<span className="sr-only"> — {s.shortName}</span></StickerButton>
+                  <StickerButton kind="book" size="sm" tilt={i % 2 ? 1 : -1} href={l.booking} suffix={` — ${s.shortName}`}>예약하기</StickerButton>
                 </li>
               ) : null;
             })}
@@ -92,17 +89,18 @@ export default async function GuidePage() {
   return (
     <div className={styles.page}>
       <header className={styles.top}>
-        <SectionLabel kind="guide" color="red" as="h1" big className={styles.h1}>이용 안내</SectionLabel>
-        <p className={`outl ${styles.brand}`}>{BRAND.name} · {BRAND.eventTag}</p>
-        <Piece name="note-again" rotate={6} sizes="110px" className={styles.note} />
+        <div className={styles.titleRow}>
+          <SectionLabel kind="guide" color="red" as="h1" big className={styles.h1}>이용 안내</SectionLabel>
+          <KitPiece name="note-again" rotate={5} sizes="140px" className={`note-dark ${styles.note}`} />
+        </div>
+        <p className={`info ${styles.brand}`}>{BRAND.name} · {BRAND.eventTag}</p>
       </header>
 
       <section className={styles.sec} aria-labelledby="steps-title">
         <div className="sec-h">
           <SectionLabel kind="howto" color="blue" id="steps-title">이용 방법</SectionLabel>
-          <p className={`outl ${styles.lead}`}>{BRAND.course}</p>
+          <p className={`info ${styles.lead}`}>{BRAND.course}</p>
         </div>
-        <StepsStrip className={styles.strip} />
         <div className={`paper paper-l ${styles.stepPaper}`}>
           <ol className={styles.steps}>
             {STEP_LINES.map((text, i) => (

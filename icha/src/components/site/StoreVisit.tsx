@@ -1,10 +1,11 @@
 import { LOCATIONS } from "@/lib/locations";
 import { placeLinks } from "@/lib/naver";
 import type { Store } from "@/lib/stores";
+import { StickerButton } from "./Kit";
 import { StoreMap, type MapStore } from "./StoreMap";
 import styles from "./StoreVisit.module.css";
 
-/** 위치 — 테이프로 붙인 지도 조각(그 매장만), 종이 한 장(지하철·층·주차·오는 길), 길찾기는 작은 글자. 문구는 lib/locations.ts 값 그대로. */
+/** 위치 — 테이프로 붙인 지도 조각(그 매장만, 높이 190), 종이 한 장(지하철·층·주차·오는 길), 키트 꼬리표 [길찾기](40px, 네이버 지도). 문구는 lib/locations.ts 값 그대로. */
 export function StoreVisit({ store }: { store: Store }) {
   const loc = LOCATIONS[store.id];
   const links = placeLinks(store);
@@ -32,7 +33,7 @@ export function StoreVisit({ store }: { store: Store }) {
           <dt>오는 길</dt>
           <dd>{loc.directions}</dd>
         </dl>
-        {links && <a href={links.directions} target="_blank" rel="noreferrer" className={`link ${styles.way}`}>네이버 지도 길찾기</a>}
+        {links && <StickerButton kind="directions" tilt={0} secondary href={links.directions} className={styles.way}>길찾기</StickerButton>}
       </div>
     </div>
   );

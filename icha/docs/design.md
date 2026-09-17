@@ -8,14 +8,28 @@
 
 주 사용 환경: **손님이 술집 테이블에서 휴대폰으로** (포스터 QR → 네이버 플레이스 → 소개글 링크 → 이 사이트). 모바일이 기본, 데스크톱은 확장. 직원은 매장 태블릿·휴대폰으로 관리자 화면을 본다.
 
-## 2. 디자인 언어 v9 — "포스터 콜라주"
+## 2. 디자인 언어 v10 — "포스터 콜라주 + 키트 61장"
+
+> v10(2026-09): 디자이너의 키트 61장(`public/images/kit/`, `docs/kit.md`)이 포스터 조각·CSS 판·CSS 버튼을 대신한다. 아래 v9 문단 중 조각·판·버튼·배경·캡션 항목은 이 절의 **v10 규칙**이 우선한다.
+
+### v10 규칙 — 키트 그림 위에 CSS 를 겹치지 않는다
+- **그림자 없음**: 키트 그림(간판·혜택·제목판·버튼·순서·알약·리본·메모·컷아웃·도장·테이프·화살표·티켓·봉투·소주잔)에는 그림자·외곽선이 이미 그려져 있다. 그 위에 `box-shadow`·`filter: drop-shadow`·`border`·`border-radius` 를 얹지 않는다(`.stk.stk-kit`, `.kbtn`, `.klabel` = `none`). CSS 스티커 그림자는 키트가 없을 때의 대체(`.stk`, `.btn`, `.plate`)에만 남는다. 눌린 그림 버튼은 `translateY(2px) + brightness(.96)`.
+- **배경**: `bg-night.jpg`(가로 화면은 `bg-night-wide.jpg`) 고정·cover, 흐림 없음(이미 보케), 확대 없음(1.15배 확대본), 위에 어두운 한 겹 `rgba(12,8,20,.50)` — 0.45~0.58 을 화면으로 비교해 크림 종이가 앞으로 나오면서 골목 불빛이 남는 값. `.app` 은 `isolation: isolate` 라 안의 어떤 z-index 도 body 에 포털된 시트 위로 못 올라온다.
+- **크기는 잰 값**(390px 화면 = 단 358px; 표는 `docs/kit.md`): 간판 1200×500 → 한 단 가득 358×149(홈·매장 화면), 혜택 1000×300 → ≤300 + 옆 컷아웃(맥주·소주 96px 높이, 주전자 96px 폭, 요거트 84px 높이), 제목판 700×200 → 46px(큰 제목 60px), 리본 → 한 단 가득 58px, 순서 600×360 → 2×2 칸 폭 (단−44)/2 에 화살표 44×22 는 1→2·3→4 사이에만, 알약 → 300 가운데, 버튼 900×220 → 52px(작은 것 44, 한 줄 가득 64는 크림 바 가운데·폭으로 늘리지 않음), 꼬리표 420×150 → 40px(누르는 상자 44), 아이콘 24, 메모 note-good 130·note-phone 300·note-again/today 136~140, 도장 56(무료)/96(사용 완료) −12°(고르기 줄 44), 테이프 68×20 opacity .85, 티켓 → 한 단 가득 153px(글자 왼쪽 5~71%·위아래 8%, 반쪽 76~96%), 봉투 160, 소주잔 150, 제목 42px(맨 위 줄에서 가장 큼; 로그인 꼬리표는 36), 머리 배너 → 화면 폭 그대로 자르지 않음. 주전자는 76px 폭(세 혜택 상자가 3% 안에서 같은 폭). 조각을 나란히 견줄 때는 **보이는 몸통**으로 맞춘다: `plate-joseon`(불투명 간판이 캔버스의 70%)은 112%/112%/72%/94px(`docs/kit.md` 규칙 7). 순서 2×2 는 줄 사이 28px 에 2→3 꺾인 화살표(40×20, 135°)까지 — 넷이 한 줄로 이어진다.
+- **흰 손글씨 메모**(note-again·note-today)는 키트에서 유일하게 그림자가 안 구워진 글씨라 보케 위에서 `.note-dark` — 받침 상자가 아니라 획마다 검은 테두리 그림자 + 글자 상자보다 사방 26/40px 큰 타원 어둠(`::before`, 가장자리 0%, z-index −1). 직사각형이 보이지 않는다. 크림 메모(note-good·note-phone)는 어디서나 그대로. 매장 화면의 note-good 은 가게 간판 띠 아래(사진마다 잰 top, `StoreHero.module.css`), 사진은 68vw 상자에 `50% 0%`(도쿄·조선) — **가게 간판을 자르지 않는다**.
+- **아래 고정 크림 바** `.fixed-col.sticky-bar`: 탭 바 바로 위 불투명 크림(#F4E9D2), 위 검은 선 1px, 안에 64px 그림 버튼 하나 가운데. 높이 `--stickybar-h` 80px + 탭 60px = 140px; 본문은 `.app:has(.sticky-bar)` 가 그만큼(+16px) 아래를 비운다. 매장 화면(예약하기)·사용 매장 선택(이 쿠폰 받기)·쿠폰 화면(직원 앞에서 사용하기)이 쓴다. 떠 있는 스티커 `.sticky-cta` 는 없앴다.
+- **읽히는 이름 = 그림 글자**: 그림 버튼·제목판의 접근성 이름은 `KIT_ALT`(그림에 적힌 글자). 같은 버튼이 여럿이면 `suffix`(" — 도쿄스탠드")만, 진행 중은 `srText`("발급 중"). 그림 안 글자와 CSS 글자를 겹쳐 쓰지 않는다.
+- **사진 캡션**(v9 의 "캡션 없음"을 뒤집음): 폴라로이드 흰 띠 아래에 캡션 — Pretendard 13px/700 잉크색, 왼쪽 정렬, 명사구만(값 앞에서만 접힘, 잘림 없음). 메뉴 사진은 `stores.ts` 의 이름·가격 그대로("조선 김치전 · 12,000원"), 장소는 "매장 입구"·"1층 홀". 문장·농담 없음. 사진은 4:3 창(`storePhotos.ts` 의 `pos` 는 실제 파일을 하나씩 잘라 보고 정한 값). 실제 글꼴로 잰 가장 긴 캡션은 227px(시그니처 콜드햄 플레이트 · 13,900원)라 홈의 큰 카드(단의 3/5, 캡션 폭 198px)에 다 들지 않는 것이 셋(430 화면은 하나) — 값이 '13…'로 잘리는 대신 **값 앞에서만 둘째 줄로 접힌다**(`capParts`: "시그니처 콜드햄 플레이트" / "· 13,900원", 2줄까지). 매장 화면의 한 단 가득 카드(344px)는 다 한 줄. 작은 카드(2/5)는 캡션이 짧은 장소 사진만. 홈 3장: [안주 큰 카드][입구 작은 카드] / [포켓: 손글씨 메모 또는 요거트][술 큰 카드]. 매장 화면 5장: [대표 안주 한 단 가득] / [큰][작은] / [작은][큰] — 서로 덮지 않는다(캡션이 가려지면 안 되므로).
+- **지도**: 컨테이너 높이 명시(190px), 표시 직후·300ms 뒤·크기 변할 때 `invalidateSize()` + 다시 맞춤. 홈은 세 핀과 라벨이 다 들어오게(위 56·좌우 56·아래 44 여백), 서면역 표시는 통째로 들어올 때만 그린다(가장자리에 반쯤 걸치지 않는다). 매장 화면은 그 핀 + 서면역.
+- **검수**: `scratchpad/pw/geo-check.mjs` 를 390×844·430×932 로 모든 화면에 돌린다 — 가로 스크롤 0, `<img>` 비율 ±2%(object-fit fill 만), a/button ≥44×44, 20px 미만 글자의 뒤 픽셀 대비 ≥4.5(글자를 투명하게 만든 캡처에서 가운데·네 모서리), 글자 요소끼리 8×8 초과 겹침 0, 이미지가 끝까지 내려도 고정 바에 덮이지 않음. 결과는 `scratchpad/shots/geo/*.json`.
+
 
 사장님 전단지(`public/images/event/poster.jpg`)가 화면 아래로 계속 이어지는 것처럼 보여야 한다. 손님 눈에 "가게가 직접 만든, 지금 운영 중인 사이트"여야지 "코드로 짠 데모"로 보이면 실패다. 상자·테두리·네온·그라데이션·아이콘 세트·생성 이미지는 쓰지 않는다.
 
 - **배경**: 포스터의 밤거리 보케 한 장(`/images/poster/bokeh.jpg`)이 화면 전체에 고정되고(`.app::before`, `position: fixed`) 그 위에 35% 미만의 어두운 겹 하나. 스크롤해도 배경은 그대로고 내용만 지나간다. 배경을 섹션마다 바꾸지 않는다.
 - **조각 스티커**: 포스터에서 오려 낸 PNG(`/images/poster/*.png` — hero-top, title, title-tight, plate-*, benefit-*, ribbon-event, steps, step-1..4, pill-condition, note-*, mug, footer-line)를 `<Piece name=…>`(`src/components/site/Poster.tsx`)로 그대로 붙인다. 다시 그리지 않고, 글자가 든 조각은 alt 에 그 글자를 그대로 적는다. 기본은 `.stk`(모서리 6px, 딱딱한 그림자, `--r` 기울기 ±1~6°), 모서리 테이프는 `.tape*`. 매장 이름은 언제나 그 집의 포스터 간판 조각(`plateOf(id)`), 혜택은 `benefitOf(id)`.
 - **종이**: 크림색(`--cream`) 종이 카드 `.paper`(살짝 기울임 `.paper-l`/`.paper-r`), 찢은 메모 `.scrap > .scrap-in`, 종이 위 목록 `.row`, 정보표 `.kv`. 종이 위 글자는 잉크색 `--ink`, 보조는 `--ink-2`, 구분선은 점선 `--paper-line`. 쿠폰은 종이 티켓(`src/components/flow/PaperTicket.tsx`: 위아래 구멍, 점선으로 뜯는 반쪽, Do Hyeon 코드). 안내·자주 묻는 질문·입력 폼도 모두 종이 위에 놓는다.
-- **사진**: 진짜 매장 사진만 폴라로이드(`.pola`, 흰 테두리)로. **사진 밑에 설명(캡션)을 적지 않는다** — 실제 매장 사이트는 사진에 말을 붙이지 않는다. 사진 설명은 `alt` 로만. 사진이 없는 자리는 비우거나 포스터 조각을 쓴다.
+- **사진**: 진짜 매장 사진만 폴라로이드(`.pola`, 흰 테두리)로. (v10) 흰 띠 아래에 명사구 캡션(값 앞에서만 접힘) — 위 v10 규칙. 사진 설명은 `alt` 로도.
 - **손글씨**: 놀이 문구는 사장님 포스터 조각(이미지) 안에만 있다. 화면 글자로 손글씨(`.hand`)를 정보에 쓰지 않는다(아래 "문구 규칙"). 굳이 쓴다면 6단어 이하의 짧은 강조뿐이고, 그것도 크림 종이(잉크 `--ink` 또는 빨강 `--red`)나 어두운 띠(흰색) 위에만 — 보케 위에 바로 놓지 않는다.
 - **글자**: 제목·간판·버튼·코드 = Do Hyeon(`.disp`, `.plate`, `.outl`, `.mono`), 손글씨 = Nanum Pen Script(`.hand`), 본문 = Pretendard(`--font-sans`). Do Hyeon 과 Nanum Pen Script 는 `src/app/fonts.css` 에서 자체 호스팅한다(`@fontsource/*` 의 한글 한 파일 + 라틴 한 파일) — Google Fonts 를 기다리는 동안 대체 글꼴이 보이거나, 유니코드 조각이 따로 도착해 한 단어 안에서 글꼴이 섞이는 일(막걸 → 막+걸)이 없다. Pretendard 는 layout.tsx 의 CDN 링크(가변 서브셋) 그대로.
 - **색 간판**: 섹션 제목과 상태 제목은 글자로 그린 판 `.plate`(`.plate-blue/-red/-green/-yellow/-cream`, 매장색은 `[data-store]` 안에서 `.plate-store`). 검은 테두리 2px, 잉크 그림자, 살짝 기울임. 작은 판은 `.plate-sm`.
@@ -32,14 +46,14 @@
 기준은 손님이 매일 보는 실제 매장 페이지(네이버 스마트플레이스 매장 정보, 배달의민족 매장 상세, 캐치테이블 매장 페이지)다. 문구 표는 `scratchpad/copy-table.json`, 공용 문구는 `src/lib/copy.ts`·`src/lib/config.ts`(BRAND, REASONS).
 - **정보 문구는 합니다체·명사형.** 영업시간·상태·혜택·다음 매장·규칙·주소·안내·오류·FAQ 답은 짧은 명사구("도보 1분", "1일 3장 · 유효기간 30일") 또는 합니다체("쿠폰이 발급됩니다"). 해요체(~요/~어요/~죠)·느낌표·의문형 제목·이모지·"여기서/저기서/이 집/다른 집/가게" 금지 → "매장", "다른 매장".
 - **손글씨 금지(정보).** 손글씨(`.hand`, `.hand-w`, `.hand-y`, `.hand-r`)와 찢은 메모로 정보를 쓰지 않는다. 놀이 문구는 포스터 조각(이미지)에만 남는다.
-- **사진 설명 없음.** 폴라로이드·갤러리에 캡션을 달지 않는다(`storePhotos.ts` 에 캡션 필드 없음).
+- **사진 설명은 캡션 한 줄.** (v10) 폴라로이드 캡션은 명사구 하나 — 메뉴는 이름·가격, 장소는 "매장 입구"·"1층 홀"(`storePhotos.ts` 의 `cap`).
 - **받침 없는 글자 없음.** 보케 위 글자는 어두운 띠 `.info`(#14111a 88%, 크림 Pretendard 15px) 또는 크림 종이 `.paper` 위에만. 노란 글자는 검은 띠(`.marq`)나 `.info` 안에서만. 종이 위 빨강(`--red`)은 Pretendard 작은 글자에 쓰지 않는다(대비 3.9:1) — 잉크색으로. 모든 글자는 뒤에 실제로 있는 색과 4.5:1 이상.
-- **고정형**: 영업 상태 칩 `.chip` 4종 — 영업 중 / 영업 전 · 17:00 오픈 / 영업 종료 / 휴무 (뒤에 시간 "15:00~09:00"). 혜택 "다른 매장 쿠폰 제시 시 {품목} 무료". 다음 매장 "다음 매장 · 3차 와르르맨숀 · 도보 1분". 거리 "서면역 6번 출구 도보 N분", "50m 이내". 규칙 "1일 N장 · 유효기간 N일".
+- **고정형**: 영업 상태 칩 `.chip` 4종 — 영업 중 / 영업 전 · 17:00 오픈 / 영업 종료 / 휴무 (뒤에 시간 "15:00~09:00"). 혜택 "다른 매장 쿠폰 제시 시 {품목} 무료". 다음 매장 "다음 매장" / "3차 와르르맨숀 · 도보 1분"(두 줄). 거리 "서면역 6번 출구 도보 N분", "50m 이내". 규칙 "1일 N장 · 유효기간 N일".
 - **라벨은 명사**: 섹션 제목(영업시간·주소·전화·메뉴·오시는 길·리뷰·특별 혜택·이용 방법·자주 묻는 질문), 버튼(예약하기·쿠폰함·사용하기·길찾기·로그인·홈·더보기·리뷰 작성·매장 정보). 제목 옆 손글씨 리드(궁금한 것, 다녀온 사람들, ○○의 밤)는 없다. 로딩 중 라벨은 처리 중/확인 중/발급 중.
 - **문장은 줄바꿈**: 컬럼을 넘어가는 줄이 없어야 한다(`white-space: nowrap` 은 칩·버튼·간판에만).
 - **사실값 유지**: 영업시간·가격·주소·rules 숫자·템플릿 변수는 바꾸지 않는다. 포스터 조각 alt 와 `BRAND.name/eventTag/course/condition/slogan/unionName`, `stores.ts` 의 course.line/benefitLabel/quotes/alt/hoursNote 는 포스터 원문이라 그대로.
 
-토큰·유틸(globals.css): 색 `--yellow --red --blue --green --cream --cream-2 --ink --ink-2 --naver`, 매장색 `[data-store]` → `--store`, 글꼴 `--font-display --font-hand --font-sans`, 그림자 `--shadow-hard --shadow-ink`. 스티커 `.stk .tape .tape-tl .tape-tr`, 종이 `.paper .paper-l .paper-r .scrap .scrap-in .row .kv`, 간판 `.plate .plate-* .plate-sm`, 폴라로이드 `.pola`, 정보 받침 `.info .info-row .star`, 상태 칩 `.chip .chip-on .chip-off`, 버튼 `.btn .btn-naver .btn-secondary .btn-block .btn-sm .btn-r .btn-0 .link .link-d`(`.link-w` 는 보케 위 받침 없는 글자라 더 쓰지 않는다), 도장·꼬리표 `.stamp .stamp-green .tag .tag-free .tag-store`, 검은 띠 `.marq`, 지도 종이 `.map-paper`, 고정 스티커 `.fixed-col .sticky-cta`, 입력 `.field .label .input .help .error`.
+토큰·유틸(globals.css): 색 `--yellow --red --blue --green --cream --cream-2 --ink --ink-2 --naver`, 매장색 `[data-store]` → `--store`, 글꼴 `--font-display --font-hand --font-sans`, 그림자 `--shadow-hard --shadow-ink`. 스티커 `.stk .tape .tape-tl .tape-tr`, 종이 `.paper .paper-l .paper-r .scrap .scrap-in .row .kv`, 간판 `.plate .plate-* .plate-sm`, 폴라로이드 `.pola`, 정보 받침 `.info .info-row .star`, 상태 칩 `.chip .chip-on .chip-off`, 버튼 `.btn .btn-naver .btn-secondary .btn-block .btn-sm .btn-r .btn-0 .link .link-d`(`.link-w` 는 보케 위 받침 없는 글자라 더 쓰지 않는다), 도장·꼬리표 `.stamp .stamp-green .tag .tag-free .tag-store`, 검은 띠 `.marq`, 지도 종이 `.map-paper`, 아래 고정 크림 바 `.fixed-col .sticky-bar`, 손글씨 받침 `.note-dark`, 폴라로이드 캡션 `.pola .cap`, 입력 `.field .label .input .help .error`.
 
 
 ## 3. 이미 있는 것 (수정 금지, 사용만)
@@ -48,7 +62,7 @@
 - `src/components/site/Header.tsx`, `Footer.tsx`
 - `src/components/site/StoreMap.tsx` (+ StoreMap.css, StoreMap.module.css) — 실제 지도. props: stores(MapStore[]: id,name,shortName,drink,lat,lng,address,naverPlaceId,subway?,directions?,floor?), focusId?, height?, compact?(목록·패널 숨김). 클라이언트 컴포넌트.
 - `src/lib/geo.ts` (distanceM, walkMinutes, formatDistance, naverWalkUrl, kakaoMapUrl, googleMapUrl, SEOMYEON_STATION), `src/lib/locations.ts` (LOCATIONS[storeId]: subway, directions, floor, landmarks, parking)
-- `src/components/site/Poster.tsx` (PIECES, `<Piece>`, plateOf, benefitOf) — 포스터 조각. `src/components/site/StepsStrip.tsx`, `PlaceSheet.tsx`, `PlaceButton.tsx`, `StickyCta.tsx`
+- `src/components/site/Poster.tsx` (PIECES, `<Piece>`, plateOf, benefitOf) — 포스터 조각(키트 우선). `src/components/site/Kit.tsx`(StickerButton·SectionLabel·TabIcon·KitPiece), `StepsStrip.tsx`, `PlaceSheet.tsx`, `PlaceButton.tsx`, `storePhotos.ts`
 - `src/lib/config.ts` (BRAND, Rules, REASONS/reasonText, normalizePhone/formatPhone/maskPhone/formatWon)
 - `src/lib/stores.ts` (STORES, STORE_BY_ID, getStore, giftStoresFor, naverPlaceUrl) — 데이터는 채워지는 중. 화면은 반드시 이 데이터로 렌더링하고 매장 정보를 하드코딩하지 않는다. 사진은 `store.images[]`(src는 /images/stores/<id>/... , kind: hero/exterior/interior/food/drink/menu).
 - `src/lib/db/queries.ts` (회원/영수증/메뉴/쿠폰/관리자/통계), `src/lib/settings.ts`(getRules/saveRules/tierFor), `src/lib/coupons.ts`, `src/lib/receipt/service.ts`(submitReceipt, adminDecideReceipt), `src/lib/auth/session.ts`(getMemberSession/getAdminSession …), `src/lib/auth/password.ts`, `src/lib/http.ts`

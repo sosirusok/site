@@ -1,23 +1,30 @@
-/* 키트 부품 — 그림 버튼·그림 제목·탭 아이콘·장식 선. 그림자는 .btn/.stk 와 같은 값(딱딱한 검정), 투명 PNG 라 drop-shadow 로 모양을 따라간다 */
+/* 키트 부품 — 그림 버튼·그림 제목·탭 아이콘·장식 선.
+   키트 그림(투명 PNG)에는 그림자·외곽선이 이미 그려져 있다 → 여기에는 filter·box-shadow·border 가 없다(v10).
+   크기: 버튼 900x220 → 52px(작은 것 44px, 한 줄 가득 64px), 꼬리표 420x150 → 40px, 제목판 700x200 → 46px(큰 제목 60px). */
 
-/* 그림 버튼 — 높이 52px(작은 것 44px), 폭은 그림 비율대로. 눌리면 3px 내려앉고 그림자가 줄어든다(.btn 과 같음) */
-.kbtn { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; min-width: 44px; padding: 0; background: none; border: 0; box-shadow: none; transform: rotate(var(--r, -1deg)); user-select: none; -webkit-tap-highlight-color: transparent; }
-.kbtnImg { display: block; width: auto; height: var(--kh, 52px); max-width: 100%; filter: drop-shadow(var(--kit-btn-shadow, 4px 4px 0 #000)); transition: transform 0.08s, filter 0.08s, opacity 0.12s; }
-.kbtn:active .kbtnImg { transform: translate(3px, 3px); filter: drop-shadow(1px 1px 0 #000); }
+/* 그림 버튼 — 누르는 상자는 44px 이상, 그림은 --kh 높이·비율대로. 눌리면 2px 내려앉고 살짝 어두워진다(그림자 변화 없음) */
+.kbtn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; padding: 0; background: none; border: 0; box-shadow: none; transform: rotate(var(--r, -1deg)); user-select: none; -webkit-tap-highlight-color: transparent; }
+.kbtnImg { display: block; width: auto; height: var(--kh, 52px); max-width: 100%; object-fit: contain; filter: none; transition: transform 0.08s, filter 0.08s, opacity 0.12s; }
+.kbtn:active .kbtnImg { transform: translateY(2px); filter: brightness(0.96); }
 .kbtn:disabled { cursor: not-allowed; }
-.kbtn:disabled .kbtnImg { opacity: 0.6; transform: none; filter: drop-shadow(var(--kit-btn-shadow, 4px 4px 0 #000)); }
-.sm { min-height: 44px; --kh: 44px; }
-.block { display: flex; width: 100%; --kh: 60px; }
-.block .kbtnImg { width: 100%; height: auto; max-height: 72px; object-fit: contain; }
+.kbtn:disabled .kbtnImg { opacity: 0.6; transform: none; filter: none; }
+.sm { --kh: 44px; }
+.tag { --kh: 40px; }
+/* 한 줄 가득 — 그림 64px 을 가운데에. 폭으로 늘리지 않는다 */
+.block { display: flex; width: 100%; --kh: 64px; }
 
 /* 그림 제목 — 판(.plate) 자리. 높이 46px(큰 제목 60px) */
 .klabel { display: inline-block; transform: rotate(var(--r, -1.5deg)); }
-.klabelImg { display: block; width: auto; height: var(--lh, 46px); max-width: 100%; filter: drop-shadow(var(--kit-label-shadow, 4px 4px 0 #000)); }
+.klabelImg { display: block; width: auto; height: var(--lh, 46px); max-width: 100%; object-fit: contain; filter: none; }
 .klabelBig { --lh: 60px; }
 .plateBig { font-size: 30px; padding: 12px 18px 10px; }
 
 /* 탭 아이콘 24px */
 .tabIcon { width: 24px; height: 24px; object-fit: contain; }
+
+/* 그림 한 장(bare) — 상자 없이 그림만, 폭은 바깥이 정한다 */
+.bare { display: block; }
+.bare img { width: 100%; height: auto; }
 
 /* 장식 선 — 가운데, 60% 폭 */
 .divider { display: block; width: 60%; max-width: 60%; margin: 0 auto; }

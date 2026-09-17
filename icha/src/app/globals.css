@@ -1,11 +1,12 @@
 /* ──────────────────────────────────────────────────────────────
-   알콜부시기 — 기본 스타일 v9 "포스터 콜라주"
+   알콜부시기 — 기본 스타일 v10 "포스터 콜라주 + 키트 61장"
    사장님 전단지(public/images/event/poster.jpg)를 아래로 이어 붙인 화면.
-   바탕은 포스터의 밤거리 보케 한 장이 고정돼 있고, 그 위에 포스터에서 오려 낸 조각(간판·혜택·리본·순서·메모),
-   진짜 사진(폴라로이드), 크림색 종이 메모, 스티커 버튼이 붙는다. 상자·테두리·네온 없음.
-   글자: 제목·간판·버튼 = Do Hyeon(포스터 고딕), 손글씨 메모 = Nanum Pen Script, 본문 = Pretendard.
-   초록 버튼은 가게마다 "예약하기" 하나뿐, 나머지 버튼은 노란 스티커.
-   키트(public/images/kit/, docs/kit.md): 파일이 있으면 배경(--kit-bg)·테이프(--kit-tape)·화살표(--kit-arrow)·버튼·제목·아이콘이 그 그림으로 바뀐다.
+   바탕은 디자이너의 밤거리 보케(bg-night)가 고정돼 있고, 그 위에 어두운 한 겹(50%) — 그래야 크림 종이·간판·사진이 앞으로 나온다.
+   그 위에 키트 조각(간판·혜택·리본·순서·제목판·버튼·메모·컷아웃·도장·테이프·티켓), 진짜 사진(폴라로이드+캡션), 크림색 종이가 붙는다.
+   키트 그림에는 그림자·외곽선이 이미 그려져 있다 → 키트 그림에는 CSS 그림자·테두리·모서리를 절대 겹치지 않는다(.stk-kit, .kbtn, .klabel).
+   CSS 스티커 그림자는 키트가 없을 때의 대체 그리기(.stk, .btn, .plate)에만 남아 있다.
+   글자: 제목·간판·버튼 = 키트 그림(없으면 Do Hyeon), 본문·캡션 = Pretendard. 손글씨 글꼴은 키트 메모 그림이 대신한다.
+   초록 버튼은 가게마다 "예약하기" 하나뿐. 크기 표는 docs/design.md v10.
    ────────────────────────────────────────────────────────────── */
 :root {
   --yellow: #FFD400;
@@ -34,6 +35,7 @@
   --gutter: 16px;
   --header-h: 56px;
   --tabbar-h: 60px;
+  --stickybar-h: 80px;     /* 화면 아래 크림 바(예약하기·쿠폰 받기·사용하기): 64px 그림 + 위아래 8px */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 @media (min-width: 400px) { :root { --gutter: 18px; } }
@@ -47,12 +49,14 @@ html { -webkit-text-size-adjust: 100%; background: #14101c; }
 html, body { margin: 0; padding: 0; }
 body { color: var(--fg); font-family: var(--font-sans); font-size: 15px; line-height: 1.5; letter-spacing: -0.01em; -webkit-font-smoothing: antialiased; word-break: keep-all; overflow-wrap: anywhere; min-height: 100dvh; }
 
-/* 손님 화면 한 단(480px) — 바탕은 화면 전체에 고정된 포스터 밤거리(살짝만 흐린 bokeh-soft), 그 위에 어두운 한 겹은 25%까지만 — 포스터의 색이 남아야 한다.
-   키트에 bg-night.jpg 가 있으면 (site) 레이아웃이 .app 에 --kit-bg 를 얹고(lib/kit.ts kitCssVars) 그 그림을 쓴다. 가로가 넓은 화면은 bg-night-wide */
-.app { position: relative; max-width: var(--app-max); min-height: 100dvh; margin: 0 auto; padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 16px); overflow-x: clip; }
-.app::before { content: ""; position: fixed; inset: -12px; z-index: -1; pointer-events: none; background: linear-gradient(rgba(12, 8, 20, 0.25), rgba(12, 8, 20, 0.25)), var(--kit-bg, url("/images/poster/bokeh-soft.jpg")) center / cover no-repeat #14101c; filter: blur(5px); }
-@media (min-aspect-ratio: 1 / 1) { .app::before { background-image: linear-gradient(rgba(12, 8, 20, 0.25), rgba(12, 8, 20, 0.25)), var(--kit-bg-wide, var(--kit-bg, url("/images/poster/bokeh-soft.jpg"))); } }
-.app:has(.sticky-cta) { padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 84px); }
+/* 손님 화면 한 단(480px) — 바탕은 화면 전체에 고정된 키트 밤거리(bg-night, 세로) 위에 어두운 한 겹 50%: 크림 종이가 앞으로 나오고 골목 불빛은 남는 값(0.45~0.58 중 화면으로 고른 값).
+   흐림 없음(그림이 이미 보케). 확대 없음(cover 만). 가로가 넓은 화면은 bg-night-wide. 키트가 없을 때만 포스터의 bokeh-soft.jpg.
+   isolation: 안의 어떤 z-index 도 body 에 포털된 시트(플레이스·확인)보다 위로 올라오지 못한다 */
+.app { position: relative; isolation: isolate; max-width: var(--app-max); min-height: 100dvh; margin: 0 auto; padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 16px); overflow-x: clip; }
+.app::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(rgba(12, 8, 20, 0.5), rgba(12, 8, 20, 0.5)), var(--kit-bg, url("/images/poster/bokeh-soft.jpg")) center / cover no-repeat #14101c; }
+@media (min-aspect-ratio: 1 / 1) { .app::before { background-image: linear-gradient(rgba(12, 8, 20, 0.5), rgba(12, 8, 20, 0.5)), var(--kit-bg-wide, var(--kit-bg, url("/images/poster/bokeh-soft.jpg"))); } }
+/* 아래 고정 크림 바가 있는 화면은 탭 + 바 + 16px 만큼 본문 아래를 비운다 — 무엇도 가려지지 않는다 */
+.app:has(.sticky-bar) { padding-bottom: calc(var(--tabbar-h) + var(--stickybar-h) + env(safe-area-inset-bottom) + 16px); }
 .fixed-col { position: fixed; left: 50%; transform: translateX(-50%); width: min(100%, var(--app-max)); }
 
 img, svg, video { display: block; max-width: 100%; height: auto; }
@@ -93,10 +97,11 @@ details > summary::-webkit-details-marker { display: none; }
 /* ── 스티커: 포스터에서 오려 낸 조각 ── */
 .stk { display: block; position: relative; border-radius: 6px; box-shadow: var(--shadow-hard); transform: rotate(var(--r, 0deg)); }
 .stk > img { border-radius: inherit; width: 100%; height: auto; }
-/* 키트 그림(투명 PNG)은 모서리를 깎지 않고 그림자가 모양을 따라간다 */
-.stk.stk-kit { border-radius: 0; box-shadow: none; filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.45)); }
-/* 모서리 테이프 — 반투명 크림 종이 띠(키트 tape.png 가 있으면 그 그림: --kit-tape) */
-.tape::after, .tape-tl::after, .tape-tr::after { content: ""; position: absolute; z-index: 3; width: 68px; height: 20px; background-color: var(--kit-tape-fill, rgba(244, 233, 210, 0.74)); background-image: var(--kit-tape, none); background-size: 100% 100%; background-repeat: no-repeat; box-shadow: var(--kit-tape-shadow, 0 1px 2px rgba(0, 0, 0, 0.28)); pointer-events: none; border-radius: 1px; }
+/* 키트 그림(투명 PNG)에는 그림자·외곽선이 이미 그려져 있다 — CSS 그림자·모서리·테두리 없음 */
+.stk.stk-kit { border-radius: 0; box-shadow: none; filter: none; border: 0; }
+.stk.stk-kit > img { border-radius: 0; }
+/* 모서리 테이프 68x20 — 키트 tape.png(알파가 약해 opacity .85), 없으면 반투명 크림 띠 */
+.tape::after, .tape-tl::after, .tape-tr::after { content: ""; position: absolute; z-index: 3; width: 68px; height: 20px; background-color: var(--kit-tape-fill, rgba(244, 233, 210, 0.74)); background-image: var(--kit-tape, none); background-size: 100% 100%; background-repeat: no-repeat; box-shadow: var(--kit-tape-shadow, 0 1px 2px rgba(0, 0, 0, 0.28)); opacity: var(--kit-tape-opacity, 1); pointer-events: none; border-radius: 1px; }
 .tape::after { left: 50%; top: -9px; margin-left: -34px; transform: rotate(-3deg); }
 .tape-tl::after { left: -18px; top: 6px; transform: rotate(-42deg); }
 .tape-tr::after { right: -18px; top: 6px; transform: rotate(42deg); }
@@ -133,10 +138,15 @@ details > summary::-webkit-details-marker { display: none; }
 .plate-store { --plate: var(--store, var(--ink)); }
 .plate-sm { font-size: 16px; padding: 7px 10px 6px; border-width: 2px; box-shadow: 3px 3px 0 #000; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }
 
-/* ── 폴라로이드: 진짜 사진 ── */
-.pola { display: block; position: relative; background: #fff; padding: 7px 7px 20px; box-shadow: 0 6px 0 rgba(0, 0, 0, 0.42), 0 2px 8px rgba(0, 0, 0, 0.35); transform: rotate(var(--r, 0deg)); color: #111; }
-.pola > img, .pola > .ph { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; background: #ddd; }
-.pola .cap { display: block; font-family: var(--font-hand); font-size: 18px; line-height: 1; margin-top: 7px; color: #2a2521; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* ── 폴라로이드: 진짜 사진(4:3, 흰 테두리 7px) + 아래 흰 띠의 캡션 ──
+   캡션은 Pretendard 13px/700 잉크색, 왼쪽 정렬. 메뉴 캡션은 stores.ts 값과 같은 이름·가격. 손글씨 아님.
+   실제 글꼴로 잰 캡션 폭: 가장 긴 것 227px(시그니처 콜드햄 플레이트 · 13,900원), 209, 205, 188 … — 홈의 큰 카드(390 화면 198px, 430 화면 219px)에는 긴 셋(430 에서는 하나)이 한 줄에 안 든다.
+   그래서 값이 '13…'로 잘리는 대신 둘째 줄로 접히고(2줄까지), 접히는 자리는 값 앞(.cap-price 는 한 덩어리): "시그니처 콜드햄 플레이트" / "· 13,900원". 매장 화면의 한 단 가득 카드(344px)는 다 한 줄.
+   카드 높이 = 7 + 사진 + 6 + 17(줄마다) + 8 */
+.pola { display: block; position: relative; background: #fff; padding: 7px 7px 8px; box-shadow: 0 6px 0 rgba(0, 0, 0, 0.42), 0 2px 8px rgba(0, 0, 0, 0.35); transform: rotate(var(--r, 0deg)); color: #111; }
+.pola > img, .pola > .ph { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: #ddd; }
+.pola .cap { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; font-family: var(--font-sans); font-size: 13px; font-weight: 700; line-height: 17px; margin-top: 6px; color: #111; text-align: left; letter-spacing: -0.01em; white-space: normal; overflow: hidden; }
+.pola .cap-price { white-space: nowrap; }
 
 /* ── 스티커 버튼 ── */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; padding: 0 22px; background: var(--yellow); color: var(--ink); font-family: var(--font-display); font-weight: 400; font-size: 20px; line-height: 1; border: 2px solid #111; border-radius: 6px; box-shadow: var(--shadow-ink); transform: rotate(var(--r, -1deg)); white-space: nowrap; user-select: none; transition: transform 0.08s, box-shadow 0.08s, opacity 0.12s; }
@@ -157,9 +167,19 @@ summary.btn { list-style: none; }
 .paper .link, .scrap .link { color: var(--ink); }
 .btn-text { min-height: 44px; font-size: 14px; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
 
-/* 화면 아래 떠 있는 스티커(탭 위) — 판 없이 스티커만 */
-.sticky-cta { bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 10px); z-index: 30; padding: 0 var(--gutter); pointer-events: none; }
-.sticky-cta > * { pointer-events: auto; }
+/* 화면 아래 고정 크림 바(탭 바로 위) — 불투명 크림, 위에 검은 선 1px, 안에 64px 그림 버튼 하나 가운데(폭으로 늘리지 않는다).
+   높이 --stickybar-h(80px) = 8 + 64 + 8. 본문은 .app:has(.sticky-bar) 가 그만큼 아래를 비운다. 오류 줄이 있으면 바가 위로 자란다 */
+.sticky-bar { bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); z-index: 35; display: grid; justify-items: center; gap: 6px; min-height: var(--stickybar-h); padding: 8px var(--gutter); background: var(--cream); border-top: 1px solid #111; }
+.sticky-bar .error { justify-self: stretch; text-align: center; }
+
+/* ── 흰 손글씨 메모(note-again·note-today)가 보케 위에 올 때 ──
+   이 두 장(과 footer-line)은 키트에서 유일하게 그림자가 구워져 있지 않다(디자이너: 생성된 글씨에서 검정 배경만 뺐다). 받침 상자(직사각형)는 두지 않고:
+   1. 획마다 검은 테두리 그림자(drop-shadow 셋) — 밝은 보케 점 위에서도 획이 읽힌다
+   2. 글자 상자보다 사방 26/40px 큰 타원 어둠(::before, closest-side, 가운데 66% → 가장자리 0%) — 밤이 그 자리만 조금 더 어두운 것처럼, 모서리·직선 가장자리가 없다
+   z-index −1: 이웃(제목판·폴라로이드·꼬리표)보다 아래, .app 의 고정 바탕(같은 −1, 먼저 그려짐)보다 위 — 어둠이 이웃을 물들이지 않는다 */
+.note-dark { position: relative; z-index: -1; isolation: isolate; display: block; padding: 0; background: none; border-radius: 0; }
+.note-dark::before { content: ""; position: absolute; inset: -26px -40px; z-index: -1; pointer-events: none; background: radial-gradient(ellipse closest-side at 50% 50%, rgba(12, 8, 20, 0.66) 0%, rgba(12, 8, 20, 0.52) 45%, rgba(12, 8, 20, 0.22) 78%, transparent 100%); }
+.note-dark img { filter: drop-shadow(0 0 1px #000) drop-shadow(0 1px 1px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 4px rgba(0, 0, 0, 0.85)); }
 
 /* ── 입력 ── */
 .field { display: grid; gap: 8px; }
@@ -189,9 +209,10 @@ summary.btn { list-style: none; }
 
 /* ── 지도(밝은 타일 그대로) — 테이프로 붙인 종이 조각 ── */
 .map-paper { position: relative; background: #fff; padding: 8px; box-shadow: var(--shadow-hard); transform: rotate(var(--r, 1deg)); }
-.map-paper::before, .map-paper::after { content: ""; position: absolute; z-index: 1000; width: 74px; height: 22px; background-color: var(--kit-tape-fill, rgba(244, 233, 210, 0.74)); background-image: var(--kit-tape, none); background-size: 100% 100%; background-repeat: no-repeat; box-shadow: var(--kit-tape-shadow, 0 1px 2px rgba(0, 0, 0, 0.28)); pointer-events: none; }
+.map-paper::before, .map-paper::after { content: ""; position: absolute; z-index: 1000; width: 68px; height: 20px; background-color: var(--kit-tape-fill, rgba(244, 233, 210, 0.74)); background-image: var(--kit-tape, none); background-size: 100% 100%; background-repeat: no-repeat; box-shadow: var(--kit-tape-shadow, 0 1px 2px rgba(0, 0, 0, 0.28)); opacity: var(--kit-tape-opacity, 1); pointer-events: none; }
+/* 테이프는 위 두 모서리 — 오른쪽 아래는 지도 출처 글자(© OpenStreetMap) 자리라 비워 둔다 */
 .map-paper::before { left: -20px; top: 10px; transform: rotate(-42deg); }
-.map-paper::after { right: -20px; bottom: 10px; transform: rotate(-42deg); }
+.map-paper::after { right: -20px; top: 10px; transform: rotate(42deg); }
 .leaflet-container.leaflet-container { background: #e9e2d4; font-family: var(--font-sans); }
 .leaflet-container.leaflet-container .leaflet-control-attribution { background: rgba(244, 233, 210, 0.85); color: #4a4238; font-size: 10px; }
 .leaflet-container.leaflet-container .leaflet-control-attribution a { color: #111; }

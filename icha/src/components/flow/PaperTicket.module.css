@@ -1,6 +1,9 @@
-/* 종이 쿠폰 — 그림자는 바깥(wrap)에서, 구멍은 mask 로 뚫는다 */
+/* 종이 쿠폰 — CSS 로 그릴 때 그림자는 바깥(wrap)에서, 구멍은 mask 로 뚫는다 */
 .wrap { filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.45)); transform: rotate(var(--r, 0deg)); }
-.dim { opacity: 0.82; filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.3)) grayscale(0.4); }
+/* 키트 티켓 그림 위에 얹을 때 — 그림자는 그림에 있으니 CSS 그림자 없음 */
+.wrapKit { transform: rotate(var(--r, 0deg)); }
+/* 지난 쿠폰 — 살짝 흐리게(도장은 따로 위에 찍힌다) */
+.dim { opacity: 0.84; }
 .ticket { display: grid; grid-template-columns: 1fr var(--stub, 96px); background: var(--cream); color: var(--ink); border-radius: 6px; overflow: hidden;
   -webkit-mask: radial-gradient(circle 10px at calc(100% - var(--stub, 96px)) 0, transparent 9.5px, #000 10.5px), radial-gradient(circle 10px at calc(100% - var(--stub, 96px)) 100%, transparent 9.5px, #000 10.5px);
   -webkit-mask-composite: source-in; mask-composite: intersect;
@@ -9,27 +12,31 @@
 .lg { --stub: 118px; }
 .main { display: grid; gap: 4px; padding: 14px 14px 14px 16px; min-width: 0; }
 .lg .main { padding: 20px 16px 20px 20px; gap: 6px; }
-.store { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
-.name { font-size: 20px; line-height: 1.2; }
-.lg .name { font-size: 26px; }
+.store { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+/* 매장 색 판 — 티켓 안에서는 한 단계 작게(14px, 23px 높이) */
+.storePlate { font-size: 14px; padding: 5px 8px 4px; box-shadow: 2px 2px 0 #000; }
+.name { font-size: 20px; line-height: 1.2; min-height: 1.2em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lg .name { font-size: 22px; }
 .code { font-size: 22px; line-height: 1.2; color: var(--ink); }
-.lg .code { font-size: 34px; margin-top: 4px; }
-.meta { font-size: 12.5px; color: var(--ink-2); }
+.lg .code { font-size: 26px; }
+.meta { font-size: 12.5px; line-height: 1.3; color: var(--ink-2); }
 .lg .meta { font-size: 13.5px; }
 .stub { position: relative; display: grid; place-items: center; padding: 12px 8px; border-left: 2px dashed rgba(17, 17, 17, 0.4); background: rgba(255, 255, 255, 0.35); }
-.stubPhoto { width: 68px; height: 68px; object-fit: cover; background: #fff; padding: 3px; box-shadow: 1px 2px 0 rgba(0, 0, 0, 0.3); transform: rotate(4deg); }
-.lg .stubPhoto { width: 90px; height: 90px; }
-.stubCut { width: 74px; height: 74px; object-fit: contain; filter: drop-shadow(2px 3px 0 rgba(0, 0, 0, 0.28)); }
-.lg .stubCut { width: 96px; height: 96px; }
+.stubPhoto { width: 64px; height: 64px; object-fit: cover; background: #fff; padding: 3px; box-shadow: 1px 2px 0 rgba(0, 0, 0, 0.3); transform: rotate(4deg); }
+.stubCut { width: 68px; height: 68px; object-fit: contain; filter: drop-shadow(2px 3px 0 rgba(0, 0, 0, 0.28)); }
 /* 사진 없는 반쪽 — 글자를 한 자씩 세로로 쌓는다(가로쓰기 그대로, 기울거나 뒤집히지 않는다) */
-.stubText { display: grid; justify-items: center; gap: 2px; font-size: 19px; line-height: 1; color: var(--ink-2); }
+.stubText { display: grid; justify-items: center; gap: 2px; font-size: 18px; line-height: 1; color: var(--ink-2); }
 .stubText > span { display: block; }
-.lg .stubText { font-size: 23px; gap: 4px; }
 
-/* 키트의 종이 티켓 그림(ticket.png) 위에 얹을 때 — 종이·구멍·점선은 그림이 맡고, 글자와 반쪽만 절대 위치.
-   자리는 그림 기준 %: 파일이 오면 이 네 줄만 맞춘다 */
+/* 키트의 종이 티켓 그림(ticket.png 1400x600) 위에 얹을 때 — 종이·구멍·점선은 그림이 맡고, 글자와 반쪽만 절대 위치.
+   그림 기준 %: 몸통 x 2~98% / y 8~92%, 절취선 x 73.4%. 358 폭이면 티켓 153px, 글자 자리 236x129(위아래 8%), 반쪽 72x110.
+   글자 줄 높이(390 화면, lg): 매장 판 29 + 이름 24 + 코드 29 + 조건 16 + 틈 12 = 110 < 129 — 줄은 max-content 라 어떤 줄도 눌려 잘리지 않고, 조건 줄은 한 줄(nowrap, 12.5px 로 236 안에 든다) */
 .kit { position: relative; color: var(--ink); }
 .kitImg { display: block; width: 100%; height: auto; }
-.kitMain { position: absolute; left: 6%; top: 8%; bottom: 8%; width: 62%; padding: 0; align-content: center; }
-.lg .kitMain { padding: 0; }
-.kitStub { position: absolute; right: 4%; top: 12%; bottom: 12%; width: 22%; padding: 0; border-left: 0; background: none; }
+.kitMain { position: absolute; left: 5%; top: 8%; bottom: 8%; width: 66%; padding: 0; gap: 3px; grid-auto-rows: max-content; align-content: center; }
+.lg .kitMain { padding: 0; gap: 4px; }
+.kit .name { font-size: 20px; }
+.kit .code { font-size: 22px; }
+.kit.lg .code { font-size: 24px; }
+.kit .meta { font-size: 12.5px; white-space: nowrap; }
+.kitStub { position: absolute; left: 76%; right: 4%; top: 14%; bottom: 14%; padding: 0; border-left: 0; background: none; }

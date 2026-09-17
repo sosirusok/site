@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { CSSProperties } from "react";
 import { KitPiece, SectionLabel, StickerButton } from "@/components/site/Kit";
@@ -11,7 +10,8 @@ import { MenuThumb, StoreMenu } from "@/components/site/StoreMenu";
 import { StoreReviews } from "@/components/site/StoreReviews";
 import { StoreVisit } from "@/components/site/StoreVisit";
 import { BRAND, formatWon, type StoreId } from "@/lib/config";
-import { listMenu } from "@/lib/db/queries";
+import { giftLine } from "@/lib/copy";
+import { listMenu, type MenuItem } from "@/lib/db/queries";
 import { placeLinks } from "@/lib/naver";
 import { getRules } from "@/lib/settings";
 import { getStore } from "@/lib/stores";
@@ -21,8 +21,19 @@ export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ id: string }> };
 
-/** DB 에 배경 뺀 품목 사진이 없을 때 혜택 조각 옆에 붙는 키트의 오려 낸 술(없으면 아무것도 안 붙는다) */
-const CUT: Record<StoreId, string> = { tokyo: "cut-beer", joseon: "cut-makgeolli", wareureu: "cut-yogurt" };
+/** 혜택 상자 옆에 붙는 키트 컷아웃 — 1차 맥주잔(96px 높이), 2차 막걸리 주전자(76px 폭), 3차 요거트 아이스크림(84px 높이; 소주병은 혜택 품목 줄의 사진 자리에) */
+const CUT: Record<StoreId, { name: string; cls: "cutTall" | "cutWide" | "cutYogurt" }> = {
+  tokyo: { name: "cut-beer", cls: "cutTall" },
+  joseon: { name: "cut-makgeolli", cls: "cutWide" },
+  wareureu: { name: "cut-yogurt", cls: "cutYogurt" },
+};
+
+/** 혜택 품목에 사진이 없을 때 사진 자리(64px)에 놓는 그 집 술 컷아웃 — 와르르맨숀의 소주 1병은 cut-soju(디자이너 배정). 사진 있는 줄과 글자 시작점이 같다 */
+const DRINK_CUT: Record<StoreId, string> = { tokyo: "cut-beer", joseon: "cut-makgeolli", wareureu: "cut-soju" };
+
+function hasPhoto(m: MenuItem): boolean {
+  return Boolean(m.imagePath || m.hasImageData);
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
@@ -35,10 +46,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /**
- * 매장 화면 — 밤 사진 위에 포스터 간판 조각, 어두운 띠(상태 칩·오늘 영업시간·별점), 종이(영업시간·주소·전화),
- * 특별 혜택(포스터 혜택 조각 + 오려 낸 품목 사진 + 찢은 종이: 혜택 한 줄·품목·조건), 사진(폴라로이드 다섯, 캡션 없음), 메뉴판(크림 종이),
- * 오시는 길(테이프 지도), 리뷰(종이 조각), 다음 매장(종이 한 줄). 정보 글자는 전부 본문 글꼴, 명사구·합니다체.
- * 초록 버튼은 아래 고정 [예약하기] 하나. 섹션 제목·버튼·도장은 키트(label-*, btn-book, stamp-free)가 있으면 그 그림.
+ * 매장 화면 — 밤 사진 위에 키트 간판, 어두운 띠(상태 칩·오늘 영업시간·별점), 종이(영업시간·주소·전화),
+ * 특별 혜택(키트 제목판 + 혜택 상자 ≤300 + 컷아웃 + 찢은 종이: 혜택 한 줄(둘이면 노란 꼬리표 '택 1')·품목 줄(사진 64px 또는 술 컷아웃 | 이름·설명·값 + 무료 도장 오른쪽 끝)·조건), 사진(키트 제목판 + 폴라로이드 다섯, 캡션 + [사진 더 보기]),
+ * 메뉴(종이 메뉴판 + [메뉴 전체 보기]), 오시는 길(테이프 지도 + [길찾기]), 리뷰(종이 조각 + [네이버 리뷰 남기기]), 다음 매장(종이 한 줄).
+ * 정보 글자는 전부 본문 글꼴, 명사구·합니다체. 초록 버튼은 아래 고정 크림 바의 [예약하기](64px) 하나 — 본문은 .app:has(.sticky-bar) 가 그만큼 아래를 비운다.
  */
 export default async function StorePage({ params }: Props) {
   const { id } = await params;
@@ -51,12 +62,9 @@ export default async function StorePage({ params }: Props) {
     getRules(),
   ]);
   const links = placeLinks(store);
-  /** 배경을 뺀 PNG 가 있는 혜택 품목(도쿄스탠드 생맥주) — 포스터 오려 붙인 듯 혜택 조각 옆에 크게 */
-  const cutout = gifts.find((g) => g.imagePath && /\.png$/i.test(g.imagePath)) ?? null;
   const notice = rules.storeNotices[store.id]?.trim() ?? "";
   const reviewBenefit = rules.reviewBenefit[store.id]?.trim() ?? "";
-  /** 혜택 한 줄(고정형) — 품목은 DB 혜택 이름들, 없으면 포스터의 혜택 이름 */
-  const giftWhat = gifts.length ? gifts.map((g) => g.name).join(" 또는 ") : store.benefitLabel;
+  const cut = CUT[store.id];
 
   return (
     <article className={styles.page} data-store={store.id}>
@@ -74,19 +82,20 @@ export default async function StorePage({ params }: Props) {
         </div>
         <div className={styles.giftRow}>
           <div className={styles.giftTop}>
-            <Piece name={benefitOf(store.id)} rotate={-2} sizes="250px" className={`tape-tl ${styles.benefit}`} />
-            {cutout ? (
-              <Image src={cutout.imagePath!} alt={cutout.name} width={160} height={320} sizes="110px" className={styles.cutout} draggable={false} />
-            ) : (
-              <KitPiece name={CUT[store.id]} bare sizes="110px" className={styles.cutout} />
-            )}
+            <Piece name={benefitOf(store.id)} rotate={-1} sizes="300px" className={styles.benefit} />
+            <KitPiece name={cut.name} bare sizes="100px" className={`${styles.cut} ${styles[cut.cls]}`} />
           </div>
-          <div className={`scrap ${styles.giftScrap}`} style={{ "--r": "1.5deg" } as CSSProperties}>
+          <div className={`scrap ${styles.giftScrap}`} style={{ "--r": "1deg" } as CSSProperties}>
             <div className={`scrap-in ${styles.giftIn}`}>
-              <p className={`${styles.giftHead} ${cutout ? styles.giftHeadClear : ""}`}>다른 매장 쿠폰 제시 시 {giftWhat} 무료</p>
+              <p className={styles.giftHead}>
+                {giftLine(gifts.map((g) => g.name), store.benefitLabel)}
+                {gifts.length > 1 && <span className={`tag tag-yellow ${styles.giftPick}`}>택 1</span>}
+              </p>
               {gifts.map((g) => (
                 <div key={g.id} className={styles.gift}>
-                  {g.id !== cutout?.id && <MenuThumb m={g} size={64} />}
+                  <div className={styles.giftThumb}>
+                    {hasPhoto(g) ? <MenuThumb m={g} size={64} /> : <KitPiece name={DRINK_CUT[store.id]} bare sizes="64px" className={styles.giftCut} />}
+                  </div>
                   <div className={styles.giftBody}>
                     <p className={styles.giftName}>{g.name}</p>
                     {g.description && <p className={styles.giftDesc}>{g.description}</p>}
@@ -97,7 +106,6 @@ export default async function StorePage({ params }: Props) {
                   </div>
                 </div>
               ))}
-              {gifts.length > 1 && <p className={styles.giftPick}>택 1</p>}
               <p className={styles.giftRule}>이용 조건 · {BRAND.condition}</p>
             </div>
           </div>
@@ -106,7 +114,7 @@ export default async function StorePage({ params }: Props) {
 
       <section className={styles.sec} aria-labelledby="photo-title">
         <div className="sec-h">
-          <h2 id="photo-title" className="plate plate-blue">사진</h2>
+          <SectionLabel kind="photo" color="blue" id="photo-title">사진</SectionLabel>
         </div>
         <StoreGallery store={store} photoUrl={links?.photo ?? null} />
       </section>
@@ -139,8 +147,8 @@ export default async function StorePage({ params }: Props) {
       <NextStop store={store} />
 
       {links && (
-        <div className="fixed-col sticky-cta">
-          <StickerButton kind="book" block href={links.booking}>예약하기<span className="sr-only"> — {store.shortName}</span></StickerButton>
+        <div className="fixed-col sticky-bar">
+          <StickerButton kind="book" block href={links.booking} suffix={` — ${store.shortName}`}>예약하기</StickerButton>
         </div>
       )}
     </article>

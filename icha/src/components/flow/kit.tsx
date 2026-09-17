@@ -28,15 +28,19 @@ export type StickerButtonProps = {
   /** 기울기(도) — 기본 -1, 옆에 나란히 둘 때 1, 0 이면 반듯하게 */
   rotate?: -1 | 0 | 1;
   className?: string;
-  /** 살아 있는 글자 — 이미지 버튼일 때는 화면에서 숨기고 보조기기에만 읽힌다 */
+  /** 키트가 없을 때 노란 스티커에 찍히는 글자. 키트 그림일 때 읽히는 이름은 그림에 적힌 글자(KIT_ALT) + suffix */
   children: ReactNode;
+  /** 읽히는 이름 뒤에 붙는 꼬리(" — 도쿄스탠드") */
+  suffix?: string;
+  /** 진행 중 같은 상태 글자로 읽히는 이름을 바꿀 때 */
+  srText?: string;
   "aria-label"?: string;
   id?: string;
 };
 
 /** 스티커 버튼 — 키트에 btn-<kind> 가 있으면 그 그림(52px, 작은 것 44px), 없으면 CSS .btn(.btn-naver 는 book 만). 흐름 화면용 짧은 이름 */
-export function StickerButton({ small = false, rotate = -1, ...p }: StickerButtonProps) {
-  return <KitStickerButton {...p} size={small ? "sm" : "md"} tilt={rotate} />;
+export function StickerButton({ small = false, rotate, ...p }: StickerButtonProps) {
+  return <KitStickerButton {...p} size={small ? "sm" : "md"} tilt={rotate ?? (p.block ? 0 : -1)} />;
 }
 
 /**

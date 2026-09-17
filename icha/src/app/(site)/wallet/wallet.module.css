@@ -6,13 +6,12 @@
 .noticeIn { font-size: 15px; line-height: 1.5; }
 .noticeTag { margin-right: 8px; vertical-align: 1px; }
 .top { display: grid; gap: 12px; justify-items: start; padding: 18px var(--gutter) 6px; }
-.h1 { font-size: 28px; padding: 12px 18px 10px; }
+.h1 { --r: -1.5deg; }
 .sub { font-weight: 700; }
 .sec { padding: 22px var(--gutter) 6px; }
 .count { color: #fff; }
 .none { color: rgba(244, 233, 210, 0.92); }
 .foot { display: grid; gap: 14px; justify-items: start; padding-top: 30px; }
-.foot :global(.btn-block) { justify-self: stretch; }
 .rule { justify-self: stretch; font-size: 14px; color: rgba(244, 233, 210, 0.92); }
 /* 보케 위 밑줄 링크 — 어두운 알약 위에 */
 .pill { background: rgba(20, 17, 26, 0.9); padding: 0 12px; border-radius: 4px; }

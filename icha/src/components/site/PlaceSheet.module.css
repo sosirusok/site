@@ -1,12 +1,15 @@
-/* 예약 시트 — 아래에서 올라오는 크림색 종이. 위 모서리는 살짝 찢은 듯 */
+/* 예약 시트 — 아래에서 올라오는 크림색 종이. body 포털, z 60(탭 40·고정 바 35 위). 제목은 패널 안쪽 여백 안에(잘리지 않음), 패널 안이 스크롤 */
 .backdrop { position: fixed; inset: 0; z-index: 60; background: rgba(0, 0, 0, 0.62); display: flex; align-items: flex-end; justify-content: center; }
-.sheet { position: relative; width: min(100%, var(--app-max)); max-height: 88dvh; overflow-y: auto; overflow-x: clip; background: var(--cream); color: var(--ink); padding: 22px var(--gutter) calc(18px + env(safe-area-inset-bottom)); border-top: 3px solid #111; box-shadow: 0 -6px 0 rgba(0, 0, 0, 0.35); display: grid; gap: 10px; animation: up 0.22s var(--ease-out); }
+.sheet { position: relative; width: min(100%, var(--app-max)); max-height: 88dvh; overflow-y: auto; overflow-x: clip; background: var(--cream); color: var(--ink); padding: 18px var(--gutter) calc(18px + env(safe-area-inset-bottom)); border-top: 3px solid #111; box-shadow: 0 -6px 0 rgba(0, 0, 0, 0.35); display: grid; gap: 10px; animation: up 0.22s var(--ease-out); }
 @keyframes up { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
-.title { margin-top: -34px; }
-.sub { font-size: 14px; font-weight: 600; color: var(--ink-2); margin-top: 6px; }
-.list { display: grid; gap: 14px; margin-top: 6px; }
-.item { display: grid; grid-template-columns: 1fr auto; gap: 10px 14px; align-items: center; padding: 10px 0 6px; border-top: 1px dashed var(--paper-line); }
+.head { display: grid; gap: 8px; justify-items: start; }
+.title { --r: -1.5deg; }
+.sub { font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.list { display: grid; gap: 10px; margin-top: 4px; }
+/* 매장 한 줄 — 간판 조각 ≤200px(1200x500 → 83px 높이; 390 화면은 예약 스티커 180px 옆 166px) + 오른쪽에 스티커·꼬리표 */
+.item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 12px; align-items: center; padding: 10px 0 8px; border-top: 1px dashed var(--paper-line); }
 .plate { width: 100%; max-width: 200px; }
-.side { display: grid; gap: 2px; justify-items: end; }
-.links { display: flex; gap: 14px; }
+/* 조선칼국수 간판은 불투명 간판이 캔버스의 70% 라 112%(왼쪽 −12px): 셋이 같은 무게로 보인다 */
+.item[data-store="joseon"] .plate { width: 112%; max-width: 224px; margin-left: -12px; }
+.side { display: grid; gap: 4px; justify-items: end; }
 .foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 4px; padding-top: 8px; border-top: 1px dashed var(--paper-line); }

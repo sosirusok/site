@@ -1,10 +1,11 @@
-/* 맨 위 한 줄 — 투명. 제목 조각은 작은 스티커, 로그인은 종이 꼬리표 */
-.header { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: var(--header-h); padding: 10px var(--gutter) 4px; }
+/* 맨 위 한 줄 — 투명. 제목은 키트 title.png 42px(1400x480 → 122px 폭)로 줄에서 가장 크고, 로그인은 키트 꼬리표 36px(101px 폭) — 상표가 보조 버튼보다 크다. 키트 그림에는 CSS 그림자·모서리 없음 */
+.header { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: var(--header-h); padding: 8px var(--gutter) 4px; }
 .brand { display: inline-flex; align-items: center; min-height: 44px; opacity: 1; transition: opacity 0.3s ease; }
 /* 홈 첫 화면 — 포스터 머리에 제목이 크게 있으니 스티커는 감춘다(150px 내려가면 나타남) */
 .brandHidden { opacity: 0; pointer-events: none; }
-.brandImg { width: auto; height: 26px; border-radius: 3px; box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.5); transform: rotate(-2deg); }
+.brandImg { width: auto; height: 42px; }
+/* 키트가 없을 때의 포스터 조각 제목(불투명 잘라낸 조각) — 이때만 모서리·그림자 */
+.brandImgPoster { width: auto; height: 26px; border-radius: 3px; box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.5); transform: rotate(-2deg); }
 .me { display: inline-flex; align-items: center; min-height: 44px; }
-/* 키트 btn-login.png — 36px 높이, 모양 따라가는 딱딱한 그림자 */
-.meImg { width: auto; height: 36px; filter: drop-shadow(2px 2px 0 #000); transform: rotate(2deg); }
+.header .me { --kh: 36px; }
 .meTag { display: inline-flex; align-items: center; min-height: 34px; padding: 0 12px; background: var(--cream); color: var(--ink); font-family: var(--font-display); font-size: 15px; line-height: 1; border: 2px solid #111; border-radius: 4px; box-shadow: 2px 2px 0 #000; transform: rotate(2deg); font-variant-numeric: tabular-nums; }

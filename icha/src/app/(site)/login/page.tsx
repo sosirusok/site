@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { PhoneForm } from "@/components/flow/PhoneForm";
 import { safeNext } from "@/components/flow/format";
-import { Piece } from "@/components/site/Poster";
+import { KitPiece, SectionLabel } from "@/components/site/Kit";
 import { getMemberSession } from "@/lib/auth/session";
 import styles from "./login.module.css";
 
 export const metadata: Metadata = { title: "로그인" };
 
-/** 로그인 — 계산 시 직원에게 말한 휴대폰 번호를 넣으면 그 번호의 쿠폰함이 열린다. 폼은 종이 카드 위에, 안내 줄은 어두운 띠에 본문 글꼴. */
+/** 로그인 — 키트 큰 제목판(label-phone "번호로 시작", 60px) + 손글씨 메모(note-today 140px, 획 그림자 + 가장자리 없는 어둠), 어두운 띠 안내 한 줄, 종이 카드 위 번호 입력 + 키트 [로그인](64px). 맨 위 줄의 로그인 꼬리표는 이 화면에서 감춘다(Header). */
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const sp = await searchParams;
   const next = safeNext(sp.next, "/wallet");
@@ -18,9 +18,11 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   return (
     <div className={styles.page}>
       <header className={styles.top} aria-labelledby="login-title">
-        <h1 id="login-title" className={`plate plate-blue ${styles.h1}`}>로그인</h1>
-        <p className={`${styles.strip} ${styles.sub}`}>계산 시 말씀하신 휴대폰 번호로 로그인합니다</p>
-        <Piece name="note-today" rotate={5} sizes="110px" className={styles.note} />
+        <div className={styles.titleRow}>
+          <SectionLabel kind="phone" color="blue" as="h1" big id="login-title" className={styles.h1}>번호로 시작</SectionLabel>
+          <KitPiece name="note-today" rotate={4} sizes="140px" className={`note-dark ${styles.note}`} />
+        </div>
+        <p className={`info ${styles.sub}`}>계산 시 말씀하신 휴대폰 번호로 로그인합니다</p>
       </header>
       <section className={`paper paper-l ${styles.card}`}>
         <PhoneForm next={next} />

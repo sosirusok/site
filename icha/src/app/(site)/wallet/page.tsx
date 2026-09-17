@@ -4,7 +4,7 @@ import type { CSSProperties } from "react";
 import { DotLine } from "@/components/flow/kit";
 import { LogoutButton } from "@/components/flow/LogoutButton";
 import { ActiveCoupons, EmptyWallet, PastCoupons, RelayCards, type WalletCoupon, type WalletRelay } from "@/components/flow/WalletSections";
-import { PlaceButton } from "@/components/site/PlaceButton";
+import { SectionLabel } from "@/components/site/Kit";
 import { getMemberSession } from "@/lib/auth/session";
 import { BRAND, STORE_IDS, type StoreId } from "@/lib/config";
 import { ruleLine } from "@/lib/copy";
@@ -39,8 +39,8 @@ async function menuPhotoIndex(): Promise<(storeId: StoreId, menuItemId: number |
 }
 
 /**
- * 쿠폰함 — 번호 하나에 담긴 쿠폰 더미. 위에서부터: 받은 쿠폰(아직 사용 매장을 안 고름) → 사용 가능 쿠폰 → 지난 쿠폰.
- * 안내·규칙 줄은 보케 위 어두운 띠에 본문 글꼴로(손글씨·해요체 없음), 관리자 공지는 크림 종이.
+ * 쿠폰함 — 키트 큰 제목판(label-wallet 60px). 번호 하나에 담긴 쿠폰 더미: 받은 쿠폰(아직 사용 매장을 안 고름) → 사용 가능 쿠폰 → 지난 쿠폰. 쿠폰은 키트 티켓 그림 위에 실제 값.
+ * 안내·규칙 줄은 보케 위 어두운 띠에 본문 글꼴로(손글씨·해요체 없음), 관리자 공지는 크림 종이. 맨 아래 초록 [예약하기](플레이스 시트) 하나.
  * 사진·등급·누적 금액은 없다(사장님 결정).
  */
 export default async function WalletPage() {
@@ -84,7 +84,7 @@ export default async function WalletPage() {
       )}
 
       <header className={styles.top}>
-        <h1 className={`plate plate-yellow ${styles.h1}`}>쿠폰함</h1>
+        <SectionLabel kind="wallet" color="yellow" as="h1" big className={styles.h1}>쿠폰함</SectionLabel>
         <p className={`${styles.strip} ${styles.sub}`}>사용 시 직원에게 이 화면 제시</p>
       </header>
 
@@ -108,7 +108,6 @@ export default async function WalletPage() {
       )}
 
       <footer className={`${styles.sec} ${styles.foot}`}>
-        {!nothing && <PlaceButton stores={places} className="btn btn-naver btn-block">예약하기</PlaceButton>}
         <p className={`${styles.strip} ${styles.rule}`}><DotLine items={[ruleLine(rules), BRAND.condition]} /></p>
         <LogoutButton className={`link link-w ${styles.pill}`} />
       </footer>

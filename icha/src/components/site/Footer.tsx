@@ -9,15 +9,15 @@ import styles from "./Footer.module.css";
 const SEARCH_QUERY = "서면 알콜부시기";
 
 /**
- * 모든 손님 화면 맨 아래 — 포스터 마지막 줄 조각 아래 어두운 띠.
+ * 모든 손님 화면 맨 아래 — 어두운 띠 안에 포스터 마지막 줄(footer-line, 흰 글자라 어두운 띠 위에 둔다) 그리고
  * 세 매장(차수·상호·주소·전화), 작은 링크 한 줄, 저작권 한 줄. Pretendard 13px 크림색. 실제 매장이 운영하는 사이트의 발.
  */
 export function Footer() {
   const ordered = [...STORES].sort((a, b) => a.course.n - b.course.n);
   return (
     <footer className={styles.footer}>
-      <Piece name="footer-line" bare className={styles.line} sizes="(min-width: 480px) 480px, 100vw" />
       <div className={styles.strip}>
+        <Piece name="footer-line" bare className={styles.line} sizes="(min-width: 480px) 448px, 100vw" />
         <ul className={styles.stores}>
           {ordered.map((s) => (
             <li key={s.id} className={styles.store}>

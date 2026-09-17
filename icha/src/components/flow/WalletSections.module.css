@@ -9,7 +9,6 @@
 .relayHead { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .relayTitle { font-size: 20px; }
 .relaySub { font-size: 15px; line-height: 1.5; color: var(--ink-2); }
-.relay :global(.btn) { margin-top: 8px; }
 /* 3차 초록 판은 흰 글자 대비를 위해 한 단계 짙게 */
 .relay[data-store="wareureu"] :global(.plate-store) { --plate: #156e38; }
 
@@ -17,10 +16,12 @@
 .stack { display: grid; gap: 18px; }
 .stackItem { position: relative; }
 .ticketLink { display: block; position: relative; }
-/* 도장 — 크림 92% 위에 짙은 빨강/초록(대비 4.5:1 이상) */
-.soon { position: absolute; right: 100px; top: -12px; font-size: 16px; padding: 4px 8px 3px; background: rgba(244, 233, 210, 0.95); opacity: 1; color: #b8221b; border-color: #b8221b; }
+/* 남은 날 도장 — 크림 92% 위에 짙은 빨강(대비 4.5:1 이상), 티켓 오른쪽 위 반쪽 위 */
+.soon { position: absolute; right: 10px; top: -10px; font-size: 16px; padding: 4px 8px 3px; background: rgba(244, 233, 210, 0.95); opacity: 1; color: #b8221b; border-color: #b8221b; }
+/* 만료·취소 쿠폰의 도장(글자) — 왼쪽 아래(키트에 그 도장이 없다). 사용한 쿠폰은 키트 도장(96px, -12도)이 반쪽 위에 찍히고 시각은 티켓 글자 줄에 */
 .pastStamp { position: absolute; left: 14px; bottom: -8px; font-size: 16px; padding: 4px 8px 3px; background: rgba(244, 233, 210, 0.95); opacity: 1; color: #b8221b; border-color: #b8221b; }
 .pastStamp:global(.stamp-green) { color: #156e38; border-color: #156e38; }
+.usedStamp { position: absolute; right: 2%; top: 50%; transform: translateY(-50%) rotate(-12deg); }
 
 /* 지난 쿠폰 — 띠를 누르면 펼쳐진다 */
 .past { padding: 8px var(--gutter) 6px; }
@@ -28,14 +29,11 @@
 .pastArrow { font-size: 16px; transition: transform 0.15s; }
 .past[open] .pastArrow { transform: rotate(180deg); }
 
-/* 빈 쿠폰함 — 종이 옆에 키트의 빈 영수증 꽂이(투명 PNG, 그림자 없음). 꽂이는 그림의 가운데 1/3 이라 종이와 살짝 겹쳐도 된다 */
-.empty { position: relative; display: grid; gap: 22px; padding: 10px 0 8px; }
-.emptyRow { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 96px; gap: 6px; align-items: end; }
-.emptyPaper { max-width: 100%; z-index: 1; display: grid; gap: 8px; padding: 18px 18px 20px; }
+/* 빈 쿠폰함 — 봉투 160px 가운데, 그 아래 종이 한 장, 초록 스티커 왼쪽. 봉투 그림(700x700)은 몸통이 가운데 57% 라 위아래 여백을 당긴다 */
+.empty { display: grid; gap: 14px; justify-items: start; padding: 4px 0 8px; }
+.envelope { justify-self: center; margin: -30px 0 -34px; }
+.emptyNote { justify-self: center; width: 96px; }
+.emptyPaper { justify-self: stretch; display: grid; gap: 8px; padding: 18px 18px 20px; }
 .emptyTitle { font-size: 22px; }
 .emptyText { font-size: 15px; line-height: 1.5; color: var(--ink-2); }
-/* 꽂이 그림(360px)은 가운데 29% 만 물체라, 240px 로 키우고 물체 둘레(70x155)만 보이도록 상자로 자른다 — 그림자 없음 */
-.spikeBox { display: block; width: 92px; height: 164px; overflow: hidden; justify-self: end; margin-bottom: -6px; }
-.emptySpike { max-width: none; margin: -42px 0 0 -74px; }
-.emptyNote { width: 96px; margin: 0 0 40px 0; }
-.emptyBtn { margin-top: 6px; }
+.emptyBtn { margin-top: 4px; }

@@ -1,4 +1,4 @@
-/* 매장 화면 — 보케 위에 붙인 조각·종이. 섹션 제목은 색 간판, 옆에는 짧은 사실 칩만(개수·거리) */
+/* 매장 화면 — 보케 위에 붙인 키트 조각·종이. 섹션 제목은 키트 제목판(46px), 옆에는 짧은 사실 칩만(개수·거리) */
 .page { padding-bottom: 8px; }
 .sec { padding: 26px var(--gutter) 6px; }
 .anchor { scroll-margin-top: 8px; }
@@ -9,27 +9,36 @@
 .noticeIn { font-size: 15px; line-height: 1.5; }
 .noticeDay { font-weight: 700; margin-right: 6px; }
 
-/* 특별 혜택 — 포스터 혜택 조각 옆에 오려 낸 품목 사진(6도 기울여, 딱딱한 그림자), 그 아래로 찢은 종이가 겹친다 */
-.giftRow { display: grid; gap: 0; }
-.giftTop { position: relative; display: flex; align-items: flex-end; justify-content: space-between; }
-.benefit { width: 66%; max-width: 250px; z-index: 2; }
-.cutout { position: relative; z-index: 3; width: 76px; height: auto; margin: -6px 18px -30px 0; transform: rotate(6deg); filter: drop-shadow(4px 5px 0 rgba(0, 0, 0, 0.55)); }
-.cutout img { width: 100%; height: auto; }
-.giftScrap { margin: -14px 0 0 8%; }
-.giftIn { display: grid; gap: 10px; padding: 22px 18px 16px; }
+/* 특별 혜택 — 혜택 상자(1000x300, ≤300px)와 그 옆 컷아웃(맥주 96px 높이 / 주전자 76px 폭 / 요거트 84px 높이), 그 아래 찢은 종이. 서로 덮지 않는다 */
+.giftRow { display: grid; gap: 12px; }
+.giftTop { position: relative; display: flex; align-items: flex-end; gap: 8px; }
+.benefit { flex: 1 1 auto; min-width: 0; max-width: 300px; }
+.benefit img { width: 100%; height: auto; }
+.cut { flex: none; }
+.cutTall { height: 96px; width: auto; }
+.cutTall img { height: 96px; width: auto; }
+.cutWide { width: 76px; }
+.cutWide img { width: 76px; height: auto; }
+.cutYogurt { height: 84px; width: auto; }
+.cutYogurt img { height: 84px; width: auto; }
+.giftScrap { margin: 0; }
+.giftIn { display: grid; gap: 10px; padding: 18px 18px 16px; }
 /* 혜택 한 줄(고정형) — 본문 글꼴 15px 굵게 */
 .giftHead { font-size: 15px; font-weight: 700; line-height: 1.45; }
-/* 오려 낸 품목 사진이 종이 위로 30px 내려와 있으니 첫 줄은 그만큼 오른쪽을 비운다 */
-.giftHeadClear { padding-right: 96px; }
-.gift { display: flex; align-items: center; gap: 12px; }
-.giftBody { flex: 1; min-width: 0; }
+/* '택 1' — 문장 끝의 노란 꼬리표 */
+.giftPick { margin-left: 8px; vertical-align: 2px; }
+/* 품목 줄 — 사진 칸 64px 은 사진이 없어도 비워 두지 않고 그 집 술 컷아웃을 놓는다: 두 줄의 글자가 같은 x 에서 시작하고 무료 도장은 둘 다 오른쪽 끝 */
+.gift { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 12px; align-items: center; }
+.giftThumb { display: grid; place-items: center; width: 64px; height: 64px; }
+.giftThumb .giftCut { width: auto; height: 64px; }
+.giftThumb .giftCut img { width: auto; height: 64px; }
+.giftBody { min-width: 0; }
 .giftName { font-size: 16px; font-weight: 700; line-height: 1.35; }
 .giftDesc { margin-top: 2px; font-size: 13px; line-height: 1.45; color: var(--ink-2); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
-.giftPrice { display: flex; align-items: center; gap: 12px; margin-top: 4px; font-size: 14px; }
+.giftPrice { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 4px; font-size: 14px; }
 .giftStrike { color: var(--ink-2); }
 .giftFree { font-size: 20px; padding: 4px 8px 3px; }
-/* 키트 stamp-free.png — 도장 자리, 52px */
-.giftStamp { display: inline-block; width: 52px; transform: rotate(-8deg); }
+/* 키트 무료 도장 500x500 → 56px, -12도 */
+.giftStamp { display: inline-block; width: 56px; transform: rotate(-12deg); }
 .giftStamp img { width: 100%; height: auto; }
-.giftPick { font-size: 14px; font-weight: 700; color: var(--ink); }
 .giftRule { font-size: 13px; line-height: 1.5; color: var(--ink-2); border-top: 1px dashed var(--paper-line); padding-top: 8px; }

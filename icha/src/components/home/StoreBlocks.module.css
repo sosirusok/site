@@ -1,29 +1,43 @@
-/* 1차·2차·3차 블록 — 간판 조각, 폴라로이드 부채(캡션 없음), 혜택 조각, 정보 종이(상태 칩·시간·혜택·공지), 초록 스티커 하나 */
+/* 1차·2차·3차 블록 — 키트 간판(한 단 가득), 폴라로이드 셋 + 포켓, 혜택 상자 + 컷아웃, 정보 종이, 초록 스티커 하나 + 더 보기 스티커.
+   폭 기준(390 화면 = 358 단): 간판 358x149, 큰 카드 3/5, 작은 카드 2/5, 혜택 상자 ≤300, 컷아웃 96 */
 .list { padding: 22px var(--gutter) 4px; display: grid; gap: 4px; }
 .block { position: relative; display: grid; gap: 0; }
 
-/* 간판 조각 — 왼쪽 정렬, 짝수 블록은 오른쪽 */
-.top { position: relative; display: flex; align-items: flex-start; }
-.flip .top { justify-content: flex-end; }
-.plateLink { position: relative; display: block; width: 76%; max-width: 300px; }
+/* 간판 조각 — 한 단 가득(1200x500 → 358x149), 살짝 기울임(±1도) */
+.plateLink { position: relative; display: block; }
 .plate { width: 100%; }
-.noteAgain { position: absolute; right: -4px; top: -16px; width: 104px; z-index: 2; }
-.noteToday { position: absolute; left: -2px; top: -12px; width: 116px; z-index: 2; }
+.plate img { width: 100%; height: auto; }
+/* 조선칼국수 간판은 그림의 불투명 간판이 캔버스의 70%(x 15~85%) 라 같은 폭이면 도쿄·와르르(95%)보다 작아 보인다 → 112%(양옆 −6%): 보이는 간판 280x155 ≈ 도쿄 341x130 과 같은 무게. 넘치는 21px 은 투명 여백뿐(간판 몸통은 단 안쪽 39px 에서 시작) */
+.block[data-store="joseon"] .plate { width: 112%; margin-inline: -6%; }
 
-/* 폴라로이드 부채 — 가운데 장이 위(맨 앞), 양옆 장은 60px 아래. 흰 테두리만, 캡션은 없다 */
-.fan { position: relative; aspect-ratio: 358 / 254; margin: 8px 0 0; }
-.pola { position: absolute; width: 46%; }
-.p0 { left: 0; top: 60px; z-index: 1; }
-.p1 { left: 27%; top: 0; z-index: 3; }
-.p2 { left: 54%; top: 60px; z-index: 2; }
-.flip .p0 { left: 54%; }
-.flip .p2 { left: 0; }
+/* 사진 격자 — 5칸, 사이 8px. 1행 [큰 3칸][작은 2칸, 30px 아래] / 2행 [포켓 2칸][큰 3칸]. 2차는 좌우 반대 */
+.fan { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); column-gap: 8px; row-gap: 10px; align-items: start; margin-top: 16px; }
+.pola { display: block; }
+.pola img { width: 100%; }
+.pA { grid-column: 1 / 4; grid-row: 1; }
+.pB { grid-column: 4 / 6; grid-row: 1; margin-top: 30px; }
+.pocket { grid-column: 1 / 3; grid-row: 2; align-self: center; justify-self: center; display: grid; justify-items: center; }
+.pC { grid-column: 3 / 6; grid-row: 2; }
+.flip .pA { grid-column: 3 / 6; }
+.flip .pB { grid-column: 1 / 3; }
+.flip .pocket { grid-column: 4 / 6; }
+.flip .pC { grid-column: 1 / 4; }
+/* 포켓 안 손글씨 메모(700x360·800x360 → 136px 폭, 포켓 138px) — 흰 글씨라 획 그림자 + 가장자리 없는 어둠(.note-dark, globals.css) */
+.noteBox { width: 136px; }
+.noteBox img { width: 100%; height: auto; }
+/* 포켓 안 요거트 컷아웃(700x800 → 96px 폭·110px 높이, 컵 몸통 53x102) — 메모처럼 포켓을 채우고 살짝 기울인다 */
+.pocketCut { width: 96px; transform: rotate(-4deg); }
 
-/* 혜택 조각 + 오려 낸 술(장식) */
-.under { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-top: 12px; }
-.flip .under { flex-direction: row-reverse; }
-.benefit { flex: 0 0 58%; max-width: 240px; }
-.mug { flex: none; width: 66px; margin: 0 8px -10px; z-index: 2; }
+/* 혜택 상자(1000x300, ≤300px) + 옆의 컷아웃. 상자는 남는 폭을 채우고 300 에서 멈춘다(390 화면: 맥주·소주 옆 283, 주전자(76px) 옆 274 — 세 상자가 3% 안에서 같다; 430 화면은 셋 다 300) */
+.under { display: flex; align-items: flex-end; justify-content: flex-start; gap: 8px; margin-top: 16px; }
+.flip .under { flex-direction: row-reverse; justify-content: flex-end; }
+.benefit { flex: 1 1 auto; min-width: 0; max-width: 300px; }
+.benefit img { width: 100%; height: auto; }
+.cut { flex: none; }
+.cutTall { height: 96px; width: auto; }
+.cutTall img { height: 96px; width: auto; }
+.cutWide { width: 76px; }
+.cutWide img { width: 76px; height: auto; }
 
 /* 정보 종이 — 영업 상태 칩 + 시간, 혜택 한 줄(굵게), 공지. 본문 글꼴 15px, 잉크색 */
 .info { margin-top: 16px; padding: 12px 16px; display: grid; gap: 8px; }
@@ -34,12 +48,10 @@
 .notice { font-size: 14px; line-height: 1.5; border-top: 1px dashed var(--paper-line); padding-top: 8px; }
 .noticeDay { font-weight: 700; margin-right: 6px; }
 
-/* 초록 스티커 하나 + 어두운 받침 위 작은 글자 링크 */
-.cta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; }
-.flip .cta { flex-direction: row-reverse; }
-
-/* 마지막(3차) 블록 아래 — 키트 장식 선(sign-wareureu), 가운데 60% */
-.sign { margin-top: 22px; }
+/* 초록 스티커(52px, 213px 폭) 한 줄 + 그 아래 오른쪽에 더 보기 스티커(44px, 180px 폭) — 둘을 한 줄에 두면 393px 이라 두 줄. 세 블록 모두 같은 규칙(예약 왼쪽, 더 보기 오른쪽; 사진 격자만 좌우가 바뀐다) */
+.cta { display: grid; gap: 6px; margin-top: 14px; }
+.book { justify-self: start; }
+.more { justify-self: end; }
 
 /* 블록 사이 — 다음 매장 종이 한 줄(가로 여백은 .list 가 이미 준다) */
 .walk { padding: 22px 0 10px; }

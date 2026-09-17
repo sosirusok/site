@@ -13,7 +13,7 @@ function pretty(digits: string): string {
   return `${d.slice(0, 3)}-${d.slice(3, 7)}-${d.slice(7)}`;
 }
 
-/** 휴대폰 번호 하나로 로그인하는 폼 — 계산 시 직원에게 말한 번호 그대로. 성공하면 next 로 전체 이동한다(상단 바까지 로그인 상태로). */
+/** 휴대폰 번호 하나로 로그인하는 폼 — 계산 시 직원에게 말한 번호 그대로. 보내는 버튼은 키트 [로그인](btn-login, 64px 가운데). 성공하면 next 로 전체 이동한다(상단 바까지 로그인 상태로). */
 export function PhoneForm({ next, label = "로그인" }: { next: string; label?: string }) {
   const id = useId();
   const [digits, setDigits] = useState("");
@@ -72,7 +72,7 @@ export function PhoneForm({ next, label = "로그인" }: { next: string; label?:
         />
         {error && <p id={`${id}-err`} className={`error ${styles.err}`} role="alert">{error}</p>}
       </div>
-      <StickerButton kind="wallet" type="submit" block disabled={busy}>
+      <StickerButton kind="login" type="submit" block disabled={busy} srText={busy ? "확인 중" : undefined}>
         {busy ? "확인 중" : label}
       </StickerButton>
     </form>

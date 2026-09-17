@@ -1,8 +1,9 @@
 import type { CSSProperties } from "react";
 import type { Store } from "@/lib/stores";
+import { StickerButton } from "./Kit";
 import styles from "./StoreReviews.module.css";
 
-/** 리뷰 — 어두운 띠에 별점 한 줄, 방문자 인용은 찢은 종이 조각 위에, 리뷰 이벤트(관리자 문구)는 어두운 띠, 링크 둘. 값은 stores.ts 의 실제 리뷰. */
+/** 리뷰 — 어두운 띠에 별점 한 줄, 방문자 인용은 찢은 종이 조각 위에, 리뷰 이벤트(관리자 문구)는 어두운 띠, 키트 [네이버 리뷰 남기기](44px) + 더보기 글자 링크. 값은 stores.ts 의 실제 리뷰. */
 export function StoreReviews({ store, limit = 2, reviewUrl, benefit = null }: { store: Store; limit?: number; reviewUrl: string | null; benefit?: string | null }) {
   const quotes = store.quotes.slice(0, limit);
   const r = store.naverRating;
@@ -29,7 +30,7 @@ export function StoreReviews({ store, limit = 2, reviewUrl, benefit = null }: { 
       {benefit && <p className={`info ${styles.benefit}`}><b>리뷰 이벤트</b> · {benefit}</p>}
       {reviewUrl && (
         <div className={styles.links}>
-          <a className="link-d" href={reviewUrl} target="_blank" rel="noreferrer">리뷰 작성</a>
+          <StickerButton kind="review" size="sm" tilt={0} href={reviewUrl}>네이버 리뷰 남기기</StickerButton>
           <a className="link-d" href={reviewUrl} target="_blank" rel="noreferrer">리뷰 더보기</a>
         </div>
       )}

@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { KitDivider, KitPiece, StickerButton } from "@/components/site/Kit";
+import { KitPiece, StickerButton } from "@/components/site/Kit";
 import { NextStop } from "@/components/site/NextStop";
 import { benefitOf, Piece, plateOf } from "@/components/site/Poster";
 import { nowText, openStatus } from "@/components/site/StoreHelpers";
-import { FAN_PHOTOS } from "@/components/site/storePhotos";
+import { capParts, FAN_PHOTOS, photoAlt } from "@/components/site/storePhotos";
 import type { Rules, StoreId } from "@/lib/config";
+import { giftLine } from "@/lib/copy";
 import { placeLinks } from "@/lib/naver";
 import { STORES, type Store } from "@/lib/stores";
 import s from "./StoreBlocks.module.css";
@@ -18,25 +19,27 @@ function todayParts(store: Store, now: Date): { open: boolean; state: string; ho
   return { open: st.open, state: nowText(st), hours: st.today.replace(/\s*–\s*(다음날\s*)?/, "~") };
 }
 
-/** 혜택 한 줄(고정형): "다른 매장 쿠폰 제시 시 {품목} 무료" — 품목은 DB 혜택 이름들, 없으면 포스터의 혜택 이름 */
-function giftLine(store: Store, names: string[]): string {
-  const what = names.length ? names.join(" 또는 ") : store.benefitLabel;
-  return `다른 매장 쿠폰 제시 시 ${what} 무료`;
-}
+/** 혜택 상자 옆에 붙는 키트 컷아웃 — 1차 맥주잔(96px 높이), 2차 막걸리 주전자(96px 폭), 3차 소주병(96px 높이). 없으면 포스터 맥주잔(1차)만 */
+const CUT: Record<StoreId, { name: string; cls: string }> = {
+  tokyo: { name: "cut-beer", cls: "cutTall" },
+  joseon: { name: "cut-makgeolli", cls: "cutWide" },
+  wareureu: { name: "cut-soju", cls: "cutTall" },
+};
 
-const FAN_R = [
-  [-6, 3, -3],
-  [5, -3, 3],
-] as const;
-
-/** 혜택 조각 옆에 붙는 오려 낸 술(장식) — 1차는 포스터 맥주잔(키트 cut-beer 가 오면 그것), 2차·3차는 키트가 와야 보인다 */
-const CUT: Record<StoreId, string> = { tokyo: "cut-beer", joseon: "cut-makgeolli", wareureu: "cut-soju" };
+/** 폴라로이드 세 장의 기울기 — [안주 큰 카드, 술 큰 카드, 입구 작은 카드]; 짝수 블록(2차)은 좌우가 바뀌므로 반대로 */
+const FAN_R: readonly [number, number, number][] = [
+  [-2, 2, 3],
+  [2, -2, -3],
+];
 
 /**
- * 1차 · 2차 · 3차 — 매장마다 포스터 간판 조각(기울여 붙임, 누르면 매장 화면), 진짜 사진 세 장의 폴라로이드 부채(캡션 없음),
- * 포스터 혜택 조각, 그 아래 정보 종이 한 장(영업 상태 칩 + 시간 / 혜택 한 줄 / 공지), 초록 스티커 [예약하기] 하나.
- * 정보 글자는 전부 본문 글꼴로 종이 위에 — 보케 위에 손글씨로 정보를 쓰지 않는다. 블록 사이는 다음 매장 종이 한 줄.
- * 3차 블록 아래에는 키트의 와르르맨숀 장식 선(sign-wareureu)만 가늘게.
+ * 1차 · 2차 · 3차 — 매장마다 키트 간판(한 단 가득, 누르면 매장 화면), 폴라로이드 세 장(캡션 있음), 포켓(손글씨 메모 또는 컷아웃),
+ * 혜택 상자 + 컷아웃, 정보 종이 한 장(영업 상태 칩 + 시간 / 혜택 한 줄 / 공지), 초록 [예약하기] 하나 + [사진·메뉴 더 보기].
+ * 사진 격자(5칸): 큰 카드 3칸(60%) — 캡션 한 줄(최장 191px)이 들어가려면 사진 폭 195px 이상이라 이 폭. 작은 카드 2칸(40%)은 캡션이 짧은 매장 입구.
+ *   1행: [안주 큰 카드][입구 작은 카드(30px 아래)]   2행: [포켓][술 큰 카드]   — 2차 블록은 좌우 반대(.flip)
+ *   포켓: 1차 note-again, 2차 note-today(흰 손글씨라 획 그림자 + 가장자리 없는 어둠 .note-dark), 3차 cut-yogurt(요거트 아이스크림 96px 폭, −4도).
+ * 간판 링크의 읽히는 이름 = 간판에 적힌 글자(img alt) + " 매장 정보". 예약하기는 왼쪽, 더 보기는 오른쪽 — 세 블록 같은 규칙.
+ * 정보 글자는 전부 본문 글꼴로 종이 위에. 블록 사이는 다음 매장 종이 한 줄.
  * gifts: 매장별 혜택 품목 이름(listMenu giftOnly).
  */
 export function StoreBlocks({ now, rules, gifts }: { now: Date; rules: Rules; gifts: Record<StoreId, string[]> }) {
@@ -50,34 +53,46 @@ export function StoreBlocks({ now, rules, gifts }: { now: Date; rules: Rules; gi
         const notice = rules.storeNotices?.[st.id]?.trim();
         const photos = FAN_PHOTOS[st.id];
         const next = ordered[i + 1];
-        const rot = FAN_R[flip ? 1 : 0];
+        const rot = FAN_R[flip ? 1 : 0]!;
         const today = todayParts(st, now);
+        const cut = CUT[st.id];
+        const pola = (k: number, cls: string | undefined, sizes: string) => {
+          const p = photos[k]!;
+          const [capName, capPrice] = capParts(p.cap);
+          return (
+            <Link href={`/stores/${st.id}`} className={`pola ${s.pola} ${cls}`} style={{ "--r": `${rot[k]}deg` } as CSSProperties}>
+              <Image src={p.src} alt={photoAlt(st.images, p)} width={480} height={360} sizes={sizes} style={{ objectPosition: p.pos }} />
+              <span className="cap">{capName}{capPrice && <> <span className="cap-price">{capPrice}</span></>}</span>
+            </Link>
+          );
+        };
         return (
           <div key={st.id}>
             <article className={`${s.block} ${flip ? s.flip : ""}`} data-store={st.id}>
-              <div className={s.top}>
-                <Link href={`/stores/${st.id}`} className={`tape ${s.plateLink}`} aria-label={`${st.course.n}차 ${st.shortName} 매장 정보`}>
-                  <Piece name={plateOf(st.id)} rotate={flip ? 2 : -2} sizes="300px" priority={i === 0} className={s.plate} />
-                </Link>
-                {i === 0 && <Piece name="note-again" rotate={6} className={s.noteAgain} sizes="110px" />}
-                {i === 1 && <Piece name="note-today" rotate={-5} className={s.noteToday} sizes="120px" />}
-              </div>
+              <Link href={`/stores/${st.id}`} className={s.plateLink}>
+                <Piece name={plateOf(st.id)} rotate={flip ? 1 : -1} sizes="(min-width: 480px) 448px, 100vw" priority={i === 0} className={s.plate} />
+                <span className="sr-only"> 매장 정보</span>
+              </Link>
               <h3 className="sr-only">{st.course.n}차 {st.name}</h3>
 
               <div className={s.fan}>
-                {photos.map((p, k) => {
-                  const alt = st.images.find((im) => im.src === p.src)?.alt ?? `${st.shortName} 사진`;
-                  return (
-                    <Link key={p.src} href={`/stores/${st.id}`} className={`pola ${s.pola} ${s[`p${k}`]}`} style={{ "--r": `${rot[k]}deg` } as CSSProperties}>
-                      <Image src={p.src} alt={alt} width={320} height={320} sizes="180px" style={p.pos ? { objectPosition: p.pos } : undefined} />
-                    </Link>
-                  );
-                })}
+                {pola(0, s.pA, "220px")}
+                {pola(2, s.pB, "140px")}
+                <div className={s.pocket}>
+                  {i === 0 && <KitPiece name="note-again" rotate={-5} sizes="136px" className={`note-dark ${s.noteBox}`} />}
+                  {i === 1 && <KitPiece name="note-today" rotate={4} sizes="136px" className={`note-dark ${s.noteBox}`} />}
+                  {i === 2 && <KitPiece name="cut-yogurt" bare sizes="96px" className={s.pocketCut} />}
+                </div>
+                {pola(1, s.pC, "220px")}
               </div>
 
               <div className={s.under}>
-                <Piece name={benefitOf(st.id)} rotate={flip ? -2 : 1.5} sizes="240px" className={s.benefit} />
-                {i === 0 ? <Piece name="mug" rotate={8} className={s.mug} sizes="72px" /> : <KitPiece name={CUT[st.id]} rotate={flip ? -8 : 8} className={s.mug} sizes="72px" />}
+                <Piece name={benefitOf(st.id)} rotate={flip ? 1 : -1} sizes="300px" className={s.benefit} />
+                {st.id === "tokyo" ? (
+                  <Piece name="mug" bare className={`${s.cut} ${s[cut.cls]}`} sizes="80px" />
+                ) : (
+                  <KitPiece name={cut.name} bare className={`${s.cut} ${s[cut.cls]}`} sizes="100px" />
+                )}
               </div>
 
               <div className={`paper ${flip ? "paper-r" : "paper-l"} ${s.info}`}>
@@ -85,19 +100,18 @@ export function StoreBlocks({ now, rules, gifts }: { now: Date; rules: Rules; gi
                   <span className={`chip ${today.open ? "chip-on" : "chip-off"} ${s.chip}`}>{today.state}</span>
                   {today.hours && <span className={`num ${s.hours}`}>{today.hours}</span>}
                 </p>
-                <p className={s.giftLine}>{giftLine(st, gifts[st.id] ?? [])}</p>
+                <p className={s.giftLine}>{giftLine(gifts[st.id] ?? [], st.benefitLabel)}</p>
                 {notice && <p className={s.notice}><b className={s.noticeDay}>공지</b>{notice}</p>}
               </div>
 
               <div className={s.cta}>
                 {links ? (
-                  <StickerButton kind="book" href={links.booking}>예약하기<span className="sr-only"> — {st.shortName}</span></StickerButton>
+                  <StickerButton kind="book" href={links.booking} tilt={flip ? 1 : -1} suffix={` — ${st.shortName}`} className={s.book}>예약하기</StickerButton>
                 ) : (
                   <Link className="btn" href={`/stores/${st.id}`}>매장 정보</Link>
                 )}
-                <Link href={`/stores/${st.id}`} className="link-d">사진·메뉴 더보기</Link>
+                <StickerButton kind="details" size="sm" tilt={flip ? -1 : 1} secondary href={`/stores/${st.id}`} suffix={` — ${st.shortName}`} className={s.more}>사진·메뉴 더 보기</StickerButton>
               </div>
-              {!next && <KitDivider name={`sign-${st.id}`} className={s.sign} />}
             </article>
 
             {next && <NextStop store={st} next={next} className={s.walk} rotate={flip ? 1 : -1} />}

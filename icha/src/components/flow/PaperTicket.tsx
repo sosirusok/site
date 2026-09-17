@@ -15,6 +15,8 @@ export type TicketData = {
   image?: { src: string; local: boolean } | null;
   /** 계산할 때 받은 쿠폰은 없음, 매장이 따로 넣어 준 쿠폰만 "매장 쿠폰" */
   kindLabel?: string | null;
+  /** 조건 줄을 바꿔 쓸 때(사용한 쿠폰: "9월 17일 08:58 사용"). 없으면 "10월 17일까지 · 메인안주 1개 주문 시" */
+  meta?: string | null;
 };
 
 /** 사진이 없는 반쪽에 세로로 쌓는 이벤트 이름 — 글자를 하나씩 따로 놓는다(writing-mode 없이) */
@@ -23,17 +25,17 @@ const STUB_LABEL = "알콜부시기";
 /**
  * 크림 종이 쿠폰 한 장 — 오른쪽에 점선으로 뜯는 반쪽(사진 또는 이벤트 이름), 위아래 구멍, 코드는 Do Hyeon.
  * md 는 쿠폰함 목록, lg 는 쿠폰 화면.
- * bg 가 있으면(키트의 ticket.png, 크림 종이 티켓 그림) CSS 로 그리던 종이·구멍·점선 대신 그 그림을 깔고 글자와 반쪽만 얹는다.
- * 그림 안 자리는 왼쪽 6~68% 가 글자, 오른쪽 74~96% 가 반쪽 — 파일이 오면 PaperTicket.module.css 의 .kitMain/.kitStub 만 맞춘다.
+ * bg 가 있으면(키트의 ticket.png 1400x600, 크림 종이 티켓 그림) CSS 로 그리던 종이·구멍·점선 대신 그 그림을 한 단 가득(358x153) 깔고 글자와 반쪽만 얹는다.
+ * 그림을 재서 정한 자리: 종이 몸통 x 2~98%, y 8~92%, 절취선 x 73.4%(위아래 홈 y 0~12%). → 글자는 왼쪽 5~69%, 반쪽은 76~96%. CSS 그림자 없음(그림에 있다).
  */
 export function PaperTicket({ t, size = "md", rotate = 0, dim = false, className = "", bg = null }: { t: TicketData; size?: "md" | "lg"; rotate?: number; dim?: boolean; className?: string; bg?: KitPiece | null }) {
   const cut = t.image?.local && /\.png$/i.test(t.image.src);
   const main = (
     <>
-      <p className={s.store}><span className="plate plate-store plate-sm">{t.storeName}</span>{t.kindLabel && <span className="tag">{t.kindLabel}</span>}</p>
+      <p className={s.store}><span className={`plate plate-store plate-sm ${s.storePlate}`}>{t.storeName}</span>{t.kindLabel && <span className="tag">{t.kindLabel}</span>}</p>
       <p className={`disp ${s.name}`}>{t.menuName}</p>
       <p className={`mono ${s.code}`} aria-label={`쿠폰 코드 ${t.code.split("").join(" ")}`}>{t.code}</p>
-      <p className={s.meta}>{fmtMD(t.expiresAt)}까지 · 메인안주 1개 주문 시</p>
+      <p className={s.meta}>{t.meta ?? `${fmtMD(t.expiresAt)}까지 · 메인안주 1개 주문 시`}</p>
     </>
   );
   const stub = t.image ? (
@@ -48,9 +50,9 @@ export function PaperTicket({ t, size = "md", rotate = 0, dim = false, className
   const sizeCls = size === "lg" ? s.lg : s.md;
   if (bg) {
     return (
-      <div className={`${s.wrap} ${dim ? s.dim : ""} ${className}`} style={{ "--r": `${rotate}deg` } as CSSProperties} data-store={t.storeId}>
+      <div className={`${s.wrapKit} ${dim ? s.dim : ""} ${className}`} style={{ "--r": `${rotate}deg` } as CSSProperties} data-store={t.storeId}>
         <div className={`${s.kit} ${sizeCls}`}>
-          <Image src={bg.src} alt="" width={bg.w} height={bg.h} sizes="(min-width: 480px) 448px, calc(100vw - 32px)" className={s.kitImg} draggable={false} priority={size === "lg"} />
+          <Image src={bg.src} alt="" width={bg.w} height={bg.h} sizes="(min-width: 480px) 448px, 100vw" className={s.kitImg} draggable={false} priority={size === "lg"} />
           <div className={`${s.main} ${s.kitMain}`}>{main}</div>
           <div className={`${s.stub} ${s.kitStub}`}>{stub}</div>
         </div>

@@ -1,6 +1,5 @@
 import type { CSSProperties } from "react";
 import { SectionLabel, StickerButton } from "@/components/site/Kit";
-import { Piece } from "@/components/site/Poster";
 import { StoreMap, type MapStore } from "@/components/site/StoreMap";
 import { LOCATIONS } from "@/lib/locations";
 import { naverSearchUrl, placeLinks } from "@/lib/naver";
@@ -24,7 +23,7 @@ function shortAddress(a: string): string {
 /** 네이버 검색창에 그대로 넣는 말 */
 const SEARCH_QUERY = "서면 알콜부시기";
 
-/** 오시는 길 — 제목 옆 거리 한 줄(어두운 띠), 테이프로 붙인 지도 조각(밝은 타일), 주소 세 줄이 적힌 종이 한 장, 노란 스티커 [네이버 검색] */
+/** 오시는 길 — 키트 제목판(label-map), 거리 한 줄(어두운 띠), 테이프로 붙인 지도 조각(높이 190, 표시 뒤 크기 재계산), 주소 세 줄 종이(길찾기 꼬리표), [네이버에서 검색] */
 export function Directions() {
   const ordered = [...STORES].sort((a, b) => a.course.n - b.course.n);
   const mapStores: MapStore[] = ordered.filter((st) => st.lat != null && st.lng != null).map((st) => ({
@@ -40,7 +39,6 @@ export function Directions() {
         <div className="map-paper">
           <StoreMap stores={mapStores} compact hidePanel height={190} />
         </div>
-        <Piece name="note-today" rotate={5} sizes="120px" className={s.mapNote} />
       </div>
       <div className={`paper paper-l ${s.addrPaper}`}>
         <ul className={s.addrs}>
@@ -53,14 +51,14 @@ export function Directions() {
                   <p className={s.addrName}>{st.shortName}</p>
                   <p className={s.addrSub}>{shortAddress(st.address)} · {LOCATIONS[st.id].subway}</p>
                 </div>
-                {links && <a className={`link ${s.addrLink}`} href={links.directions} target="_blank" rel="noreferrer">길찾기</a>}
+                {links && <StickerButton kind="directions" tilt={0} secondary href={links.directions} suffix={` — ${st.shortName}`} className={s.addrLink}>길찾기</StickerButton>}
               </li>
             );
           })}
         </ul>
       </div>
       <div className={s.searchRow}>
-        <StickerButton kind="search" href={naverSearchUrl(SEARCH_QUERY)}>네이버 검색</StickerButton>
+        <StickerButton kind="search" href={naverSearchUrl(SEARCH_QUERY)}>네이버에서 검색</StickerButton>
       </div>
     </section>
   );

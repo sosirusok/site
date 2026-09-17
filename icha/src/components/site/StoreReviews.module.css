@@ -8,4 +8,5 @@
 .text { font-size: 14.5px; line-height: 1.6; color: var(--ink); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 .meta { margin-top: 6px; font-size: 13px; color: var(--ink-2); text-align: right; }
 .benefit { justify-self: start; font-size: 15px; }
-.links { display: flex; gap: 10px; }
+/* 스티커는 오른쪽 끝 — 매장 화면의 다른 '더 보기' 스티커(사진 더 보기·메뉴 전체 보기·길찾기)와 같은 쪽 */
+.links { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px 12px; }

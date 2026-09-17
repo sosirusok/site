@@ -1,3 +1,4 @@
-.page { padding: 8px var(--gutter) 40px; display: grid; gap: 8px; }
+/* 아래 고정 크림 바(.sticky-bar)까지의 여백은 .app:has(.sticky-bar) 가 준다 */
+.page { padding: 8px var(--gutter) 24px; display: grid; gap: 8px; }
 /* 뒤로 가기 — 글자는 작아도 누르는 영역은 44px. 보케 위라 어두운 알약을 깐다 */
 .back { font-size: 15px; padding: 0 12px; background: rgba(20, 17, 26, 0.9); border-radius: 4px; }

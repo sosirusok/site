@@ -1,7 +1,8 @@
 .wrap { display: grid; gap: 14px; }
-.mapBox { position: relative; border-radius: 0; overflow: hidden; background: var(--bg-2); isolation: isolate; border: 1px solid var(--line); }
+/* 지도 상자 — 높이는 인라인 style(height)로 명시, 폭은 종이 폭 그대로. 안의 Leaflet z-index 는 isolation 으로 가둔다 */
+.mapBox { position: relative; width: 100%; border-radius: 0; overflow: hidden; background: #e9e2d4; isolation: isolate; border: 1px solid rgba(17, 17, 17, 0.25); }
 .map { position: absolute; inset: 0; }
-.loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--fg-2); font-size: 15px; background: var(--bg-2); }
+.loading { position: absolute; inset: 0; display: grid; place-items: center; color: #4a4238; font-size: 15px; background: #e9e2d4; }
 .loading a { text-decoration: underline; font-weight: 700; }
 .list { display: grid; border-top: 2px solid var(--line-2); }
 .item {

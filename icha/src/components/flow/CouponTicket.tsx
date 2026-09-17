@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import { daysLeft, fmtDate, fmtDateTimeSec, fmtMD, fmtMDHM, fmtTime } from "./format";
-import { DotLine, StickerButton } from "./kit";
+import { DotLine, KitCut, StickerButton } from "./kit";
 import { Ticket } from "./Ticket";
 import type { ApiFail, RedeemApiOk } from "./types";
 import styles from "./CouponTicket.module.css";
@@ -59,9 +59,9 @@ function kindText(c: Pick<TicketCoupon, "kind">): string | null {
 }
 
 /**
- * 쿠폰 한 장 — 쿠폰(키트 파일에 따라 네온 티켓 또는 종이 쿠폰), 노란 사용하기 스티커, 초록 예약하기 하나.
+ * 쿠폰 한 장 — 키트 티켓 그림 위의 쿠폰(한 단 가득), 아래 고정 크림 바의 [직원 앞에서 사용하기](64px), 초록 예약하기(44px) 하나.
  * 정보 줄(조건·유효기간·안내)은 보케 위 어두운 띠에 본문 글꼴로 — 손글씨·해요체 없음.
- * 사용 = 직원 앞에서 버튼 → 크림 종이 확인 시트 → 사용 완료(초록 도장, 초 단위 시계, 기록 종이, 리뷰 스티커).
+ * 사용 = 바의 버튼 → 크림 종이 확인 시트(취소는 크림 CSS 버튼 — 키트에 없는 말) → 사용 완료(키트 도장 stamp-used 96px, 초 단위 시계, 기록 종이, [네이버 리뷰 남기기]).
  */
 export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: TicketStore }) {
   const id = useId();
@@ -128,7 +128,7 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
         </div>
         <div className={styles.ticketWrap}>
           <Ticket t={ticketData} size="lg" rotate={-1.5} dim />
-          <span className={`stamp stamp-green ${styles.bigStamp}`}>사용 완료</span>
+          <KitCut name="stamp-used" width={96} className={styles.usedStamp} fallback={<span className={`stamp stamp-green ${styles.bigStamp}`}>사용 완료</span>} />
         </div>
         {fresh && <LiveClock />}
         {fresh && <p className={`${styles.strip} ${styles.hint}`}>직원 확인용. 위 시계는 현재 시각으로 움직이며 캡처 화면에서는 멈춥니다.</p>}
@@ -140,7 +140,7 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
         </div>
         {/* 기록 종이 아래 — 노란 리뷰 스티커 하나, 쿠폰함은 작은 밑줄 글자 */}
         <div className={styles.actions}>
-          {store.placeReview && <StickerButton kind="review" href={store.placeReview} block className={styles.stretch}>네이버 리뷰 작성</StickerButton>}
+          {store.placeReview && <StickerButton kind="review" href={store.placeReview} block className={styles.stretch}>네이버 리뷰 남기기</StickerButton>}
           <Link href="/wallet" className={`link link-w ${styles.pill}`}>쿠폰함</Link>
         </div>
       </article>
@@ -161,11 +161,11 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
         </div>
         <div className={styles.ticketWrap}>
           <Ticket t={ticketData} size="lg" rotate={1} dim />
-          <span className={`stamp ${styles.bigStamp}`}>{expired ? "기간 만료" : "취소됨"}</span>
+          <span className={`stamp ${styles.bigStamp}`}>{expired ? <>기간<br />만료</> : "취소됨"}</span>
         </div>
         {error && <p className={`error ${styles.err}`} role="alert">{error}</p>}
         <div className={styles.actions}>
-          <StickerButton kind="wallet" href="/wallet" block className={styles.stretch}>쿠폰함</StickerButton>
+          <StickerButton kind="wallet" href="/wallet" block className={styles.stretch}>쿠폰함 열기</StickerButton>
         </div>
       </article>
     );
@@ -175,6 +175,11 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
   return (
     <article className={styles.root} data-status="active">
       <Ticket t={ticketData} size="lg" rotate={-1.5} />
+      {store.placeBooking && (
+        <div className={styles.bookRow}>
+          <StickerButton kind="book" href={store.placeBooking} small rotate={1} suffix={` — ${store.shortName}`}>예약하기</StickerButton>
+        </div>
+      )}
 
       <div className={`${styles.strip} ${styles.info}`}>
         <p className={styles.how}>메인안주 1개 주문 시 · 직원에게 제시</p>
@@ -185,12 +190,13 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
       </div>
 
       <div className={styles.use}>
+        <p className={`${styles.strip} ${styles.useCap}`}>직원 확인 후 아래 버튼을 눌러 주세요. 사용 처리 후에는 취소할 수 없습니다.</p>
+      </div>
+
+      {/* 아래 고정 크림 바(탭 위) — 키트 [직원 앞에서 사용하기] 64px */}
+      <div className="fixed-col sticky-bar">
         {error && <p className={`error ${styles.err}`} role="alert">{error}</p>}
-        <StickerButton kind="use" block className={styles.stretch} onClick={() => { setError(null); setConfirming(true); }}>사용하기</StickerButton>
-        <p className={`${styles.strip} ${styles.useCap}`}>직원 확인 후 눌러 주세요. 사용 처리 후에는 취소할 수 없습니다.</p>
-        {store.placeBooking && (
-          <StickerButton kind="book" href={store.placeBooking} small rotate={1}>{store.shortName} 예약하기</StickerButton>
-        )}
+        <StickerButton kind="use" block onClick={() => { setError(null); setConfirming(true); }}>직원 앞에서 사용하기</StickerButton>
       </div>
 
       {confirming && (
@@ -202,8 +208,8 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
               <p className={styles.sheetCap}>직원 확인 후 사용해 주세요. 사용 후에는 취소할 수 없습니다.</p>
               {error && <p className="error" role="alert">{error}</p>}
               <div className={styles.sheetBtns}>
-                <button ref={cancelRef} type="button" className="btn btn-secondary btn-r" onClick={() => setConfirming(false)} disabled={busy}>취소</button>
-                <StickerButton kind="use" onClick={redeem} disabled={busy}>{busy ? "처리 중" : "사용하기"}</StickerButton>
+                <button ref={cancelRef} type="button" className={`btn btn-secondary btn-sm btn-0 ${styles.cancel}`} onClick={() => setConfirming(false)} disabled={busy}>취소</button>
+                <StickerButton kind="use" rotate={0} onClick={redeem} disabled={busy} srText={busy ? "처리 중" : undefined}>{busy ? "처리 중" : "직원 앞에서 사용하기"}</StickerButton>
               </div>
             </div>
           </div>

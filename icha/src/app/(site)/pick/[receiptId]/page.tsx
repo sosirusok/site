@@ -37,7 +37,7 @@ export default async function PickPage({ params }: { params: Promise<{ receiptId
           <h1 id="pick-title" className={`plate plate-red ${styles.h1}`}>선택 기간 만료</h1>
           <p className={`${styles.strip} ${styles.sub}`}>{store.shortName} 발급 쿠폰의 선택 기간이 {fmtMD(deadline)}에 종료되었습니다. 다음 계산 시 휴대폰 번호를 말씀하시면 새 쿠폰이 발급됩니다.</p>
         </div>
-        <StickerButton kind="wallet" href="/wallet" block>쿠폰함</StickerButton>
+        <StickerButton kind="wallet" href="/wallet" block>쿠폰함 열기</StickerButton>
       </section>
     );
   }

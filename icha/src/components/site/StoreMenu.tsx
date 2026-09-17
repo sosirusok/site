@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { formatWon } from "@/lib/config";
+import { StickerButton } from "./Kit";
 import type { MenuItem } from "@/lib/db/queries";
 import { menuImageUrl } from "@/lib/menu-image";
 import type { Store } from "@/lib/stores";
@@ -34,7 +35,7 @@ function Row({ m }: { m: MenuItem }) {
   );
 }
 
-/** 메뉴판 — 크림 종이 한 장. 혜택 품목이 맨 위, 8개까지 보인 뒤 나머지는 접힘. 값은 Do Hyeon, 사진은 잘라 낸 PNG. 값은 DB(listMenu). */
+/** 메뉴판 — 크림 종이 한 장(머리는 '{매장} 메뉴판' 글자 한 줄 — 키트 제목판 [메뉴]가 바로 위에 있으니 판을 또 두지 않는다). 혜택 품목이 맨 위, 8개까지 보인 뒤 나머지는 접힘(밑줄 글자 줄 — 종이 안의 버튼은 키트 스티커 하나뿐). 맨 아래 오른쪽에 키트 [메뉴 전체 보기](네이버). 값은 DB(listMenu). */
 export function StoreMenu({ store, items, menuUrl }: { store: Store; items: MenuItem[]; menuUrl: string | null }) {
   const sorted = [...items.filter((m) => m.isGift), ...items.filter((m) => !m.isGift)];
   const head = sorted.slice(0, VISIBLE);
@@ -42,7 +43,6 @@ export function StoreMenu({ store, items, menuUrl }: { store: Store; items: Menu
   return (
     <div className={`paper paper-l ${styles.board}`}>
       <p className={styles.head}>
-        <span className="plate plate-red plate-sm">MENU</span>
         <span className={styles.headText}>{store.shortName} 메뉴판</span>
       </p>
       {items.length === 0 ? (
@@ -52,13 +52,13 @@ export function StoreMenu({ store, items, menuUrl }: { store: Store; items: Menu
           <ul className={styles.list}>{head.map((m) => <Row key={m.id} m={m} />)}</ul>
           {rest.length > 0 && (
             <details className={styles.more}>
-              <summary className={`btn btn-secondary btn-sm btn-block btn-0 ${styles.moreBtn}`}>메뉴 더보기 · {rest.length}개</summary>
+              <summary className={`btn-text ${styles.moreBtn}`}>메뉴 더보기 · {rest.length}개 <span className={styles.moreArrow} aria-hidden="true">▾</span></summary>
               <ul className={styles.list}>{rest.map((m) => <Row key={m.id} m={m} />)}</ul>
             </details>
           )}
         </>
       )}
-      {menuUrl && <a className={`link ${styles.naver}`} href={menuUrl} target="_blank" rel="noreferrer">전체 메뉴 · 네이버 플레이스</a>}
+      {menuUrl && <StickerButton kind="moremenu" size="sm" tilt={0} secondary href={menuUrl} className={styles.naver}>메뉴 전체 보기</StickerButton>}
     </div>
   );
 }

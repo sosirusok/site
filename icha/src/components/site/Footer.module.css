@@ -1,16 +1,16 @@
-/* 맨 아래 — 포스터 마지막 줄 조각, 그 아래 어두운 띠에 가게 세 줄·링크 한 줄·저작권. 장식 없음 */
+/* 맨 아래 — 어두운 띠에 포스터 마지막 줄 조각(1400x100 → 단 가득 26px, 흰 글자), 가게 세 줄·링크 한 줄·저작권. 장식 없음 */
 .footer { margin-top: 36px; }
-.line { display: block; width: 100%; --r: 0deg; box-shadow: none; }
+.strip { background: #14111a; color: rgba(244, 233, 210, 0.86); font-family: var(--font-sans); font-size: 13px; line-height: 1.55; padding: 18px var(--gutter) 14px; display: grid; gap: 12px; border-top: 1px solid rgba(244, 233, 210, 0.12); }
+.line { display: block; width: 100%; }
 .line img { width: 100%; height: auto; }
-.strip { background: #14111a; color: rgba(244, 233, 210, 0.86); font-family: var(--font-sans); font-size: 13px; line-height: 1.55; padding: 16px var(--gutter) 14px; display: grid; gap: 10px; border-top: 1px solid rgba(244, 233, 210, 0.12); }
 .stores { display: grid; gap: 4px; }
 .store { color: rgba(244, 233, 210, 0.86); }
 .storeName { font-weight: 600; color: var(--cream); }
 .dot { color: rgba(244, 233, 210, 0.5); }
 .addr { color: rgba(244, 233, 210, 0.78); }
-.tel { display: inline-flex; align-items: center; min-height: 44px; margin: 0; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(244, 233, 210, 0.45); color: var(--cream); }
+.tel { display: inline; min-height: 0; padding-block: 12px; margin: 0; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(244, 233, 210, 0.45); color: var(--cream); }
 .links { display: flex; align-items: center; flex-wrap: wrap; gap: 0 4px; }
 .link { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; padding: 0 2px; color: var(--cream); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(244, 233, 210, 0.45); }
-.sep { color: rgba(244, 233, 210, 0.45); padding: 0 4px; }
+.sep { color: rgba(244, 233, 210, 0.6); padding: 0 4px; }
 .copy { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 12.5px; color: rgba(244, 233, 210, 0.6); }
-.staff { display: inline-flex; align-items: center; min-height: 44px; margin: -12px 0; color: rgba(244, 233, 210, 0.55); text-decoration: underline; text-underline-offset: 3px; }
+.staff { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; margin: -12px -6px -12px 0; padding: 0 6px; color: rgba(244, 233, 210, 0.55); text-decoration: underline; text-underline-offset: 3px; }

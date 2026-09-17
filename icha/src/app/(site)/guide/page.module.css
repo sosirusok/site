@@ -1,16 +1,17 @@
-/* 이용 안내 — 간판 제목, 순서 조각, 종이 카드. 보케 위 글자는 흰 Do Hyeon 외곽선(.outl, 20px 이상)만 */
+/* 이용 안내 — 키트 제목판, 순서 조각, 종이 카드. 보케 위 글자는 어두운 띠(.info) 위 본문 글꼴만 */
 .page { padding-bottom: 8px; }
-.top { position: relative; display: grid; gap: 14px; justify-items: start; padding: 18px var(--gutter) 6px; }
-.h1 { --r: -1.5deg; }
-/* 브랜드 줄은 오른쪽 메모 조각(약 60px 높이) 아래로 — 간판 60px + 간격이면 겹치지 않는다 */
-.brand { font-size: 20px; margin-top: 4px; }
-.note { position: absolute; right: var(--gutter); top: 8px; width: 104px; }
+.top { position: relative; display: grid; gap: 12px; justify-items: start; padding: 14px var(--gutter) 6px; }
+/* 큰 제목판(60px, 210px 폭) 왼쪽 + 손글씨 메모(700x360 → 140x72, 받침 없음) 오른쪽 — 한 줄에 210 + 140 = 350 < 358 */
+.titleRow { display: flex; align-items: flex-start; justify-content: space-between; gap: 0; width: 100%; }
+.h1 { --r: -1.5deg; flex: none; }
+.note { flex: none; width: 140px; margin-top: 6px; }
+.note img { width: 100%; height: auto; }
+.brand { font-size: 15px; font-weight: 600; }
 
 .sec { padding: 24px var(--gutter) 6px; }
-.lead { font-size: 20px; padding-bottom: 4px; }
+.lead { font-size: 15px; margin-bottom: 4px; }
 .strip { margin-bottom: 22px; }
-/* 초록 간판은 흰 글자 대비를 위해 한 단계 짙게 */
-.faqLabel { --plate: #156e38; }
+.faqLabel { --r: 1deg; }
 
 /* 이용 방법 넷 — 종이 위에 노란 번호 판 */
 .stepPaper { display: grid; gap: 10px; padding: 14px 16px 12px; }

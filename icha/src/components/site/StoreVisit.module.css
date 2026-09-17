@@ -1,5 +1,5 @@
 .block { display: grid; gap: 18px; }
 .map { --r: -1deg; margin: 4px 2px; }
 .map :global(.leaflet-control-zoom) { display: none; }
-.paper { display: grid; gap: 10px; padding: 14px 16px 8px; }
-.way { justify-self: start; }
+.paper { display: grid; gap: 10px; padding: 14px 16px 12px; }
+.way { justify-self: end; }
