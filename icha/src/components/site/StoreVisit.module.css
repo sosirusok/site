@@ -1,5 +1,9 @@
-.block { display: grid; gap: 18px; }
-.map { --r: -1deg; margin: 4px 2px; }
+/* 지도 종이(−1°) → 메모 300px(2°)가 지도의 오른쪽 아래 모서리를 24px(기울기까지 상자로는 ~32px) 덮는다(핀 라벨은 아래 44px 위에 있다). 메모 안: Do Hyeon 머리말 + Pretendard 14px, 오른쪽 아래 길찾기 꼬리표 */
+.block { display: grid; justify-items: end; padding: 4px 2px 0; }
+.map { --r: -1deg; width: 100%; z-index: 0; }
 .map :global(.leaflet-control-zoom) { display: none; }
-.paper { display: grid; gap: 10px; padding: 14px 16px 12px; }
-.way { justify-self: end; }
+.paper { position: relative; z-index: 2; width: 300px; max-width: 100%; margin-top: -24px; --r: 2deg; display: grid; gap: 8px; padding: 12px 14px 10px; }
+.lines { display: grid; gap: 6px; font-size: 14px; line-height: 1.45; color: var(--ink); }
+.line { word-break: keep-all; }
+.key { display: inline-block; font-size: 15px; color: var(--ink); margin-right: 2px; }
+.way { justify-self: end; margin-top: 2px; --kh: 36px; }

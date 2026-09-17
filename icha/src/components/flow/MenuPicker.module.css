@@ -1,8 +1,9 @@
 .root { display: grid; gap: 16px; }
-.cards { display: grid; gap: 20px; }
+.cards { display: grid; gap: 0; }
+.card + .card { margin-top: -6px; }
 
-/* 보케 위 정보 줄 — 어두운 띠(#14111a 90%) 위 본문 글꼴 */
-.strip { background: rgba(20, 17, 26, 0.9); color: #fff; font-family: var(--font-sans); font-size: 15px; line-height: 1.5; padding: 10px 14px; border-radius: 4px; }
+/* 보케 위 정보 줄 — 포스터의 검은 띠 위 Do Hyeon 16px */
+.strip { background: #111; color: #fff; font-family: var(--font-display); font-size: 16px; font-weight: 400; line-height: 1.35; padding: 9px 14px; border-radius: 0; box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5); }
 
 /* 매장 종이 — 고르면 그 집 색 테두리가 굵게 */
 .card { display: grid; gap: 10px; padding: 14px 16px 16px; border: 2px solid transparent; transition: border-color 0.15s; }
@@ -32,7 +33,7 @@
 /* 지운 원래 가격 — 크림 위 4.5:1 이상 */
 .price :global(.strike) { color: #5f5648; }
 /* 규칙 줄 — 고정 스티커 뒤로 숨지 않게 위 여백을 조금 둔다 */
-.note { font-weight: 700; margin-top: 2px; }
+.note { margin-top: 6px; --r: -0.6deg; transform: rotate(var(--r)); }
 
 /* 오류 줄 — 크림 바 안, 짙은 빨강 */
 .err { color: #b8221b; font-size: 14px; }

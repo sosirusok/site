@@ -60,7 +60,7 @@ export function RelayCards({ relays }: { relays: WalletRelay[] }) {
   );
 }
 
-/* 사용 가능 쿠폰 — 쿠폰 더미(번갈아 기울여 쌓인다). 종이인지 네온인지는 키트 파일이 정한다(Ticket) */
+/* 사용 가능 쿠폰 — 쿠폰 더미(번갈아 ±1.5° 기울여 14px 씩 겹쳐 쌓인다). 종이인지 네온인지는 키트 파일이 정한다(Ticket) */
 export function ActiveCoupons({ coupons }: { coupons: WalletCoupon[] }) {
   const now = new Date();
   return (
@@ -72,7 +72,7 @@ export function ActiveCoupons({ coupons }: { coupons: WalletCoupon[] }) {
             <Link href={`/coupons/${c.id}`} className={styles.ticketLink} aria-label={`${c.store?.shortName ?? "매장"} ${c.menuName} 쿠폰`}>
               <Ticket
                 t={{ storeId: c.store?.id ?? "joseon", storeName: c.store?.shortName ?? "매장", menuName: c.menuName, code: c.code, expiresAt: c.expiresAt, image: c.image, kindLabel: kindText(c) }}
-                rotate={i % 2 ? 1 : -1}
+                rotate={i % 2 ? 1.5 : -1.5}
               />
               {left <= 7 && <span className={`stamp ${styles.soon}`}>{Math.max(left, 0)}일 남음</span>}
             </Link>
@@ -95,7 +95,7 @@ export function PastCoupons({ coupons }: { coupons: WalletCoupon[] }) {
             <Link href={`/coupons/${c.id}`} className={styles.ticketLink} aria-label={`${c.store?.shortName ?? ""} ${c.menuName} — ${c.status === "used" ? "사용 완료" : c.status === "expired" ? "기간 만료" : "취소"}`}>
               <Ticket
                 t={{ storeId: c.store?.id ?? "joseon", storeName: c.store?.shortName ?? "매장", menuName: c.menuName, code: c.code, expiresAt: c.expiresAt, image: c.image, kindLabel: kindText(c), meta: c.status === "used" ? `${fmtMDHM(c.usedAt)} 사용` : null }}
-                rotate={i % 2 ? 1 : -1}
+                rotate={i % 2 ? 1.5 : -1.5}
                 dim
               />
               {c.status === "used" ? (

@@ -132,11 +132,12 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
         </div>
         {fresh && <LiveClock />}
         {fresh && <p className={`${styles.strip} ${styles.hint}`}>직원 확인용. 위 시계는 현재 시각으로 움직이며 캡처 화면에서는 멈춥니다.</p>}
-        <div className="paper paper-l">
-          <div className="row"><b>사용 시각</b><span className="val num">{usedAt ? fmtDateTimeSec(usedAt) : "방금"}</span></div>
-          <div className="row"><b>매장</b><span className="val">{store.shortName}</span></div>
-          <div className="row"><b>품목</b><span className="val">{coupon.menuName}</span></div>
-          <div className="row"><b>코드</b><span className="val mono">{coupon.code}</span></div>
+        {/* 기록 — 검은 띠 위 Do Hyeon 네 줄(머리말은 노랑) */}
+        <div className={`${styles.strip} ${styles.record}`}>
+          <p><span className={styles.recKey}>사용 시각</span> <span className="num">{usedAt ? fmtDateTimeSec(usedAt) : "방금"}</span></p>
+          <p><span className={styles.recKey}>매장</span> {store.shortName}</p>
+          <p><span className={styles.recKey}>품목</span> {coupon.menuName}</p>
+          <p><span className={styles.recKey}>코드</span> <span className="mono">{coupon.code}</span></p>
         </div>
         {/* 기록 종이 아래 — 노란 리뷰 스티커 하나, 쿠폰함은 작은 밑줄 글자 */}
         <div className={styles.actions}>

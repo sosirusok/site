@@ -14,12 +14,14 @@ const I: Record<TabIconKind, React.ReactNode> = {
   info: <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zm0-13v.5M12 11v6" />,
 };
 
-/** 하단 탭 — 크림색 종이 띠. 홈 / 쿠폰함 / 플레이스(예약 시트) / 안내. 고른 탭은 노란 형광펜. */
+/** 하단 탭 — 포스터 맨 아래의 검은 띠. 홈 / 쿠폰함 / 플레이스(예약 시트) / 안내. 아이콘은 크림 스티커 위에, 글자는 크림 Do Hyeon, 고른 탭은 노랑. */
 export function TabBar({ stores }: { stores: PlaceSheetStore[] }) {
   const path = usePathname() ?? "/";
   const [open, setOpen] = useState(false);
   const icon = (kind: TabIconKind) => (
-    <TabIcon kind={kind} fallback={<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" aria-hidden="true">{I[kind]}</svg>} />
+    <span className={styles.icon} aria-hidden="true">
+      <TabIcon kind={kind} fallback={<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" aria-hidden="true">{I[kind]}</svg>} />
+    </span>
   );
   const item = (href: string, label: string, kind: TabIconKind, active: boolean) => (
     <Link key={label} href={href} className={`${styles.item} ${active ? styles.active : ""}`} aria-current={active ? "page" : undefined}>

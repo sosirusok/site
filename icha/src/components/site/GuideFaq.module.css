@@ -1,6 +1,7 @@
-/* 자주 묻는 질문 — 종이 카드, 오른쪽에 손으로 그린 + 표시 */
-.list { display: grid; gap: 14px; }
-.item { padding: 0 16px; }
+/* 자주 묻는 질문 — 종이 한 장, 질문마다 점선, 오른쪽에 손으로 그린 + 표시 */
+.list { display: grid; gap: 0; padding: 8px 16px 6px; }
+.item { border-top: 1px dashed var(--paper-line); }
+.item:first-child { border-top: 0; }
 .details { display: block; }
 .summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 60px; padding: 12px 0; user-select: none; -webkit-tap-highlight-color: transparent; }
 .q { font-size: 18px; line-height: 1.3; }

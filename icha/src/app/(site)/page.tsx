@@ -30,9 +30,7 @@ export default async function HomePage() {
     <>
       <PosterHero />
       {(rules.notice || !rules.eventActive) && (
-        <div className={`paper paper-r ${styles.notice}`}>
-          <p className={styles.noticeIn}><b className={styles.noticeDay}>공지</b>{rules.notice || "이벤트 기간이 아닙니다"}</p>
-        </div>
+        <p className={`band ${styles.notice}`}><b className={styles.noticeDay}>공지</b>{rules.notice || "이벤트 기간이 아닙니다"}</p>
       )}
       <Marquee />
       <StoreBlocks now={now} rules={rules} gifts={gifts} />

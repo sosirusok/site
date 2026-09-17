@@ -1,10 +1,15 @@
-.root { display: grid; gap: 18px; padding-top: 6px; }
+.root { display: grid; gap: 10px; padding-top: 6px; }
+/* 기록 띠 — 네 줄 */
+.record { display: grid; gap: 4px; transform: rotate(-0.8deg); }
+.recKey { color: var(--yellow); margin-right: 4px; }
 
 /* 보케 위 정보 줄 — 어두운 띠(#14111a 90%) 위 본문 글꼴. 손글씨·노란 글자는 보케에 직접 놓지 않는다 */
-.strip { background: rgba(20, 17, 26, 0.9); color: #fff; font-family: var(--font-sans); font-size: 15px; line-height: 1.5; padding: 10px 14px; border-radius: 4px; }
+.strip { background: #111; color: #fff; font-family: var(--font-display); font-size: 16px; font-weight: 400; line-height: 1.35; padding: 9px 14px; border-radius: 0; box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5); }
 
 /* 상태 */
-.state { display: grid; gap: 12px; justify-items: start; }
+.state { display: grid; gap: 0; justify-items: start; }
+.state .h1 { position: relative; z-index: 2; margin-bottom: -8px; }
+.state .stateSub { margin-left: 20px; transform: rotate(0.8deg); }
 .h1 { font-size: 26px; padding: 12px 18px 10px; }
 /* 초록 간판은 흰 글자 대비를 위해 한 단계 짙게 */
 .plateGreen { --plate: #156e38; }
@@ -33,7 +38,7 @@
 /* 사용 완료 아래 — 노란 스티커 하나 + 작은 밑줄 링크(44px 터치) */
 .actions { display: grid; gap: 8px; justify-items: center; }
 /* 보케 위 밑줄 링크 — 어두운 알약 위에 */
-.pill { background: rgba(20, 17, 26, 0.9); padding: 0 12px; border-radius: 4px; }
+.pill { background: #111; padding: 0 12px; border-radius: 0; font-family: var(--font-display); font-size: 16px; font-weight: 400; }
 
 /* 확인 시트 — 아래에서 올라오는 크림 종이 */
 .overlay { position: fixed; inset: 0; z-index: 60; background: rgba(0, 0, 0, 0.62); animation: fade 0.15s ease-out; }
@@ -57,4 +62,5 @@
 .clockDate { font-size: 13px; color: var(--ink-2); }
 
 /* 티켓 바로 아래, 오른쪽 정렬한 예약 스티커 — 사용 안내 문장의 '아래 버튼'은 고정 바의 사용 버튼만 가리키게 */
-.bookRow { display: flex; justify-content: flex-end; margin-top: 10px; }
+/* 티켓의 오른쪽 아래 모서리를 덮는 예약 스티커 */
+.bookRow { display: flex; justify-content: flex-end; margin-top: -18px; margin-right: 6px; position: relative; z-index: 2; }

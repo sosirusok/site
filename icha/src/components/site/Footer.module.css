@@ -3,12 +3,15 @@
 .strip { background: #14111a; color: rgba(244, 233, 210, 0.86); font-family: var(--font-sans); font-size: 13px; line-height: 1.55; padding: 18px var(--gutter) 14px; display: grid; gap: 12px; border-top: 1px solid rgba(244, 233, 210, 0.12); }
 .line { display: block; width: 100%; }
 .line img { width: 100%; height: auto; }
-.stores { display: grid; gap: 4px; }
-.store { color: rgba(244, 233, 210, 0.86); }
+.stores { display: grid; gap: 6px; }
+/* 매장 한 칸 — 첫 줄 상호·주소(접혀도 된다), 둘째 줄 전화번호는 제 줄에 통째로(숫자 가운데서 끊기지 않는다) */
+.store { display: grid; justify-items: start; color: rgba(244, 233, 210, 0.86); line-height: 1.6; }
+.storeLine { display: block; }
 .storeName { font-weight: 600; color: var(--cream); }
 .dot { color: rgba(244, 233, 210, 0.5); }
 .addr { color: rgba(244, 233, 210, 0.78); }
-.tel { display: inline; min-height: 0; padding-block: 12px; margin: 0; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(244, 233, 210, 0.45); color: var(--cream); }
+/* 전화 — 제 줄의 44px 누르는 상자(흐름은 28px: 위아래 −8px), 숫자는 한 덩어리 */
+.tel { display: inline-flex; align-items: center; min-height: 44px; margin: -8px 0; padding: 0; white-space: nowrap; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(244, 233, 210, 0.45); color: var(--cream); }
 .links { display: flex; align-items: center; flex-wrap: wrap; gap: 0 4px; }
 .link { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; padding: 0 2px; color: var(--cream); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(244, 233, 210, 0.45); }
 .sep { color: rgba(244, 233, 210, 0.6); padding: 0 4px; }

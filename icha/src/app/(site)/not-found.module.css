@@ -4,10 +4,10 @@
 .cut { margin: -24px 0 -30px; }
 /* 간판은 줄이 길어도 칸 밖으로 나가지 않게 — 13자까지 한 줄, 넘치면 줄바꿈 */
 .h1 { font-size: 22px; padding: 12px 18px 10px; white-space: normal; max-width: 100%; line-height: 1.2; }
-/* 보케 위 정보 줄 — 어두운 띠(#14111a 90%) 위 본문 글꼴 */
-.strip { background: rgba(20, 17, 26, 0.9); color: #fff; font-family: var(--font-sans); font-size: 15px; line-height: 1.5; padding: 10px 14px; border-radius: 4px; }
+/* 보케 위 정보 줄 — 포스터의 검은 띠 위 Do Hyeon 16px */
+.strip { background: #111; color: #fff; font-family: var(--font-display); font-size: 16px; font-weight: 400; line-height: 1.35; padding: 9px 14px; border-radius: 0; box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5); }
 .sub { font-weight: 700; }
 .btn { margin-top: 12px; min-width: 170px; }
 .retry { margin-top: 2px; }
 /* 보케 위 밑줄 링크 — 어두운 알약 위에 */
-.pill { background: rgba(20, 17, 26, 0.9); padding: 0 12px; border-radius: 4px; }
+.pill { background: #111; padding: 0 12px; border-radius: 0; font-family: var(--font-display); font-size: 16px; font-weight: 400; }

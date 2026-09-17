@@ -1,7 +1,11 @@
-/* 하단 탭 — 크림색 종이 띠, 위쪽은 검은 선 한 줄. 글자는 Do Hyeon 검정 */
-.bar { bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(4, 1fr); height: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: var(--cream); border-top: 3px solid #111; box-shadow: 0 -5px 0 rgba(0, 0, 0, 0.35); }
-.item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 44px; color: #111; font-family: var(--font-display); font-size: 13px; line-height: 1; }
-.item:active { background: rgba(17, 17, 17, 0.06); }
-.label { display: inline-block; padding: 3px 5px 2px; border-radius: 3px; }
-/* 고른 탭 — 노란 형광펜 자국. 기울이지 않고 그림자는 1px 만 */
-.active .label { background: var(--yellow); box-shadow: 1px 1px 0 #111; }
+/* 하단 탭 — 포스터 맨 아래의 검은 띠. 키트 아이콘(검은 선 그림)은 크림 스티커 네모 위에, 글자는 크림 Do Hyeon, 고른 탭은 노란 글자·노란 스티커. 위 가장자리 노랑·검정 사선 띠 */
+.bar { bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(4, 1fr); height: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: #111; border-top: 2px solid #000; box-shadow: 0 -4px 0 rgba(0, 0, 0, 0.45); }
+.bar::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: repeating-linear-gradient(-45deg, var(--yellow) 0 7px, #111 7px 14px); pointer-events: none; }
+.item { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 44px; color: var(--cream); font-family: var(--font-display); font-size: 13px; line-height: 1; }
+.item:active { background: rgba(255, 255, 255, 0.06); }
+/* 아이콘 스티커 — 크림 네모 30x30, 살짝 기울임. 고른 탭은 노랑 */
+.icon { display: grid; place-items: center; width: 30px; height: 30px; background: var(--cream); border: 1.5px solid #000; box-shadow: 2px 2px 0 #000; transform: rotate(-3deg); }
+.item:nth-child(even) .icon { transform: rotate(3deg); }
+.label { display: inline-block; padding: 2px 2px 0; }
+.active .icon { background: var(--yellow); }
+.active .label { color: var(--yellow); }

@@ -23,7 +23,11 @@ function shortAddress(a: string): string {
 /** 네이버 검색창에 그대로 넣는 말 */
 const SEARCH_QUERY = "서면 알콜부시기";
 
-/** 오시는 길 — 키트 제목판(label-map), 거리 한 줄(어두운 띠), 테이프로 붙인 지도 조각(높이 190, 표시 뒤 크기 재계산), 주소 세 줄 종이(길찾기 꼬리표), [네이버에서 검색] */
+/**
+ * 오시는 길 — 키트 제목판(label-map) 왼쪽 + 노란 콜아웃 "3개 매장 50m 이내"(제목판 오른쪽 끝을 살짝 덮는다), 그 아래 어두운 띠 한 줄(출구·도보),
+ * 테이프로 붙인 지도 종이(−1.5°), 주소 셋을 적은 크림 메모 한 장(300px, 2°)이 지도의 오른쪽 아래 모서리를 덮고(길찾기 꼬리표는 메모 안),
+ * [네이버에서 검색] 스티커(−2°)가 메모의 왼쪽 아래 모서리를 덮는다.
+ */
 export function Directions() {
   const ordered = [...STORES].sort((a, b) => a.course.n - b.course.n);
   const mapStores: MapStore[] = ordered.filter((st) => st.lat != null && st.lng != null).map((st) => ({
@@ -32,33 +36,33 @@ export function Directions() {
   return (
     <section className={s.dir} aria-labelledby="map-title">
       <div className={s.dirHead}>
-        <SectionLabel kind="map" color="blue" id="map-title">오시는 길</SectionLabel>
-        <p className={`info ${s.dirLead}`}>3개 매장 모두 50m 이내 · {walkLine()}</p>
+        <SectionLabel kind="map" color="blue" id="map-title" className={s.dirLabel}>오시는 길</SectionLabel>
+        <p className={`callout ${s.dirCallout}`}>3개 매장 50m 이내</p>
+        <p className={`band ${s.dirLead}`}>{walkLine()}</p>
       </div>
       <div className={s.mapWrap}>
-        <div className="map-paper">
-          <StoreMap stores={mapStores} compact hidePanel height={190} />
+        <div className={`map-paper ${s.mapPaper}`}>
+          <StoreMap stores={mapStores} compact hidePanel height={200} />
         </div>
-      </div>
-      <div className={`paper paper-l ${s.addrPaper}`}>
-        <ul className={s.addrs}>
-          {ordered.map((st) => {
-            const links = placeLinks(st);
-            return (
-              <li key={st.id} className={s.addrRow} data-store={st.id}>
-                <span className={`plate plate-store plate-sm ${s.addrNo}`} style={{ "--r": "-3deg" } as CSSProperties}>{st.course.n}차</span>
-                <div className={s.addrBody}>
-                  <p className={s.addrName}>{st.shortName}</p>
-                  <p className={s.addrSub}>{shortAddress(st.address)} · {LOCATIONS[st.id].subway}</p>
-                </div>
-                {links && <StickerButton kind="directions" tilt={0} secondary href={links.directions} suffix={` — ${st.shortName}`} className={s.addrLink}>길찾기</StickerButton>}
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-      <div className={s.searchRow}>
-        <StickerButton kind="search" href={naverSearchUrl(SEARCH_QUERY)}>네이버에서 검색</StickerButton>
+        <div className={`paper ${s.addrPaper}`} style={{ "--r": "2deg" } as CSSProperties}>
+          <ul className={s.addrs}>
+            {ordered.map((st) => {
+              const links = placeLinks(st);
+              return (
+                <li key={st.id} className={s.addrRow} data-store={st.id}>
+                  <div className={s.addrBody}>
+                    <p className={`disp ${s.addrName}`}><span className={s.addrNo}>{st.course.n}차</span> {st.shortName}</p>
+                    <p className={s.addrSub}>{shortAddress(st.address)} · {LOCATIONS[st.id].subway}</p>
+                  </div>
+                  {links && <StickerButton kind="directions" tilt={0} secondary href={links.directions} suffix={` — ${st.shortName}`} className={s.addrLink}>길찾기</StickerButton>}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+        <div className={s.searchRow}>
+          <StickerButton kind="search" href={naverSearchUrl(SEARCH_QUERY)} style={{ "--r": "-2deg" } as CSSProperties}>네이버에서 검색</StickerButton>
+        </div>
       </div>
     </section>
   );

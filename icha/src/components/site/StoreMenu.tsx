@@ -35,15 +35,15 @@ function Row({ m }: { m: MenuItem }) {
   );
 }
 
-/** 메뉴판 — 크림 종이 한 장(머리는 '{매장} 메뉴판' 글자 한 줄 — 키트 제목판 [메뉴]가 바로 위에 있으니 판을 또 두지 않는다). 혜택 품목이 맨 위, 8개까지 보인 뒤 나머지는 접힘(밑줄 글자 줄 — 종이 안의 버튼은 키트 스티커 하나뿐). 맨 아래 오른쪽에 키트 [메뉴 전체 보기](네이버). 값은 DB(listMenu). */
+/** 메뉴판 — 크림 종이 한 장(메뉴는 종이니까), 위 가장자리 가운데 테이프, −0.8°. 머리는 '{매장} 메뉴판 · N개' 한 줄(키트 제목판 [메뉴]가 바로 위에 있으니 판을 또 두지 않는다). 혜택 품목이 맨 위, 8개까지 보인 뒤 나머지는 접힘(밑줄 글자 줄 — 종이 안의 버튼은 키트 스티커 하나뿐). 맨 아래 오른쪽에 키트 [메뉴 전체 보기](네이버). 값은 DB(listMenu). */
 export function StoreMenu({ store, items, menuUrl }: { store: Store; items: MenuItem[]; menuUrl: string | null }) {
   const sorted = [...items.filter((m) => m.isGift), ...items.filter((m) => !m.isGift)];
   const head = sorted.slice(0, VISIBLE);
   const rest = sorted.slice(VISIBLE);
   return (
-    <div className={`paper paper-l ${styles.board}`}>
+    <div className={`paper tape ${styles.board}`}>
       <p className={styles.head}>
-        <span className={styles.headText}>{store.shortName} 메뉴판</span>
+        <span className={`disp ${styles.headText}`}>{store.shortName} 메뉴판{items.length > 0 ? ` · ${items.length}개` : " · 준비 중"}</span>
       </p>
       {items.length === 0 ? (
         <p className={styles.empty}>메뉴 준비 중</p>

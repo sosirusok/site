@@ -1,17 +1,17 @@
 .page { display: grid; padding-bottom: 8px; }
-/* 보케 위 정보 줄 — 어두운 띠(#14111a 90%) 위 본문 글꼴 */
-.strip { background: rgba(20, 17, 26, 0.9); color: #fff; font-family: var(--font-sans); font-size: 15px; line-height: 1.5; padding: 10px 14px; border-radius: 4px; }
+/* 보케 위 정보 줄 — 포스터의 검은 띠 위 Do Hyeon 16px */
+.strip { background: #111; color: #fff; font-family: var(--font-display); font-size: 16px; font-weight: 400; line-height: 1.35; padding: 9px 14px; border-radius: 0; box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5); }
 /* 관리자 공지 — 크림 종이, 앞에 '공지' 라벨 */
-.notice { margin: 14px var(--gutter) 0; padding: 12px 16px; }
+.notice { margin: 12px var(--gutter) 0; padding: 10px 14px; }
 .noticeIn { font-size: 15px; line-height: 1.5; }
 .noticeTag { margin-right: 8px; vertical-align: 1px; }
-.top { display: grid; gap: 12px; justify-items: start; padding: 18px var(--gutter) 6px; }
-.h1 { --r: -1.5deg; }
-.sub { font-weight: 700; }
+.top { display: grid; gap: 0; justify-items: start; padding: 14px var(--gutter) 2px; }
+.h1 { --r: -1.5deg; position: relative; z-index: 2; margin-bottom: -8px; }
+.sub { justify-self: stretch; margin-left: 24px; --r: 1deg; transform: rotate(var(--r)); }
 .sec { padding: 22px var(--gutter) 6px; }
 .count { color: #fff; }
 .none { color: rgba(244, 233, 210, 0.92); }
-.foot { display: grid; gap: 14px; justify-items: start; padding-top: 30px; }
+.foot { display: grid; gap: 10px; justify-items: start; padding-top: 22px; }
 .rule { justify-self: stretch; font-size: 14px; color: rgba(244, 233, 210, 0.92); }
 /* 보케 위 밑줄 링크 — 어두운 알약 위에 */
-.pill { background: rgba(20, 17, 26, 0.9); padding: 0 12px; border-radius: 4px; }
+.pill { background: #111; padding: 0 12px; border-radius: 0; font-family: var(--font-display); font-size: 16px; font-weight: 400; }

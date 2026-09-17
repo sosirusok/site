@@ -1,27 +1,29 @@
-/* 매장 첫 화면 — 밤 사진 한 장 화면 폭 그대로(68vw: 390 → 265px, 4:3 사진 292px 의 위 91%), 오른쪽에 종이 메모, 아래 모서리에 간판(한 단 가득) */
-.hero { position: relative; margin-top: 4px; }
-.shotWrap { position: relative; height: 68vw; min-height: 220px; max-height: 300px; overflow: visible; background: #1a1520; }
+/* 매장 첫 장면 — 좌표는 390 화면 기준 px × --u. 사진 390x300 → 간판 top 250(−2°) → 컷아웃 top 190 오른쪽 6(6°) → 검은 띠 */
+.hero { position: relative; isolation: isolate; margin-top: 0; }
+.shotWrap { position: relative; height: calc(300 * var(--u)); overflow: hidden; background: #1a1520; z-index: 0;
+  -webkit-mask-image: linear-gradient(#000 74%, transparent 100%); mask-image: linear-gradient(#000 74%, transparent 100%); }
 .shot { object-fit: cover; }
-/* 종이 메모 note-good 520x600 → 130px 폭(150px 높이, 종이 몸통 x 9~120 / y 5~145), 위 모서리 테이프(위로 9px).
-   가게 간판(사진 맨 위 줄)을 덮지 않는 자리 — 사진마다 잰 값:
-   메모는 4도 기울어 상자보다 위로 4px·아래로 4px 더 나가고, 테이프의 왼쪽 위 모서리는 top − 11px 까지 올라간다(회전 계산).
-   간판 띠는 사진 폭에 비례하니(사진은 폭에 맞춰 그려진다) 메모의 top 도 vw 로 — 화면 390/430/480 모두 테이프 모서리가 간판 아래 2px 이상 밖.
-   도쿄스탠드: 파란 간판 아래 끝 = 0.167 × (vw × 0.75) = 12.5vw(390: 49, 430: 54), 노렌 y 56~90(x 66~256), 창의 生ビール 글자 x ~268 → top 13vw + 13px(390: 64 → 테이프 모서리 52.5) / right −4(종이 몸통 x 269~380): 노렌·창 글자 오른쪽으로 비켜서 문 데칼(곰 그림) 위, 몸통 아래 끝 212 < 간판 몸통 240
-   조선칼국수: 간판 아래 끝 = 0.22 × (vw × 0.751) = 16.5vw(390: 64, 430: 71), 막걸리 간판 x ~312/344 → top 16.5vw + 14px(390: 78 → 테이프 모서리 67): 간판 아래 지붕·오른쪽 창 위, 몸통 아래 끝 227 < 간판 몸통 236(112% 간판 그림의 위 3.6% = 6px 은 투명)
-   와르르맨숀: 라이트박스가 가운데(x 140~260) → 오른쪽 위 그대로 */
-.note { position: absolute; right: calc(var(--gutter) - 4px); top: 12px; width: 130px; z-index: 2; }
+/* 종이 메모 note-good 520x600 → 118px 폭, 사진 오른쪽 위(테이프). 5° */
+.note { position: absolute; right: calc(10 * var(--u)); top: calc(10 * var(--u)); width: calc(118 * var(--u)); z-index: 3; }
 .note img { width: 100%; height: auto; }
-:global([data-store="tokyo"]) .note { top: calc(13vw + 13px); right: -4px; }
-:global([data-store="joseon"]) .note { top: calc(16.5vw + 14px); }
-/* 간판 1200x500 → 한 단 가득(358x149), 사진 아래를 32px 덮는다(메모 몸통 y ≤ 230 은 간판에 안 덮인다: 390 화면 사진 265 − 32 = 233) */
-.plateWrap { position: relative; z-index: 2; margin: -32px var(--gutter) 0; }
+/* 간판 1200x500 → 358x149, 사진 아래 50px 을 덮는다(top 250), 왼쪽 위 모서리 테이프 */
+.plateWrap { position: relative; z-index: 2; margin: calc(-50 * var(--u)) var(--gutter) 0; width: calc(358 * var(--u)); }
 .plate { width: 100%; }
 .plate img { width: 100%; height: auto; }
-/* 조선칼국수 간판은 그림의 불투명 간판이 캔버스의 70%(x 15~85%) 라 같은 폭이면 도쿄·와르르(95%)보다 작아 보인다 → 112%(양옆 −6%): 보이는 간판 280x155 ≈ 도쿄 341x130 과 같은 무게, 넘치는 건 투명 여백뿐 */
-:global([data-store="joseon"]) .plate { width: 112%; margin-inline: -6%; }
+/* 조선칼국수 간판은 그림의 불투명 간판이 캔버스의 70% 라 112%(양옆 −6%) — 보이는 간판이 다른 둘과 같은 무게(kit.md 규칙 7) */
+:global([data-store="joseon"]) .plateWrap { width: calc(401 * var(--u)); margin-left: calc(-5.5 * var(--u)); }
+/* 컷아웃 — 간판 오른쪽 끝을 뚫고 나온다: top 190, 오른쪽 6, 6° */
+.cut { position: absolute; top: calc(190 * var(--u)); right: calc(6 * var(--u)); z-index: 3; transform: rotate(6deg); }
+.hero .cutTall img { height: calc(120 * var(--u)); width: auto; }
+.hero .cutWide img { width: calc(116 * var(--u)); height: auto; }
+.hero .cutWide { top: calc(162 * var(--u)); right: calc(4 * var(--u)); }
 
-/* 사진 아래 — 어두운 띠 한 줄(상태 칩·오늘 시간·별점), 종이 한 장 */
-.facts { padding: 16px var(--gutter) 0; display: grid; gap: 14px; }
-.now { font-size: 15px; }
-.factPaper { padding: 12px 16px; }
-.tel { min-height: 44px; margin: -8px 0; }
+/* 검은 띠 — 간판 아래 6px, 두세 줄 + 오른쪽 끝 전화 꼬리표 */
+.facts { position: relative; z-index: 2; margin: calc(6 * var(--u)) var(--gutter) 0; padding: 10px 12px 10px; white-space: normal; align-items: center; gap: 10px; }
+.factLines { flex: 1; min-width: 0; display: grid; gap: 3px; }
+.now { font-size: 16px; line-height: 1.25; }
+.sub { font-family: var(--font-sans); font-size: 13px; font-weight: 500; line-height: 1.35; color: var(--cream); }
+.addr { font-family: var(--font-sans); font-size: 13px; font-weight: 500; line-height: 1.35; color: var(--cream); padding-right: 116px; }
+/* 전화 꼬리표 — 크림 스티커(Do Hyeon 14px)가 띠의 오른쪽 아래 모서리를 넘겨 붙는다. 누르는 상자 44px */
+.tel { position: absolute; right: -4px; bottom: -26px; display: inline-flex; align-items: center; justify-content: flex-end; min-height: 44px; min-width: 44px; z-index: 3; }
+.telTag { display: inline-block; padding: 6px 8px 5px; background: var(--cream); color: var(--ink); font-family: var(--font-display); font-size: 14px; line-height: 1; border: 2px solid #111; box-shadow: 2px 2px 0 #000; transform: rotate(3deg); white-space: nowrap; }

@@ -21,15 +21,12 @@ export function Footer() {
         <ul className={styles.stores}>
           {ordered.map((s) => (
             <li key={s.id} className={styles.store}>
-              <span className={styles.storeName}>{s.course.n}차 {s.name}</span>
-              <span className={styles.dot} aria-hidden="true"> · </span>
-              <span className={styles.addr}>{s.address}</span>
-              {s.phone && (
-                <>
-                  <span className={styles.dot} aria-hidden="true"> · </span>
-                  <a href={`tel:${s.phone.replace(/-/g, "")}`} className={`num ${styles.tel}`}>{s.phone}</a>
-                </>
-              )}
+              <span className={styles.storeLine}>
+                <span className={styles.storeName}>{s.course.n}차 {s.name}</span>
+                <span className={styles.dot} aria-hidden="true"> · </span>
+                <span className={styles.addr}>{s.address}</span>
+              </span>
+              {s.phone && <a href={`tel:${s.phone.replace(/-/g, "")}`} className={`num ${styles.tel}`}>{s.phone}</a>}
             </li>
           ))}
         </ul>

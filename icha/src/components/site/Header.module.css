@@ -3,7 +3,7 @@
 .brand { display: inline-flex; align-items: center; min-height: 44px; opacity: 1; transition: opacity 0.3s ease; }
 /* 홈 첫 화면 — 포스터 머리에 제목이 크게 있으니 스티커는 감춘다(150px 내려가면 나타남) */
 .brandHidden { opacity: 0; pointer-events: none; }
-.brandImg { width: auto; height: 42px; }
+.brandImg { width: auto; height: 40px; }
 /* 키트가 없을 때의 포스터 조각 제목(불투명 잘라낸 조각) — 이때만 모서리·그림자 */
 .brandImgPoster { width: auto; height: 26px; border-radius: 3px; box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.5); transform: rotate(-2deg); }
 .me { display: inline-flex; align-items: center; min-height: 44px; }

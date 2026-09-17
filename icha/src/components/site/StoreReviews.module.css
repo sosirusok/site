@@ -1,12 +1,14 @@
-/* 리뷰 — 어두운 띠 위 별점, 찢은 종이 위 인용, 어두운 받침 위 링크 */
-.root { display: grid; gap: 14px; }
-.rating { justify-self: start; font-size: 15px; font-weight: 600; }
-.list { display: grid; gap: 14px; }
-.quote { max-width: 94%; }
+/* 리뷰 — 콜아웃 한 줄, 서로 겹쳐 붙은 찢은 종이 조각, 검은 띠, 스티커 */
+.root { display: grid; gap: 0; }
+.rating { justify-self: start; margin: -4px 0 6px 4px; font-size: 18px; --r: -2deg; }
+.list { display: grid; gap: 0; }
+.quote { position: relative; max-width: 92%; }
 .quoteL { justify-self: start; }
-.quoteR { justify-self: end; }
+/* 둘째 조각은 첫째의 아래 오른쪽 모서리를 18px 덮는다 */
+.quoteR { justify-self: end; margin-top: -18px; }
 .text { font-size: 14.5px; line-height: 1.6; color: var(--ink); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 .meta { margin-top: 6px; font-size: 13px; color: var(--ink-2); text-align: right; }
-.benefit { justify-self: start; font-size: 15px; }
-/* 스티커는 오른쪽 끝 — 매장 화면의 다른 '더 보기' 스티커(사진 더 보기·메뉴 전체 보기·길찾기)와 같은 쪽 */
-.links { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px 12px; }
+/* 리뷰 이벤트 띠 — 둘째 조각의 아래 왼쪽 모서리를 살짝 덮는다 */
+.benefit { position: relative; z-index: 3; justify-self: start; margin-top: -10px; --r: -1deg; }
+/* 스티커는 오른쪽 끝 — 조각·띠 아래 8px */
+.links { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px 12px; margin-top: 8px; }

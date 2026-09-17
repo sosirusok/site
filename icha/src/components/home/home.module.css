@@ -1,36 +1,41 @@
-/* 홈 — 보케 위에 붙인 키트 조각·종이·스티커. 정보 글자는 종이(.paper)나 어두운 띠(.info) 위에만. */
+/* 홈 — 보케 위에 포스터처럼 겹쳐 붙인 키트 조각·사진·종이. 장면 사이 빈 보케는 없다(검은 띠·리본이 잇는다). */
 
 /* ── 영수증 릴레이 EVENT ── */
-.how { padding: 26px var(--gutter) 8px; display: grid; gap: 22px; }
-/* 리본 1600x260 — 한 단 가득(358 → 58px) */
-.ribbon { width: 100%; }
+.how { position: relative; z-index: 2; padding: 0 var(--gutter) 8px; display: grid; gap: 0; margin-top: -20px; }
+/* 리본 1600x260 — 한 단 가득(358 → 58px), 3차 장면의 아래 20px 을 덮는다 */
+.ribbon { width: 100%; pointer-events: none; }
 .ribbon img { width: 100%; height: auto; }
-.steps { margin-top: 2px; }
-/* 메모 900x420 → 300px 폭, 그 아래 오른쪽에 [쿠폰함 열기] */
-.noteRow { display: grid; gap: 6px; justify-items: start; margin-top: 2px; }
-.note { width: 300px; max-width: 100%; }
+.steps { margin-top: 10px; }
+/* 메모 900x420 → 300px 폭, 순서 격자의 오른쪽 아래 모서리를 24px 덮고, [쿠폰함 열기]가 메모의 왼쪽 아래 모서리를 덮는다 */
+.noteRow { position: relative; display: grid; justify-items: end; margin-top: -24px; }
+.note { width: 300px; max-width: 100%; z-index: 1; }
 .note img { width: 100%; height: auto; }
 .noteIn { font-size: 15px; font-weight: 600; line-height: 1.5; padding: 12px 16px; }
-.walletBtn { justify-self: end; }
-/* 조건 알약 1200x140 → 300px 가운데, 아래 규칙 한 줄 */
-.pillRow { display: grid; justify-items: center; gap: 10px; margin-top: 4px; }
+.walletBtn { justify-self: start; margin-top: -26px; margin-left: 4px; z-index: 2; }
+/* 조건 알약 1200x140 → 300px 가운데, 바로 아래 규칙 한 줄(흰 Do Hyeon 외곽선) */
+.pillRow { display: grid; justify-items: center; gap: 4px; margin-top: 10px; }
 .pill { width: 300px; max-width: 100%; }
 .pill img { width: 100%; height: auto; }
-.rule { font-size: 15px; font-weight: 600; color: var(--cream); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85), 0 0 6px rgba(0, 0, 0, 0.6); text-align: center; }
+.rule { font-size: 16px; text-align: center; --r: 0deg; }
 
 /* ── 오시는 길 ── */
-.dir { padding: 26px var(--gutter) 6px; display: grid; gap: 18px; }
-.dirHead { display: grid; gap: 12px; justify-items: start; }
-.dirLead { font-size: 15px; }
-.mapWrap { position: relative; padding: 6px 2px 10px; }
+.dir { padding: 18px var(--gutter) 6px; display: grid; gap: 10px; }
+.dirHead { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 0 4px; justify-items: start; }
+.dirLabel { --r: -1.5deg; }
+/* 콜아웃 — 제목판 오른쪽 끝을 8px 덮는다 */
+.dirCallout { margin-left: -8px; margin-top: -6px; --r: -4deg; z-index: 1; font-size: 18px; }
+.dirLead { grid-column: 1 / -1; margin-top: 8px; }
+/* 지도 종이(−1.5°) → 주소 메모 300px(2°)가 지도의 오른쪽 아래 모서리를 24px(기울기까지 상자로는 34px) 덮는다(핀·라벨은 아래 44px 위에 있다) → 검색 스티커가 메모의 왼쪽 아래 모서리를 덮는다.
+   메모 아래 여백 34px: 스티커(그림 52px, 보이는 부분 4~48px)가 24px 올라와도 글자(메모 2° 기울어 왼쪽 끝은 5px 더 위)까지 19px 남는다 */
+.mapWrap { position: relative; display: grid; justify-items: end; padding: 6px 2px 0; }
+.mapPaper { --r: -1.5deg; width: 100%; z-index: 0; }
 .mapWrap :global(.leaflet-control-zoom) { display: none; }
-.addrPaper { margin-top: 6px; padding: 6px 16px; }
-.addrs { display: grid; }
-.addrRow { display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 8px 0; border-bottom: 1px dashed var(--paper-line); }
-.addrRow:last-child { border-bottom: 0; }
-.addrNo { flex: none; }
+.addrPaper { position: relative; z-index: 2; width: 300px; max-width: 100%; margin-top: -24px; padding: 8px 14px 34px; }
+.addrs { display: grid; gap: 2px; }
+.addrRow { display: flex; align-items: center; gap: 8px; min-height: 52px; padding: 4px 0; }
 .addrBody { flex: 1; min-width: 0; }
-.addrName { font-family: var(--font-display); font-size: 18px; line-height: 1.2; }
-.addrSub { margin-top: 2px; font-size: 13px; color: var(--ink-2); }
-.addrLink { flex: none; }
-.searchRow { display: flex; align-items: center; gap: 14px; margin-top: 4px; }
+.addrName { font-size: 17px; line-height: 1.2; }
+.addrNo { color: var(--blue); }
+.addrSub { margin-top: 1px; font-size: 13px; line-height: 1.35; color: var(--ink); }
+.addrLink { flex: none; --kh: 36px; }
+.searchRow { position: relative; z-index: 3; justify-self: start; margin-top: -24px; margin-left: 6px; }

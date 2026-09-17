@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { DotLine } from "@/components/flow/kit";
 import { GuideFaq, type FaqItem } from "@/components/site/GuideFaq";
 import { KitPiece, SectionLabel, StickerButton } from "@/components/site/Kit";
+import { StepsStrip } from "@/components/site/StepsStrip";
 import { BRAND } from "@/lib/config";
-import { STEP_LINES, ruleLine } from "@/lib/copy";
+import { ruleLine } from "@/lib/copy";
 import { LOCATIONS } from "@/lib/locations";
 import { placeLinks } from "@/lib/naver";
 import { getRules } from "@/lib/settings";
@@ -32,8 +34,9 @@ function walkLine(): string {
 }
 
 /**
- * 이용 안내 — 키트 큰 제목판(label-guide 60px) + 손글씨 메모(note-again 140px, 획 그림자 + 가장자리 없는 어둠) + 어두운 띠 한 줄, 이렇게 받아요(label-howto) + 순서 네 칸(2×2) + 종이에 적은 이용 방법 넷,
- * 자주 묻는 질문(label-faq)은 종이 카드. 보케 위 글자는 어두운 띠 위 본문 글꼴뿐. 아래 고정 버튼 없음(탭에 플레이스).
+ * 이용 안내 — 키트 큰 제목판(label-guide 60px) + 손글씨 메모(note-again 140px, 획 그림자 + 가장자리 없는 어둠) + 어두운 띠 한 줄,
+ * 이렇게 받아요(label-howto + 콜아웃) → 포스터 순서 네 칸(2×2, 홈과 같은 조각) → 휴대폰 번호 메모(300px, 순서 격자의 오른쪽 아래 모서리를 덮는다) → 규칙 한 줄 검은 띠.
+ * 같은 내용을 번호 목록으로 한 번 더 적지 않는다(절차는 자주 묻는 질문의 발급·사용 항목에). 자주 묻는 질문(label-faq)은 종이 카드. 아래 고정 버튼 없음(탭에 플레이스).
  */
 export default async function GuidePage() {
   const rules = await getRules();
@@ -97,21 +100,21 @@ export default async function GuidePage() {
       </header>
 
       <section className={styles.sec} aria-labelledby="steps-title">
-        <div className="sec-h">
+        <div className={`sec-h ${styles.stepsHead}`}>
           <SectionLabel kind="howto" color="blue" id="steps-title">이용 방법</SectionLabel>
-          <p className={`info ${styles.lead}`}>{BRAND.course}</p>
+          <p className={`callout ${styles.lead}`}>{BRAND.course}</p>
         </div>
-        <div className={`paper paper-l ${styles.stepPaper}`}>
-          <ol className={styles.steps}>
-            {STEP_LINES.map((text, i) => (
-              <li key={text} className={styles.step}>
-                <span className={`plate plate-yellow plate-sm ${styles.num}`} aria-hidden="true">{i + 1}</span>
-                <p className={styles.stepT}><span className="sr-only">{i + 1}. </span>{text}</p>
-              </li>
-            ))}
-          </ol>
-          <p className={styles.rule}><DotLine items={[ruleLine(rules), BRAND.condition]} /></p>
+        <StepsStrip className={styles.steps} />
+        <div className={styles.noteRow}>
+          <KitPiece
+            name="note-phone"
+            rotate={2}
+            sizes="300px"
+            className={styles.phoneNote}
+            fallback={<p className={`paper ${styles.phoneNote} ${styles.phoneNoteIn}`} style={{ "--r": "2deg" } as CSSProperties}>계산 시 휴대폰 번호를 말씀하시면 쿠폰이 발급됩니다</p>}
+          />
         </div>
+        <p className={`info ${styles.rule}`}><DotLine items={[ruleLine(rules), BRAND.condition]} /></p>
       </section>
 
       <section className={styles.sec} aria-labelledby="faq-title">
