@@ -8,8 +8,9 @@
 
 /* 상태 */
 .state { display: grid; gap: 0; justify-items: start; }
-.state .h1 { position: relative; z-index: 2; margin-bottom: -8px; }
-.state .stateSub { margin-left: 20px; transform: rotate(0.8deg); }
+/* 판(−1.5°, 그림자 4px)이 띠의 위 2px 만 덮는다. 띠 글자는 위 여백 18px 라 판의 가장 낮은 모서리(+2.4)·그림자(+4)에서 7px 아래 */
+.state .h1 { position: relative; z-index: 2; margin-bottom: -2px; }
+.state .stateSub { margin-left: 20px; padding-top: 18px; transform: rotate(0.8deg); }
 .h1 { font-size: 26px; padding: 12px 18px 10px; }
 /* 초록 간판은 흰 글자 대비를 위해 한 단계 짙게 */
 .plateGreen { --plate: #156e38; }
