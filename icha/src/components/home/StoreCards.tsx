@@ -58,20 +58,20 @@ export function StoreCards({ now, rules, gifts }: { now: Date; rules: Rules; gif
             <Fragment key={st.id}>
               {prev && (
                 <li className={s.walk} data-store={st.id} data-shape={shape}>
-                  <span className={s.walkText}>
+                  <span className={`stamped ${s.walkText}`}>
                     <span className="sr-only">{prev.shortName}에서 </span>
                     {i === 1 ? <>걸어서 {walkMin(prev, st)}분</> : <>길 건너 {walkMin(prev, st)}분</>}
                   </span>
                 </li>
               )}
               <li className={s.panel} data-store={st.id} data-shape={shape}>
-                <div className={`duo duo-food ${s.shot}`}>
+                <div className={`duo duo-food torn-b ${s.shot}`}>
                   <Image src={photo.src} alt={photoAlt(st.images, photo)} fill priority={i === 0} sizes="(min-width: 480px) 480px, 100vw" style={{ objectPosition: photo.pos }} className={s.shotImg} />
                   <span className={`duo-over ${s.shotNo}`} aria-hidden="true">{no}</span>
                 </div>
                 {/* 상호는 사진 안에 가두지 않는다 — 사진 경계를 물고 내려와 아래 검은 띠를 침범한다 */}
                 <div className={s.shotText}>
-                  <span className={s.shotDrink}>{st.course.n}차 · {st.drink}</span>
+                  <span className={`stamped ${s.shotDrink}`}>{st.course.n}차 · {st.drink}</span>
                   <h3 className={`h1 ${s.shotName}`}>{st.name}</h3>
                 </div>
 
@@ -81,7 +81,7 @@ export function StoreCards({ now, rules, gifts }: { now: Date; rules: Rules; gif
                 </p>
 
                 <div className={s.panelBody}>
-                  <p className={s.giftLine}>
+                  <p className={shape === "b" ? `torn-tb inked ${s.giftLine}` : s.giftLine}>
                     <span className={s.giftLabel}>쿠폰 혜택</span>
                     <b className={`hl ${s.giftWhat}`}>{what} 무료</b>
                   </p>

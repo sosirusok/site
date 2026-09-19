@@ -6,7 +6,7 @@
 /* 받은 쿠폰 */
 .relays { display: grid; gap: 24px; margin: 0; padding: 0; list-style: none; }
 .relay { display: grid; gap: 10px; }
-.relayHead { margin: 0 calc(var(--gutter) * -1); padding: 10px var(--gutter) 9px; background: var(--store); color: #06030c; font-family: var(--font-poster); font-size: 18px; line-height: 1.2; }
+.relayHead { margin: 0 calc(var(--gutter) * -1); padding: 10px var(--gutter) 26px; background: var(--store); color: #06030c; font-family: var(--font-poster); font-size: 18px; line-height: 1.2; }
 .relaySub { margin: 0 0 2px; font-size: 14.5px; color: var(--ink-2); }
 
 /* 쿠폰 목록 */

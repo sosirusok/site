@@ -30,7 +30,7 @@
 
 /* 집과 집 사이 — 세로 막대 + 가운데 정렬을 두 번 쓰지 않는다. 다음 사진 왼쪽 위로 비스듬히 얹는다 */
 .walk { position: relative; z-index: 2; margin-bottom: -20px; padding: 0 var(--gutter); pointer-events: none; }
-.walkText { display: inline-block; padding: 5px 11px; background: var(--store); color: #06030c; font-family: var(--font-poster); font-size: 16px; line-height: 1.1; transform: rotate(-2.5deg); box-shadow: 0 0 22px -6px var(--store); }
+.walkText { display: inline-block; padding: 9px 15px; background: var(--store); color: #06030c; font-family: var(--font-poster); font-size: 16px; line-height: 1.1; transform: rotate(-2.5deg); box-shadow: 0 0 22px -6px var(--store); }
 .walk[data-shape="c"] { text-align: right; }
 .walk[data-shape="c"] .walkText { transform: rotate(2deg); }
 
@@ -50,7 +50,7 @@
 .shotText { position: relative; z-index: 2; display: grid; gap: 7px; margin-top: -40px; padding: 0 var(--gutter); }
 .panel[data-shape="b"] .shotText { justify-items: end; text-align: right; }
 .panel[data-shape="c"] .shotText { margin-top: -30px; margin-right: -26px; }
-.shotDrink { justify-self: start; padding: 4px 9px; background: var(--store); color: #06030c; font-family: var(--font-poster); font-size: 14px; letter-spacing: -0.01em; box-shadow: 0 0 20px -4px var(--store); }
+.shotDrink { justify-self: start; padding: 8px 14px; background: var(--store); color: #06030c; font-family: var(--font-poster); font-size: 14px; letter-spacing: -0.01em; box-shadow: 0 0 20px -4px var(--store); }
 .panel[data-shape="b"] .shotDrink { justify-self: end; }
 .shotName { color: #fff; text-shadow: 0 0 3px rgba(5, 2, 8, 0.95), 0 0 18px rgba(255, 46, 136, 0.7); }
 .panel[data-shape="c"] .shotName { white-space: nowrap; }
@@ -65,7 +65,7 @@
 .giftLine { display: grid; gap: 5px; }
 .giftLabel { font-family: var(--font-poster); font-size: 14px; color: var(--mag); }
 /* 2차 집만 혜택을 화면 폭 노란 띠로 뒤집는다 — 세 번 같은 줄이면 줄이 안 읽힌다 */
-.panel[data-shape="b"] .giftLine { margin: 0 calc(var(--gutter) * -1); padding: 13px var(--gutter) 14px; background: var(--yellow); }
+.panel[data-shape="b"] .giftLine { margin: 0 calc(var(--gutter) * -1); padding: 26px var(--gutter) 32px; background: var(--yellow); }
 .panel[data-shape="b"] .giftLabel { color: rgba(11, 0, 17, 0.62); }
 .panel[data-shape="b"] .giftWhat { color: #0b0011; text-shadow: none; }
 /* 3차 집은 혜택을 제일 크게 */

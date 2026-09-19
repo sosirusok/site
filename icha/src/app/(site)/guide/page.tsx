@@ -45,7 +45,7 @@ export default async function GuidePage() {
             const l = placeLinks(s2);
             return (
               <li key={s2.id} className={styles.bookItem} data-store={s2.id}>
-                <span className={styles.bookBand}>{s2.course.n}차 {s2.shortName}</span>
+                <span className={`torn-b4 inked inked-b ${styles.bookBand}`}>{s2.course.n}차 {s2.shortName}</span>
                 <span className={styles.bookRow}>
                   <span className={styles.bookSub}>{LOCATIONS[s2.id].subway}</span>
                   {l && <Button href={l.booking} variant="naver" size="sm" srSuffix={` — ${s2.course.n}차 ${s2.shortName}`}>예약</Button>}
@@ -82,7 +82,7 @@ export default async function GuidePage() {
       </Section>
 
       {/* 페이지가 사진으로 끝나면 만들다 만 화면처럼 보인다 — 라임 색면 하나로 닫고 다음 행동을 준다 */}
-      <div className={styles.closer}>
+      <div className={`torn-t inked ${styles.closer}`}>
         <p className={styles.closerTitle}>번호만 말씀하시면 쿠폰이 쌓입니다</p>
         <div className={styles.closerRow}>
           <Button href="/wallet" variant="dark" size="lg">내 쿠폰함 열기 →</Button>

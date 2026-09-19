@@ -67,7 +67,7 @@ export function StoreMenu({ store, items, menuUrl }: { store: Store; items: Menu
           <ul className={styles.list}>{head.map((m) => <Row key={m.id} m={m} noThumb={dup.has(m.id)} />)}</ul>
           {rest.length > 0 && (
             <details className={styles.more}>
-              <summary className={`btn btn-soft btn-block ${styles.moreBtn}`}>메뉴 {rest.length}개 더 보기</summary>
+              <summary className={`btn btn-outline btn-block ${styles.moreBtn}`}>메뉴 {rest.length}개 더 보기</summary>
               <ul className={styles.list}>{rest.map((m) => <Row key={m.id} m={m} noThumb={dup.has(m.id)} />)}</ul>
             </details>
           )}

@@ -20,7 +20,7 @@
 
 
 /* 페이지를 닫는 라임 색면 — 보라로만 끝나지 않게, 그리고 다음 행동을 손에 쥐여 준다 */
-.closer { margin-top: 8px; padding: 30px var(--gutter) 34px; background: var(--lime); }
+.closer { margin-top: 8px; padding: 44px var(--gutter) 34px; background: var(--lime); }
 .closerTitle { margin: 0 0 16px; font-family: var(--font-poster); font-size: clamp(23px, 6.6vw, 28px); line-height: 1.16; letter-spacing: -0.015em; color: #0b0011; }
 .closerRow { display: flex; flex-wrap: wrap; gap: 11px; }
 .closerRow > * { flex: 1 1 auto; }
@@ -38,6 +38,6 @@
 /* 매장 예약 — [번호|본문|버튼] 3칸 줄을 쓰지 않는다. 상호를 화면 폭 색면 한 줄로 깔고 그 아래 출구와 버튼 */
 .bookList { display: grid; gap: 22px; margin: 0; padding: 0; list-style: none; }
 .bookItem { display: grid; }
-.bookBand { margin: 0 calc(var(--gutter) * -1); padding: 10px var(--gutter) 9px; background: var(--store); color: #06030c; font-family: var(--font-poster); font-size: 19px; line-height: 1.2; }
+.bookBand { margin: 0 calc(var(--gutter) * -1); padding: 10px var(--gutter) 20px; background: var(--store); color: #06030c; font-family: var(--font-poster); font-size: 19px; line-height: 1.2; }
 .bookRow { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 11px; }
 .bookSub { font-size: 15px; color: var(--ink-2); }

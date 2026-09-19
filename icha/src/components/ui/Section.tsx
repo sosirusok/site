@@ -42,7 +42,7 @@ export function Section({ id, title, lead, alt = false, no, head, tone = "mag", 
     <section id={id} className={`section ${alt ? "section-alt" : ""} ${flush ? "section-flush" : ""} ${className}`} style={style} aria-labelledby={title ? hid : undefined}>
       {title && ((head ?? (no ? "no" : "band")) === "slab" ? (
         /* ③ 색면형 머리 — 화면 폭 단색 판에 검은 제목만. 보라가 끊기는 자리 */
-        <div className="section-head section-head-slab">
+        <div className="section-head section-head-slab torn-b inked">
           {title && <h2 id={hid} className="d2">{title}</h2>}
           {lead && <p className="lead">{lead}</p>}
           {action && <div className="section-head-action">{action}</div>}

@@ -49,7 +49,7 @@ export function HeroMarquee() {
     </span>
   );
   return (
-    <div className="marquee" role="presentation">
+    <div className="marquee torn-b2 inked inked-b" role="presentation">
       <span className="sr-only">{BRAND.slogan}</span>
       {run}
       {run}

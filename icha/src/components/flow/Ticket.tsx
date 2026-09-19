@@ -53,7 +53,7 @@ export function Ticket({ t, size = "md", dim = false, stamp = null, className = 
         )}
       </div>
       <span className={s.tear} aria-hidden="true" />
-      <p className={s.stub}>
+      <p className={`inked ${s.stub}`}>
         <span className={s.code} aria-label={`쿠폰 코드 ${t.code.split("").join(" ")}`}>{t.code}</span>
         <span className={s.free}>무료</span>
       </p>

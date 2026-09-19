@@ -16,7 +16,7 @@ export default function LoginPage() {
         <h1 className="h1">휴대폰 번호로 로그인</h1>
         <p className="lead">계산할 때 댄 번호 그대로 넣으시면 됩니다. 인증번호 없습니다.</p>
       </header>
-      <section className={`card card-pad ${styles.card}`}>
+      <section className={`card card-pad torn-tb inked ${styles.card}`}>
         <PhoneForm />
       </section>
       <p className="fineprint">번호는 쿠폰 찾는 데만 씁니다. 문자 안 보냅니다.</p>

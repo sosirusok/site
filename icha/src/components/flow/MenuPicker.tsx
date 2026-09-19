@@ -113,7 +113,7 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
           return (
             <div key={s.id} className={styles.group} data-on={on || undefined} data-store={s.id}>
               {/* 매장 이름은 상자의 머리가 아니라 화면 폭을 가로지르는 색면이다 — 상자를 세로로 쌓으면 그게 카드 목록이다 */}
-              <h2 className={styles.groupHead}>
+              <h2 className={`torn-b3 inked inked-b ${styles.groupHead}`}>
                 <span className={styles.groupNo} aria-hidden="true">{String(s.course.n).padStart(2, "0")}</span>
                 <span className={styles.groupName}>{s.shortName}</span>
                 <span className={styles.groupDrink}>{s.drink}</span>

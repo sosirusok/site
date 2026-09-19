@@ -98,7 +98,8 @@ body { color: var(--ink); background: #030106; font-family: var(--font-sans); fo
   content: ""; position: fixed; inset: 0; z-index: 3; pointer-events: none; mix-blend-mode: overlay; opacity: 0.2;
   background-image:
     repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0 1px, transparent 1px 6px),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    url("/images/print/grain.webp");
+  background-size: auto, 220px 220px;
 }
 .app > main { position: relative; z-index: 1; }
 .app:has(.sticky-bar) { padding-bottom: calc(var(--stickybar-h) + env(safe-area-inset-bottom)); }
@@ -206,7 +207,7 @@ details > summary::-webkit-details-marker { display: none; }
       화면을 위에서 아래로 훑을 때 보라가 끊기는 자리를 만든다 */
 /* 색면형 머리를 쓰는 섹션은 판이 섹션 맨 위에 붙어야 한다 — 위 여백을 판에 넘긴다 */
 .section:has(> .section-head-slab) { padding-top: 0; }
-.section-head-slab { display: block; margin: 0 calc(var(--gutter) * -1) 26px; padding: 18px var(--gutter) 17px; background: var(--tone, var(--lime)); }
+.section-head-slab { position: relative; display: block; margin: 0 calc(var(--gutter) * -1) 26px; padding: 18px var(--gutter) 30px; background: var(--tone, var(--lime)); }
 .section-flush > .section-head-slab { margin-left: 0; margin-right: 0; }
 .section-head-slab .d2 { color: #0b0011; text-shadow: none; }
 .section-head-slab .lead { margin-top: 5px; color: rgba(11, 0, 17, 0.78); }
@@ -221,7 +222,7 @@ details > summary::-webkit-details-marker { display: none; }
 /* ══ 버튼 ══════════════════════════════════════════════════════
    네 가지가 눈에 띄게 다르다. 공통은 "최소 48px, 모서리 각짐" 뿐 */
 /* 화살표는 CSS 로 박지 않는다 — 실제로 다른 화면으로 넘어가는 버튼에만 마크업에서 직접 쓴다 */
-.btn { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 18px; border-radius: 0; font-size: 15px; font-weight: 800; line-height: 1.15; letter-spacing: -0.01em; white-space: nowrap; border: 0; transition: background-color 0.14s, color 0.14s, box-shadow 0.14s, transform 0.08s; user-select: none; }
+.btn { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 18px; border-radius: 0; font-size: 15px; font-weight: 800; line-height: 1.15; letter-spacing: -0.01em; white-space: nowrap; border: 0; transition: background-color 0.14s, color 0.14s, box-shadow 0.14s, filter 0.14s, transform 0.08s; user-select: none; }
 .btn:active { transform: translateY(1px); }
 .btn:disabled { opacity: 0.42; cursor: not-allowed; transform: none; filter: none; }
 
@@ -229,14 +230,13 @@ details > summary::-webkit-details-marker { display: none; }
 .btn-naver {
   min-height: 56px; padding: 0 20px; background: var(--naver); color: #04170b; font-size: 20px;
   font-family: var(--font-poster); font-size: 19px; font-weight: 400; letter-spacing: 0.01em;
-  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
   filter: drop-shadow(0 0 14px rgba(3, 199, 90, 0.45));
 }
 .btn-naver:active { background: #02a94c; filter: drop-shadow(0 0 22px rgba(3, 199, 90, 0.8)); }
 
 /* ② 라임으로 꽉 찬 바 — 이벤트의 주 동작(쿠폰함·확인). 아래에 두꺼운 그림자 턱 */
-.btn-primary { min-height: 54px; background: var(--lime); color: #100c00; font-family: var(--font-poster); font-size: 21px; font-weight: 400; letter-spacing: 0.01em; box-shadow: 0 4px 0 0 #6f8c00, 0 0 24px rgba(204, 255, 0, 0.35); }
-.btn-primary:active { box-shadow: 0 1px 0 0 #6f8c00, 0 0 30px rgba(204, 255, 0, 0.6); transform: translateY(3px); }
+.btn-primary { min-height: 54px; background: var(--lime); color: #100c00; font-family: var(--font-poster); font-size: 21px; font-weight: 400; letter-spacing: 0.01em; filter: drop-shadow(0 4px 0 #6f8c00) drop-shadow(0 0 16px rgba(204, 255, 0, 0.3)); }
+.btn-primary:active { filter: drop-shadow(0 1px 0 #6f8c00) drop-shadow(0 0 22px rgba(204, 255, 0, 0.55)); transform: translateY(3px); }
 .btn-brand { background: var(--lime); color: #100c00; font-weight: 800; }
 
 /* ③ 네온 아웃라인 — 두꺼운 테두리 + 안팎 발광. 누르면 색이 채워진다. 매장 안에서는 그 집 형광색 */
@@ -245,14 +245,15 @@ details > summary::-webkit-details-marker { display: none; }
 .btn-outline {
   --neon: var(--cyan);
   background: rgba(255, 255, 255, 0.02); color: var(--neon);
-  border: 2px solid var(--neon); box-shadow: inset 0 0 12px -4px var(--neon), 0 0 12px -2px var(--neon);
+  border: 0; box-shadow: inset 0 0 16px -9px var(--neon); filter: drop-shadow(0 0 5px color-mix(in srgb, var(--neon) 45%, transparent));
   font-family: var(--font-sans); font-weight: 800; letter-spacing: 0.02em;
 }
-.btn-outline:active { background: var(--neon); color: #06030c; box-shadow: 0 0 26px -2px var(--neon); }
+.btn-outline:active { background: var(--neon); color: #06030c; box-shadow: none; filter: drop-shadow(0 0 13px var(--neon)); }
+.btn-outline:active::before { background: #06030c; }
 [data-store] .btn-outline { --neon: var(--store); }
 
 /* ④ 검은 슬래브 — 보조 중의 보조. 위쪽에만 형광 선 */
-.btn-soft { background: #150a26; color: var(--ink); border-top: 2px solid var(--mag); }
+.btn-soft { background: #150a26; color: var(--ink); background-image: linear-gradient(to bottom, transparent 0 6px, var(--mag) 6px 9px, transparent 9px); }
 .btn-soft:active { background: #22103b; }
 
 /* ⑤ 밑줄 링크형 — 상자가 아니다 */
@@ -263,12 +264,12 @@ details > summary::-webkit-details-marker { display: none; }
 .btn-naver.btn-lg { min-height: 58px; font-size: 20px; }
 .btn-primary.btn-lg { min-height: 56px; font-size: 20px; }
 .btn-sm { min-height: 44px; font-size: 14px; padding: 0 14px; }
-.btn-naver.btn-sm { min-height: 46px; font-size: 16px; --cut: 8px; }
+.btn-naver.btn-sm { min-height: 46px; font-size: 16px; }
 .btn-xs { min-height: 44px; font-size: 13px; padding: 0 12px; }
 /* 라임·노랑 색면 위에 얹는 버튼 — 색면 위에서는 형광색이 보이지 않으니 검정으로 뒤집는다 */
 .btn-dark { background: #0b0011; color: var(--lime); font-family: var(--font-poster); font-size: 21px; letter-spacing: -0.01em; }
 .btn-dark:active { background: #1c0a2e; }
-.btn-darkline { background: none; color: #0b0011; border: 2px solid #0b0011; font-family: var(--font-poster); font-size: 20px; letter-spacing: -0.01em; }
+.btn-darkline { background: none; color: #0b0011; border: 0; font-family: var(--font-poster); font-size: 20px; letter-spacing: -0.01em; }
 .btn-darkline:active { background: rgba(11, 0, 17, 0.12); }
 
 .btn-block { display: flex; width: 100%; }
@@ -352,7 +353,7 @@ summary.btn { list-style: none; }
 .backprint li::before { content: "· "; color: var(--store, var(--mag)); }
 
 /* ══ 마키 — 사이트 전체에 하나만(홈 히어로 아래) ══ */
-.marquee { position: relative; display: flex; margin: 28px 0 36px; min-height: 56px; align-items: center; overflow: hidden; background: var(--mag); color: #0b0011; border-top: 2px solid var(--lime); border-bottom: 2px solid var(--lime); box-shadow: 0 0 26px -6px rgba(255, 46, 136, 0.9); }
+.marquee { position: relative; display: flex; margin: 28px 0 36px; min-height: 60px; align-items: center; overflow: hidden; background: var(--mag); color: #0b0011; border-top: 2px solid var(--lime); border-bottom: 2px solid var(--lime); box-shadow: 0 0 26px -6px rgba(255, 46, 136, 0.9); }
 .marquee-track { display: flex; flex: none; align-items: center; gap: 22px; padding: 9px 11px; white-space: nowrap; animation: slide 22s linear infinite; }
 .marquee-track > * { font-family: var(--font-label); font-size: 15px; letter-spacing: 0.16em; text-transform: uppercase; }
 .marquee-track > .ko { font-family: var(--font-poster); font-size: 16px; letter-spacing: 0; }
@@ -399,3 +400,58 @@ summary.btn { list-style: none; }
 .giftlines-name { display: inline-flex; align-items: center; min-height: 44px; margin-bottom: -6px; font-family: var(--font-poster); font-size: 20px; line-height: 1.15; color: var(--ink); text-decoration: none; }
 .giftlines-name::after { content: " →"; font-family: var(--font-label); color: var(--store); }
 .giftlines-what { font-size: 14px; line-height: 1.45; color: var(--store); }
+
+/* ══ 인쇄 재료 ═══════════════════════════════════════════════
+   색면의 경계를 CSS 로 그리지 않는다. scripts/print-kit.mjs 가 구운 알파 마스크로 종이를 찢고,
+   잉크 얼룩 타일을 얹어 "칠한 면"이 아니라 "인쇄된 면"으로 만든다.
+   border-radius 를 0 으로 두든 모서리를 깎든 그건 여전히 기하 도형이다 — 찢어진 자리는 수식으로 안 나온다. */
+.torn-b, .torn-b2, .torn-b3, .torn-b4 { -webkit-mask-repeat: no-repeat, no-repeat; mask-repeat: no-repeat, no-repeat; -webkit-mask-position: bottom center, top center; mask-position: bottom center, top center; }
+.torn-b { -webkit-mask-image: url("/images/print/tear/tear-a.png"), linear-gradient(#000, #000); mask-image: url("/images/print/tear/tear-a.png"), linear-gradient(#000, #000); -webkit-mask-size: 100% 22px, 100% calc(100% - 21px); mask-size: 100% 22px, 100% calc(100% - 21px); }
+.torn-b2 { -webkit-mask-image: url("/images/print/tear/tear-b.png"), linear-gradient(#000, #000); mask-image: url("/images/print/tear/tear-b.png"), linear-gradient(#000, #000); -webkit-mask-size: 100% 26px, 100% calc(100% - 25px); mask-size: 100% 26px, 100% calc(100% - 25px); }
+.torn-b3 { -webkit-mask-image: url("/images/print/tear/tear-c.png"), linear-gradient(#000, #000); mask-image: url("/images/print/tear/tear-c.png"), linear-gradient(#000, #000); -webkit-mask-size: 100% 18px, 100% calc(100% - 17px); mask-size: 100% 18px, 100% calc(100% - 17px); }
+.torn-b4 { -webkit-mask-image: url("/images/print/tear/tear-d.png"), linear-gradient(#000, #000); mask-image: url("/images/print/tear/tear-d.png"), linear-gradient(#000, #000); -webkit-mask-size: 100% 15px, 100% calc(100% - 14px); mask-size: 100% 15px, 100% calc(100% - 14px); }
+/* 위아래가 다 찢긴 조각 */
+.torn-tb { -webkit-mask-image: url("/images/print/tear/tear-up-b.png"), url("/images/print/tear/tear-b.png"), linear-gradient(#000, #000); mask-image: url("/images/print/tear/tear-up-b.png"), url("/images/print/tear/tear-b.png"), linear-gradient(#000, #000); -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: top center, bottom center, center; mask-position: top center, bottom center, center; -webkit-mask-size: 100% 17px, 100% 22px, 100% calc(100% - 38px); mask-size: 100% 17px, 100% 22px, 100% calc(100% - 38px); }
+/* 위만 찢긴 조각 */
+.torn-t { -webkit-mask-image: url("/images/print/tear/tear-up-a.png"), linear-gradient(#000, #000); mask-image: url("/images/print/tear/tear-up-a.png"), linear-gradient(#000, #000); -webkit-mask-repeat: no-repeat, no-repeat; mask-repeat: no-repeat, no-repeat; -webkit-mask-position: top center, bottom center; mask-position: top center, bottom center; -webkit-mask-size: 100% 22px, 100% calc(100% - 21px); mask-size: 100% 22px, 100% calc(100% - 21px); }
+
+/* 잉크 — 롤러가 고르게 먹지 않은 자국. 단색 색면 위에만 얹는다(사진 위에는 안 얹는다) */
+.inked { position: relative; }
+.inked::after {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background-image: url("/images/print/ink/ink-a.webp"); background-size: 190px 190px;
+  mix-blend-mode: multiply; opacity: 0.5;
+}
+.inked > * { position: relative; z-index: 1; }
+.inked-b::after { background-image: url("/images/print/ink/ink-b.webp"); background-size: 230px 230px; opacity: 0.42; }
+@media (prefers-reduced-motion: no-preference) { }
+
+/* ══ 도장 ═══════════════════════════════════════════════════
+   버튼은 도형이 아니다. 잉크가 고르게 먹지 않은 고무 도장이 종이에 찍힌 자국이다.
+   네 변이 다 갉아먹힌 알파 판(stamp/*.png)을 mask-border 로 9분할해 씌운다 —
+   모서리 조각은 늘어나지 않으니 찍힌 자리의 결손이 그대로 남고, 변 조각만 버튼 길이만큼 반복된다.
+   그래서 버튼 폭이 달라져도 요철이 늘어붙지 않는다. */
+.btn-naver, .btn-primary, .btn-brand, .btn-soft, .btn-dark {
+  -webkit-mask-box-image-width: 14px; -webkit-mask-box-image-repeat: round;
+  mask-border-width: 14px; mask-border-repeat: round;
+  /* 초점 테두리는 바깥(offset 2px)에 그려져 마스크에 잘린다 — 안쪽으로 넣는다 */
+  outline-offset: -4px;
+}
+.btn-naver, .btn-soft { -webkit-mask-box-image-source: url("/images/print/stamp/stamp-a.png"); mask-border-source: url("/images/print/stamp/stamp-a.png"); -webkit-mask-box-image-slice: 14 fill; mask-border-slice: 14 fill; }
+.btn-dark { -webkit-mask-box-image-source: url("/images/print/stamp/stamp-b.png"); mask-border-source: url("/images/print/stamp/stamp-b.png"); -webkit-mask-box-image-slice: 14 fill; mask-border-slice: 14 fill; }
+/* 속 빈 버튼: 테두리를 CSS 선으로 긋지 않는다. 잉크 테두리 판(ring)을 색 면에 씌워 얹는다 */
+.btn-outline::before, .btn-darkline::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; background: var(--neon, #0b0011);
+  -webkit-mask-box-image: url("/images/print/stamp/ring-a.png") 12 round; -webkit-mask-box-image-width: 12px;
+  mask-border: url("/images/print/stamp/ring-a.png") 12 / 12px round;
+}
+.btn-darkline::before { background: #0b0011; -webkit-mask-box-image-source: url("/images/print/stamp/ring-b.png"); mask-border-source: url("/images/print/stamp/ring-b.png"); }
+.btn-primary, .btn-brand { -webkit-mask-box-image-source: url("/images/print/stamp/stamp-d.png"); mask-border-source: url("/images/print/stamp/stamp-d.png"); -webkit-mask-box-image-slice: 16 fill; mask-border-slice: 16 fill; -webkit-mask-box-image-width: 16px; mask-border-width: 16px; }
+/* 아무 색면에나 붙이는 도장 — 작은 꼬리표·조각용 */
+.stamped { -webkit-mask-box-image: url("/images/print/stamp/stamp-c.png") 11 fill round; -webkit-mask-box-image-width: 11px; mask-border: url("/images/print/stamp/stamp-c.png") 11 fill / 11px round; }
+.stamped-b { -webkit-mask-box-image: url("/images/print/stamp/stamp-b.png") 14 fill round; -webkit-mask-box-image-width: 14px; mask-border: url("/images/print/stamp/stamp-b.png") 14 fill / 14px round; }
+/* 작은 꼬리표 — 24px 짜리 조각이라 얕은 도장을 쓴다 */
+.badge-store, .badge-brand, .chip { -webkit-mask-box-image: url("/images/print/stamp/stamp-s.png") 7 fill round; -webkit-mask-box-image-width: 7px; mask-border: url("/images/print/stamp/stamp-s.png") 7 fill / 7px round; }
+.badge-store { box-shadow: none; filter: drop-shadow(0 0 10px color-mix(in srgb, var(--store, var(--cyan)) 60%, transparent)); }
+/* 폼 판 — 1px 테두리 상자를 두르지 않는다. 위아래가 찢긴 종이 조각으로 바꾼다 */
+.card.torn-tb { border: 0; padding-top: 32px; padding-bottom: 40px; }

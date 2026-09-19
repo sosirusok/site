@@ -52,7 +52,7 @@ export function RelayCards({ relays }: { relays: WalletRelay[] }) {
         {/* 상자가 아니다 — 매장 색면 한 줄 아래 설명과 버튼. 쿠폰 표와 모양이 겹치면 둘 다 카드로 읽힌다 */}
         {relays.map((r) => (
           <li key={r.id} className={styles.relay} data-store={r.store.id}>
-            <p className={styles.relayHead}>{r.store.shortName}에서 받음</p>
+            <p className={`torn-b2 inked ${styles.relayHead}`}>{r.store.shortName}에서 받음</p>
             <p className={styles.relaySub}><DotLine items={[`${r.giftNames.join("·")} 중 한 곳`, `${fmtMD(r.deadline)}까지`]} /></p>
             <Button href={`/pick/${r.id}`} variant="primary" block srSuffix={` — ${r.store.shortName}에서 받은 쿠폰`}>쓸 집 고르기</Button>
           </li>
