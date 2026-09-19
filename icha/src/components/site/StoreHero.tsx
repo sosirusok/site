@@ -1,24 +1,14 @@
 import Image from "next/image";
-import type { StoreId } from "@/lib/config";
+import { Button } from "@/components/ui/Button";
+import { placeLinks } from "@/lib/naver";
 import type { Store } from "@/lib/stores";
-import { KitPiece } from "./Kit";
-import { Piece, plateOf } from "./Poster";
 import { kstNow, nowText, openStatus, parseHours } from "./StoreHelpers";
 import { STORE_FAN } from "./storePhotos";
 import styles from "./StoreHero.module.css";
 
-/** 간판 오른쪽 끝을 뚫고 나오는 그 집 술 — 1차 맥주잔(120px 높이), 2차 주전자(116px 폭), 3차 소주병(120px 높이) */
-const CUT: Record<StoreId, { name: string; cls: "cutTall" | "cutWide" }> = {
-  tokyo: { name: "cut-beer", cls: "cutTall" },
-  joseon: { name: "cut-makgeolli", cls: "cutWide" },
-  wareureu: { name: "cut-soju", cls: "cutTall" },
-};
-
 /**
- * 매장 첫 장면 — 대표 안주 사진을 화면 폭 가득(390x300, 아래가 밤으로 녹는다), 사진 오른쪽 위에 키트 종이 메모 note-good(118px, 테이프),
- * 사진 아래 50px 을 덮는 키트 간판(358x149, −2°, 왼쪽 위 테이프), 간판 오른쪽 끝을 뚫고 나오는 컷아웃(6°).
- * 그 아래 검은 띠 두세 줄: Do Hyeon 16px "영업 중 · 오늘 17:00~03:00 · ★ 4.82 (17)" / (주문 마감·다른 요일) / 크림 13px 주소, 띠 오른쪽 끝에 전화 꼬리표(크림 스티커, 전화 링크).
- * 보이는 이름은 간판이고 읽히는 이름(h1)은 눈에 안 보이게 같이 둔다.
+ * 매장 첫 화면 — 대표 안주 사진(16:10, 화면 폭 가득) → 흰 바탕에 배지(차수·술·영업 상태), 상호(h1), 한 줄 소개, 별점·리뷰 수,
+ * 오늘 영업시간(다른 요일은 작게)·주소, [전화하기][길찾기]. 예약하기는 아래 고정 바에.
  */
 export function StoreHero({ store }: { store: Store }) {
   const st = openStatus(store);
@@ -29,39 +19,34 @@ export function StoreHero({ store }: { store: Store }) {
   const otherDays = parseHours(store)
     .filter((l) => !l.dayset.has(dow))
     .map((l) => `${l.days} ${l.openText}~${l.closeText}`);
-  const today = st.today === "휴무" ? "" : `오늘 ${st.today.replace(/\s*–\s*/, "~").replace("다음날 ", "")}`;
+  const today = st.today === "휴무" ? "오늘 휴무" : `오늘 ${st.today.replace(/\s*–\s*/, "~").replace("다음날 ", "")}`;
   const state = st.today === "휴무" ? "휴무" : nowText(st);
-  const sub = [st.lastOrder ? `주문 마감 ${st.lastOrder}` : null, ...otherDays].filter(Boolean).join(" · ");
-  const cut = CUT[store.id];
+  const links = placeLinks(store);
 
   return (
     <header className={styles.hero}>
-      <div className={styles.shotWrap} aria-hidden="true">
-        <Image src={photo.src} alt="" fill priority sizes="(min-width: 480px) 480px, 100vw" style={{ objectPosition: photo.pos }} className={styles.shot} />
+      <div className={styles.shotWrap}>
+        <Image src={photo.src} alt={alt} fill priority sizes="(min-width: 480px) 480px, 100vw" style={{ objectPosition: photo.pos }} className={styles.shot} />
       </div>
-      <span className="sr-only">{alt}</span>
-      <KitPiece name="note-good" rotate={5} sizes="130px" className={`tape ${styles.note}`} />
-      <h1 className="sr-only">{store.name}</h1>
-      <div className={styles.plateWrap}>
-        <Piece name={plateOf(store.id)} rotate={-2} priority sizes="(min-width: 480px) 448px, 100vw" className={`tape-tl ${styles.plate}`} />
-      </div>
-      <KitPiece name={cut.name} bare sizes="140px" className={`${styles.cut} ${styles[cut.cls]}`} />
-
-      <div className={`band ${styles.facts}`}>
-        <div className={styles.factLines}>
-          <p className={`${styles.now} num`}>
-            <span className={st.open ? "y" : ""}>{state}</span>
-            {today && <span> · {today}</span>}
-            {r && <span> · <span className="y">★ {r.score.toFixed(2)}</span> ({r.count.toLocaleString("ko-KR")})</span>}
-          </p>
-          {sub && <p className={`${styles.sub} num`}>{sub}</p>}
-          <p className={styles.addr}>{store.address}</p>
+      <div className={styles.body}>
+        <div className={styles.badges}>
+          <span className="badge badge-store">{store.course.n}차</span>
+          <span className="badge">{store.drink}</span>
+          <span className={`badge ${st.open ? "dot-on" : "dot-off"}`}>{state}</span>
         </div>
-        {store.phone && (
-          <a href={`tel:${store.phone.replace(/-/g, "")}`} className={styles.tel}>
-            <span className={`num ${styles.telTag}`}>{store.phone}</span>
-          </a>
-        )}
+        <h1 className={`h1 ${styles.name}`}>{store.name}</h1>
+        <p className="lead">{store.headline}</p>
+        {r && <p className={`small ${styles.rating}`}><span className={styles.star} aria-hidden="true">★</span> <b className="num">{r.score.toFixed(2)}</b> <span className="muted num">네이버 방문자 리뷰 {r.count.toLocaleString("ko-KR")}개</span></p>}
+        <dl className={`kv ${styles.kv}`}>
+          <dt>영업시간</dt>
+          <dd className="num">{today}{st.lastOrder && <span className="muted"> · 주문 마감 {st.lastOrder}</span>}{otherDays.length > 0 && <span className={`small muted ${styles.other}`}>{otherDays.join(" · ")}</span>}</dd>
+          <dt>주소</dt>
+          <dd>{store.address}</dd>
+        </dl>
+        <div className="btn-row">
+          {links && <Button href={links.booking} variant="naver" srSuffix={` — ${store.shortName}`}>네이버 예약하기</Button>}
+          {links && <Button href={links.home} variant="outline" srSuffix={` — ${store.shortName}`}>네이버 플레이스</Button>}
+        </div>
       </div>
     </header>
   );

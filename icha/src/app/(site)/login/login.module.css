@@ -1,11 +1,4 @@
-/* 로그인 — 키트 제목판 + 메모, 어두운 띠 안내 한 줄, 종이 카드 위 입력 하나. 화면을 채워서 푸터가 가운데로 올라오지 않게 */
-.page { display: grid; gap: 8px; align-content: start; padding: 14px var(--gutter) 40px; min-height: calc(100dvh - var(--header-h) - var(--tabbar-h) - 40px); }
-.top { position: relative; display: grid; gap: 0; justify-items: start; }
-/* 큰 제목판(60px, 210px 폭) + 손글씨 메모(800x360 → 140x63, 받침 없음) — 한 줄, 양끝(210 + 140 = 350 < 358) */
-.titleRow { display: flex; align-items: flex-start; justify-content: space-between; gap: 0; width: 100%; }
-.h1 { --r: -1.5deg; flex: none; position: relative; z-index: 2; margin-bottom: -8px; }
-.note { flex: none; width: 140px; margin-top: 8px; }
-.note img { width: 100%; height: auto; }
-.sub { justify-self: stretch; margin-left: 24px; --r: 1deg; }
-.card { display: grid; gap: 16px; padding: 22px 18px 18px; margin-top: 0; }
-.help { border-top: 1px dashed var(--paper-line); padding-top: 10px; font-size: 13.5px; line-height: 1.5; }
+/* 로그인 — 화면을 채워서 푸터가 가운데로 올라오지 않게 */
+.page { display: grid; gap: 20px; align-content: start; padding: 28px var(--gutter) 40px; min-height: calc(100dvh - var(--header-h) - var(--tabbar-h) - 40px); }
+.top { display: grid; gap: 8px; }
+.card { padding: 20px 18px; }

@@ -116,7 +116,7 @@ export function StoreMap({ stores, focusId, height = 440, compact = false, hideP
         const marker = new M.Marker({
           position: new M.LatLng(s.lat, s.lng),
           map,
-          icon: { content: pinHtml(i + 1, s.shortName, s.id === activeId, s.id, compact), anchor: new M.Point(19, 48) },
+          icon: { content: pinHtml(i + 1, s.shortName, s.id === activeId, s.id, compact), anchor: new M.Point(22, 19) },
           zIndex: s.id === activeId ? 10 : 1,
         });
         M.Event.addListener(marker, "click", () => {
@@ -141,7 +141,7 @@ export function StoreMap({ stores, focusId, height = 440, compact = false, hideP
         },
         setActive: (id) => {
           stores.forEach((s, i) => {
-            markers.get(s.id)?.setIcon({ content: pinHtml(i + 1, s.shortName, s.id === id, s.id, compact), anchor: new M.Point(19, 48) });
+            markers.get(s.id)?.setIcon({ content: pinHtml(i + 1, s.shortName, s.id === id, s.id, compact), anchor: new M.Point(22, 19) });
             markers.get(s.id)?.setZIndex(s.id === id ? 10 : 1);
           });
         },
@@ -163,7 +163,7 @@ export function StoreMap({ stores, focusId, height = 440, compact = false, hideP
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자',
       }).addTo(map);
       const markers = new Map<string, import("leaflet").Marker>();
-      const icon = (i: number, s: MapStore, act: boolean) => L.divIcon({ className: "", html: pinHtml(i + 1, s.shortName, act, s.id, compact), iconSize: [44, 48], iconAnchor: [22, 48] });
+      const icon = (i: number, s: MapStore, act: boolean) => L.divIcon({ className: "", html: pinHtml(i + 1, s.shortName, act, s.id, compact), iconSize: [44, 52], iconAnchor: [22, 19] });
       stores.forEach((s, i) => {
         const m = L.marker([s.lat, s.lng], { icon: icon(i, s, s.id === activeId), zIndexOffset: s.id === activeId ? 1000 : 0, keyboard: true, title: s.name }).addTo(map);
         m.on("click", () => {

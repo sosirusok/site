@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import type { CSSProperties } from "react";
 import { DotLine } from "@/components/flow/kit";
 import { LogoutButton } from "@/components/flow/LogoutButton";
 import { ActiveCoupons, EmptyWallet, PastCoupons, RelayCards, type WalletCoupon, type WalletRelay } from "@/components/flow/WalletSections";
-import { SectionLabel } from "@/components/site/Kit";
 import { getMemberSession } from "@/lib/auth/session";
-import { BRAND, STORE_IDS, type StoreId } from "@/lib/config";
+import { BRAND, maskPhone, STORE_IDS, type StoreId } from "@/lib/config";
 import { ruleLine } from "@/lib/copy";
 import { isPickExpired, pickDeadlineFor } from "@/lib/coupons";
 import { listCouponsForMember, listMenu, listReceiptsForMember, menuImageUrl, type MenuItem } from "@/lib/db/queries";
@@ -17,7 +15,7 @@ import styles from "./wallet.module.css";
 
 export const metadata: Metadata = { title: "쿠폰함" };
 
-/** 쿠폰 티켓용 메뉴 사진 — 품목 번호로 먼저, 없으면 매장+품목 이름으로 찾는다 */
+/** 쿠폰 카드용 메뉴 사진 — 품목 번호로 먼저, 없으면 매장+품목 이름으로 찾는다 */
 async function menuPhotoIndex(): Promise<(storeId: StoreId, menuItemId: number | null, menuName: string) => WalletCoupon["image"]> {
   const byId = new Map<number, MenuItem>();
   const byName = new Map<string, MenuItem>();
@@ -39,8 +37,7 @@ async function menuPhotoIndex(): Promise<(storeId: StoreId, menuItemId: number |
 }
 
 /**
- * 쿠폰함 — 키트 큰 제목판(label-wallet 60px). 번호 하나에 담긴 쿠폰 더미: 받은 쿠폰(아직 사용 매장을 안 고름) → 사용 가능 쿠폰 → 지난 쿠폰. 쿠폰은 키트 티켓 그림 위에 실제 값.
- * 안내·규칙 줄은 보케 위 어두운 띠에 본문 글꼴로(손글씨·해요체 없음), 관리자 공지는 크림 종이. 맨 아래 초록 [예약하기](플레이스 시트) 하나.
+ * 쿠폰함 — 제목(내 번호) → (공지) → 받은 쿠폰(아직 사용 매장을 안 고름) → 사용 가능 쿠폰 → 지난 쿠폰 → 조건·로그아웃.
  * 사진·등급·누적 금액은 없다(사장님 결정).
  */
 export default async function WalletPage() {
@@ -77,16 +74,13 @@ export default async function WalletPage() {
 
   return (
     <div className={styles.page}>
-      {rules.notice && (
-        <div className={`paper paper-r ${styles.notice}`} style={{ "--r": "0.6deg" } as CSSProperties}>
-          <p className={styles.noticeIn}><b className={`tag ${styles.noticeTag}`}>공지</b>{rules.notice}</p>
-        </div>
-      )}
-
       <header className={styles.top}>
-        <SectionLabel kind="wallet" color="yellow" as="h1" big className={styles.h1}>쿠폰함</SectionLabel>
-        <p className={`${styles.strip} ${styles.sub}`}>사용 시 직원에게 이 화면 제시</p>
+        <span className="eyebrow">My coupons</span>
+        <h1 className="h1">쿠폰함</h1>
+        <p className="small muted num">{maskPhone(session.phone)} · 사용 시 직원에게 이 화면을 보여 주세요</p>
       </header>
+
+      {rules.notice && <p className={styles.notice}><b className={styles.noticeTag}>공지</b>{rules.notice}</p>}
 
       {nothing ? (
         <section className={styles.sec} aria-label="빈 쿠폰함">
@@ -97,10 +91,10 @@ export default async function WalletPage() {
           {relays.length > 0 && <RelayCards relays={relays} />}
 
           <section className={styles.sec} aria-labelledby="wallet-active">
-            <div className="sec-h">
-              <h2 id="wallet-active" className="plate plate-red">사용 가능 쿠폰{active.length > 0 && <span className={styles.count}> {active.length}</span>}</h2>
+            <div className={styles.head}>
+              <h2 id="wallet-active" className="h3">사용 가능 쿠폰 <span className={styles.count}>{active.length}</span></h2>
             </div>
-            {active.length > 0 ? <ActiveCoupons coupons={active} /> : <p className={`${styles.strip} ${styles.none}`}>{relays.length > 0 ? "받은 쿠폰에서 사용 매장을 선택하면 표시됩니다" : "사용 가능한 쿠폰이 없습니다"}</p>}
+            {active.length > 0 ? <ActiveCoupons coupons={active} /> : <p className={`box small muted ${styles.none}`}>{relays.length > 0 ? "받은 쿠폰에서 사용 매장을 선택하면 여기에 표시됩니다." : "사용 가능한 쿠폰이 없습니다."}</p>}
           </section>
 
           {past.length > 0 && <PastCoupons coupons={past} />}
@@ -108,8 +102,11 @@ export default async function WalletPage() {
       )}
 
       <footer className={`${styles.sec} ${styles.foot}`}>
-        <p className={`${styles.strip} ${styles.rule}`}><DotLine items={[ruleLine(rules), BRAND.condition]} /></p>
-        <LogoutButton className={`link link-w ${styles.pill}`} />
+        <ul className="notice" aria-label="이용 조건">
+          <li><DotLine items={[ruleLine(rules), BRAND.condition]} /></li>
+          <li>쿠폰 1장당 매장 1곳 · 발급 후 변경 불가</li>
+        </ul>
+        <LogoutButton className="btn btn-ghost btn-sm" />
       </footer>
     </div>
   );

@@ -1,47 +1,29 @@
 .root { display: grid; gap: 16px; }
-.cards { display: grid; gap: 0; }
-.card + .card { margin-top: -6px; }
+.cards { display: grid; gap: 12px; }
 
-/* 보케 위 정보 줄 — 포스터의 검은 띠 위 Do Hyeon 16px */
-.strip { background: #111; color: #fff; font-family: var(--font-display); font-size: 16px; font-weight: 400; line-height: 1.35; padding: 9px 14px; border-radius: 0; box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5); }
+/* 매장 카드 — 고르면 검은 테두리 */
+.card { display: grid; padding: 14px 16px 12px; border-width: 1.5px; transition: border-color 0.15s; }
+.card[data-on] { border-color: var(--ink); }
+.cardHead { display: flex; align-items: center; gap: 8px; padding-bottom: 6px; }
+.storeName { font-size: 16px; font-weight: 700; }
+.none { padding: 8px 0 6px; }
+.cardFoot { display: flex; justify-content: flex-end; padding-top: 10px; border-top: 1px solid var(--line); }
 
-/* 매장 종이 — 고르면 그 집 색 테두리가 굵게 */
-.card { display: grid; gap: 10px; padding: 14px 16px 16px; border: 2px solid transparent; transition: border-color 0.15s; }
-.card[data-on] { border-color: var(--store); }
-.cardHead { display: flex; align-items: center; }
-/* 간판 1200x500 → 230px(96px 높이), 종이 위 모서리에서 살짝 위로 */
-.plate { width: 64%; max-width: 230px; margin: -22px 0 2px -4px; }
-.plate img { width: 100%; height: auto; }
-/* 조선칼국수 간판은 불투명 간판이 캔버스의 70% 라 72%(왼쪽 −12px): 셋이 같은 무게 */
-.card[data-store="joseon"] .plate { width: 72%; max-width: 258px; margin-left: -12px; }
-.none { font-size: 15px; line-height: 1.5; color: var(--ink-2); padding-bottom: 4px; }
-/* 가게마다 초록 버튼은 예약하기 하나 */
-.book { justify-self: end; margin-top: 4px; }
-
-/* 품목 행 — 라디오 */
+/* 품목 줄 — 라디오 */
 .items { display: grid; }
-.item { width: 100%; text-align: left; min-height: 60px; }
-.thumb { flex: none; width: 56px; height: 56px; object-fit: cover; background: #fff; padding: 3px; box-shadow: 1px 2px 0 rgba(0, 0, 0, 0.3); transform: rotate(-3deg); }
-.thumbCut { flex: none; width: 56px; height: 56px; object-fit: contain; filter: drop-shadow(2px 3px 0 rgba(0, 0, 0, 0.28)); }
-.radio { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #111; background: #fff; flex: none; display: grid; place-items: center; transition: background 0.12s; }
-.item[aria-checked="true"] .radio { background: var(--store); box-shadow: 0 0 0 3px var(--yellow); }
+.item { width: 100%; display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 10px 0; border-top: 1px solid var(--line); text-align: left; color: inherit; }
+.radio { flex: none; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--line-2); background: #fff; display: grid; place-items: center; transition: border-color 0.12s, background 0.12s; }
+.item[aria-checked="true"] .radio { border-color: var(--ink); background: var(--ink); }
 .item[aria-checked="true"] .radio::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #fff; }
-.name { display: block; }
-.price { display: block; }
-/* 무료 — 혜택 종이와 같은 키트 도장(stamp-free 500x500 → 44px, −12도). 키트가 없을 때만 빨간 CSS 꼬리표 */
-.freeStamp { flex: none; width: 44px; transform: rotate(-12deg); }
-/* 지운 원래 가격 — 크림 위 4.5:1 이상 */
-.price :global(.strike) { color: #5f5648; }
-/* 규칙 줄 — 고정 스티커 뒤로 숨지 않게 위 여백을 조금 둔다 */
-.note { margin-top: 6px; --r: -0.6deg; transform: rotate(var(--r)); }
-
-/* 오류 줄 — 크림 바 안, 짙은 빨강 */
-.err { color: #b8221b; font-size: 14px; }
+.thumb { flex: none; width: 56px; height: 56px; object-fit: cover; border-radius: 10px; background: var(--bg-2); }
+.thumbCut { flex: none; width: 56px; height: 56px; object-fit: contain; border-radius: 10px; background: var(--bg-2); padding: 5px; }
+.thumbEmpty { flex: none; display: block; width: 56px; height: 56px; border-radius: 10px; background: var(--bg-2); }
+.body { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.name { font-size: 15px; font-weight: 600; line-height: 1.4; }
+.price { color: var(--ink-3); }
 
 /* 발급 완료 */
-.issued { position: relative; display: grid; gap: 12px; justify-items: start; padding-top: 14px; }
-.issuedStamp { position: absolute; right: 8px; top: -8px; z-index: 2; font-size: 26px; background: rgba(244, 233, 210, 0.95); opacity: 1; color: #156e38; border-color: #156e38; }
-.issued > :global(.stk), .issued > [data-store] { justify-self: stretch; }
-.issuedTitle { font-size: 22px; margin-top: 12px; --plate: #156e38; }
-.issuedSub { justify-self: stretch; font-weight: 700; }
-.issuedBtns { display: grid; gap: 14px; width: 100%; margin-top: 14px; }
+.issued { display: grid; gap: 10px; justify-items: start; padding-top: 8px; }
+.check { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: var(--naver-soft); color: var(--naver); margin-bottom: 4px; }
+.issuedTicket { justify-self: stretch; margin-top: 8px; }
+.issuedBtns { display: grid; gap: 10px; width: 100%; margin-top: 8px; }

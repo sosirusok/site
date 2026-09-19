@@ -2,28 +2,29 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { TabIcon, type TabIconKind } from "./Kit";
 import { PlaceSheet, type PlaceSheetStore } from "./PlaceSheet";
 import styles from "./TabBar.module.css";
 
-/* 단순한 검은 선 아이콘 — 키트 icon-<home|wallet|place|info>.png 가 있으면 그 그림으로 바뀐다 */
-const I: Record<TabIconKind, React.ReactNode> = {
-  home: <path d="M4 11 12 4l8 7v9h-5v-6h-6v6H4z" />,
-  wallet: <path d="M3 8a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-3a2 2 0 0 0 0-4zM10 6v12" />,
-  place: <path d="M12 21s-6-5.4-6-11a6 6 0 0 1 12 0c0 5.6-6 11-6 11zm0-8.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />,
-  info: <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zm0-13v.5M12 11v6" />,
+type Kind = "home" | "wallet" | "book" | "info";
+
+/* 선 아이콘 24px */
+const ICON: Record<Kind, React.ReactNode> = {
+  home: <path d="M3.5 10.5 12 3.5l8.5 7V20a1 1 0 0 1-1 1h-5v-6h-5v6h-5a1 1 0 0 1-1-1z" />,
+  wallet: <path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4zM9 7v12" />,
+  book: <path d="M7 3v3M17 3v3M4 8h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zM9 14l2 2 4-4" />,
+  info: <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 8h.01M11 12h1v4h1" />,
 };
 
-/** 하단 탭 — 포스터 맨 아래의 검은 띠. 홈 / 쿠폰함 / 플레이스(예약 시트) / 안내. 아이콘은 크림 스티커 위에, 글자는 크림 Do Hyeon, 고른 탭은 노랑. */
+/** 하단 탭(60px, 흰 바탕) — 홈 / 쿠폰함 / 예약(매장 고르는 시트) / 안내. 고른 탭은 검정, 나머지 회색. */
 export function TabBar({ stores }: { stores: PlaceSheetStore[] }) {
   const path = usePathname() ?? "/";
   const [open, setOpen] = useState(false);
-  const icon = (kind: TabIconKind) => (
-    <span className={styles.icon} aria-hidden="true">
-      <TabIcon kind={kind} fallback={<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" aria-hidden="true">{I[kind]}</svg>} />
-    </span>
+  const icon = (kind: Kind) => (
+    <svg className={styles.icon} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round" aria-hidden="true">
+      {ICON[kind]}
+    </svg>
   );
-  const item = (href: string, label: string, kind: TabIconKind, active: boolean) => (
+  const item = (href: string, label: string, kind: Kind, active: boolean) => (
     <Link key={label} href={href} className={`${styles.item} ${active ? styles.active : ""}`} aria-current={active ? "page" : undefined}>
       {icon(kind)}
       <span className={styles.label}>{label}</span>
@@ -31,12 +32,12 @@ export function TabBar({ stores }: { stores: PlaceSheetStore[] }) {
   );
   return (
     <>
-      <nav className={`fixed-col ${styles.bar}`} aria-label="하단 메뉴">
+      <nav className={`fixed-col tabbar ${styles.bar}`} aria-label="하단 메뉴">
         {item("/", "홈", "home", path === "/" || path.startsWith("/stores"))}
         {item("/wallet", "쿠폰함", "wallet", path.startsWith("/wallet") || path.startsWith("/coupons") || path.startsWith("/pick") || path.startsWith("/login"))}
         <button type="button" className={styles.item} onClick={() => setOpen(true)} aria-haspopup="dialog" aria-expanded={open}>
-          {icon("place")}
-          <span className={styles.label}>플레이스</span>
+          {icon("book")}
+          <span className={styles.label}>예약</span>
         </button>
         {item("/guide", "안내", "info", path.startsWith("/guide") || path.startsWith("/verify"))}
       </nav>

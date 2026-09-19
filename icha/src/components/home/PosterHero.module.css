@@ -1,4 +1,0 @@
-/* 포스터 머리 — 화면 폭 그대로(390 → 390x152), 위아래 틈 없이 검은 띠(마키)에 바로 닿는다. 키트 그림이라 그림자·모서리 없음 */
-.hero { position: relative; margin: 0; line-height: 0; }
-.img { display: block; }
-.img img { width: 100%; height: auto; }

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { MenuPicker, type PickStore } from "@/components/flow/MenuPicker";
 import { fmtMD } from "@/components/flow/format";
-import { DotLine, StickerButton } from "@/components/flow/kit";
+import { Button } from "@/components/ui/Button";
 import { getMemberSession } from "@/lib/auth/session";
 import { isPickExpired, pickDeadlineFor } from "@/lib/coupons";
 import { getReceipt, listMenu, menuImageUrl } from "@/lib/db/queries";
@@ -13,7 +13,7 @@ import styles from "./pick.module.css";
 
 export const metadata: Metadata = { title: "사용 매장 선택" };
 
-/** 받은 쿠폰을 어느 매장 혜택으로 바꿀지 고른다 — 발급 매장을 뺀 두 매장, 포스터 순서(1차→2차→3차). 안내 줄은 어두운 띠에 본문 글꼴. */
+/** 받은 쿠폰을 어느 매장 혜택으로 바꿀지 고른다 — 발급 매장을 뺀 두 매장, 포스터 순서(1차→2차→3차). */
 export default async function PickPage({ params }: { params: Promise<{ receiptId: string }> }) {
   const { receiptId } = await params;
   const session = await getMemberSession();
@@ -33,11 +33,12 @@ export default async function PickPage({ params }: { params: Promise<{ receiptId
   if (isPickExpired(receipt, rules)) {
     return (
       <section className={styles.page} aria-labelledby="pick-title">
-        <div className={styles.head}>
-          <h1 id="pick-title" className={`plate plate-red ${styles.h1}`}>선택 기간 만료</h1>
-          <p className={`${styles.strip} ${styles.sub}`}>{store.shortName} 발급 쿠폰의 선택 기간이 {fmtMD(deadline)}에 종료되었습니다. 다음 계산 시 휴대폰 번호를 말씀하시면 새 쿠폰이 발급됩니다.</p>
-        </div>
-        <StickerButton kind="wallet" href="/wallet" block>쿠폰함 열기</StickerButton>
+        <header className={styles.head}>
+          <span className="eyebrow">Expired</span>
+          <h1 id="pick-title" className="h1">선택 기간 만료</h1>
+          <p className="lead">{store.shortName} 발급 쿠폰의 선택 기간이 {fmtMD(deadline)}에 종료되었습니다. 다음 계산 시 휴대폰 번호를 말씀하시면 새 쿠폰이 발급됩니다.</p>
+        </header>
+        <Button href="/wallet" variant="primary" size="lg" block>쿠폰함 열기</Button>
       </section>
     );
   }
@@ -67,10 +68,11 @@ export default async function PickPage({ params }: { params: Promise<{ receiptId
 
   return (
     <section className={styles.page} aria-labelledby="pick-title" data-store={store.id}>
-      <div className={styles.head}>
-        <h1 id="pick-title" className={`plate plate-red ${styles.h1}`}>사용 매장 선택</h1>
-        <p className={`${styles.strip} ${styles.sub}`}><DotLine items={[`${store.shortName} 발급 쿠폰`, `${fmtMD(deadline)}까지 선택`]} /></p>
-      </div>
+      <header className={styles.head}>
+        <span className="eyebrow">Choose a store</span>
+        <h1 id="pick-title" className="h1">사용 매장 선택</h1>
+        <p className="lead"><b>{store.shortName}</b>에서 받은 쿠폰입니다. 어느 매장에서 어떤 혜택으로 쓸지 고르세요. {fmtMD(deadline)}까지 선택할 수 있습니다.</p>
+      </header>
       <MenuPicker receiptId={receipt.id} stores={stores} couponValidDays={rules.couponValidDays} />
     </section>
   );

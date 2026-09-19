@@ -1,19 +1,17 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import type { CSSProperties } from "react";
-import { DotLine } from "@/components/flow/kit";
-import { GuideFaq, type FaqItem } from "@/components/site/GuideFaq";
-import { KitPiece, SectionLabel, StickerButton } from "@/components/site/Kit";
-import { StepsStrip } from "@/components/site/StepsStrip";
+import Image from "next/image";
+import { HowToSteps } from "@/components/home/HowToSteps";
+import { Button } from "@/components/ui/Button";
+import { Section } from "@/components/ui/Section";
 import { BRAND } from "@/lib/config";
-import { ruleLine } from "@/lib/copy";
+import { faqItems } from "@/lib/faq";
 import { LOCATIONS } from "@/lib/locations";
 import { placeLinks } from "@/lib/naver";
 import { getRules } from "@/lib/settings";
 import { STORES } from "@/lib/stores";
 import styles from "./page.module.css";
 
-/** 정적(ISR) — 규칙(유효기간·한도·리뷰 이벤트)만 DB 에서 읽는다. 60초마다, 그리고 관리자가 저장할 때 바로 새로 만든다. */
+/** 정적(ISR) — 60초마다. 규칙을 저장하면 revalidatePath("/guide") */
 export const revalidate = 60;
 
 export const metadata: Metadata = {
@@ -24,106 +22,69 @@ export const metadata: Metadata = {
 /** 1차 → 2차 → 3차 */
 const ORDERED = [...STORES].sort((a, b) => a.course.n - b.course.n);
 
-/** 세 매장을 아우르는 출구·도보 한 줄 — 숫자는 LOCATIONS 에서만 읽는다 */
-function walkLine(): string {
-  const v = ORDERED.map((s) => LOCATIONS[s.id]);
-  const exits = Array.from(new Set(v.map((l) => l.exit))).join("·");
-  const mins = v.map((l) => l.walkMin);
-  const lo = Math.min(...mins);
-  const hi = Math.max(...mins);
-  return `서면역 ${exits}번 출구 도보 ${lo === hi ? `${lo}분` : `${lo}~${hi}분`}`;
-}
-
-/**
- * 이용 안내 — 키트 큰 제목판(label-guide 60px) + 손글씨 메모(note-again 140px, 획 그림자 + 가장자리 없는 어둠) + 어두운 띠 한 줄,
- * 이렇게 받아요(label-howto + 콜아웃) → 포스터 순서 네 칸(2×2, 홈과 같은 조각) → 휴대폰 번호 메모(300px, 순서 격자의 오른쪽 아래 모서리를 덮는다) → 규칙 한 줄 검은 띠.
- * 같은 내용을 번호 목록으로 한 번 더 적지 않는다(절차는 자주 묻는 질문의 발급·사용 항목에). 자주 묻는 질문(label-faq)은 종이 카드. 아래 고정 버튼 없음(탭에 플레이스).
- */
+/** 이용 안내 — 제목 → 이용 방법(홈과 같은 네 단계) → 매장 예약(세 줄) → 자주 묻는 질문(전체) → 이벤트 포스터(원본 그림). */
 export default async function GuidePage() {
   const rules = await getRules();
-  const days = rules.couponValidDays;
-  const limit = rules.dailyLimitPerMember;
+  const faq = faqItems(rules);
   const reviews = ORDERED.map((s) => ({ s, text: rules.reviewBenefit[s.id].trim() })).filter((x) => x.text !== "");
-
-  const faq: (FaqItem | null)[] = [
-    { id: "get", q: "쿠폰 발급 방법", a: <p>계산 시 직원에게 휴대폰 번호를 말씀하시면 해당 번호로 쿠폰이 발급됩니다.</p> },
-    {
-      id: "book",
-      q: "예약 방법",
-      a: (
-        <>
-          <p>네이버 예약으로 접수합니다.</p>
-          <ul className={styles.bookRow}>
-            {ORDERED.map((s, i) => {
-              const l = placeLinks(s);
-              return l ? (
-                <li key={s.id} className={styles.bookItem} data-store={s.id}>
-                  <span className={`plate plate-store plate-sm ${styles.bookName}`}>{s.course.n}차 {s.shortName}</span>
-                  <StickerButton kind="book" size="sm" tilt={i % 2 ? 1 : -1} href={l.booking} suffix={` — ${s.shortName}`}>예약하기</StickerButton>
-                </li>
-              ) : null;
-            })}
-          </ul>
-        </>
-      ),
-    },
-    { id: "use", q: "쿠폰 사용 방법", a: <p><Link href="/wallet" className="link">쿠폰함</Link>에서 사용할 매장의 혜택을 선택한 뒤, 해당 매장에서 메인안주 1개 주문 시 직원에게 제시합니다.</p> },
-    { id: "when", q: "쿠폰 유효기간", a: <p>발급일부터 {days}일. 휴대폰 번호 1개당 하루 {limit}장까지 발급됩니다.</p> },
-    { id: "near", q: "매장 간 거리", a: <p>3개 매장 모두 50m 이내. {walkLine()}.</p> },
-    reviews.length > 0
-      ? {
-          id: "review",
-          q: "리뷰 이벤트",
-          a: (
-            <ul className={styles.revList}>
-              {reviews.map(({ s, text }) => (
-                <li key={s.id} data-store={s.id}>
-                  <span className="plate plate-store plate-sm">{s.shortName}</span> {text}
-                </li>
-              ))}
-            </ul>
-          ),
-        }
-      : null,
-    { id: "phone", q: "휴대폰 번호 이용 목적", a: <p>쿠폰 발급과 확인에만 사용합니다. 문자나 전화는 발송하지 않습니다.</p> },
-    { id: "main", q: "메인안주 기준", a: <p>각 매장 메뉴판의 안주 1개. 해당 메뉴는 매장에서 확인해 주세요.</p> },
-  ];
-  const items = faq.filter((x): x is FaqItem => x !== null).slice(0, 7);
 
   return (
     <div className={styles.page}>
       <header className={styles.top}>
-        <div className={styles.titleRow}>
-          <SectionLabel kind="guide" color="red" as="h1" big className={styles.h1}>이용 안내</SectionLabel>
-          <KitPiece name="note-again" rotate={5} sizes="140px" className={`note-dark ${styles.note}`} />
-        </div>
-        <p className={`info ${styles.brand}`}>{BRAND.name} · {BRAND.eventTag}</p>
+        <span className="eyebrow">Guide</span>
+        <h1 className="h1">이용 안내</h1>
+        <p className="lead">{BRAND.name} {BRAND.eventTag} — 쿠폰을 받는 법, 쓰는 법, 예약과 자주 묻는 질문입니다.</p>
       </header>
 
-      <section className={styles.sec} aria-labelledby="steps-title">
-        <div className={`sec-h ${styles.stepsHead}`}>
-          <SectionLabel kind="howto" color="blue" id="steps-title">이용 방법</SectionLabel>
-          <p className={`callout ${styles.lead}`}>{BRAND.course}</p>
-        </div>
-        <StepsStrip className={styles.steps} />
-        <div className={styles.noteRow}>
-          <KitPiece
-            name="note-phone"
-            rotate={2}
-            sizes="300px"
-            className={styles.phoneNote}
-            fallback={<p className={`paper ${styles.phoneNote} ${styles.phoneNoteIn}`} style={{ "--r": "2deg" } as CSSProperties}>계산 시 휴대폰 번호를 말씀하시면 쿠폰이 발급됩니다</p>}
-          />
-        </div>
-        <p className={`info ${styles.rule}`}><DotLine items={[ruleLine(rules), BRAND.condition]} /></p>
-      </section>
+      <HowToSteps rules={rules} />
 
-      <section className={styles.sec} aria-labelledby="faq-title">
-        <div className="sec-h">
-          <SectionLabel kind="faq" color="green" id="faq-title" className={styles.faqLabel}>자주 묻는 질문</SectionLabel>
-        </div>
-        <GuideFaq items={items} />
-      </section>
+      <Section id="book" eyebrow="Reservation" title="매장 예약" lead="네이버 예약으로 접수합니다" alt>
+        <ul className={styles.bookList}>
+          {ORDERED.map((s) => {
+            const l = placeLinks(s);
+            return (
+              <li key={s.id} className={styles.bookItem} data-store={s.id}>
+                <span className="badge badge-store">{s.course.n}차</span>
+                <span className={styles.bookBody}>
+                  <span className={styles.bookName}>{s.shortName}</span>
+                  <span className="small muted">{LOCATIONS[s.id].subway}</span>
+                </span>
+                {l && <Button href={l.booking} variant="naver" size="sm" srSuffix={` — ${s.shortName}`}>예약하기</Button>}
+              </li>
+            );
+          })}
+        </ul>
+        {reviews.length > 0 && (
+          <div className={`box-brand ${styles.reviewBox}`}>
+            <p className={styles.reviewTitle}>리뷰 이벤트</p>
+            <ul className={styles.reviewList}>
+              {reviews.map(({ s, text }) => <li key={s.id}><b>{s.shortName}</b> {text}</li>)}
+            </ul>
+          </div>
+        )}
+      </Section>
+
+      <Section id="faq" eyebrow="FAQ" title="자주 묻는 질문">
+        <ul className={styles.faq}>
+          {faq.map((it) => (
+            <li key={it.id}>
+              <details className={styles.faqItem} id={it.id}>
+                <summary className={styles.faqQ}>
+                  <span>{it.q}</span>
+                  <svg className={styles.faqIcon} width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5" /></svg>
+                </summary>
+                <p className={styles.faqA}>{it.a}</p>
+              </details>
+            </li>
+          ))}
+        </ul>
+      </Section>
+
+      <Section id="poster" eyebrow="Poster" title="이벤트 포스터" lead="매장에 붙어 있는 포스터 원본" alt>
+        <figure className={`card ${styles.poster}`}>
+          <Image src="/images/event/poster.jpg" alt={`${BRAND.name} 포스터 — ${BRAND.unionName}, ${BRAND.eventTag}`} width={1080} height={1350} sizes="(min-width: 480px) 440px, calc(100vw - 40px)" className={styles.posterImg} />
+        </figure>
+      </Section>
     </div>
   );
 }

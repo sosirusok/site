@@ -1,9 +1,3 @@
-/* 아래 고정 크림 바(.sticky-bar)까지의 여백은 .app:has(.sticky-bar) 가 준다. 화면을 채워서 푸터가 가운데로 올라오지 않게 */
-.page { padding: 18px var(--gutter) 8px; display: grid; gap: 20px; align-content: start; min-height: calc(100dvh - var(--header-h) - var(--tabbar-h) - var(--stickybar-h) - 40px); }
-.head { display: grid; gap: 0; justify-items: start; }
-/* 판(−1.5°, 그림자 4px)이 띠의 위 4px 만 덮는다. 띠 글자는 위 여백 18px 라 판의 가장 낮은 모서리(+2.4)·그림자(+4)에서 5px 아래 */
-.head .h1 { position: relative; z-index: 2; margin-bottom: -4px; }
-.h1 { font-size: 28px; padding: 12px 18px 10px; }
-/* 보케 위 정보 줄 — 포스터의 검은 띠 위 Do Hyeon 16px */
-.strip { background: #111; color: #fff; font-family: var(--font-display); font-size: 16px; font-weight: 400; line-height: 1.35; padding: 9px 14px; border-radius: 0; box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5); }
-.sub { justify-self: stretch; margin-left: 20px; padding-top: 18px; transform: rotate(0.8deg); }
+/* 아래 고정 바(.sticky-bar)까지의 여백은 .app:has(.sticky-bar) 가 준다. 화면을 채워서 푸터가 가운데로 올라오지 않게 */
+.page { padding: 28px var(--gutter) 16px; display: grid; gap: 20px; align-content: start; min-height: calc(100dvh - var(--header-h) - var(--tabbar-h) - var(--stickybar-h) - 40px); }
+.head { display: grid; gap: 8px; }

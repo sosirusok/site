@@ -1,11 +1,8 @@
-/* 하단 탭 — 포스터 맨 아래의 검은 띠. 키트 아이콘(검은 선 그림)은 크림 스티커 네모 위에, 글자는 크림 Do Hyeon, 고른 탭은 노란 글자·노란 스티커. 위 가장자리 노랑·검정 사선 띠 */
-.bar { bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(4, 1fr); height: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: #111; border-top: 2px solid #000; box-shadow: 0 -4px 0 rgba(0, 0, 0, 0.45); }
-.bar::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: repeating-linear-gradient(-45deg, var(--yellow) 0 7px, #111 7px 14px); pointer-events: none; }
-.item { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 44px; color: var(--cream); font-family: var(--font-display); font-size: 13px; line-height: 1; }
-.item:active { background: rgba(255, 255, 255, 0.06); }
-/* 아이콘 스티커 — 크림 네모 30x30, 살짝 기울임. 고른 탭은 노랑 */
-.icon { display: grid; place-items: center; width: 30px; height: 30px; background: var(--cream); border: 1.5px solid #000; box-shadow: 2px 2px 0 #000; transform: rotate(-3deg); }
-.item:nth-child(even) .icon { transform: rotate(3deg); }
-.label { display: inline-block; padding: 2px 2px 0; }
-.active .icon { background: var(--yellow); }
-.active .label { color: var(--yellow); }
+/* 하단 탭 — 흰 바탕, 위 선 1px, 네 칸. 아이콘 24px + 글자 11px */
+.bar { bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(4, 1fr); height: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: rgba(255, 255, 255, 0.98); border-top: 1px solid var(--line); }
+.item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 44px; color: var(--ink-3); font-size: 11px; font-weight: 600; line-height: 1; letter-spacing: -0.01em; }
+.item:active { background: var(--bg-2); }
+.icon { display: block; }
+.label { display: block; }
+.active { color: var(--ink); }
+.active .label { font-weight: 700; }

@@ -1,42 +1,25 @@
-.sec { padding: 14px var(--gutter) 4px; }
+.sec { padding: 8px var(--gutter) 16px; }
+.head { display: grid; gap: 2px; margin-bottom: 12px; }
+.count { color: var(--ink-3); font-weight: 600; margin-left: 4px; }
 
-/* 보케 위 정보 줄 — 포스터의 검은 띠 위 Do Hyeon 16px */
-.strip { background: #111; color: #fff; font-family: var(--font-display); font-size: 16px; font-weight: 400; line-height: 1.35; padding: 9px 14px; border-radius: 0; box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5); }
+/* 받은 쿠폰 */
+.relays { display: grid; gap: 12px; }
+.relay { display: grid; gap: 8px; }
+.relayHead { display: flex; align-items: center; gap: 8px; }
+.relayTitle { font-size: 16px; font-weight: 700; }
+.relaySub { margin-bottom: 4px; }
 
-/* 받은 쿠폰 — 종이 한 장씩 */
-.relays { display: grid; gap: 0; }
-.relay + .relay { margin-top: -10px; }
-.relay { display: grid; gap: 8px; justify-items: start; padding: 16px 16px 18px; }
-.relayHead { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.relayTitle { font-size: 20px; }
-.relaySub { font-size: 15px; line-height: 1.5; color: var(--ink-2); }
-/* 3차 초록 판은 흰 글자 대비를 위해 한 단계 짙게 */
-.relay[data-store="wareureu"] :global(.plate-store) { --plate: #156e38; }
+/* 쿠폰 목록 */
+.stack { display: grid; gap: 10px; }
+.ticketLink { display: block; }
 
-/* 종이 쿠폰 더미 — 서로 겹쳐 쌓인다(번갈아 ±1.5°): 티켓 그림의 위아래 투명 여백이 각 12px(8%)라 −30px 이면 종이 몸통이 6px 겹친다. 위 쿠폰이 z 가 높아 아래 모서리가 덮이지 않는다 */
-.stack { display: grid; gap: 0; }
-.stackItem { position: relative; margin-top: -30px; z-index: 1; }
-.stackItem:first-child { margin-top: 0; }
-.stackItem:nth-child(1) { z-index: 9; } .stackItem:nth-child(2) { z-index: 8; } .stackItem:nth-child(3) { z-index: 7; } .stackItem:nth-child(4) { z-index: 6; } .stackItem:nth-child(5) { z-index: 5; } .stackItem:nth-child(6) { z-index: 4; }
-.ticketLink { display: block; position: relative; }
-/* 남은 날 도장 — 크림 92% 위에 짙은 빨강(대비 4.5:1 이상), 티켓 오른쪽 위 반쪽 위 */
-.soon { position: absolute; right: 10px; top: -10px; font-size: 16px; padding: 4px 8px 3px; background: rgba(244, 233, 210, 0.95); opacity: 1; color: #b8221b; border-color: #b8221b; }
-/* 만료·취소 쿠폰의 도장(글자) — 왼쪽 아래(키트에 그 도장이 없다). 사용한 쿠폰은 키트 도장(96px, -12도)이 반쪽 위에 찍히고 시각은 티켓 글자 줄에 */
-.pastStamp { position: absolute; left: 14px; bottom: -8px; font-size: 16px; padding: 4px 8px 3px; background: rgba(244, 233, 210, 0.95); opacity: 1; color: #b8221b; border-color: #b8221b; }
-.pastStamp:global(.stamp-green) { color: #156e38; border-color: #156e38; }
-.usedStamp { position: absolute; right: 2%; top: 50%; transform: translateY(-50%) rotate(-12deg); }
+/* 지난 쿠폰 — 줄을 누르면 펼쳐진다 */
+.past { padding: 8px var(--gutter) 8px; }
+.pastSummary { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 48px; font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+.pastIcon { color: var(--ink-3); transition: transform 0.2s; }
+.past[open] .pastIcon { transform: rotate(180deg); }
 
-/* 지난 쿠폰 — 띠를 누르면 펼쳐진다 */
-.past { padding: 10px var(--gutter) 6px; }
-.pastSummary { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 48px; font-weight: 700; margin-bottom: 12px; }
-.pastArrow { font-size: 16px; transition: transform 0.15s; }
-.past[open] .pastArrow { transform: rotate(180deg); }
-
-/* 빈 쿠폰함 — 봉투 160px 가운데, 그 아래 종이 한 장, 초록 스티커 왼쪽. 봉투 그림(700x700)은 몸통이 가운데 57% 라 위아래 여백을 당긴다 */
-.empty { display: grid; gap: 14px; justify-items: start; padding: 4px 0 8px; }
-.envelope { justify-self: center; margin: -30px 0 -34px; }
-.emptyNote { justify-self: center; width: 96px; }
-.emptyPaper { justify-self: stretch; display: grid; gap: 8px; padding: 18px 18px 20px; }
-.emptyTitle { font-size: 22px; }
-.emptyText { font-size: 15px; line-height: 1.5; color: var(--ink-2); }
-.emptyBtn { margin-top: 4px; }
+/* 빈 쿠폰함 */
+.empty { display: grid; gap: 8px; justify-items: center; text-align: center; padding: 32px 20px 24px; }
+.emptyIcon { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--bg-2); color: var(--ink-3); margin-bottom: 6px; }
+.emptyBtn { margin-top: 10px; }

@@ -5,8 +5,6 @@ import { BRAND, SITE_URL } from "@/lib/config";
 
 /** 본문 글꼴 Pretendard(가변, 동적 서브셋) — CDN 의 CSS 53KB(92 @font-face, font-display: swap) */
 const PRETENDARD_CSS = "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css";
-/** 첫 화면(검은 띠·콜아웃·간판 글자)에 바로 쓰이는 Do Hyeon — public/fonts/(scripts/fonts-local.mjs), src/app/fonts.css 의 @font-face 와 같은 주소 */
-const DO_HYEON = ["/fonts/do-hyeon-korean-400-normal.woff2", "/fonts/do-hyeon-latin-400-normal.woff2"];
 /**
  * Pretendard CSS 를 그리기를 막지 않게 받는다: <link rel="preload" as="style"> 로 먼저 받아 두고, 이 인라인 스크립트가 media="print" 스타일시트로 붙였다가
  * 다 받으면 media="all" 로 바꾼다(브라우저는 맞지 않는 media 의 CSS 를 기다리지 않는다). 하이드레이션과 무관하게 HTML 을 읽는 즉시 돈다. JS 가 꺼져 있으면 <noscript> 의 보통 링크.
@@ -39,7 +37,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#111111",
+  themeColor: "#ffffff",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -51,7 +49,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://cdn.jsdelivr.net" />
-        {DO_HYEON.map((href) => <link key={href} rel="preload" as="font" type="font/woff2" href={href} crossOrigin="anonymous" />)}
         <link rel="preload" as="style" href={PRETENDARD_CSS} />
         <script dangerouslySetInnerHTML={{ __html: PRETENDARD_LOADER }} />
         <noscript dangerouslySetInnerHTML={{ __html: `<link rel="stylesheet" href="${PRETENDARD_CSS}">` }} />

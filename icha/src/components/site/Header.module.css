@@ -1,11 +1,7 @@
-/* 맨 위 한 줄 — 투명. 제목은 키트 title.png 42px(1400x480 → 122px 폭)로 줄에서 가장 크고, 로그인은 키트 꼬리표 36px(101px 폭) — 상표가 보조 버튼보다 크다. 키트 그림에는 CSS 그림자·모서리 없음 */
-.header { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: var(--header-h); padding: 8px var(--gutter) 4px; }
-.brand { display: inline-flex; align-items: center; min-height: 44px; opacity: 1; transition: opacity 0.3s ease; }
-/* 홈 첫 화면 — 포스터 머리에 제목이 크게 있으니 스티커는 감춘다(150px 내려가면 나타남) */
-.brandHidden { opacity: 0; pointer-events: none; }
-.brandImg { width: auto; height: 40px; }
-/* 키트가 없을 때의 포스터 조각 제목(불투명 잘라낸 조각) — 이때만 모서리·그림자 */
-.brandImgPoster { width: auto; height: 26px; border-radius: 3px; box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.5); transform: rotate(-2deg); }
+/* 맨 위 흰 바 — 붙박이(sticky), 아래 선 1px. 로고는 포스터 제목 글자(1400x480 → 높이 30px = 88px 폭) */
+.header { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; justify-content: space-between; gap: 12px; height: var(--header-h); padding: 0 var(--gutter); background: rgba(255, 255, 255, 0.96); backdrop-filter: saturate(1.2) blur(8px); border-bottom: 1px solid var(--line); }
+.brand { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; }
+.logo { width: auto; height: 30px; }
+.brandSub { font-size: 12px; font-weight: 600; color: var(--ink-3); letter-spacing: -0.01em; }
 .me { display: inline-flex; align-items: center; min-height: 44px; }
-.header .me { --kh: 36px; }
-.meTag { display: inline-flex; align-items: center; min-height: 34px; padding: 0 12px; background: var(--cream); color: var(--ink); font-family: var(--font-display); font-size: 15px; line-height: 1; border: 2px solid #111; border-radius: 4px; box-shadow: 2px 2px 0 #000; transform: rotate(2deg); font-variant-numeric: tabular-nums; }
+.meTag { height: 32px; padding: 0 12px; font-size: 13px; font-weight: 700; }

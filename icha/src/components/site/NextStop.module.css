@@ -1,8 +1,7 @@
-/* 다음 매장 — 화면 폭 가득 검은 띠 44px(누르는 상자), 키트 화살표 44x22 를 90° 돌려 아래를 가리키고, 노란 Do Hyeon 16px 한 줄. 아래 가장자리 사선 띠 */
-.sec { padding: 0; }
-.row { width: 100%; min-height: 44px; padding: 0 var(--gutter) 5px; gap: 10px; box-shadow: none; color: var(--yellow); }
-.arrow { flex: none; width: 44px; height: 30px; display: grid; place-items: center; }
-.arrow img { width: 40px; height: auto; transform: rotate(90deg); }
-.chevron { flex: none; font-family: var(--font-display); font-size: 22px; line-height: 1; color: var(--yellow); }
-.text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.lead { color: var(--cream); }
+/* 다음 매장 — 카드 한 줄 56px */
+.row { display: flex; align-items: center; gap: 10px; min-height: 56px; padding: 10px 14px 10px 16px; }
+.lead { font-size: 12px; font-weight: 700; color: var(--ink-3); }
+.no { flex: none; }
+.name { flex: 1; min-width: 0; font-size: 15px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.walk { flex: none; }
+.chev { flex: none; color: var(--ink-3); }

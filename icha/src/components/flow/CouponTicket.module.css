@@ -1,67 +1,23 @@
-.root { display: grid; gap: 10px; padding-top: 6px; }
-/* 기록 띠 — 네 줄 */
-.record { display: grid; gap: 4px; transform: rotate(-0.8deg); }
-.recKey { color: var(--yellow); margin-right: 4px; }
-
-/* 보케 위 정보 줄 — 어두운 띠(#14111a 90%) 위 본문 글꼴. 손글씨·노란 글자는 보케에 직접 놓지 않는다 */
-.strip { background: #111; color: #fff; font-family: var(--font-display); font-size: 16px; font-weight: 400; line-height: 1.35; padding: 9px 14px; border-radius: 0; box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5); }
-
-/* 상태 */
-.state { display: grid; gap: 0; justify-items: start; }
-/* 판(−1.5°, 그림자 4px)이 띠의 위 2px 만 덮는다. 띠 글자는 위 여백 18px 라 판의 가장 낮은 모서리(+2.4)·그림자(+4)에서 7px 아래 */
-.state .h1 { position: relative; z-index: 2; margin-bottom: -2px; }
-.state .stateSub { margin-left: 20px; padding-top: 18px; transform: rotate(0.8deg); }
-.h1 { font-size: 26px; padding: 12px 18px 10px; }
-/* 초록 간판은 흰 글자 대비를 위해 한 단계 짙게 */
-.plateGreen { --plate: #156e38; }
-.stateSub { justify-self: stretch; }
-.ticketWrap { position: relative; }
-/* 만료·취소 도장(키트에 없는 도장) — 키트 사용 완료 도장과 같은 자리·같은 꼴: 티켓 오른쪽 반쪽(76~96%) 위 둥근 도장 84px, −12도, 두 줄 글자.
-   글자 자리(왼쪽 5~71%)와는 상자도 겹치지 않는다(390 화면: 도장 회전 상자 x 271~371 > 글자 자리 오른쪽 끝 270). 크림 95% 위 짙은 빨강(대비 4.5:1 이상) */
-.bigStamp { position: absolute; right: 3%; top: 50%; width: 84px; height: 84px; display: grid; place-items: center; text-align: center; transform: translateY(-50%) rotate(-12deg); font-size: 24px; line-height: 1.05; padding: 0; border-width: 4px; border-radius: 50%; background: rgba(244, 233, 210, 0.95); opacity: 1; color: #b8221b; border-color: #b8221b; white-space: normal; }
-.bigStamp:global(.stamp-green) { color: #156e38; border-color: #156e38; }
-/* 키트 사용 완료 도장 500x500 → 96px, -12도, 티켓 오른쪽 반쪽 위 */
-.usedStamp { position: absolute; right: 3%; top: 50%; transform: translateY(-50%) rotate(-12deg); }
-
-/* 쿠폰 정보 — 조건 · 유효기간 · 발급 시각 */
-.info { display: grid; gap: 4px; padding: 12px 14px; }
-.how { font-weight: 700; }
-.when { color: rgba(244, 233, 210, 0.92); font-variant-numeric: tabular-nums; }
-.soon { color: var(--yellow); font-weight: 700; }
-
-/* 사용 — 안내 한 줄 + 초록 예약하기(작게). 사용 버튼은 아래 고정 크림 바에 */
-.use { display: grid; gap: 12px; justify-items: center; padding-top: 4px; }
-/* 한 줄 가득 스티커는 가운데 정렬 격자 안에서도 옆으로 늘린다 */
-.stretch { justify-self: stretch; }
-.useCap { justify-self: stretch; font-size: 14px; text-align: center; color: rgba(244, 233, 210, 0.92); }
-.err { color: #b8221b; font-size: 14px; }
-.hint { font-size: 14px; color: rgba(244, 233, 210, 0.92); }
-/* 사용 완료 아래 — 노란 스티커 하나 + 작은 밑줄 링크(44px 터치) */
+.root { display: grid; gap: 14px; }
+.state { display: grid; gap: 8px; justify-items: start; }
+.stateBadge { margin-bottom: 2px; }
+.info { padding: 16px; }
+.soon { color: var(--danger); }
+.hint { line-height: 1.55; }
+.record { padding: 16px; }
 .actions { display: grid; gap: 8px; justify-items: center; }
-/* 보케 위 밑줄 링크 — 어두운 알약 위에 */
-.pill { background: #111; padding: 0 12px; border-radius: 0; font-family: var(--font-display); font-size: 16px; font-weight: 400; }
+.actions > :global(.btn) { justify-self: stretch; }
 
-/* 확인 시트 — 아래에서 올라오는 크림 종이 */
-.overlay { position: fixed; inset: 0; z-index: 60; background: rgba(0, 0, 0, 0.62); animation: fade 0.15s ease-out; }
+/* 확인 시트 — 아래에서 올라오는 흰 패널 */
+.overlay { position: fixed; inset: 0; z-index: 60; background: rgba(23, 23, 26, 0.5); animation: fade 0.15s ease-out; }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 .sheetCol { bottom: 0; z-index: 61; }
-.sheet :global(.error) { color: #b8221b; }
-.sheet { display: grid; gap: 8px; background: var(--cream); color: var(--ink); border-top: 3px solid #111; box-shadow: 0 -6px 0 rgba(0, 0, 0, 0.35); padding: 22px var(--gutter) calc(18px + env(safe-area-inset-bottom)); animation: up 0.22s var(--ease-out); }
+.sheet { display: grid; gap: 8px; background: #fff; color: var(--ink); border-radius: 20px 20px 0 0; padding: 10px var(--gutter) calc(20px + env(safe-area-inset-bottom)); animation: up 0.22s var(--ease-out); }
 @keyframes up { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
-/* 시트 제목 — 패널 안쪽 여백 안에(잘리지 않게), 판 글자 20px */
-.sheetTitle { margin-top: 0; }
-.sheetTitle :global(.plate) { font-size: 20px; white-space: normal; }
-.sheetSub { font-size: 17px; font-weight: 700; margin-top: 8px; }
-.sheetCap { font-size: 14px; color: var(--ink-2); }
-.sheetBtns { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; }
-.cancel { min-width: 96px; }
+.grip { display: block; width: 36px; height: 4px; border-radius: 2px; background: var(--line-2); margin: 0 auto 8px; }
+.sheetSub { font-size: 16px; font-weight: 700; }
+.sheetBtns { margin-top: 12px; }
 
-/* 사용 완료 시계 — 종이 위 큰 숫자 */
-.clock { display: grid; gap: 2px; justify-items: center; text-align: center; padding: 14px 16px; }
-.clockCap { font-size: 13px; font-weight: 700; color: var(--ink-2); }
-.clockTime { font-size: 46px; line-height: 1.1; color: #156e38; letter-spacing: 0.04em; }
-.clockDate { font-size: 13px; color: var(--ink-2); }
-
-/* 티켓 바로 아래, 오른쪽 정렬한 예약 스티커 — 사용 안내 문장의 '아래 버튼'은 고정 바의 사용 버튼만 가리키게 */
-/* 티켓의 오른쪽 아래 모서리를 덮는 예약 스티커 */
-.bookRow { display: flex; justify-content: flex-end; margin-top: -18px; margin-right: 6px; position: relative; z-index: 2; }
+/* 사용 완료 시계 — 큰 숫자 */
+.clock { display: grid; gap: 2px; justify-items: center; text-align: center; padding: 16px; }
+.clockTime { font-size: 40px; line-height: 1.1; font-weight: 800; color: var(--naver); letter-spacing: 0.02em; }

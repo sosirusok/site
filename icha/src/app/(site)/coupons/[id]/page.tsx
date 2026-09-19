@@ -11,7 +11,7 @@ import styles from "./coupon.module.css";
 
 export const metadata: Metadata = { title: "쿠폰" };
 
-/** 쿠폰 한 장 — 종이 쿠폰(그 집 색 판·Do Hyeon 코드), 노란 사용하기 스티커. 사용 뒤에는 도장과 시계. */
+/** 쿠폰 한 장 — 쿠폰 카드, 조건 표, 아래 고정 바의 사용 버튼. 사용 뒤에는 시계와 기록. */
 export default async function CouponPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const session = await getMemberSession();
@@ -44,7 +44,7 @@ export default async function CouponPage({ params }: { params: Promise<{ id: str
   return (
     <section className={styles.page} data-store={store.id}>
       <p>
-        <Link href="/wallet" className={`link link-w ${styles.back}`}>‹ 쿠폰함</Link>
+        <Link href="/wallet" className={styles.back}><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 5l-5 5 5 5" /></svg>쿠폰함</Link>
       </p>
       <CouponTicket coupon={tc} store={ts} />
     </section>

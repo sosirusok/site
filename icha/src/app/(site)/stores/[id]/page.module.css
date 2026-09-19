@@ -1,52 +1,16 @@
-/* 매장 화면 — 포스터처럼 겹쳐 붙인 조각들. 섹션 제목판(46px)은 다음 조각의 왼쪽 위 모서리를 덮으며 잇는다(빈 보케 12px 이하) */
+/* 매장 화면 — 섹션은 흰/연회색 교차. 아래 고정 바(.sticky-bar)까지의 여백은 .app:has(.sticky-bar) 가 준다 */
 .page { padding-bottom: 0; }
-.sec { position: relative; padding: 16px var(--gutter) 4px; display: grid; }
-.anchor { scroll-margin-top: 8px; }
-/* 제목판이 아래 조각의 왼쪽 위를 12px 덮는다 */
-.overLabel { position: relative; z-index: 6; justify-self: start; margin-bottom: -12px; --r: -2deg; }
-.headRow { display: flex; align-items: flex-end; gap: 2px; margin-bottom: -6px; position: relative; z-index: 6; }
-.headRow .overLabel { margin-bottom: 0; }
-.lead { margin: 0 0 8px -6px; --r: -4deg; }
-.reviewLabel { justify-self: start; --r: -2deg; margin-bottom: 2px; position: relative; z-index: 6; }
-.next { margin-top: 14px; }
-
-/* 매장 공지 — 검은 띠 한 줄(간판 띠 바로 아래) */
-.notice { margin: 6px var(--gutter) 0; white-space: normal; }
-.noticeDay { color: var(--yellow); font-weight: 400; margin-right: 8px; }
-
-/* ── 특별 혜택 장면 ──
-   제목판(z6)이 혜택 상자(300px, 1.5°)의 왼쪽 위 모서리를 덮고, 상자 오른쪽 위에 무료 도장 56(−12°), 상자 오른쪽 끝을 컷아웃이 뚫는다(z5).
-   아래 노란 콜아웃 두 줄, 품목마다 검은 띠(사진 컷아웃이 띠 왼쪽 끝을 뚫고, 오른쪽 끝에 무료 도장 52), 조건 띠 */
-.giftScene { position: relative; display: grid; justify-items: start; }
-.giftLabel { position: relative; z-index: 6; margin-bottom: -14px; --r: -2deg; }
-.benefit { position: relative; width: 300px; max-width: 100%; z-index: 2; margin-left: 6px; }
-.benefit img { width: 100%; height: auto; }
-/* 무료 도장 56 — 상자의 왼쪽 아래 모서리(제목판은 왼쪽 위, 컷아웃은 오른쪽) */
-.giftStamp { position: absolute; top: 62px; left: -6px; width: 56px; z-index: 4; transform: rotate(-12deg); }
-.giftStamp img { width: 100%; height: auto; }
-.cut { position: absolute; right: 0; z-index: 5; transform: rotate(6deg); }
-/* 컷아웃은 상자 글자(오른쪽 끝 ~312px)를 덮지 않는 자리: 맥주잔은 상자 오른쪽 위, 주전자는 오른쪽 아래(빈 빨강 자리), 요거트는 컵 몸통이 캔버스 22~78% 라 오른쪽으로 더 */
-.cutTall { top: -6px; right: 0; }
-.cutTall img { height: 104px; width: auto; }
-.cutWide { top: 50px; right: -14px; }
-.cutWide img { width: 96px; height: auto; }
-.cutYogurt { top: 2px; right: -10px; }
-.cutYogurt img { height: 92px; width: auto; }
-.giftCallout { position: relative; z-index: 3; margin: 6px 0 0 8px; max-width: 320px; --r: -2deg; }
-/* '택 1' — 콜아웃 끝의 노란 꼬리표 */
-.giftPick { margin-left: 8px; vertical-align: 4px; text-shadow: none; }
-.giftList { display: grid; gap: 6px; width: 100%; margin-top: 10px; }
-.gift { width: 100%; align-items: center; gap: 12px; padding: 8px 12px 8px 72px; min-height: 64px; white-space: normal; transform: rotate(var(--r, -1deg)); }
-/* 사진 컷아웃 64px — 띠 왼쪽 끝을 뚫고 나온다 */
-.giftThumb { position: absolute; left: -2px; top: 50%; transform: translateY(-50%) rotate(-6deg); display: grid; place-items: center; width: 64px; height: 64px; z-index: 2; }
-.giftThumb .giftCut { width: auto; height: 64px; }
-.giftThumb .giftCut img { width: auto; height: 64px; }
-.giftBody { flex: 1; min-width: 0; display: grid; gap: 1px; }
-.giftName { font-size: 17px; line-height: 1.25; color: #fff; }
-.giftDesc { font-family: var(--font-sans); font-size: 12.5px; font-weight: 500; line-height: 1.35; color: var(--cream); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
-.giftStrike { font-family: var(--font-sans); font-size: 13px; font-weight: 600; color: var(--cream); text-decoration: line-through; }
-/* 무료 도장 52px — 띠 오른쪽 끝(위 모서리에 걸친다) */
-.giftFree { flex: none; width: 52px; margin: -14px -6px -10px 0; transform: rotate(-12deg); }
-.giftFree img { width: 100%; height: auto; }
-.giftFreeText { font-size: 18px; padding: 4px 8px 3px; color: var(--yellow); border-color: var(--yellow); }
-.giftRule { margin-top: 6px; font-size: 15px; --r: 0.5deg; }
+/* 매장 공지 — 노란 상자 한 줄(사진 아래) */
+.notice { display: flex; align-items: flex-start; gap: 10px; margin: 16px var(--gutter) -16px; padding: 12px 14px; background: var(--brand-soft); border-radius: var(--radius-sm); font-size: 14px; line-height: 1.5; }
+.noticeTag { flex: none; font-weight: 800; }
+/* 쿠폰 혜택 — 노란 상자 + 품목 줄 */
+.giftBox { display: grid; gap: 4px; }
+.giftLine { font-size: 18px; line-height: 1.4; }
+.giftList { display: grid; margin-top: 8px; }
+.gift { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.gift:last-child { border-bottom: 0; }
+.giftBody { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.giftName { font-size: 15px; font-weight: 700; }
+.giftDesc { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+.giftPrice { flex: none; display: grid; justify-items: end; gap: 4px; font-size: 13px; }
+.next { padding: 8px var(--gutter) 24px; }

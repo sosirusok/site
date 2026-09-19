@@ -1,29 +1,11 @@
-/* 매장 첫 장면 — 좌표는 390 화면 기준 px × --u. 사진 390x300 → 간판 top 250(−2°) → 컷아웃 top 190 오른쪽 6(6°) → 검은 띠 */
-.hero { position: relative; isolation: isolate; margin-top: 0; }
-.shotWrap { position: relative; height: calc(300 * var(--u)); overflow: hidden; background: #1a1520; z-index: 0;
-  -webkit-mask-image: linear-gradient(#000 74%, transparent 100%); mask-image: linear-gradient(#000 74%, transparent 100%); }
+/* 매장 첫 화면 — 사진 16:10 → 흰 바탕 정보 */
+.hero { display: grid; }
+.shotWrap { position: relative; aspect-ratio: 16 / 10; background: var(--bg-3); }
 .shot { object-fit: cover; }
-/* 종이 메모 note-good 520x600 → 118px 폭, 사진 오른쪽 위(테이프). 5° */
-.note { position: absolute; right: calc(10 * var(--u)); top: calc(10 * var(--u)); width: calc(118 * var(--u)); z-index: 3; }
-.note img { width: 100%; height: auto; }
-/* 간판 1200x500 → 358x149, 사진 아래 50px 을 덮는다(top 250), 왼쪽 위 모서리 테이프 */
-.plateWrap { position: relative; z-index: 2; margin: calc(-50 * var(--u)) var(--gutter) 0; width: calc(358 * var(--u)); }
-.plate { width: 100%; }
-.plate img { width: 100%; height: auto; }
-/* 조선칼국수 간판은 그림의 불투명 간판이 캔버스의 70% 라 112%(양옆 −6%) — 보이는 간판이 다른 둘과 같은 무게(kit.md 규칙 7) */
-:global([data-store="joseon"]) .plateWrap { width: calc(401 * var(--u)); margin-left: calc(-5.5 * var(--u)); }
-/* 컷아웃 — 간판 오른쪽 끝을 뚫고 나온다: top 190, 오른쪽 6, 6° */
-.cut { position: absolute; top: calc(190 * var(--u)); right: calc(6 * var(--u)); z-index: 3; transform: rotate(6deg); }
-.hero .cutTall img { height: calc(120 * var(--u)); width: auto; }
-.hero .cutWide img { width: calc(116 * var(--u)); height: auto; }
-.hero .cutWide { top: calc(162 * var(--u)); right: calc(4 * var(--u)); }
-
-/* 검은 띠 — 간판 아래 6px, 두세 줄 + 오른쪽 끝 전화 꼬리표 */
-.facts { position: relative; z-index: 2; margin: calc(6 * var(--u)) var(--gutter) 0; padding: 10px 12px 10px; white-space: normal; align-items: center; gap: 10px; }
-.factLines { flex: 1; min-width: 0; display: grid; gap: 3px; }
-.now { font-size: 16px; line-height: 1.25; }
-.sub { font-family: var(--font-sans); font-size: 13px; font-weight: 500; line-height: 1.35; color: var(--cream); }
-.addr { font-family: var(--font-sans); font-size: 13px; font-weight: 500; line-height: 1.35; color: var(--cream); padding-right: 116px; }
-/* 전화 꼬리표 — 크림 스티커(Do Hyeon 14px)가 띠의 오른쪽 아래 모서리를 넘겨 붙는다. 누르는 상자 44px */
-.tel { position: absolute; right: -4px; bottom: -26px; display: inline-flex; align-items: center; justify-content: flex-end; min-height: 44px; min-width: 44px; z-index: 3; }
-.telTag { display: inline-block; padding: 6px 8px 5px; background: var(--cream); color: var(--ink); font-family: var(--font-display); font-size: 14px; line-height: 1; border: 2px solid #111; box-shadow: 2px 2px 0 #000; transform: rotate(3deg); white-space: nowrap; }
+.body { display: grid; gap: 10px; padding: 20px var(--gutter) 24px; border-bottom: 1px solid var(--line); }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.name { font-size: 24px; }
+.rating { display: flex; align-items: center; gap: 4px; }
+.star { color: #f5a623; }
+.kv { margin-top: 4px; }
+.other { display: block; margin-top: 2px; }

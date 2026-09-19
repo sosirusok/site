@@ -1,17 +1,13 @@
-/* 지도 핀·역 표시 — Leaflet/네이버 지도 안에 삽입되는 HTML 이라 전역 클래스. 포스터 색 판에 검은 테두리, 빛 번짐 없음 */
-.sm-pin { width: 44px; height: 48px; position: relative; cursor: pointer; }
-.sm-pin__body, .sm-pin__num { left: 3px; }
-.sm-pin__body { position: absolute; left: 0; top: 0; width: 38px; height: 38px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: #111; border: 2px solid #111; box-sizing: border-box; box-shadow: 2px 2px 0 rgba(0,0,0,.45); }
-.sm-pin__num { position: absolute; left: 0; top: 0; width: 38px; height: 38px; display: grid; place-items: center; font: 400 17px/1 "Do Hyeon", "Pretendard Variable", Pretendard, sans-serif; color: #fff; text-shadow: 1px 1px 0 #000; }
-.sm-pin--active .sm-pin__body { border-color: #FFD400; }
-.sm-pin[data-store="joseon"] .sm-pin__body { background: #D9332B; }
-.sm-pin[data-store="tokyo"] .sm-pin__body { background: #1E48C8; }
-.sm-pin[data-store="wareureu"] .sm-pin__body { background: #1B8A46; }
-.sm-pin[data-store="joseon"] .sm-pin__label { background: #D9332B; }
-.sm-pin[data-store="tokyo"] .sm-pin__label { background: #1E48C8; }
-.sm-pin[data-store="wareureu"] .sm-pin__label { background: #156e38; }
-.sm-pin__label { position: absolute; left: 50%; top: 100%; transform: translate(-50%, 2px) rotate(-2deg); white-space: nowrap; background: #111; color: #fff; font: 400 13px/1 "Do Hyeon", "Pretendard Variable", Pretendard, sans-serif; padding: 5px 8px 4px; border: 2px solid #111; border-radius: 4px; box-shadow: 2px 2px 0 #000; text-shadow: 1px 1px 0 #000; }
-.sm-station { width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 4px solid #1E48C8; box-sizing: border-box; box-shadow: 0 0 0 2px #111; }
-.sm-station__label { position: absolute; left: 26px; top: 1px; white-space: nowrap; font: 400 13px/1.2 "Do Hyeon", "Pretendard Variable", Pretendard, sans-serif; color: #111; background: rgba(255,255,255,.85); padding: 1px 5px; border-radius: 3px; }
-.leaflet-container.leaflet-container { font-family: "Pretendard Variable", Pretendard, sans-serif; background: #e9e2d4; }
+/* 지도 핀·역 표시 — Leaflet/네이버 지도 안에 삽입되는 HTML 이라 전역 클래스. 매장색 원 핀(흰 테두리) + 아래 흰 이름표 */
+.sm-pin { width: 44px; height: 52px; position: relative; cursor: pointer; }
+.sm-pin__body { position: absolute; left: 7px; top: 4px; width: 30px; height: 30px; border-radius: 50%; background: #17171a; border: 3px solid #fff; box-sizing: border-box; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); }
+.sm-pin__num { position: absolute; left: 7px; top: 4px; width: 30px; height: 30px; display: grid; place-items: center; font: 800 13px/1 "Pretendard Variable", Pretendard, sans-serif; color: #fff; }
+.sm-pin--active .sm-pin__body { box-shadow: 0 0 0 3px rgba(23, 23, 26, 0.18), 0 2px 6px rgba(0, 0, 0, 0.3); }
+.sm-pin[data-store="joseon"] .sm-pin__body { background: #d9332b; }
+.sm-pin[data-store="tokyo"] .sm-pin__body { background: #1e48c8; }
+.sm-pin[data-store="wareureu"] .sm-pin__body { background: #0d7f3f; }
+.sm-pin__label { position: absolute; left: 50%; top: 36px; transform: translateX(-50%); white-space: nowrap; background: #fff; color: #17171a; font: 700 12px/1 "Pretendard Variable", Pretendard, sans-serif; padding: 4px 7px; border: 1px solid #d4d4da; border-radius: 6px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
+.sm-station { width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 4px solid #1e48c8; box-sizing: border-box; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); }
+.sm-station__label { position: absolute; left: 26px; top: 2px; white-space: nowrap; font: 700 12px/1.2 "Pretendard Variable", Pretendard, sans-serif; color: #17171a; background: rgba(255, 255, 255, 0.9); padding: 1px 5px; border-radius: 4px; }
+.leaflet-container.leaflet-container { font-family: "Pretendard Variable", Pretendard, sans-serif; background: #e9e9ec; }
 .leaflet-container .leaflet-control-attribution { font-size: 10px; opacity: .9; }

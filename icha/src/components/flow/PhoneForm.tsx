@@ -1,9 +1,9 @@
 "use client";
 import { useId, useState, type ChangeEvent, type FormEvent } from "react";
 import { writeMemberCache } from "@/components/site/useMember";
+import { Button } from "@/components/ui/Button";
 import { formatPhone, normalizePhone } from "@/lib/config";
 import { safeNext } from "./format";
-import { StickerButton } from "./kit";
 import styles from "./PhoneForm.module.css";
 
 /** 입력 중인 숫자열을 자동 하이픈으로 보여 준다 (010-1234-5678) */
@@ -16,8 +16,8 @@ function pretty(digits: string): string {
 }
 
 /**
- * 휴대폰 번호 하나로 로그인하는 폼 — 계산 시 직원에게 말한 번호 그대로. 보내는 버튼은 키트 [로그인](btn-login, 64px 가운데). 성공하면 next 로 전체 이동한다(상단 바까지 로그인 상태로).
- * next 를 안 주면 주소의 ?next= 를 보낼 때 읽는다(로그인 화면은 정적 HTML 이라 서버에서 searchParams 를 읽지 않는다). 같은 사이트 안 경로만(safeNext).
+ * 휴대폰 번호 하나로 로그인하는 폼 — 계산 시 직원에게 말한 번호 그대로. 성공하면 next 로 전체 이동한다(상단 바까지 로그인 상태로).
+ * next 를 안 주면 주소의 ?next= 를 보낼 때 읽는다(로그인 화면은 정적 HTML). 같은 사이트 안 경로만(safeNext).
  */
 export function PhoneForm({ next, label = "로그인" }: { next?: string; label?: string }) {
   const id = useId();
@@ -50,7 +50,7 @@ export function PhoneForm({ next, label = "로그인" }: { next?: string; label?
         setBusy(false);
         return;
       }
-      writeMemberCache(data.member?.phone ?? phone); // 다음 화면의 헤더가 바로 내 번호 꼬리표로
+      writeMemberCache(data.member?.phone ?? phone); // 다음 화면의 헤더가 바로 내 번호로
       window.location.assign(next ?? safeNext(new URLSearchParams(window.location.search).get("next") ?? undefined, "/wallet"));
     } catch {
       setError("네트워크 연결을 확인해 주세요.");
@@ -60,7 +60,7 @@ export function PhoneForm({ next, label = "로그인" }: { next?: string; label?
 
   return (
     <form className={styles.form} onSubmit={onSubmit} noValidate>
-      <div className="field">
+      <div>
         <label className="label" htmlFor={id}>휴대폰 번호</label>
         <input
           id={id}
@@ -78,9 +78,7 @@ export function PhoneForm({ next, label = "로그인" }: { next?: string; label?
         />
         {error && <p id={`${id}-err`} className={`error ${styles.err}`} role="alert">{error}</p>}
       </div>
-      <StickerButton kind="login" type="submit" block disabled={busy} srText={busy ? "확인 중" : undefined}>
-        {busy ? "확인 중" : label}
-      </StickerButton>
+      <Button type="submit" variant="primary" size="lg" block disabled={busy} aria-busy={busy || undefined}>{busy ? "확인 중…" : label}</Button>
     </form>
   );
 }

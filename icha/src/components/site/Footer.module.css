@@ -1,19 +1,14 @@
-/* 맨 아래 — 어두운 띠에 포스터 마지막 줄 조각(1400x100 → 단 가득 26px, 흰 글자), 가게 세 줄·링크 한 줄·저작권. 장식 없음 */
-.footer { margin-top: 36px; }
-.strip { background: #14111a; color: rgba(244, 233, 210, 0.86); font-family: var(--font-sans); font-size: 13px; line-height: 1.55; padding: 18px var(--gutter) 14px; display: grid; gap: 12px; border-top: 1px solid rgba(244, 233, 210, 0.12); }
-.line { display: block; width: 100%; }
-.line img { width: 100%; height: auto; }
-.stores { display: grid; gap: 6px; }
-/* 매장 한 칸 — 첫 줄 상호·주소(접혀도 된다), 둘째 줄 전화번호는 제 줄에 통째로(숫자 가운데서 끊기지 않는다) */
-.store { display: grid; justify-items: start; color: rgba(244, 233, 210, 0.86); line-height: 1.6; }
-.storeLine { display: block; }
-.storeName { font-weight: 600; color: var(--cream); }
-.dot { color: rgba(244, 233, 210, 0.5); }
-.addr { color: rgba(244, 233, 210, 0.78); }
-/* 전화 — 제 줄의 44px 누르는 상자(흐름은 28px: 위아래 −8px), 숫자는 한 덩어리 */
-.tel { display: inline-flex; align-items: center; min-height: 44px; margin: -8px 0; padding: 0; white-space: nowrap; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(244, 233, 210, 0.45); color: var(--cream); }
-.links { display: flex; align-items: center; flex-wrap: wrap; gap: 0 4px; }
-.link { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; padding: 0 2px; color: var(--cream); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(244, 233, 210, 0.45); }
-.sep { color: rgba(244, 233, 210, 0.6); padding: 0 4px; }
-.copy { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 12.5px; color: rgba(244, 233, 210, 0.6); }
-.staff { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; margin: -12px -6px -12px 0; padding: 0 6px; color: rgba(244, 233, 210, 0.55); text-decoration: underline; text-underline-offset: 3px; }
+/* 맨 아래 — 연회색, 13px 회색 글자. 전화번호는 제 줄(44px 누르는 상자) */
+.footer { margin-top: 8px; padding: 28px var(--gutter) 24px; background: var(--bg-2); color: var(--ink-2); font-size: 13px; line-height: 1.55; display: grid; gap: 16px; border-top: 1px solid var(--line); }
+.brand { font-size: 14px; font-weight: 800; color: var(--ink); }
+.brandSub { font-weight: 600; color: var(--ink-3); margin-left: 6px; }
+.stores { display: grid; gap: 10px; }
+.store { display: grid; gap: 1px; line-height: 1.5; }
+.storeName { font-weight: 700; color: var(--ink); }
+.addr { color: var(--ink-2); }
+.tel { display: inline-flex; align-items: center; justify-self: start; min-height: 44px; min-width: 44px; margin: -4px 0 -8px; color: var(--ink); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line-2); }
+.links { display: flex; flex-wrap: wrap; gap: 0 18px; }
+.link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; font-weight: 600; color: var(--ink); }
+.warn { font-size: 12px; line-height: 1.55; color: var(--ink-3); }
+.copy { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--ink-3); }
+.staff { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; margin: -12px 0; color: var(--ink-3); text-decoration: underline; text-underline-offset: 3px; }
