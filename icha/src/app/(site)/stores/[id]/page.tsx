@@ -86,21 +86,21 @@ export default async function StorePage({ params }: Props) {
         )}
       </Section>
 
-      <Section id="photos" eyebrow="Photos" title="가게 구경" tone="cyan" alt flush pt={44} pb={26}>
+      <Section id="photos" title="가게 구경" alt flush pt={44} pb={26}>
         <StoreGallery store={store} photoUrl={links?.photo ?? null} />
       </Section>
 
-      <Section id="menu" tone="mag" title="메뉴" lead={items(menu.length)} pt={54} pb={38}>
+      <Section id="menu" title="메뉴" lead={items(menu.length)} pt={54} pb={38}>
         <StoreMenu store={store} items={menu} menuUrl={links?.menu ?? null} />
       </Section>
 
-      <Section id="visit" head="slab" tone="cyan" title="오시는 길" lead="세 매장 모두 50m 이내" alt pt={50} pb={34}>
+      <Section id="visit" head="slab" title="오시는 길" lead="세 매장 모두 50m 이내" alt pt={50} pb={34}>
         <StoreVisit store={store} />
       </Section>
 
       {(store.quotes.length > 0 || store.naverRating) && (
-        <Section id="reviews" title="가 본 사람들" tone="lime" pt={44} pb={30}>
-          <StoreReviews store={store} limit={2} reviewUrl={links?.review ?? null} benefit={reviewBenefit || null} />
+        <Section id="reviews" title="가 본 사람들" pt={44} pb={30}>
+          <StoreReviews store={store} limit={3} reviewUrl={links?.review ?? null} benefit={reviewBenefit || null} />
         </Section>
       )}
 
@@ -122,5 +122,5 @@ export default async function StorePage({ params }: Props) {
 }
 
 function items(n: number): string {
-  return n > 0 ? `${n}개 · 쿠폰 혜택 품목이 맨 위` : "준비 중";
+  return n > 0 ? `${n}개` : "준비 중";
 }

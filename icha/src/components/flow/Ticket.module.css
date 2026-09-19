@@ -1,29 +1,57 @@
-/* 쿠폰 한 장 — 그 집 형광색 테두리의 각진 티켓. 모서리 둘이 잘려 있고 코드는 Anton 으로 크게 */
-.card {
-  position: relative; display: flex; align-items: center; gap: 14px; padding: 16px 16px 16px 20px;
-  background: linear-gradient(105deg, color-mix(in srgb, var(--store, #888) 15%, transparent), rgba(255, 255, 255, 0.03) 58%), var(--card);
-  border: 2px solid var(--store, var(--line-2)); box-shadow: inset 0 0 30px -16px var(--store, #fff), 0 0 18px -8px var(--store, #fff);
-  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+/* 쿠폰 한 장 — 카드가 아니라 진짜 표(票) 모양이다.
+   아래쪽에 절취선을 두고 좌우 가장자리를 반원으로 파낸다(mask). 절취선 아래 스텁은 그 집 형광색으로
+   꽉 채우고 코드를 검은 글자로 찍는다. 테두리를 두른 상자를 세로로 쌓으면 그게 카드 목록이고,
+   카드 목록은 어느 사이트에나 있다. 표는 이 이벤트에만 있다. */
+.ticket {
+  --notch: 10px;
+  --stub: 56px;
+  position: relative; display: grid;
+  background: linear-gradient(118deg, color-mix(in srgb, var(--store, #888) 17%, transparent), rgba(255, 255, 255, 0.03) 60%), var(--card);
+  filter: drop-shadow(0 0 16px color-mix(in srgb, var(--store, #fff) 26%, transparent));
+  /* 좌우 반원 노치 — 두 겹을 겹쳐 파낸다 */
+  -webkit-mask-image:
+    radial-gradient(circle var(--notch) at 0 calc(100% - var(--stub)), transparent 97%, #000 100%),
+    radial-gradient(circle var(--notch) at 100% calc(100% - var(--stub)), transparent 97%, #000 100%);
+  mask-image:
+    radial-gradient(circle var(--notch) at 0 calc(100% - var(--stub)), transparent 97%, #000 100%),
+    radial-gradient(circle var(--notch) at 100% calc(100% - var(--stub)), transparent 97%, #000 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
 }
-.card > * { position: relative; z-index: 1; }
-.body { flex: 1; min-width: 0; display: grid; gap: 5px; }
+/* 절취선 — 노치와 노치 사이를 잇는 점선 */
+.tear { position: absolute; left: var(--notch); right: var(--notch); bottom: var(--stub); height: 0; border-top: 2px dashed color-mix(in srgb, var(--store, #fff) 55%, transparent); }
+
+/* 표의 윗칸 — 매장·품목·사진 */
+.top { display: flex; align-items: center; gap: 13px; padding: 15px 16px 14px; border: 2px solid var(--store, var(--line-2)); border-bottom: 0; }
+.body { flex: 1; min-width: 0; display: grid; gap: 6px; }
 .badges { display: flex; flex-wrap: wrap; gap: 6px; }
-.name { font-family: var(--font-poster); font-size: 19px; font-weight: 400; line-height: 1.25; letter-spacing: -0.01em; }
-.free { display: inline-block; margin-left: 5px; padding: 1px 7px; background: var(--lime); color: #100c00; font-family: var(--font-label); font-size: 12px; letter-spacing: 0.06em; vertical-align: 2px; }
-.code { font-family: var(--font-label); font-size: 26px; line-height: 1.05; letter-spacing: 0.1em; color: #fff; text-shadow: 0 0 6px color-mix(in srgb, var(--store, #fff) 70%, transparent), 0 0 24px color-mix(in srgb, var(--store, #fff) 45%, transparent); }
-.meta { margin-top: 1px; font-size: 12.5px; color: var(--ink-2); }
-.thumb { flex: none; object-fit: cover; background: var(--bg-3); border: 1px solid var(--line-2); }
-.thumbCut { flex: none; object-fit: contain; background: var(--bg-3); padding: 6px; border: 1px solid var(--line-2); }
-.thumbEmpty { flex: none; display: grid; place-items: center; background: var(--bg-3); color: var(--store, var(--ink-3)); border: 1px solid var(--line-2); font-family: var(--font-label); }
-.lg { padding: 20px 18px 20px 22px; }
+.name { font-family: var(--font-poster); font-size: 19px; font-weight: 400; line-height: 1.25; letter-spacing: -0.012em; }
+.meta { font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+
+/* 표의 스텁 — 그 집 형광색으로 꽉 채우고 코드를 검은 글자로 */
+.stub { display: flex; align-items: center; justify-content: space-between; gap: 10px; height: var(--stub); padding: 0 16px; background: var(--store, var(--line-2)); color: #06030c; }
+.code { font-family: var(--font-label); font-size: 27px; line-height: 1; letter-spacing: 0.12em; color: #06030c; }
+.free { font-family: var(--font-poster); font-size: 15px; letter-spacing: -0.01em; color: rgba(6, 3, 12, 0.82); }
+
+.thumb { flex: none; object-fit: cover; background: var(--bg-3); }
+.thumbCut { flex: none; object-fit: contain; background: var(--bg-3); padding: 6px; }
+.thumbEmpty { flex: none; display: grid; place-items: center; background: var(--bg-3); color: var(--store, var(--ink-3)); font-family: var(--font-label); }
+
+.lg { --stub: 66px; }
+.lg .top { padding: 19px 18px 18px; }
 .lg .name { font-size: 23px; }
 .lg .code { font-size: 34px; }
-/* 쓴·지난 쿠폰 — 형광을 끈다 */
-.dim { border-color: var(--line-2); background: rgba(255, 255, 255, 0.03); box-shadow: none; }
-.dim .code { text-shadow: none; color: var(--ink-3); }
+
+/* 쓴·지난 표 — 형광을 끄고 스텁을 회색으로. 모양은 그대로 표다 */
+.dim { filter: none; background: rgba(255, 255, 255, 0.03); }
+.dim .top { border-color: var(--line-2); }
+.dim .tear { border-top-color: var(--line-2); }
+.dim .stub { background: #2a2338; color: var(--ink-3); }
+.dim .code { color: var(--ink-3); }
+.dim .free { color: var(--ink-3); }
 .dim .name { color: var(--ink-3); }
-.dim .free { background: var(--bg-3); color: var(--ink-2); }
 .dim :global(.badge-store) { background: var(--ink-3); box-shadow: none; }
 .dim .thumb, .dim .thumbCut { opacity: 0.45; filter: grayscale(1); }
-/* 상태 표시 — 오른쪽 위 각진 태그 */
-.stamp { position: absolute; right: 14px; top: 12px; z-index: 2; height: 24px; display: inline-flex; align-items: center; padding: 0 9px; background: rgba(255, 255, 255, 0.14); color: var(--ink); font-family: var(--font-label); font-size: 12px; letter-spacing: 0.08em; }
+
+/* 상태 표시 — 표 위에 비스듬히 찍은 도장 */
+.stamp { position: absolute; right: 12px; top: 11px; z-index: 2; height: 26px; display: inline-flex; align-items: center; padding: 0 10px; background: rgba(255, 255, 255, 0.14); color: var(--ink); font-family: var(--font-label); font-size: 12px; letter-spacing: 0.08em; transform: rotate(-4deg); }

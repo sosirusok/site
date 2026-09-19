@@ -1,10 +1,14 @@
 .root { display: grid; gap: 16px; }
 .state { display: grid; gap: 9px; justify-items: start; }
 .stateBadge { margin-bottom: 2px; }
-.info { padding: 16px; }
-.soon { color: var(--danger); }
+/* 표에 없는 사실 한 줄 — 상자도 표도 아니다. 라벨은 형광 작은 글자, 값은 흰 글자 */
+.issued, .record { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin: 0; padding: 12px 0 0; border-top: 2px solid var(--line-2); }
+.recordKey { font-family: var(--font-poster); font-size: 14px; color: var(--cyan); }
+.recordVal { font-weight: 400; font-size: 16px; color: var(--ink); }
+.note { margin: 8px 0 0; font-size: 14px; line-height: 1.5; color: var(--ink-2); }
+.soon { font-weight: 400; font-size: 14px; color: var(--danger); }
 .hint { line-height: 1.55; }
-.record { padding: 16px; }
+
 .actions { display: grid; gap: 10px; justify-items: center; }
 .actions > :global(.btn) { justify-self: stretch; }
 

@@ -19,14 +19,12 @@ export function StoreGallery({ store, photoUrl = null }: { store: Store; photoUr
             <figure className={styles.fig}>
               <span className={`duo duo-soft duo-food ${styles.frame}`}>
                 <Image src={p.src} alt={photoAlt(store.images, p)} fill sizes={i === 0 ? "300px" : "160px"} style={{ objectPosition: p.pos }} className={styles.img} />
-                <span className={styles.no} aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
               </span>
               <figcaption className={styles.cap}>{p.cap}</figcaption>
             </figure>
           </li>
         ))}
       </ul>
-      <p className="strip-hint" aria-hidden="true">사진 {photos.length}장 · 옆으로 넘겨 보세요</p>
       {photoUrl && <Button href={photoUrl} variant="ghost" className={styles.more}>네이버에서 사진 더 보기</Button>}
     </div>
   );

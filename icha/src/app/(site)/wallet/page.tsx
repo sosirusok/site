@@ -73,7 +73,7 @@ export default async function WalletPage() {
   const places = placeSheetStores();
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page} data-footer="short">
       <header className={styles.top}>
         <h1 className="h1">쿠폰함</h1>
         <p className={styles.topPhone}><span className={`num ${styles.topNum}`}>{maskPhone(session.phone)}</span><span className={styles.topHint}>사용 시 직원에게 이 화면을 보여 주세요</span></p>
@@ -91,8 +91,8 @@ export default async function WalletPage() {
 
           <section className={styles.sec} aria-labelledby="wallet-active">
             <div className={styles.head}>
-              <h2 id="wallet-active" className="h3">사용 가능 쿠폰</h2>
-              <span className={styles.count} aria-hidden="true">{String(active.length).padStart(2, "0")}</span>
+              <h2 id="wallet-active" className="h3">바로 쓸 쿠폰</h2>
+              <span className={styles.count}>{active.length}장</span>
             </div>
             {active.length > 0 ? <ActiveCoupons coupons={active} /> : <p className={`box small muted ${styles.none}`}>{relays.length > 0 ? "받은 쿠폰에서 사용 매장을 선택하면 여기에 표시됩니다." : "사용 가능한 쿠폰이 없습니다."}</p>}
           </section>
@@ -102,10 +102,7 @@ export default async function WalletPage() {
       )}
 
       <footer className={`${styles.sec} ${styles.foot}`}>
-        <ul className="notice" aria-label="이용 조건">
-          <li><DotLine items={[ruleLine(rules), BRAND.condition]} /></li>
-          <li>쿠폰 1장당 매장 1곳 · 발급 후 변경 불가</li>
-        </ul>
+        <p className="fineprint"><DotLine items={[ruleLine(rules), BRAND.condition, "쿠폰 1장당 매장 1곳"]} /></p>
         <LogoutButton className="btn btn-ghost btn-sm" />
       </footer>
     </div>

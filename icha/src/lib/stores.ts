@@ -261,16 +261,16 @@ export const STORES: Store[] = [
     menu: [
       // 맥주
       { name: "산토리 프리미엄 생맥주", price: 8900, description: "퍼펙트 푸어링 크리미 거품", image: `${T}/menu/suntory-creamy.png`, gift: true },
-      { name: "산토리 소프트 생맥주", price: 8900, description: "쫀쫀한 거품에 탄산이 또렷한 잔", image: `${T}/menu/suntory-soft.png` },
-      { name: "산토리 밀코 생맥주", price: 8900, description: "우유처럼 하얀 거품이 잔을 덮는 생맥주", image: `${T}/menu/suntory-milko.png` },
+      { name: "산토리 소프트 생맥주", price: 8900, image: `${T}/menu/suntory-soft.png` },
+      { name: "산토리 밀코 생맥주", price: 8900, image: `${T}/menu/suntory-milko.png` },
       { name: "도쿄 윗 비어", price: 8900, description: "직접 만든 호가든 스타일 밀맥주. 오렌지 슬라이스를 올려 냅니다", image: `${T}/menu/wheat-beer.png` },
       { name: "코젤다크 생맥주", price: 10900, description: "카라멜 풍미의 체코 흑맥주", image: `${T}/menu/kozel-dark.png` },
       // 콜드햄
       { name: "시그니처 콜드햄 플레이트", price: 13900, description: "비어슁켄·약드부어스트·본레스 수제 햄 12조각 · 대표 메뉴", image: `${T}/menu/signature-cold-ham-plate.png` },
       { name: "시그니처 햄세트", price: 28900, description: "생맥주 2잔 + 시그니처 콜드햄 플레이트", image: `${T}/menu/signature-ham-set.png` }, // 네이버 메뉴 기준(매장 메뉴판에는 없음)
       { name: "콜드햄 플레이트(비어슁켄)", price: 8900, description: "독일식 햄 한 종류 6조각", image: `${T}/menu/cold-ham-plate.png` },
-      { name: "콜드햄 플레이트(약드부어스트)", price: 8900, description: "한 종류 6조각", image: `${T}/menu/cold-ham-plate.png` },
-      { name: "콜드햄 플레이트(본레스)", price: 8900, description: "훈연 향이 있는 본레스햄 6조각", image: `${T}/menu/cold-ham-plate.png` },
+      { name: "콜드햄 플레이트(약드부어스트)", price: 8900, description: "한 종류 6조각", },
+      { name: "콜드햄 플레이트(본레스)", price: 8900, description: "훈연 향이 있는 본레스햄 6조각", },
       { name: "그릴부어스트 소시지", price: 9900, description: "수제 소시지에 스위트칠리 소스", image: `${T}/menu/grill-wurst.png` },
       // 가벼운 안주
       { name: "콜드햄 샐러드", price: 6900, description: "수제 햄을 올린 샐러드", image: `${T}/menu/cold-ham-salad.png` },
@@ -419,7 +419,7 @@ export const STORES: Store[] = [
       { name: "명란청양크림파스타", price: 16900, image: `${W}/menu/myeongran-cream-pasta.jpg` },
       // 과일·디저트
       { name: "와르르요거트(시그니처) 300g", price: 14500, description: "요거트에 초코쉘·벌집꿀·샤인머스켓·초코그래놀라", image: `${W}/menu/yogurt.jpg` },
-      { name: "와르르요거트(초코쉘)", price: 6500, image: `${W}/menu/yogurt.jpg`, gift: true },
+      { name: "와르르요거트(초코쉘)", price: 6500, gift: true },
       { name: "샤인머스켓크림치즈곶감말이", price: 14500, image: `${W}/menu/gotgam-mari.jpg` },
       { name: "무화과 크림치즈", price: 12500, image: `${W}/menu/muhwagwa-cream-cheese.jpg` }, // 네이버 메뉴 기준(7월 메뉴판에는 없음)
       { name: "계절과일플래터", price: 16500 },

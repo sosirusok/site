@@ -23,14 +23,10 @@ export function StoreVisit({ store }: { store: Store }) {
           <LazyStoreMap stores={[mapStore]} focusId={store.id} compact height={220} />
         </div>
       )}
-      <dl className="kv">
-        <dt>주소</dt><dd>{store.address}</dd>
-        <dt>지하철</dt><dd>{loc.subway}</dd>
-        <dt>층</dt><dd>{loc.floor}</dd>
-        <dt>주차</dt><dd>{loc.parking}</dd>
-        <dt>가는 길</dt><dd>{loc.directions}</dd>
-      </dl>
-      {links && <Button href={links.directions} variant="outline" block srSuffix={` — ${store.shortName}`}>네이버 지도 길찾기</Button>}
+      {/* 다섯 줄짜리 라벨-값 표를 쓰지 않는다 — 주소 한 줄, 짧은 사실 한 줄, 찾아오는 설명 한 문단 */}
+      <p className={styles.addr}>{store.address}</p>
+      <p className={styles.facts}>{[loc.subway, loc.floor, loc.parking].filter(Boolean).join(" · ")}</p>
+      <p className={styles.way}>{loc.directions}</p>
     </div>
   );
 }

@@ -9,8 +9,6 @@ export type Head = "no" | "band" | "slab";
 
 type Props = {
   id?: string;
-  /** 영문 라벨("STORES") — Anton 12px 대문자, 앞에 형광 막대 */
-  eyebrow?: string;
   /** 한글 간판 제목 — Black Han Sans 29~38px */
   title?: ReactNode;
   lead?: ReactNode;
@@ -31,17 +29,18 @@ type Props = {
 };
 
 /**
- * 섹션 — 머리는 [속 빈 거대 숫자] + [Anton 영문 라벨] + [Black Han Sans 한글 제목] + [라벤더 한 줄].
+ * 섹션 — 머리는 [속 빈 거대 숫자] + [Black Han Sans 한글 제목] + [라벤더 한 줄].
+ * 한글 제목 옆에 같은 뜻의 영문 라벨을 붙이지 않는다 — 정보가 0인 장식이고, 서면 술집 손님이 읽을 말도 아니다.
  * 숫자를 주지 않으면 한 칸 머리, flush 면 좌우 여백 없이 내용이 화면 끝까지 간다. 여백은 섹션마다 다르게 준다.
  */
-export function Section({ id, eyebrow, title, lead, alt = false, no, head, tone = "mag", flush = false, pt, pb, action, className = "", children }: Props) {
+export function Section({ id, title, lead, alt = false, no, head, tone = "mag", flush = false, pt, pb, action, className = "", children }: Props) {
   const hid = id ? `${id}-title` : undefined;
   const style: CSSProperties = { ["--tone" as string]: TONE[tone] };
   if (pt != null) style["--pt" as keyof CSSProperties] = `${pt}px` as never;
   if (pb != null) style["--pb" as keyof CSSProperties] = `${pb}px` as never;
   return (
     <section id={id} className={`section ${alt ? "section-alt" : ""} ${flush ? "section-flush" : ""} ${className}`} style={style} aria-labelledby={title ? hid : undefined}>
-      {(title || eyebrow) && ((head ?? (no ? "no" : "band")) === "slab" ? (
+      {title && ((head ?? (no ? "no" : "band")) === "slab" ? (
         /* ③ 색면형 머리 — 화면 폭 단색 판에 검은 제목만. 보라가 끊기는 자리 */
         <div className="section-head section-head-slab">
           {title && <h2 id={hid} className="d2">{title}</h2>}
@@ -53,7 +52,6 @@ export function Section({ id, eyebrow, title, lead, alt = false, no, head, tone 
         <div className="section-head">
           <span className="section-head-no" aria-hidden="true">{no}</span>
           <div className="section-head-text">
-            {eyebrow && <span className="eyebrow">{eyebrow}</span>}
             {title && <h2 id={hid} className="d2">{title}</h2>}
             {lead && <p className="lead">{lead}</p>}
           </div>
@@ -64,7 +62,6 @@ export function Section({ id, eyebrow, title, lead, alt = false, no, head, tone 
         <div className="section-head section-head-band">
           <div className="section-head-bandrow">
             {title && <h2 id={hid} className="d2">{title}</h2>}
-            {eyebrow && <span className="lbl section-head-tag">{eyebrow}</span>}
           </div>
           {lead && <p className="lead section-head-lead">{lead}</p>}
           {action && <div className="section-head-action">{action}</div>}

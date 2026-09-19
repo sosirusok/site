@@ -56,7 +56,7 @@ function LiveClock() {
 
 /** 계산할 때 받은 쿠폰은 꼬리표 없음, 매장이 따로 넣어 준 쿠폰만 */
 function kindText(c: Pick<TicketCoupon, "kind">): string | null {
-  return c.kind === "side" ? null : "매장 쿠폰";
+  return null;
 }
 
 /**
@@ -122,7 +122,7 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
   /* 사용한 쿠폰 */
   if (status === "used") {
     return (
-      <article className={styles.root} data-status="used" aria-live="polite">
+      <article className={styles.root} data-status="used" aria-live="polite" data-footer="short">
         <header className={styles.state}>
           <span className={`badge badge-naver badge-lg ${styles.stateBadge}`}>{fresh ? "사용 처리 완료" : "사용된 쿠폰"}</span>
           <h1 className="h1">{fresh ? "사용 처리되었습니다" : "이미 사용한 쿠폰입니다"}</h1>
@@ -130,12 +130,10 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
         <Ticket t={{ ...ticketData, meta: `${usedAt ? fmtMDHM(usedAt) : "방금"} 사용` }} size="lg" dim stamp="사용 완료" />
         {fresh && <LiveClock />}
         {fresh && <p className={`small muted ${styles.hint}`}>직원 확인용 화면입니다. 위 시계는 현재 시각으로 움직이며 캡처 화면에서는 멈춥니다.</p>}
-        <dl className={`kv card card-pad ${styles.record}`}>
-          <dt>사용 시각</dt><dd className="num">{usedAt ? fmtDateTimeSec(usedAt) : "방금"}</dd>
-          <dt>매장</dt><dd>{store.shortName}</dd>
-          <dt>품목</dt><dd>{coupon.menuName}</dd>
-          <dt>코드</dt><dd className="mono">{coupon.code}</dd>
-        </dl>
+        <p className={styles.record}>
+          <span className={styles.recordKey}>사용 시각</span>
+          <b className={`num ${styles.recordVal}`}>{usedAt ? fmtDateTimeSec(usedAt) : "방금"}</b>
+        </p>
         <div className={styles.actions}>
           {store.placeReview && <Button href={store.placeReview} variant="naver" size="lg" block>네이버 리뷰 남기기</Button>}
           <Link href="/wallet" className="link">쿠폰함으로</Link>
@@ -147,7 +145,7 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
   if (status === "expired" || status === "void") {
     const expired = status === "expired";
     return (
-      <article className={styles.root} data-status={status}>
+      <article className={styles.root} data-status={status} data-footer="short">
         <header className={styles.state}>
           <span className={`badge badge-lg ${styles.stateBadge}`}>{expired ? "기간 만료" : "취소됨"}</span>
           <h1 className="h1">{expired ? "기간이 지난 쿠폰입니다" : "취소된 쿠폰입니다"}</h1>
@@ -168,23 +166,24 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
 
   /* 쓸 수 있는 쿠폰 */
   return (
-    <article className={styles.root} data-status="active">
+    <article className={styles.root} data-status="active" data-footer="short">
       <header className={styles.state}>
         <h1 className="h1">{store.shortName} 쿠폰</h1>
-        <p className="lead">메인안주 1개 주문 시 직원에게 이 화면을 보여 주세요.</p>
+        <p className="lead">직원에게 이 화면을 보여 주세요.</p>
       </header>
       <Ticket t={ticketData} size="lg" stamp={left <= 7 ? `${Math.max(left, 0)}일 남음` : null} />
 
-      <dl className={`kv card card-pad ${styles.info}`}>
-        <dt>유효기간</dt><dd className="num">{fmtMD(coupon.expiresAt)}까지{left <= 7 && <b className={styles.soon}> · {Math.max(left, 0)}일 남음</b>}</dd>
-        <dt>조건</dt><dd>메인안주 1개 주문 시 · 테이블당 1회</dd>
-        <dt>발급</dt><dd className="num">{fmtMDHM(coupon.issuedAt)}</dd>
-        {coupon.note && coupon.kind !== "side" && <><dt>메모</dt><dd>{coupon.note}</dd></>}
-      </dl>
+      {/* 유효기간·조건은 위 표(票)에 이미 찍혀 있다. 여기서는 표에 없는 것만 한 줄로 적는다 */}
+      <p className={styles.issued}>
+        <span className={styles.recordKey}>발급</span>
+        <b className={`num ${styles.recordVal}`}>{fmtMDHM(coupon.issuedAt)}</b>
+        {left <= 7 && <b className={styles.soon}>{Math.max(left, 0)}일 남음</b>}
+      </p>
+      {coupon.note && coupon.kind !== "side" && <p className={styles.note}>{coupon.note}</p>}
 
-      <ul className="notice" aria-label="안내">
+      <ul className="backprint" aria-label="안내" data-store={store.id}>
         <li>직원 확인 후 아래 버튼을 눌러 주세요. 사용 처리 후에는 취소할 수 없습니다.</li>
-        <li>쿠폰은 {store.shortName}에서만 쓸 수 있습니다. 다른 쿠폰·할인과 함께 쓸 수 없습니다.</li>
+        <li>{store.shortName} 전용입니다. 다른 쿠폰·할인과 함께 쓸 수 없습니다.</li>
       </ul>
       {store.placeBooking && <Button href={store.placeBooking} variant="outline" block srSuffix={` — ${store.shortName}`}>{store.shortName} 네이버 예약</Button>}
 

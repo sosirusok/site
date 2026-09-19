@@ -1,3 +1,3 @@
 /* 아래 고정 바(.sticky-bar)까지의 여백은 .app:has(.sticky-bar) 가 준다. 화면을 채워서 푸터가 가운데로 올라오지 않게 */
-.page { padding: 28px var(--gutter) 16px; display: grid; gap: 20px; align-content: start; min-height: calc(100dvh - var(--header-h) - var(--tabbar-h) - var(--stickybar-h) - 40px); }
+.page { padding: 28px var(--gutter) 16px; display: grid; gap: 20px; align-content: start; }
 .head { display: grid; gap: 8px; }

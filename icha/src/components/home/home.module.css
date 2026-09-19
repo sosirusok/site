@@ -20,57 +20,59 @@
 .introLead { max-width: 33em; }
 
 .bookBtn { margin-top: 2px; }
+.rule { margin-top: 6px; }
 .subCtas { display: flex; align-items: center; gap: 14px; margin-top: -4px; }
 .subCtas > :global(.btn-outline) { flex: none; min-width: 132px; }
 
-/* 조건 세 줄 — 형광 라벨이 붙은 스펙 시트. 줄마다 색이 다르다(회색 한 톤 금지) */
-.facts { display: grid; margin-top: 8px; border-top: 2px solid var(--line-2); }
-.fact { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding: 13px 0 13px 10px; border-bottom: 1px solid var(--line); border-left: 3px solid var(--fc, var(--mag)); }
-.toneMag { --fc: var(--mag); }
-.toneCyan { --fc: var(--cyan); }
-.toneLime { --fc: var(--lime); }
-.factKey { display: grid; gap: 2px; }
-.factEn { font-family: var(--font-label); font-size: 12px; line-height: 1; letter-spacing: 0.18em; text-transform: uppercase; color: var(--fc); text-shadow: 0 0 10px color-mix(in srgb, var(--fc) 55%, transparent); }
-.factKo { font-size: 12px; font-weight: 700; color: var(--ink-3); }
-.factVal { font-size: 14.5px; line-height: 1.5; color: var(--ink); }
-/* 네 줄 중 쿠폰 줄 하나만 라임 채움으로 올린다 — 같은 모양 네 번이면 표가 되고, 표는 읽히지 않는다 */
-.factHi { background: var(--brand-dim); border-left-width: 5px; padding-top: 15px; padding-bottom: 15px; }
-.factHi .factVal { font-family: var(--font-poster); font-size: 17px; line-height: 1.35; color: var(--lime); }
 
 /* ══ 참여 매장 — 전면 플라이어 패널 ══ */
 .panels { display: grid; }
 
-/* 패널 사이 — 형광 세로 막대 + 도보 시간(한글/영문 두 줄) */
-.walk { display: grid; justify-items: center; gap: 7px; padding: 20px 0 22px; }
-.walkBar { width: 2px; height: 20px; background: linear-gradient(var(--store), transparent); box-shadow: 0 0 10px var(--store); }
-.walkText { font-family: var(--font-poster); font-size: 17px; line-height: 1; color: var(--store); text-shadow: 0 0 14px color-mix(in srgb, var(--store) 60%, transparent); }
-.walkEn { font-family: var(--font-label); font-size: 12px; letter-spacing: 0.3em; color: var(--ink-3); }
+/* 집과 집 사이 — 세로 막대 + 가운데 정렬을 두 번 쓰지 않는다. 다음 사진 왼쪽 위로 비스듬히 얹는다 */
+.walk { position: relative; z-index: 2; margin-bottom: -20px; padding: 0 var(--gutter); pointer-events: none; }
+.walkText { display: inline-block; padding: 5px 11px; background: var(--store); color: #06030c; font-family: var(--font-poster); font-size: 16px; line-height: 1.1; transform: rotate(-2.5deg); box-shadow: 0 0 22px -6px var(--store); }
+.walk[data-shape="c"] { text-align: right; }
+.walk[data-shape="c"] .walkText { transform: rotate(2deg); }
 
 .panel { position: relative; }
-/* 전면 사진 — 듀오톤(globals .duo) */
-.shot { position: relative; aspect-ratio: 4 / 3; overflow: hidden; }
+/* 전면 사진 — 집마다 비율이 다르다. 같은 비율 세 번이면 그게 격자다 */
+.shot { position: relative; overflow: hidden; }
+.panel[data-shape="a"] .shot { aspect-ratio: 4 / 5; }
+.panel[data-shape="b"] .shot { aspect-ratio: 1 / 1; }
+.panel[data-shape="c"] .shot { aspect-ratio: 16 / 10; }
 .shotImg { object-fit: cover; }
-/* 속 빈 거대 차수 숫자 — 사진 위 왼쪽 위. 짝수 패널은 오른쪽 */
-.shotNo { top: 8px; left: 12px; font-family: var(--font-label); font-size: 104px; line-height: 0.74; color: transparent; -webkit-text-stroke: 2px var(--store); opacity: 0.95; filter: drop-shadow(0 0 16px color-mix(in srgb, var(--store) 70%, transparent)); }
-.panelFlip .shotNo { left: auto; right: 12px; }
-/* 상호 — 사진 아래 왼쪽. Black Han Sans 로 크게, 흰 글자 + 색 번짐 */
-.shotText { left: var(--gutter); right: var(--gutter); bottom: 14px; display: grid; gap: 7px; }
-.panelFlip .shotText { text-align: right; }
-.shotDrink { justify-self: start; padding: 4px 9px; background: var(--store); color: #06030c; font-size: 13px; letter-spacing: 0.14em; text-shadow: none; box-shadow: 0 0 20px -4px var(--store); }
-.shotName { color: #fff; text-shadow: 0 0 3px rgba(0, 0, 0, 0.9), 0 0 16px rgba(255, 46, 136, 0.75), 0 0 44px rgba(122, 0, 255, 0.6); }
+/* 속 빈 거대 차수 숫자 — 화면 밖으로 흘려 잘리게 한다. 좌우는 집마다 반대 */
+.shotNo { top: 4px; font-family: var(--font-label); font-size: 128px; line-height: 0.74; color: transparent; -webkit-text-stroke: 2px var(--store); filter: drop-shadow(0 0 16px color-mix(in srgb, var(--store) 70%, transparent)); }
+.panel[data-shape="a"] .shotNo { left: -26px; }
+.panel[data-shape="b"] .shotNo { right: -22px; }
+.panel[data-shape="c"] .shotNo { left: -18px; top: auto; bottom: -18px; }
+/* 상호 — 사진 경계를 물고 내려와 아래 띠를 침범한다(사진 안에 갇히지 않는다) */
+.shotText { position: relative; z-index: 2; display: grid; gap: 7px; margin-top: -40px; padding: 0 var(--gutter); }
+.panel[data-shape="b"] .shotText { justify-items: end; text-align: right; }
+.panel[data-shape="c"] .shotText { margin-top: -30px; margin-right: -26px; }
+.shotDrink { justify-self: start; padding: 4px 9px; background: var(--store); color: #06030c; font-family: var(--font-poster); font-size: 14px; letter-spacing: -0.01em; box-shadow: 0 0 20px -4px var(--store); }
+.panel[data-shape="b"] .shotDrink { justify-self: end; }
+.shotName { color: #fff; text-shadow: 0 0 3px rgba(5, 2, 8, 0.95), 0 0 18px rgba(255, 46, 136, 0.7); }
+.panel[data-shape="c"] .shotName { white-space: nowrap; }
 
 /* 사진 바로 아래 영업 상태 띠 — 그 집 색 3px 왼쪽 기둥 */
-.statusBar { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; padding: 9px var(--gutter); background: rgba(255, 255, 255, 0.05); border-left: 3px solid var(--store); font-size: 12.5px; }
+.statusBar { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; padding: 10px var(--gutter); background: rgba(255, 255, 255, 0.05); border-top: 2px solid var(--store); font-size: 13px; }
 .statusBadge { background: transparent; border-left: 0; padding: 0; color: var(--ink); font-family: var(--font-sans); font-weight: 700; font-size: 12.5px; letter-spacing: 0; }
 .statusHours { color: var(--lime); font-weight: 700; }
 .statusWalk { color: var(--ink-3); }
 
 .panelBody { display: grid; gap: 14px; padding: 16px var(--gutter) 6px; }
 .giftLine { display: grid; gap: 5px; }
-.giftLabel { color: var(--mag); text-shadow: 0 0 10px rgba(255, 46, 136, 0.7); }
+.giftLabel { font-family: var(--font-poster); font-size: 14px; color: var(--mag); }
+/* 2차 집만 혜택을 화면 폭 노란 띠로 뒤집는다 — 세 번 같은 줄이면 줄이 안 읽힌다 */
+.panel[data-shape="b"] .giftLine { margin: 0 calc(var(--gutter) * -1); padding: 13px var(--gutter) 14px; background: var(--yellow); }
+.panel[data-shape="b"] .giftLabel { color: rgba(11, 0, 17, 0.62); }
+.panel[data-shape="b"] .giftWhat { color: #0b0011; text-shadow: none; }
+/* 3차 집은 혜택을 제일 크게 */
+.panel[data-shape="c"] .giftWhat { font-size: clamp(23px, 6.6vw, 28px); }
 .giftWhat { font-family: var(--font-poster); font-size: clamp(20px, 5.8vw, 24px); line-height: 1.18; letter-spacing: -0.012em; }
-.panelNotice { font-size: 13px; line-height: 1.5; color: var(--ink-2); border-left: 3px solid var(--mag); padding-left: 10px; }
-.panelNotice b { color: var(--mag); margin-right: 4px; }
+.panelNotice { font-size: 14px; line-height: 1.55; color: var(--ink-2); }
+.panelNotice b { font-weight: 400; color: var(--mag); margin-right: 5px; }
 
 /* 가로 스크롤 사진 스트립 — 패널 안에서 화면 끝까지 흘린다 */
 .thumbs { margin: 0 calc(var(--gutter) * -1); }
@@ -84,14 +86,10 @@
 .steps { display: grid; gap: 2px; }
 .step { display: grid; grid-template-columns: 62px 1fr; align-items: start; column-gap: 12px; padding: 15px 0; border-bottom: 1px solid var(--line); }
 .step:last-child { border-bottom: 0; }
-.step[data-tone="mag"] { --sc: var(--mag); }
-.step[data-tone="cyan"] { --sc: var(--cyan); }
-.step[data-tone="lime"] { --sc: var(--lime); }
-.stepNo { font-size: 52px; color: transparent; -webkit-text-stroke: 2px var(--sc); filter: drop-shadow(0 0 10px color-mix(in srgb, var(--sc) 55%, transparent)); }
+.stepNo { font-size: 52px; color: transparent; -webkit-text-stroke: 2px var(--lime); filter: drop-shadow(0 0 10px rgba(204, 255, 0, 0.5)); }
 .stepBody { display: grid; gap: 4px; min-width: 0; }
 .stepTitle { font-family: var(--font-poster); font-size: 19px; line-height: 1.28; letter-spacing: -0.01em; color: #fff; }
-.stepSub { font-size: 13px; line-height: 1.55; color: var(--ink-2); }
-.rules { margin-top: 22px; }
+.stepSub { font-size: 14px; line-height: 1.55; color: var(--ink-3); }
 .walletBtn { margin-top: 18px; }
 
 /* ══ 오시는 길 ══ */
@@ -107,13 +105,11 @@
 .searchLine { padding: 16px var(--gutter) 0; }
 
 /* ══ 자주 묻는 질문 ══ */
-.faq { display: grid; }
-.faqItem { border-bottom: 1px solid var(--line); scroll-margin-top: 72px; }
-.faqQ { display: grid; grid-template-columns: auto 1fr auto; align-items: center; column-gap: 11px; min-height: 58px; padding: 13px 0; cursor: pointer; }
-.faqNo { font-family: var(--font-label); font-size: 17px; letter-spacing: 0.04em; color: var(--mag); text-shadow: 0 0 12px rgba(255, 46, 136, 0.7); }
-.faqText { font-size: 15px; font-weight: 700; line-height: 1.45; color: #fff; }
 /* 여닫는 표시 — 선 아이콘이 아니라 Anton 의 + / − */
-.faqToggle { display: inline-flex; align-items: center; justify-content: center; align-self: center; width: 44px; height: 44px; margin-right: -12px; font-family: var(--font-label); font-size: 22px; line-height: 1; color: var(--lime); }
-.faqToggle::before { content: "+"; }
-.faqItem[open] .faqToggle::before { content: "−"; color: var(--cyan); }
-.faqA { padding: 0 0 18px 28px; font-size: 14px; line-height: 1.7; color: var(--ink-2); border-left: 2px solid rgba(255, 46, 136, 0.35); margin-left: 6px; }
+
+/* 홈의 이용 방법 — 안내 화면과 같은 블록을 두 번 쓰지 않는다. 네 단계를 가로로 흘리는 띠 하나 */
+.flow { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; counter-reset: none; }
+.flowStep { display: grid; grid-template-columns: 30px 1fr; align-items: baseline; column-gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); }
+.flowStep:last-child { border-bottom: 0; }
+.flowNo { font-family: var(--font-label); font-size: 20px; line-height: 1; color: var(--lime); }
+.flowText { font-family: var(--font-poster); font-size: 17px; line-height: 1.35; letter-spacing: -0.01em; color: var(--ink); }

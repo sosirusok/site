@@ -11,18 +11,15 @@ export const metadata: Metadata = { title: "로그인" };
  */
 export default function LoginPage() {
   return (
-    <div className={styles.page}>
+    <div className={styles.page} data-footer="short">
       <header className={styles.top}>
         <h1 className="h1">휴대폰 번호로 로그인</h1>
-        <p className="lead">계산할 때 직원에게 말씀하신 휴대폰 번호를 입력하시면 쿠폰함으로 이동합니다. 인증번호는 없습니다.</p>
+        <p className="lead">계산할 때 댄 번호 그대로 넣으시면 됩니다. 인증번호 없습니다.</p>
       </header>
       <section className={`card card-pad ${styles.card}`}>
         <PhoneForm />
       </section>
-      <ul className="notice" aria-label="안내">
-        <li>휴대폰 번호는 쿠폰 확인 용도로만 사용하며 문자는 발송하지 않습니다.</li>
-        <li>쿠폰은 계산 시 직원이 번호로 발급합니다. 이 화면에서는 발급되지 않습니다.</li>
-      </ul>
+      <p className="fineprint">번호는 쿠폰 찾는 데만 씁니다. 문자 안 보냅니다.</p>
       <GiftLines />
     </div>
   );

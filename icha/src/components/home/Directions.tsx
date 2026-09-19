@@ -31,7 +31,7 @@ export function Directions() {
     id: st.id, name: st.name, shortName: st.shortName, drink: st.drink, lat: st.lat!, lng: st.lng!, address: st.address, naverPlaceId: st.naverPlaceId,
   }));
   return (
-    <Section id="map" tone="lime" eyebrow="Map" title="오시는 길" lead={`${walkLine()} · 세 매장 모두 50m 이내`} alt flush pt={54} pb={34}>
+    <Section id="map" tone="lime" title="오시는 길" lead={`${walkLine()} · 세 매장 모두 50m 이내`} alt flush pt={54} pb={34}>
       <div className={s.mapWrap}>
         <LazyStoreMap stores={mapStores} compact hidePanel height={230} />
       </div>

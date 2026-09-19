@@ -2,3 +2,8 @@
 /* 지도 — 카드가 아니라 위아래 형광 경계만 */
 .map { position: relative; margin: 0 calc(var(--gutter) * -1); border-top: 2px solid var(--cyan); border-bottom: 2px solid var(--mag); box-shadow: 0 0 26px -8px rgba(33, 240, 255, 0.6); }
 .map :global(.leaflet-control-zoom) { display: none; }
+
+/* 찾아오는 법 — 표가 아니라 줄. 주소가 제일 크고, 짧은 사실이 그 아래, 설명이 마지막 */
+.addr { margin: 0; font-family: var(--font-poster); font-size: clamp(19px, 5.4vw, 22px); line-height: 1.3; letter-spacing: -0.012em; color: var(--ink); }
+.facts { margin: 7px 0 0; font-size: 15px; line-height: 1.5; color: var(--cyan); }
+.way { margin: 10px 0 0; padding-left: 13px; border-left: 2px solid var(--line-2); font-size: 15px; line-height: 1.6; color: var(--ink-3); }

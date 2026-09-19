@@ -7,7 +7,5 @@
 .frame { position: relative; display: block; width: 100%; aspect-ratio: 3 / 4; overflow: hidden; border: 1px solid var(--line-2); }
 .wide .frame { aspect-ratio: 5 / 4; }
 .img { object-fit: cover; }
-/* 사진 위 Anton 번호 */
-.no { position: absolute; z-index: 3; left: 8px; top: 4px; font-family: var(--font-label); font-size: 30px; line-height: 1; color: transparent; -webkit-text-stroke: 1.5px var(--store); filter: drop-shadow(0 0 10px color-mix(in srgb, var(--store) 60%, transparent)); }
 .cap { font-size: 13px; line-height: 1.4; color: var(--ink-3); white-space: normal; }
 .more { margin: 0 var(--gutter); justify-self: start; }

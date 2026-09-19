@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Directions } from "@/components/home/Directions";
-import { FaqTeaser } from "@/components/home/FaqTeaser";
 import { Hero, HeroMarquee } from "@/components/home/Hero";
 import { HowToSteps } from "@/components/home/HowToSteps";
 import { StoreCards } from "@/components/home/StoreCards";
@@ -35,9 +34,8 @@ export default async function HomePage() {
         <p className={styles.notice}><b className={styles.noticeTag}>공지</b>{rules.notice || "이벤트 기간이 아닙니다"}</p>
       )}
       <StoreCards now={now} rules={rules} gifts={gifts} />
-      <HowToSteps rules={rules} />
+      <HowToSteps rules={rules} compact />
       <Directions />
-      <FaqTeaser rules={rules} />
     </>
   );
 }

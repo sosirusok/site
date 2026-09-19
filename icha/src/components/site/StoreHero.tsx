@@ -51,21 +51,21 @@ export function StoreHero({ store }: { store: Store }) {
           <p className={styles.rating}>
             <span className={styles.score}>{r.score.toFixed(2)}</span>
             <span className={styles.ratingBody}>
-              <span className={styles.stars} aria-hidden="true">★★★★★</span>
               <span className={styles.ratingSub}>네이버 방문자 리뷰 {r.count.toLocaleString("ko-KR")}개</span>
             </span>
           </p>
         )}
-        <dl className={`kv ${styles.kv}`}>
-          <dt>영업시간</dt>
-          <dd className="num">{today}{otherDays.length > 0 && <span className={styles.other}>{otherDays.join(" · ")}</span>}</dd>
-          <dt>주소</dt>
-          <dd>{store.address}</dd>
-        </dl>
-        {/* id 는 아래 고정 바가 본다 — 이 줄이 화면에 보이는 동안에는 고정 바를 내려 둔다(초록 예약 버튼이 한 화면에 둘 보이지 않게) */}
-        <div className="btn-row" id="hero-cta">
-          {links && <Button href={links.booking} variant="naver" srSuffix={` — ${store.shortName}`}>네이버 예약</Button>}
-          {links && <Button href={links.home} variant="outline" srSuffix={` — ${store.shortName}`}>플레이스</Button>}
+        {/* 오늘 영업시간은 바로 위 형광 띠에 이미 있다. 여기서는 다른 요일과 주소만, 표가 아니라 줄로 */}
+        {otherDays.length > 0 && <p className={`num ${styles.other}`}>{otherDays.join(" · ")}</p>}
+        <p className={styles.addr}>
+          {store.address}
+          {links && <> <a href={links.directions} target="_blank" rel="noopener noreferrer" className={styles.addrLink}>길찾기<span className="sr-only"> — {store.shortName}</span></a></>}
+        </p>
+        {/* 예약·길찾기·전화는 아래 고정 바에 있다. 여기서는 플레이스로 가는 텍스트 링크 하나만 —
+            섹션마다 CTA 를 하나씩 달면 실제 가게 페이지보다 버튼 밀도가 높아진다.
+            id 는 고정 바가 본다(이 줄이 보이는 동안에는 바를 내려 둔다). */}
+        <div id="hero-cta">
+          {links && <a href={links.home} target="_blank" rel="noopener noreferrer" className={styles.placeLink}>네이버 플레이스에서 보기<span className="sr-only"> — {store.shortName}</span></a>}
         </div>
       </div>
     </header>

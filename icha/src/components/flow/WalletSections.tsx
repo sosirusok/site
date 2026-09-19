@@ -37,7 +37,7 @@ export type WalletRelay = {
 
 /** 쿠폰 종류 꼬리표 — 계산할 때 받은 쿠폰은 없음, 매장이 따로 넣어 준 쿠폰만 */
 function kindText(c: Pick<WalletCoupon, "kind">): string | null {
-  return c.kind === "side" ? null : "매장 쿠폰";
+  return null;
 }
 
 /* 받은 쿠폰 — 카드 한 장씩(발급 매장 배지 · 안내 · [사용 매장 선택하기]) */
@@ -45,15 +45,16 @@ export function RelayCards({ relays }: { relays: WalletRelay[] }) {
   return (
     <section className={styles.sec} aria-labelledby="wallet-relay">
       <div className={styles.head}>
-        <h2 id="wallet-relay" className="h3">받은 쿠폰 <span className={styles.count}>{relays.length}</span></h2>
+        <h2 id="wallet-relay" className="h3">쓸 집 고르기 <span className={styles.count}>{relays.length}장</span></h2>
         <p className="small muted">사용할 매장을 먼저 선택해 주세요</p>
       </div>
       <ul className={styles.relays}>
+        {/* 상자가 아니다 — 매장 색면 한 줄 아래 설명과 버튼. 쿠폰 표와 모양이 겹치면 둘 다 카드로 읽힌다 */}
         {relays.map((r) => (
-          <li key={r.id} className={`card card-pad ${styles.relay}`} data-store={r.store.id}>
-            <p className={styles.relayHead}><span className="badge badge-store">{r.store.shortName}</span><span className={styles.relayTitle}>발급 쿠폰</span></p>
-            <p className={`small muted ${styles.relaySub}`}><DotLine items={[`사용 매장 ${r.giftNames.join("·")} 중 1곳`, `${fmtMD(r.deadline)}까지 선택`]} /></p>
-            <Button href={`/pick/${r.id}`} variant="primary" block srSuffix={` — ${r.store.shortName} 발급 쿠폰`}>사용 매장 선택하기</Button>
+          <li key={r.id} className={styles.relay} data-store={r.store.id}>
+            <p className={styles.relayHead}>{r.store.shortName}에서 받음</p>
+            <p className={styles.relaySub}><DotLine items={[`${r.giftNames.join("·")} 중 한 곳`, `${fmtMD(r.deadline)}까지`]} /></p>
+            <Button href={`/pick/${r.id}`} variant="primary" block srSuffix={` — ${r.store.shortName}에서 받은 쿠폰`}>쓸 집 고르기</Button>
           </li>
         ))}
       </ul>
@@ -83,12 +84,12 @@ export function ActiveCoupons({ coupons }: { coupons: WalletCoupon[] }) {
   );
 }
 
-/* 지난 쿠폰: 사용 / 만료 / 취소 — 접어 둔다 */
+/* 다 쓴 쿠폰: 사용 / 만료 / 취소 — 접어 둔다 */
 export function PastCoupons({ coupons }: { coupons: WalletCoupon[] }) {
   return (
     <details id="wallet-past" className={styles.past}>
       <summary className={styles.pastSummary}>
-        <span>지난 쿠폰 {coupons.length}장</span>
+        <span>다 쓴 쿠폰 {coupons.length}장</span>
         <span className={styles.pastIcon} aria-hidden="true" />
       </summary>
       <ul className={styles.stack}>
@@ -111,12 +112,11 @@ export function PastCoupons({ coupons }: { coupons: WalletCoupon[] }) {
 /* 아무것도 없을 때 — 아이콘, 제목, 설명, [예약하기] */
 export function EmptyWallet({ stores }: { stores: PlaceSheetStore[] }) {
   return (
-    <div className={`card ${styles.empty}`}>
-      <span className={styles.emptyIcon} aria-hidden="true">
-        <span aria-hidden="true">0</span>
-      </span>
-      <p className="h3">받은 쿠폰이 없습니다</p>
-      <p className="small muted">계산 시 직원에게 휴대폰 번호를 말씀하시면 이 번호로 쿠폰이 발급됩니다.</p>
+    <div className={styles.empty}>
+      {/* 가운데 정렬 아이콘·제목·설명·버튼 세트를 쓰지 않는다 — 어느 AI 템플릿에서나 나오는 빈 화면이다.
+          대신 빈 표 자리를 그대로 보여 준다: 점선으로 뜯긴 자리에 "아직 없음" 한 마디. */}
+      <p className={styles.emptySlot} aria-hidden="true">아직 없음</p>
+      <p className={styles.emptyLine}>계산할 때 번호만 말씀하시면 이 번호로 쌓입니다.</p>
       <PlaceButton stores={stores} variant="naver" className={styles.emptyBtn}>매장 예약하기</PlaceButton>
       <GiftLines title="쿠폰으로 받으시는 혜택" />
     </div>

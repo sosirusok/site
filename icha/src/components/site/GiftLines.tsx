@@ -15,9 +15,8 @@ export function GiftLines({ title = "쿠폰으로 받으시는 혜택" }: { titl
       <ul className="giftlines-list">
         {stores.map((s) => (
           <li key={s.id} className="giftlines-item" data-store={s.id}>
-            <span className="giftlines-no" aria-hidden="true">{String(s.course.n).padStart(2, "0")}</span>
             <span className="giftlines-body">
-              <Link href={`/stores/${s.id}`} className="giftlines-name">{s.shortName}</Link>
+              <Link href={`/stores/${s.id}`} className="giftlines-name">{s.course.n}차 {s.shortName}</Link>
               <span className="giftlines-what">{s.benefitLabel} 무료</span>
             </span>
           </li>

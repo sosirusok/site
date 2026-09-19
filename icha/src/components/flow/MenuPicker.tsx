@@ -111,12 +111,13 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
           const on = selected?.store.id === s.id;
           const none = s.items.length === 0;
           return (
-            <div key={s.id} className={`card ${styles.card}`} data-on={on || undefined} data-store={s.id}>
-              <div className={styles.cardHead}>
-                <span className="badge badge-store">{s.course.n}차</span>
-                <span className={styles.storeName}>{s.shortName}</span>
-                <span className="small muted">{s.drink}</span>
-              </div>
+            <div key={s.id} className={styles.group} data-on={on || undefined} data-store={s.id}>
+              {/* 매장 이름은 상자의 머리가 아니라 화면 폭을 가로지르는 색면이다 — 상자를 세로로 쌓으면 그게 카드 목록이다 */}
+              <h2 className={styles.groupHead}>
+                <span className={styles.groupNo} aria-hidden="true">{String(s.course.n).padStart(2, "0")}</span>
+                <span className={styles.groupName}>{s.shortName}</span>
+                <span className={styles.groupDrink}>{s.drink}</span>
+              </h2>
               {none ? (
                 <p className={`small muted ${styles.none}`}>혜택 준비 중입니다. 다른 매장을 선택해 주세요.</p>
               ) : (
@@ -148,10 +149,6 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
           );
         })}
       </div>
-      <ul className="notice" aria-label="안내">
-        <li>쿠폰 1장당 매장 1곳 · 발급 후 변경 불가</li>
-        <li>유효기간 {couponValidDays}일 · 메인안주 1개 주문 시 직원에게 제시</li>
-      </ul>
 
       {/* 아래 고정 바(탭 위) — [쿠폰 발급]. 고른 매장 이름은 버튼 글자에 */}
       <div className="fixed-col sticky-bar">

@@ -3,18 +3,15 @@
    예약 칸을 초록으로 채워 두면 어느 화면에서나 그 칸이 '지금 여기'처럼 읽힌다. */
 .bar { bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(4, 1fr); height: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: linear-gradient(0deg, #100622, #06030c 78%); }
 .bar::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, var(--mag), #7a00ff 38%, var(--cyan) 70%, var(--lime)); box-shadow: 0 0 14px rgba(255, 46, 136, 0.6); }
-.item { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 44px; color: var(--ink-3); }
-.en { font-family: var(--font-label); font-size: 11px; line-height: 1; letter-spacing: 0.22em; }
-.ko { font-family: var(--font-poster); font-size: 15px; line-height: 1; letter-spacing: -0.01em; }
+.item { position: relative; display: flex; align-items: center; justify-content: center; min-height: 44px; color: var(--ink-3); }
+.ko { font-family: var(--font-poster); font-size: 17px; line-height: 1; letter-spacing: -0.01em; }
 .item:active { background: rgba(255, 255, 255, 0.07); }
 
 /* 지금 있는 칸 — 칸 전체가 라임 판이 된다. 네 칸 중 색면은 언제나 이 하나뿐이다 */
 .active { background: var(--lime); color: #0b0011; box-shadow: 0 0 22px -6px var(--lime); }
-.active .en { color: rgba(11, 0, 17, 0.72); }
 .active:active { background: #b8e600; }
 
 /* 예약 — 색면 대신 초록 글자 + 칸 위쪽 2px 초록선 */
 .book { color: var(--naver); }
-.book .en { color: rgba(3, 199, 90, 0.8); }
 .book::after { content: ""; position: absolute; top: 2px; left: 0; right: 0; height: 2px; background: var(--naver); box-shadow: 0 0 12px rgba(3, 199, 90, 0.75); }
 .book:active { background: rgba(3, 199, 90, 0.14); }

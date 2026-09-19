@@ -1,5 +1,10 @@
-/* 가운데 한 덩어리 — 화면을 채워서 푸터가 위로 올라오지 않게 */
-.wrap { display: grid; justify-items: center; align-content: center; text-align: center; gap: 10px; padding: 48px var(--gutter); min-height: calc(100dvh - var(--header-h) - var(--tabbar-h)); }
-.code { font-size: 14px; }
-.btn { margin-top: 14px; min-width: 160px; }
+/* 없는 주소·오류 — 가운데 정렬로 화면을 비워 두지 않는다.
+   거대한 숫자가 왼쪽 가장자리 밖으로 흘러나가고, 그 위에 글자가 겹친다. 내용 높이로 끝내고 푸터를 올려 붙인다. */
+.wrap { position: relative; display: grid; justify-items: start; gap: 8px; padding: 30px var(--gutter) 40px; overflow: hidden; }
+/* 화면 왼쪽 밖으로 흘러나가는 속 빈 숫자 — 장식이 아니라 이 화면이 무엇인지 말하는 글자다 */
+.big { position: absolute; left: -22px; top: -26px; z-index: 0; font-family: var(--font-label); font-size: 168px; line-height: 0.78; color: transparent; -webkit-text-stroke: 2px var(--mag); opacity: 0.5; user-select: none; pointer-events: none; }
+.wrap > :not(.big) { position: relative; z-index: 1; }
+.wrap h1 { margin: 88px 0 0; max-width: 11em; }
+.wrap p { max-width: 24em; }
+.btn { margin-top: 16px; min-width: 190px; }
 .retry { margin-top: 2px; }

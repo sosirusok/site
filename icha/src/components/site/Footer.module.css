@@ -3,20 +3,29 @@
 .footer::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--lime), var(--cyan) 40%, var(--mag)); box-shadow: 0 0 16px rgba(255, 46, 136, 0.55); }
 .head { display: grid; gap: 4px; }
 .mark { font-family: var(--font-poster); font-size: 36px; line-height: 1; color: #fff; text-shadow: 0 0 2px #fff, 0 0 14px rgba(255, 46, 136, 0.8), 0 0 40px rgba(122, 0, 255, 0.55); }
-.markEn { font-family: var(--font-label); font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--cyan); }
+.markEn { font-family: var(--font-poster); font-size: 15px; letter-spacing: -0.01em; color: var(--cyan); }
 
 .stores { display: grid; gap: 14px; }
-.store { display: grid; grid-template-columns: 34px 1fr; column-gap: 10px; }
-.storeNo { font-family: var(--font-label); font-size: 26px; line-height: 0.9; color: transparent; -webkit-text-stroke: 1.5px var(--store); }
+.store { display: grid;  column-gap: 10px; }
 .storeBody { display: grid; gap: 1px; min-width: 0; }
 .storeName { font-family: var(--font-poster); font-size: 16px; line-height: 1.25; color: #fff; }
 .addr { color: var(--ink-2); font-size: 12.5px; }
 .tel { display: inline-flex; align-items: center; justify-self: start; min-height: 44px; min-width: 44px; margin: -2px 0 -8px; font-family: var(--font-label); font-size: 15px; letter-spacing: 0.04em; color: var(--lime); border-bottom: 2px solid rgba(204, 255, 0, 0.5); }
 
 .links { display: flex; flex-wrap: wrap; gap: 0 18px; }
-.link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; font-family: var(--font-label); font-size: 12px; letter-spacing: 0.16em; color: var(--cyan); border-bottom: 2px solid rgba(33, 240, 255, 0.4); align-self: start; }
+.link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; font-family: var(--font-poster); font-size: 16px; letter-spacing: -0.01em; color: var(--cyan); border-bottom: 2px solid rgba(33, 240, 255, 0.4); align-self: start; }
 
-.warn { display: grid; gap: 6px; font-size: 12px; line-height: 1.6; color: var(--ink-2); border: 1px solid rgba(255, 46, 136, 0.5); border-left-width: 3px; padding: 12px 14px; }
-.warnTag { font-family: var(--font-label); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mag); font-weight: 400; }
-.copy { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13px; font-family: var(--font-label); letter-spacing: 0.12em; color: var(--ink-3); }
-.staff { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; margin: -12px 0; color: var(--ink-3); border-bottom: 1px solid var(--line-2); }
+.warn { margin: 0; font-size: 13px; line-height: 1.6; color: var(--ink-3); }
+.copy { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 4px; font-size: 13px; font-family: var(--font-label); letter-spacing: 0.12em; color: var(--ink-3); }
+.staff { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; color: var(--ink-3); border-bottom: 1px solid var(--line-2); }
+
+/* 두 벌 — 기본은 전체, 흐름 화면(data-footer="short")에서는 짧은 벌. 고르는 일은 globals.css 가 한다 */
+.short { display: none; padding: 26px var(--gutter) 30px; }
+.shortMark { margin: 0 0 12px; font-family: var(--font-poster); font-size: 22px; line-height: 1; color: #fff; text-shadow: 0 0 2px #fff, 0 0 14px rgba(255, 46, 136, 0.8); }
+.shortTel { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.shortTel a { display: flex; align-items: center; gap: 9px; min-height: 46px; color: var(--ink); font-size: 15px; }
+.shortName { font-family: var(--font-poster); font-size: 15px; color: var(--store, var(--cyan)); }
+.shortLinks { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; }
+.shortWarn { margin: 14px 0 0; font-size: 13px; line-height: 1.5; color: var(--ink-3); }
+
+.storeCourse { font-weight: 400; color: var(--store, var(--cyan)); }

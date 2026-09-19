@@ -57,7 +57,7 @@ export function StoreMenu({ store, items, menuUrl }: { store: Store; items: Menu
         </>
       )}
       {menuUrl && <Button href={menuUrl} variant="ghost" srSuffix={` — ${store.shortName}`}>네이버에서 전체 메뉴 보기</Button>}
-      <p className="small faint">※ 사진은 연출된 이미지로 실제와 다를 수 있습니다. 가격은 매장 사정에 따라 바뀔 수 있습니다.</p>
+      <p className="fineprint">가격은 2026년 9월 매장 메뉴판 기준입니다.</p>
     </div>
   );
 }

@@ -6,15 +6,16 @@ import { PlaceSheet, type PlaceSheetStore } from "./PlaceSheet";
 import styles from "./TabBar.module.css";
 
 /**
- * 하단 탭(62px) — 선 아이콘 세트를 쓰지 않는다. 대신 Anton 영문 소문자 라벨(9px, 넓은 트래킹) 위에 Black Han Sans 한글(15px).
- * 고른 탭은 라임으로 빛나고 위쪽에 형광 막대가 선다. (텍스트 전용 하단 내비 — 카트러시 이벤트 페이지 방식)
+ * 하단 탭(62px) — 아이콘도, 한글 옆 영문 번역도 쓰지 않는다. Black Han Sans 한글 한 줄뿐이다.
+ * "WALLET / 쿠폰함"처럼 같은 뜻의 영문을 나란히 붙이는 건 정보가 0인 장식이고, 부산 서면 술집 손님이 읽을 말도 아니다.
+ * 지금 있는 칸은 칸 전체가 라임 색면이 된다. 예약은 초록 글자와 위 초록선으로 구분한다.
  */
-type Tab = { href: string; ko: string; en: string; active: (p: string) => boolean };
+type Tab = { href: string; ko: string; active: (p: string) => boolean };
 
 const TABS: Tab[] = [
-  { href: "/", ko: "홈", en: "HOME", active: (p) => p === "/" || p.startsWith("/stores") },
-  { href: "/wallet", ko: "쿠폰함", en: "WALLET", active: (p) => p.startsWith("/wallet") || p.startsWith("/coupons") || p.startsWith("/pick") || p.startsWith("/login") },
-  { href: "/guide", ko: "안내", en: "GUIDE", active: (p) => p.startsWith("/guide") || p.startsWith("/verify") },
+  { href: "/", ko: "홈", active: (p) => p === "/" || p.startsWith("/stores") },
+  { href: "/wallet", ko: "쿠폰함", active: (p) => p.startsWith("/wallet") || p.startsWith("/coupons") || p.startsWith("/pick") || p.startsWith("/login") },
+  { href: "/guide", ko: "안내", active: (p) => p.startsWith("/guide") || p.startsWith("/verify") },
 ];
 
 export function TabBar({ stores }: { stores: PlaceSheetStore[] }) {
@@ -23,7 +24,6 @@ export function TabBar({ stores }: { stores: PlaceSheetStore[] }) {
   const [home, wallet, guide] = TABS as [Tab, Tab, Tab];
   const cell = (t: Tab) => (
     <Link key={t.href} href={t.href} className={`${styles.item} ${t.active(path) ? styles.active : ""}`} aria-current={t.active(path) ? "page" : undefined}>
-      <span className={styles.en} aria-hidden="true">{t.en}</span>
       <span className={styles.ko}>{t.ko}</span>
     </Link>
   );
@@ -34,7 +34,6 @@ export function TabBar({ stores }: { stores: PlaceSheetStore[] }) {
         {cell(wallet)}
         {/* 예약은 탭이 아니라 바텀시트를 여는 버튼 — 초록 글자와 위 초록선으로만 구분한다(색면은 "지금 있는 칸" 전용) */}
         <button type="button" className={`${styles.item} ${styles.book}`} onClick={() => setOpen(true)} aria-haspopup="dialog" aria-expanded={open}>
-          <span className={styles.en} aria-hidden="true">BOOK</span>
           <span className={styles.ko}>예약</span>
         </button>
         {cell(guide)}

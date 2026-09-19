@@ -5,13 +5,7 @@
 .topTitle { color: #fff; text-shadow: 0 0 2px #fff, 0 0 14px rgba(33, 240, 255, 0.85), 0 0 40px rgba(122, 0, 255, 0.55); }
 
 /* 매장 예약 — 줄마다 속 빈 차수 숫자 · 상호 · 출구 · [예약] */
-.bookList { display: grid; border-top: 2px solid var(--lime); }
-.bookItem { display: grid; grid-template-columns: 40px 1fr auto; align-items: center; column-gap: 12px; min-height: 70px; padding: 12px 0; border-bottom: 1px solid var(--line); }
 .bookItem:last-child { border-bottom: 0; }
-.bookNo { font-family: var(--font-label); font-size: 34px; line-height: 0.82; color: transparent; -webkit-text-stroke: 1.8px var(--store); filter: drop-shadow(0 0 9px color-mix(in srgb, var(--store) 55%, transparent)); }
-.bookBody { min-width: 0; display: grid; gap: 3px; }
-.bookName { font-family: var(--font-poster); font-size: 19px; line-height: 1.15; color: #fff; }
-.bookSub { font-size: 12px; color: var(--ink-2); }
 .reviewBox { display: grid; gap: 8px; margin-top: 20px; }
 .reviewTitle { font-family: var(--font-label); font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--lime); }
 .reviewList { display: grid; gap: 5px; font-size: 14px; line-height: 1.55; }
@@ -19,26 +13,31 @@
 
 /* 자주 묻는 질문 */
 .faq { display: grid; }
-.faqItem { border-bottom: 1px solid var(--line); scroll-margin-top: 72px; }
-.faqQ { display: grid; grid-template-columns: auto 1fr auto; align-items: center; column-gap: 11px; min-height: 58px; padding: 13px 0; cursor: pointer; }
-.faqNo { font-family: var(--font-label); font-size: 17px; letter-spacing: 0.04em; color: var(--mag); text-shadow: 0 0 12px rgba(255, 46, 136, 0.65); }
-.faqText { font-size: 15px; font-weight: 700; line-height: 1.45; color: #fff; }
-.faqToggle { display: inline-flex; align-items: center; justify-content: center; align-self: center; width: 44px; height: 44px; margin-right: -12px; font-family: var(--font-label); font-size: 22px; line-height: 1; color: var(--lime); }
-.faqToggle::before { content: "+"; }
-.faqItem[open] .faqToggle::before { content: "−"; color: var(--cyan); }
-.faqA { padding: 0 0 18px 28px; font-size: 14px; line-height: 1.7; color: var(--ink-2); border-left: 2px solid rgba(255, 46, 136, 0.35); margin-left: 6px; }
 
 /* 포스터 — 위아래 형광 경계만, 화면 폭 가득 */
 .poster { margin: 0; border-top: 2px solid var(--cyan); border-bottom: 2px solid var(--mag); box-shadow: 0 0 26px -8px rgba(33, 240, 255, 0.55); }
 .posterImg { width: 100%; height: auto; }
 
-/* 알아 두실 점 — 번호도 점도 없이, 왼쪽에 형광 짧은 막대만. 문장이 길어도 막대 자리에 맞춰 들여쓴다 */
-.noticeList { display: grid; gap: 13px; margin: 0; padding: 0; list-style: none; }
-.noticeList li { position: relative; padding-left: 20px; font-size: 15px; line-height: 1.66; color: var(--ink-2); }
-.noticeList li::before { content: ""; position: absolute; left: 0; top: 11px; width: 11px; height: 2px; background: var(--cyan); box-shadow: 0 0 8px rgba(33, 240, 255, 0.8); }
 
 /* 페이지를 닫는 라임 색면 — 보라로만 끝나지 않게, 그리고 다음 행동을 손에 쥐여 준다 */
 .closer { margin-top: 8px; padding: 30px var(--gutter) 34px; background: var(--lime); }
 .closerTitle { margin: 0 0 16px; font-family: var(--font-poster); font-size: clamp(23px, 6.6vw, 28px); line-height: 1.16; letter-spacing: -0.015em; color: #0b0011; }
 .closerRow { display: flex; flex-wrap: wrap; gap: 11px; }
 .closerRow > * { flex: 1 1 auto; }
+
+/* 자주 묻는 질문 — 아코디언을 쓰지 않는다. 네 개뿐이라 접을 이유가 없고,
+   오른쪽 '+' 토글과 회색 구분선 조합은 어느 랜딩페이지에나 있는 그 컴포넌트다. */
+.faq { display: grid; gap: 22px; margin: 0; }
+.faqItem { display: grid; gap: 6px; }
+.faqQ { margin: 0; font-family: var(--font-poster); font-size: 18px; line-height: 1.3; letter-spacing: -0.012em; color: var(--ink); }
+.faqA { margin: 0; font-size: 15px; line-height: 1.65; color: var(--ink-2); }
+/* 안내 머리 — 이벤트 기간 한 줄 */
+.period { margin: 6px 0 0; font-size: 15px; color: var(--ink-3); }
+.period b { font-weight: 400; color: var(--lime); }
+
+/* 매장 예약 — [번호|본문|버튼] 3칸 줄을 쓰지 않는다. 상호를 화면 폭 색면 한 줄로 깔고 그 아래 출구와 버튼 */
+.bookList { display: grid; gap: 22px; margin: 0; padding: 0; list-style: none; }
+.bookItem { display: grid; }
+.bookBand { margin: 0 calc(var(--gutter) * -1); padding: 10px var(--gutter) 9px; background: var(--store); color: #06030c; font-family: var(--font-poster); font-size: 19px; line-height: 1.2; }
+.bookRow { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 11px; }
+.bookSub { font-size: 15px; color: var(--ink-2); }

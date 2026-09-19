@@ -1,13 +1,11 @@
-.root { display: grid; gap: 16px; }
-/* 별점 — Anton 52px 라임 + 그 옆 별·개수 */
-.rating { display: flex; align-items: center; gap: 13px; }
-.star { display: none; }
-.score { font-family: var(--font-label); font-size: 52px; line-height: 0.84; color: var(--lime); text-shadow: 0 0 16px rgba(204, 255, 0, 0.55), 0 0 44px rgba(204, 255, 0, 0.28); }
-.list { display: grid; gap: 12px; }
-/* 인용 — 상자가 아니라 왼쪽 형광 기둥 + Anton 큰 따옴표 */
-.quote { position: relative; display: grid; gap: 7px; background: rgba(255, 255, 255, 0.035); border-left: 3px solid var(--store); padding: 15px 16px 14px 34px; }
-.quote::before { content: "“"; position: absolute; left: 10px; top: 4px; font-family: var(--font-label); font-size: 38px; line-height: 1; color: var(--store); opacity: 0.75; }
-.text { font-size: 14px; line-height: 1.7; color: var(--ink); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
-.meta { text-align: right; font-family: var(--font-sans); font-size: 13px; letter-spacing: 0; color: var(--ink-3); }
-.benefit { font-size: 14.5px; line-height: 1.55; }
-.benefit b { display: block; font-family: var(--font-label); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--lime); margin-bottom: 4px; }
+/* 가 본 사람들 — 따옴표 글리프도, 왼쪽 색 기둥도, 상자도 쓰지 않는다.
+   그 셋을 합치면 어느 랜딩페이지에나 있는 고객후기 컴포넌트가 된다. 후기는 글자와 가로선만으로 나눈다. */
+.root { display: grid; gap: 18px; }
+.count { margin: 0; font-size: 14.5px; color: var(--ink-3); }
+.list { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; border-top: 2px solid var(--line-2); }
+.quote { display: grid; gap: 5px; padding: 15px 0 14px; border-bottom: 1px solid var(--line); }
+.text { margin: 0; font-size: 15px; line-height: 1.68; color: var(--ink); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.meta { margin: 0; font-size: 13px; color: var(--ink-3); }
+/* 리뷰 이벤트 — 사장님이 적어 넣었을 때만. 라임 색면 한 줄 */
+.benefit { margin: 0; padding: 13px 15px; background: var(--brand-dim); border-left: 0; font-size: 15px; line-height: 1.55; color: var(--ink); }
+.benefit b { display: block; margin-bottom: 3px; font-family: var(--font-poster); font-weight: 400; font-size: 15px; letter-spacing: -0.01em; color: var(--lime); }

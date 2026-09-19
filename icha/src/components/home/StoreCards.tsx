@@ -30,7 +30,6 @@ export function giftWhat(names: string[], fallback: string): string {
 }
 
 /** 술 종류의 영문 라벨 — Anton 으로 사진 위에 얹는다 */
-const DRINK_EN: Record<string, string> = { 맥주: "BEER", 막걸리: "MAKGEOLLI", 소주: "SOJU" };
 
 /**
  * 참여 매장 세 곳 — 화면 폭을 꽉 채우는 "플라이어 패널" 셋. 카드 그리드가 아니다.
@@ -52,24 +51,29 @@ export function StoreCards({ now, rules, gifts }: { now: Date; rules: Rules; gif
           const what = giftWhat(gifts[st.id] ?? [], st.benefitLabel);
           const prev = ordered[i - 1];
           const no = String(st.course.n).padStart(2, "0");
+          // 집마다 사진 비율·숫자 위치·혜택 줄 모양·썸네일 수를 다르게 준다.
+          // 성격이 다른 세 가게(서서 마시는 생맥주집 / 칼국수·막걸리 / 요리주점)를 같은 틀에 부으면 틀이 먼저 보인다.
+          const shape = ["a", "b", "c"][i] ?? "a";
+          const shownThumbs = photos.slice(0, [2, 3, 2][i] ?? 2);
           return (
             <Fragment key={st.id}>
               {prev && (
-                <li className={s.walk} data-store={st.id}>
-                  <span className={s.walkBar} aria-hidden="true" />
-                  <span className={s.walkText}><span className="sr-only">{prev.shortName}에서 </span>도보 {walkMin(prev, st)}분</span>
-                  <span className={s.walkEn} aria-hidden="true">{walkMin(prev, st)} MIN WALK</span>
-                  <span className={s.walkBar} aria-hidden="true" />
+                <li className={s.walk} data-store={st.id} data-shape={shape}>
+                  <span className={s.walkText}>
+                    <span className="sr-only">{prev.shortName}에서 </span>
+                    {i === 1 ? <>걸어서 {walkMin(prev, st)}분</> : <>길 건너 {walkMin(prev, st)}분</>}
+                  </span>
                 </li>
               )}
-              <li className={`${s.panel} ${i % 2 === 1 ? s.panelFlip : ""}`} data-store={st.id}>
+              <li className={s.panel} data-store={st.id} data-shape={shape}>
                 <div className={`duo duo-food ${s.shot}`}>
                   <Image src={photo.src} alt={photoAlt(st.images, photo)} fill priority={i === 0} sizes="(min-width: 480px) 480px, 100vw" style={{ objectPosition: photo.pos }} className={s.shotImg} />
                   <span className={`duo-over ${s.shotNo}`} aria-hidden="true">{no}</span>
-                  <div className={`duo-over ${s.shotText}`}>
-                    <span className={`lbl ${s.shotDrink}`}>{st.course.n}차 · {DRINK_EN[st.drink] ?? st.drink}</span>
-                    <h3 className={`h1 ${s.shotName}`}>{st.name}</h3>
-                  </div>
+                </div>
+                {/* 상호는 사진 안에 가두지 않는다 — 사진 경계를 물고 내려와 아래 검은 띠를 침범한다 */}
+                <div className={s.shotText}>
+                  <span className={s.shotDrink}>{st.course.n}차 · {st.drink}</span>
+                  <h3 className={`h1 ${s.shotName}`}>{st.name}</h3>
                 </div>
 
                 <p className={s.statusBar}>
@@ -80,13 +84,13 @@ export function StoreCards({ now, rules, gifts }: { now: Date; rules: Rules; gif
 
                 <div className={s.panelBody}>
                   <p className={s.giftLine}>
-                    <span className={`lbl ${s.giftLabel}`}>Coupon</span>
+                    <span className={s.giftLabel}>쿠폰 혜택</span>
                     <b className={`hl ${s.giftWhat}`}>{what} 무료</b>
                   </p>
                   {notice && <p className={s.panelNotice}><b>공지</b> {notice}</p>}
 
                   <ul className={`strip ${s.thumbs}`} aria-label={`${st.shortName} 사진`}>
-                    {photos.map((p) => (
+                    {shownThumbs.map((p) => (
                       <li key={p.src} className={s.thumb}>
                         <span className={`duo duo-soft duo-food ${s.thumbFrame}`}>
                           <Image src={p.src} alt={photoAlt(st.images, p)} fill sizes="150px" style={{ objectPosition: p.pos }} className={s.thumbImg} />
@@ -96,9 +100,11 @@ export function StoreCards({ now, rules, gifts }: { now: Date; rules: Rules; gif
                     ))}
                   </ul>
 
+                  {/* 버튼 차례도 집마다 다르게 — 세 번 같은 자리에 같은 쌍이 오면 그게 틀이다 */}
                   <div className={`btn-row ${s.panelCtas}`}>
+                    {shape === "b" && <Button href={`/stores/${st.id}`} variant="outline" srSuffix={` — ${st.shortName}`}>메뉴 보기</Button>}
                     {links ? <Button href={links.booking} variant="naver" srSuffix={` — ${st.shortName}`}>예약하기</Button> : null}
-                    <Button href={`/stores/${st.id}`} variant="outline" srSuffix={` — ${st.shortName}`}>매장 정보</Button>
+                    {shape !== "b" && <Button href={`/stores/${st.id}`} variant="outline" srSuffix={` — ${st.shortName}`}>{shape === "a" ? "매장 정보" : "안주 더 보기"}</Button>}
                   </div>
                 </div>
               </li>

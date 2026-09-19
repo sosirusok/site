@@ -4,7 +4,7 @@ import { HowToSteps } from "@/components/home/HowToSteps";
 import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { BRAND } from "@/lib/config";
-import { eventPeriodLine, noticeLines } from "@/lib/copy";
+import { eventPeriodLine } from "@/lib/copy";
 import { faqItems } from "@/lib/faq";
 import { LOCATIONS } from "@/lib/locations";
 import { placeLinks } from "@/lib/naver";
@@ -28,30 +28,28 @@ export default async function GuidePage() {
   const rules = await getRules();
   const faq = faqItems(rules);
   const reviews = ORDERED.map((s) => ({ s, text: rules.reviewBenefit[s.id].trim() })).filter((x) => x.text !== "");
-  // 유효기간·하루 한도 같은 숫자는 관리자 설정에서 읽어 적는다 — 화면에 숫자를 박아 두면 설정을 바꿔도 안내가 옛날 값으로 남는다
-  const notices = noticeLines(rules);
 
   return (
     <div className={styles.page}>
       <header className={styles.top}>
         <h1 className={`d1 ${styles.topTitle}`}>이용 안내</h1>
-        <p className="lead">{BRAND.name} {BRAND.eventTag} — 쿠폰을 받는 법, 쓰는 법, 예약과 자주 묻는 질문입니다.</p>
+        <p className="lead">쿠폰을 받는 법과 쓰는 법입니다.</p>
+        <p className={styles.period}>이벤트 기간 <b>{eventPeriodLine(rules)}</b></p>
       </header>
 
       <HowToSteps rules={rules} />
 
-      <Section id="book" no="01" tone="lime" eyebrow="Reservation" title="매장 예약" lead="네이버 예약으로 접수합니다" alt pt={52} pb={36}>
+      <Section id="book" tone="lime" title="매장 예약" lead="네이버 예약으로 접수합니다" alt pt={52} pb={36}>
         <ul className={styles.bookList}>
-          {ORDERED.map((s) => {
-            const l = placeLinks(s);
+          {ORDERED.map((s2) => {
+            const l = placeLinks(s2);
             return (
-              <li key={s.id} className={styles.bookItem} data-store={s.id}>
-                <span className={styles.bookNo} aria-hidden="true">{String(s.course.n).padStart(2, "0")}</span>
-                <span className={styles.bookBody}>
-                  <span className={styles.bookName}>{s.shortName}</span>
-                  <span className={styles.bookSub}>{LOCATIONS[s.id].subway}</span>
+              <li key={s2.id} className={styles.bookItem} data-store={s2.id}>
+                <span className={styles.bookBand}>{s2.course.n}차 {s2.shortName}</span>
+                <span className={styles.bookRow}>
+                  <span className={styles.bookSub}>{LOCATIONS[s2.id].subway}</span>
+                  {l && <Button href={l.booking} variant="naver" size="sm" srSuffix={` — ${s2.course.n}차 ${s2.shortName}`}>예약</Button>}
                 </span>
-                {l && <Button href={l.booking} variant="naver" size="sm" srSuffix={` — ${s.course.n}차 ${s.shortName}`}>예약</Button>}
               </li>
             );
           })}
@@ -66,27 +64,15 @@ export default async function GuidePage() {
         )}
       </Section>
 
-      <Section id="notice" title="알아 두실 점" lead={`이벤트 기간 ${eventPeriodLine(rules)}`} tone="cyan" pt={48} pb={32}>
-        <ul className={styles.noticeList}>
-          {notices.map((line) => <li key={line}>{line}</li>)}
-        </ul>
-      </Section>
-
-      <Section id="faq" head="slab" title="자주 묻는 질문" tone="lime" pt={46} pb={34}>
-        <ul className={styles.faq}>
+      <Section id="faq" head="slab" title="자주 묻는 질문" tone="lime" pt={44} pb={34}>
+        <dl className={styles.faq}>
           {faq.map((it) => (
-            <li key={it.id}>
-              <details className={styles.faqItem} id={it.id}>
-                <summary className={styles.faqQ}>
-                  <span className={styles.faqNo} aria-hidden="true">Q{String(faq.indexOf(it) + 1).padStart(2, "0")}</span>
-                  <span className={styles.faqText}>{it.q}</span>
-                  <span className={styles.faqToggle} aria-hidden="true" />
-                </summary>
-                <p className={styles.faqA}>{it.a}</p>
-              </details>
-            </li>
+            <div key={it.id} className={styles.faqItem} id={it.id}>
+              <dt className={styles.faqQ}>{it.q}</dt>
+              <dd className={styles.faqA}>{it.a}</dd>
+            </div>
           ))}
-        </ul>
+        </dl>
       </Section>
 
       <Section id="poster" title="포스터 원본" lead="매장에 붙어 있는 그 포스터" tone="cyan" alt flush pt={46} pb={30}>

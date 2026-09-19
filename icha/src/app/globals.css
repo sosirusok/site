@@ -12,7 +12,7 @@
    ────────────────────────────────────────────────────────────── */
 :root {
   /* 바탕 — 보라 기운의 암전 */
-  --bg: #06030c;
+  --bg: #050208;
   --bg-2: #0c0518;
   --bg-3: #17092b;
   --card: #0f0620;
@@ -65,6 +65,11 @@
   --cut: 11px;
 }
 
+/* 매장 화면 안에서는 섹션 머리 색도 그 집 색을 따른다 — 시안 가게 페이지에 마젠타 머리가 있으면 그건 장식이다.
+   노란 색면 머리만 예외로 두어 보라가 끊기는 자리를 지킨다. */
+[data-store] .section { --tone: var(--store); }
+[data-store] .section-head-slab { background: var(--yellow); }
+
 [data-store="joseon"] { --store: var(--joseon); }
 [data-store="tokyo"] { --store: var(--tokyo); }
 [data-store="wareureu"] { --store: var(--wareureu); }
@@ -78,24 +83,16 @@ body { color: var(--ink); background: #030106; font-family: var(--font-sans); fo
    바닥 = 검정 + 스크롤에 따라 색이 도는 그라데이션 메시(::after) + 스캔라인·그레인(::before). 둘 다 fixed, pointer-events 없음 */
 .app { position: relative; isolation: isolate; max-width: var(--app-max); min-height: 100dvh; margin: 0 auto; background: var(--bg); padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); overflow-x: clip; }
 .app::after {
-  content: ""; position: fixed; inset: -20% -40%; z-index: 0; pointer-events: none; opacity: 0.55;
-  background:
-    radial-gradient(38% 26% at 18% 12%, rgba(255, 46, 136, 0.42), transparent 70%),
-    radial-gradient(34% 24% at 88% 32%, rgba(33, 240, 255, 0.30), transparent 70%),
-    radial-gradient(42% 30% at 30% 74%, rgba(126, 0, 255, 0.38), transparent 72%),
-    radial-gradient(30% 22% at 82% 92%, rgba(204, 255, 0, 0.18), transparent 70%);
-  filter: blur(18px);
+  /* 바닥은 순검정이다. 흐릿한 형광 블롭 네 개를 깔아 두는 건 2023년형 다크 AI 랜딩페이지 배경이고,
+     색이 배경에서 나오면 사진도 색면도 활자도 다 그 위에 뜬 것처럼 흐려진다.
+     대신 인쇄물의 거친 하프톤 점을 깐다 — 색은 사진·색면·활자에서만 나온다. */
+  content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1.2px);
+  background-size: 4px 4px;
+  transform: rotate(-24deg) scale(1.6);
+  transform-origin: center;
 }
-/* 스크롤에 따라 메시의 색이 돈다. 지원하지 않는 브라우저에서는 그대로 정지 — 무게 0 */
-@supports (animation-timeline: scroll()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .app::after { animation: mesh linear both; animation-timeline: scroll(root); }
-    @keyframes mesh {
-      from { filter: blur(18px) hue-rotate(0deg); transform: translate3d(0, 0, 0) scale(1); }
-      to { filter: blur(26px) hue-rotate(96deg); transform: translate3d(0, -4%, 0) scale(1.12); }
-    }
-  }
-}
+
 /* 스캔라인(3px 줄무늬) + 필름 그레인 — 클럽 영상·플라이어 인쇄의 질감 */
 .app::before {
   content: ""; position: fixed; inset: 0; z-index: 3; pointer-events: none; mix-blend-mode: overlay; opacity: 0.2;
@@ -138,8 +135,6 @@ details > summary::-webkit-details-marker { display: none; }
 .h3 { font-family: var(--font-sans); font-size: 18px; line-height: 1.35; font-weight: 800; letter-spacing: -0.02em; }
 
 /* 영문 라벨 — Anton 대문자, 넓은 트래킹. 앞에 형광 막대 하나 */
-.eyebrow { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-label); font-size: 12px; line-height: 1; font-weight: 400; letter-spacing: 0.26em; text-transform: uppercase; color: var(--cyan); }
-.eyebrow::before { content: ""; width: 18px; height: 3px; background: currentColor; box-shadow: 0 0 10px currentColor; }
 /* 막대 없는 라벨(사진 위·바 안) */
 .lbl { font-family: var(--font-label); font-size: 12px; line-height: 1; letter-spacing: 0.24em; text-transform: uppercase; }
 /* 거대 숫자 — 속 빈 아웃라인. 섹션 번호·차수 */
@@ -205,7 +200,6 @@ details > summary::-webkit-details-marker { display: none; }
 .section-head-no { grid-row: 1 / span 2; font-family: var(--font-label); font-size: 62px; line-height: 0.72; color: transparent; -webkit-text-stroke: 2px var(--tone, var(--mag)); margin-top: 2px; user-select: none; }
 .section-head-text { grid-column: 2; display: grid; gap: 9px; min-width: 0; }
 .section-head-action { grid-column: 2; justify-self: start; margin-top: 12px; }
-.section-head .eyebrow { color: var(--tone, var(--cyan)); }
 .section-head .lead { margin-top: -2px; }
 /* 띠형 머리 — 제목이 먼저, 영문 라벨은 같은 줄 오른쪽 끝, 그 아래 형광 굵은 선 */
 /* ③ 색면형 머리 — 화면 폭을 통째로 덮는 단색 판에 검은 제목만. 번호도 영문 라벨도 없다.
@@ -220,8 +214,7 @@ details > summary::-webkit-details-marker { display: none; }
 .section-head-slab .section-head-action a { display: inline-flex; align-items: center; min-height: 44px; color: #0b0011; border-bottom-color: rgba(11, 0, 17, 0.55); text-decoration-color: rgba(11, 0, 17, 0.5); text-underline-offset: 4px; }
 
 .section-head-band { display: block; margin-bottom: 18px; }
-.section-head-bandrow { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-bottom: 11px; border-bottom: 3px solid var(--tone, var(--mag)); box-shadow: 0 3px 16px -7px var(--tone, var(--mag)); }
-.section-head-band .section-head-tag { flex: none; color: var(--tone, var(--cyan)); text-shadow: 0 0 12px color-mix(in srgb, var(--tone, var(--cyan)) 60%, transparent); }
+.section-head-bandrow { display: block; padding-bottom: 11px; border-bottom: 3px solid var(--tone, var(--mag)); box-shadow: 0 3px 16px -7px var(--tone, var(--mag)); }
 .section-head-band .section-head-lead { margin-top: 12px; }
 .section-head-band .section-head-action { margin-top: 10px; }
 
@@ -310,17 +303,11 @@ summary.btn { list-style: none; }
   border: 2px solid var(--lime); box-shadow: inset 0 0 26px -12px var(--lime), 0 0 18px -6px rgba(204, 255, 0, 0.5);
   padding: 16px; clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
 }
-.notice { display: grid; gap: 7px; background: rgba(255, 255, 255, 0.035); border-left: 3px solid var(--mag); padding: 14px 16px; font-size: 13.5px; line-height: 1.6; color: var(--ink-2); }
-.notice li { position: relative; padding-left: 14px; }
-.notice li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 6px; height: 6px; background: var(--mag); }
 .divider { height: 1px; background: var(--line); border: 0; margin: 0; }
 /* 형광 구분 띠 — 섹션 안에서 쓰는 굵은 경계 */
 .rule { height: 3px; border: 0; margin: 0; background: linear-gradient(90deg, var(--mag), #7a00ff 45%, var(--cyan)); box-shadow: 0 0 12px rgba(255, 46, 136, 0.5); }
 
 /* ══ 정보 표 — 라벨은 Anton 대문자 형광, 값은 흰 글자 ══ */
-.kv { display: grid; grid-template-columns: 82px 1fr; gap: 11px 12px; font-size: 15px; line-height: 1.55; }
-.kv dt { font-family: var(--font-poster); font-size: 14px; letter-spacing: -0.01em; color: var(--cyan); padding-top: 2px; }
-.kv dd { color: var(--ink); }
 /* 사진 캡션·부연처럼 "읽어도 되고 말아도 되는" 글자 — 흰 사실 글자보다 한 단 어둡게(대비 4.5:1 는 지킨다) */
 .sub { color: var(--ink-3); }
 
@@ -353,6 +340,18 @@ summary.btn { list-style: none; }
 .sticky-bar .btn-row > .btn { flex: 1 1 0; }
 .sticky-bar .btn-row > .btn-main { flex: 2.3 1 0; min-height: 58px; font-size: 19px; }
 .sticky-bar .btn-row > .btn:not(.btn-main) { min-height: 50px; }
+
+/* 꼬리말 두 벌 — 지금 할 일이 있는 화면(쿠폰함·쿠폰 상세·매장 고르기·로그인)에서는 짧은 벌만.
+   그런 화면에서 세 가게 주소·사업자등록번호를 다시 펼치면 본문보다 꼬리말이 길어진다. */
+.app:has([data-footer="short"]) footer > :first-child { display: block; }
+.app:has([data-footer="short"]) footer > :last-child { display: none; }
+
+/* 안내 문구 — 상자를 만들지 않는다. 본문 아래 잔글씨 한 문단이거나(.fineprint),
+   표 뒷면에 찍힌 약관처럼 좁은 단(.backprint)이다. 화면마다 둘 중 하나만 쓴다. */
+.fineprint { margin: 0; font-size: 14px; line-height: 1.6; color: var(--ink-3); }
+.fineprint b { font-weight: 400; color: var(--ink-2); }
+.backprint { margin: 0; padding: 0; list-style: none; display: grid; gap: 5px; font-family: var(--font-mono); font-size: 12.5px; line-height: 1.55; letter-spacing: -0.01em; color: var(--ink-3); }
+.backprint li::before { content: "· "; color: var(--store, var(--mag)); }
 
 /* ══ 마키 — 사이트 전체에 하나만(홈 히어로 아래) ══ */
 .marquee { position: relative; display: flex; margin: 28px 0 36px; min-height: 56px; align-items: center; overflow: hidden; background: var(--mag); color: #0b0011; border-top: 2px solid var(--lime); border-bottom: 2px solid var(--lime); box-shadow: 0 0 26px -6px rgba(255, 46, 136, 0.9); }
@@ -393,8 +392,7 @@ summary.btn { list-style: none; }
 .giftlines { margin: 30px var(--gutter) 0; }
 .giftlines-title { margin: 0 0 14px; font-family: var(--font-poster); font-weight: 400; font-size: 21px; line-height: 1.1; letter-spacing: -0.015em; color: var(--ink); }
 .giftlines-list { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; border-top: 2px solid var(--line-2); }
-.giftlines-item { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 13px; padding: 13px 0 13px 11px; border-bottom: 1px solid var(--line); border-left: 3px solid var(--store); }
-.giftlines-no { font-family: var(--font-label); font-size: 26px; line-height: 1; color: transparent; -webkit-text-stroke: 1.5px var(--store); }
+.giftlines-item { display: grid; padding: 13px 0 13px 11px; border-bottom: 1px solid var(--line); border-left: 3px solid var(--store); }
 .giftlines-body { display: grid; gap: 3px; min-width: 0; }
 .giftlines-name { display: inline-flex; align-items: center; min-height: 44px; margin-bottom: -8px; font-family: var(--font-poster); font-size: 17px; line-height: 1.15; color: var(--ink); text-decoration: none; }
 .giftlines-name::after { content: " →"; font-family: var(--font-label); color: var(--store); }

@@ -18,8 +18,11 @@
 .rating { display: flex; align-items: center; gap: 12px; }
 .score { font-family: var(--font-label); font-size: 44px; line-height: 0.86; color: var(--lime); text-shadow: 0 0 14px rgba(204, 255, 0, 0.6), 0 0 40px rgba(204, 255, 0, 0.3); }
 .ratingBody { display: grid; gap: 3px; min-width: 0; }
-.stars { font-size: 14px; letter-spacing: 0.18em; color: var(--lime); }
 .ratingSub { font-size: 12.5px; color: var(--ink-2); }
 
-.kv { margin-top: 2px; }
-.other { display: block; margin-top: 3px; font-size: 12.5px; color: var(--ink-2); }
+
+.other { margin: 4px 0 0; font-size: 14px; line-height: 1.45; color: var(--ink-3); }
+.addr { margin: 2px 0 0; font-size: 15.5px; line-height: 1.5; color: var(--ink); }
+.addrLink { display: inline-flex; align-items: center; justify-content: center; min-width: 52px; min-height: 44px; margin-left: 6px; color: var(--cyan); border-bottom: 2px solid rgba(33, 240, 255, 0.5); font-family: var(--font-poster); font-size: 15px; }
+/* 플레이스로 가는 링크 — 버튼이 아니라 글자. 예약·길찾기·전화는 아래 고정 바가 맡는다 */
+.placeLink { display: inline-flex; align-items: center; min-height: 44px; font-family: var(--font-poster); font-size: 16px; letter-spacing: -0.01em; color: #6af5ff; border-bottom: 2px solid rgba(106, 245, 255, 0.5); }
