@@ -158,6 +158,9 @@ export function StoreMap({ stores, focusId, height = 440, compact = false, hideP
       const map = L.map(el!, { zoomControl: !compact, scrollWheelZoom: false, attributionControl: false });
       // 지도 출처(© OpenStreetMap 기여자)는 왼쪽 위 — 오른쪽 아래는 주소 메모가 덮는 자리. 기본 접두사(Leaflet 글자 + 국기)는 없이
       L.control.attribution({ position: "topleft", prefix: "" }).addTo(map);
+      // 어두운 밤거리 화면에 흰 지도가 끼면 그 칸만 낮이 된다.
+      // CARTO 다크 타일은 키를 요구해 "API KEY REQUIRED" 그림이 오므로, OSM 타일을 그대로 받아
+      // .leaflet-tile-pane 에 CSS 필터(반전 + 색상 회전)를 걸어 어둡게 만든다(StoreMap.css).
       L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자',

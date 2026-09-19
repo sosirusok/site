@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PhoneForm } from "@/components/flow/PhoneForm";
+import { GiftLines } from "@/components/site/GiftLines";
 import styles from "./login.module.css";
 
 export const metadata: Metadata = { title: "로그인" };
@@ -12,7 +13,6 @@ export default function LoginPage() {
   return (
     <div className={styles.page}>
       <header className={styles.top}>
-        <span className="eyebrow">Login</span>
         <h1 className="h1">휴대폰 번호로 로그인</h1>
         <p className="lead">계산할 때 직원에게 말씀하신 휴대폰 번호를 입력하시면 쿠폰함으로 이동합니다. 인증번호는 없습니다.</p>
       </header>
@@ -23,6 +23,7 @@ export default function LoginPage() {
         <li>휴대폰 번호는 쿠폰 확인 용도로만 사용하며 문자는 발송하지 않습니다.</li>
         <li>쿠폰은 계산 시 직원이 번호로 발급합니다. 이 화면에서는 발급되지 않습니다.</li>
       </ul>
+      <GiftLines />
     </div>
   );
 }

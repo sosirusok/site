@@ -1,7 +1,13 @@
-/* 다음 매장 — 카드 한 줄 56px */
-.row { display: flex; align-items: center; gap: 10px; min-height: 56px; padding: 10px 14px 10px 16px; }
-.lead { font-size: 12px; font-weight: 700; color: var(--ink-3); }
-.no { flex: none; }
-.name { flex: 1; min-width: 0; font-size: 15px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.walk { flex: none; }
-.chev { flex: none; color: var(--ink-3); }
+/* 다음 매장 — 그 집 형광색 테두리의 넓은 바. 모서리 둘을 비스듬히 잘라 낸다 */
+.bar {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; column-gap: 14px;
+  min-height: 84px; padding: 14px 18px;
+  background: linear-gradient(100deg, color-mix(in srgb, var(--store) 16%, transparent), rgba(255, 255, 255, 0.03) 62%);
+  border: 2px solid var(--store); box-shadow: inset 0 0 30px -14px var(--store), 0 0 20px -8px var(--store);
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+}
+.no { font-family: var(--font-label); font-size: 44px; line-height: 0.8; color: transparent; -webkit-text-stroke: 2px var(--store); }
+.body { min-width: 0; display: grid; gap: 4px; }
+.lead { font-family: var(--font-label); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--store); }
+.name { font-family: var(--font-poster); font-size: 25px; line-height: 1.1; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.arrow { font-size: 26px; font-weight: 900; line-height: 1; color: var(--store); text-shadow: 0 0 14px var(--store); }

@@ -91,7 +91,7 @@ export function MenuPicker({ receiptId, stores, couponValidDays }: { receiptId: 
     return (
       <div className={styles.issued} aria-live="polite" data-store={store.id}>
         <span className={styles.check} aria-hidden="true">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+          <span aria-hidden="true">OK</span>
         </span>
         <h2 className="h2">쿠폰이 발급되었습니다</h2>
         <p className="lead"><DotLine items={[store.shortName, coupon.menuName, `유효기간 ${fmtMD(coupon.expiresAt)}까지`]} /></p>

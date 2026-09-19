@@ -9,18 +9,19 @@ function walkMin(a: Store, b: Store): number {
   return walkMinutes(distanceM({ lat: a.lat, lng: a.lng }, { lat: b.lat, lng: b.lng }));
 }
 
-/** 다음 매장 — 카드 한 줄(차수 배지 · 상호 · 도보 N분 · 화살표). 매장 화면 맨 아래(3차 뒤에는 처음 1차로). */
+/** 다음 매장 — 카드가 아니라 화면 폭을 채우는 형광 바. 속 빈 차수 숫자 + 간판 상호 + 도보 N분 + 큰 화살표. */
 export function NextStop({ store, next: nextProp, className = "" }: { store: Store; next?: Store; className?: string }) {
   const next = nextProp ?? nextStore(store.id);
   if (next.id === store.id) return null;
   const min = walkMin(store, next);
   return (
-    <Link href={`/stores/${next.id}`} className={`card ${styles.row} ${className}`} data-store={next.id} aria-label={`다음 매장 ${next.course.n}차 ${next.shortName}, 도보 ${min}분`}>
-      <span className={styles.lead}>다음 매장</span>
-      <span className={`badge badge-store ${styles.no}`}>{next.course.n}차</span>
-      <span className={styles.name}>{next.shortName}</span>
-      <span className={`small muted num ${styles.walk}`}>도보 {min}분</span>
-      <svg className={styles.chev} width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 5l5 5-5 5" /></svg>
+    <Link href={`/stores/${next.id}`} className={`${styles.bar} ${className}`} data-store={next.id} aria-label={`다음 매장 ${next.course.n}차 ${next.shortName}, 도보 ${min}분`}>
+      <span className={styles.no} aria-hidden="true">{String(next.course.n).padStart(2, "0")}</span>
+      <span className={styles.body}>
+        <span className={styles.lead} aria-hidden="true">NEXT STOP · 도보 {min}분</span>
+        <span className={styles.name}>{next.shortName}</span>
+      </span>
+      <span className={styles.arrow} aria-hidden="true">→</span>
     </Link>
   );
 }

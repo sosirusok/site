@@ -15,7 +15,7 @@ import s from "./home.module.css";
 export function todayParts(store: Store, now: Date): { open: boolean; state: string; hours: string } {
   const st = openStatus(store, now);
   if (st.today === "휴무") return { open: false, state: "휴무", hours: "" };
-  return { open: st.open, state: nowText(st), hours: st.today.replace(/\s*–\s*(다음날\s*)?/, "~") };
+  return { open: st.open, state: nowText(st), hours: st.today.replace(/\s*–\s*/, "~").replace("다음날 ", "익일 ") };
 }
 
 /** 두 매장 사이 걸어서 몇 분 — 좌표가 없으면 1분 */
@@ -29,47 +29,79 @@ export function giftWhat(names: string[], fallback: string): string {
   return (names.length ? names : [fallback]).map((t) => t.trim()).join(" 또는 ");
 }
 
+/** 술 종류의 영문 라벨 — Anton 으로 사진 위에 얹는다 */
+const DRINK_EN: Record<string, string> = { 맥주: "BEER", 막걸리: "MAKGEOLLI", 소주: "SOJU" };
+
 /**
- * 참여 매장 세 곳 — 카드 하나에 대표 안주 사진(16:10), 차수·술·영업 상태 배지, 상호, 쿠폰 혜택 한 줄(노란 밑줄), 오늘 시간·출구, [예약하기]·[매장 정보].
- * 카드는 세로로 쌓는다(한 화면 폭). 사진은 storePhotos.ts 의 첫 장.
+ * 참여 매장 세 곳 — 화면 폭을 꽉 채우는 "플라이어 패널" 셋. 카드 그리드가 아니다.
+ *   듀오톤으로 그레이딩한 4:3 전면 사진 → 그 위에 속 빈 거대 차수 숫자(01/02/03, 96px)와 Black Han Sans 상호(34px),
+ *   사진 아래 형광 띠 한 줄(영업 상태·오늘 시간) → 라임 발광 혜택 줄 → 사진 가로 스크롤 스트립 → 초록 예약 바 + 네온 아웃라인.
+ * 홀수·짝수 패널은 숫자와 상호가 반대쪽에 붙는다(전부 같은 모양이 아니다).
  */
 export function StoreCards({ now, rules, gifts }: { now: Date; rules: Rules; gifts: Record<StoreId, string[]> }) {
   const ordered = [...STORES].sort((a, b) => a.course.n - b.course.n);
   return (
-    <Section id="stores" eyebrow="Stores" title="참여 매장" lead="서면역 6번 출구 도보 2~4분 · 세 매장 모두 50m 이내" alt>
-      <ul className={s.cards}>
+    <Section id="stores" head="slab" tone="yellow" title="오늘 밤 세 집" lead="서면역 6번 출구 도보 2~4분 · 세 매장 모두 50m 이내" alt flush pt={54} pb={30}>
+      <ul className={s.panels}>
         {ordered.map((st, i) => {
           const links = placeLinks(st);
-          const photo = FAN_PHOTOS[st.id][0]!;
+          const photos = FAN_PHOTOS[st.id];
+          const photo = photos[0]!;
           const today = todayParts(st, now);
           const notice = rules.storeNotices?.[st.id]?.trim();
           const what = giftWhat(gifts[st.id] ?? [], st.benefitLabel);
           const prev = ordered[i - 1];
+          const no = String(st.course.n).padStart(2, "0");
           return (
             <Fragment key={st.id}>
-            {prev && <li className={s.walk}><span className={s.walkLine} aria-hidden="true" /><span className="sr-only">{prev.shortName}에서 </span>도보 {walkMin(prev, st)}분<span className={s.walkLine} aria-hidden="true" /></li>}
-            <li className={`card ${s.card}`} data-store={st.id}>
-              <div className={s.photo}>
-                <Image src={photo.src} alt={photoAlt(st.images, photo)} fill priority={i === 0} sizes="(min-width: 480px) 440px, calc(100vw - 40px)" style={{ objectPosition: photo.pos }} className={s.photoImg} />
-              </div>
-              <div className={s.cardBody}>
-                <div className={s.badges}>
-                  <span className="badge badge-store">{st.course.n}차</span>
-                  <span className="badge">{st.drink}</span>
-                  <span className={`badge ${today.open ? "dot-on" : "dot-off"}`}>{today.state}</span>
+              {prev && (
+                <li className={s.walk} data-store={st.id}>
+                  <span className={s.walkBar} aria-hidden="true" />
+                  <span className={s.walkText}><span className="sr-only">{prev.shortName}에서 </span>도보 {walkMin(prev, st)}분</span>
+                  <span className={s.walkEn} aria-hidden="true">{walkMin(prev, st)} MIN WALK</span>
+                  <span className={s.walkBar} aria-hidden="true" />
+                </li>
+              )}
+              <li className={`${s.panel} ${i % 2 === 1 ? s.panelFlip : ""}`} data-store={st.id}>
+                <div className={`duo duo-food ${s.shot}`}>
+                  <Image src={photo.src} alt={photoAlt(st.images, photo)} fill priority={i === 0} sizes="(min-width: 480px) 480px, 100vw" style={{ objectPosition: photo.pos }} className={s.shotImg} />
+                  <span className={`duo-over ${s.shotNo}`} aria-hidden="true">{no}</span>
+                  <div className={`duo-over ${s.shotText}`}>
+                    <span className={`lbl ${s.shotDrink}`}>{st.course.n}차 · {DRINK_EN[st.drink] ?? st.drink}</span>
+                    <h3 className={`h1 ${s.shotName}`}>{st.name}</h3>
+                  </div>
                 </div>
-                <h3 className={`h3 ${s.name}`}>{st.name}</h3>
-                <p className={s.gift}><span className={s.giftLabel}>쿠폰 혜택</span> <b className="hl">{what} 무료</b></p>
-                <p className={`small muted ${s.meta}`}>
-                  {today.hours ? `오늘 ${today.hours}` : "오늘 휴무"} · {LOCATIONS[st.id].subway}
-                  {notice && <><br /><span className={s.notice}>공지 · {notice}</span></>}
+
+                <p className={s.statusBar}>
+                  <span className={`badge ${today.open ? "dot-on" : "dot-off"} ${s.statusBadge}`}>{today.state}</span>
+                  <span className={`num ${s.statusHours}`}>{today.hours ? `오늘 ${today.hours}` : "오늘 휴무"}</span>
+                  <span className={s.statusWalk}>{LOCATIONS[st.id].subway}</span>
                 </p>
-                <div className="btn-row">
-                  {links ? <Button href={links.booking} variant="naver" srSuffix={` — ${st.shortName}`}>예약하기</Button> : null}
-                  <Button href={`/stores/${st.id}`} variant="outline" srSuffix={` — ${st.shortName}`}>매장 정보</Button>
+
+                <div className={s.panelBody}>
+                  <p className={s.giftLine}>
+                    <span className={`lbl ${s.giftLabel}`}>Coupon</span>
+                    <b className={`hl ${s.giftWhat}`}>{what} 무료</b>
+                  </p>
+                  {notice && <p className={s.panelNotice}><b>공지</b> {notice}</p>}
+
+                  <ul className={`strip ${s.thumbs}`} aria-label={`${st.shortName} 사진`}>
+                    {photos.map((p) => (
+                      <li key={p.src} className={s.thumb}>
+                        <span className={`duo duo-soft duo-food ${s.thumbFrame}`}>
+                          <Image src={p.src} alt={photoAlt(st.images, p)} fill sizes="150px" style={{ objectPosition: p.pos }} className={s.thumbImg} />
+                        </span>
+                        <span className={s.thumbCap}>{p.cap}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className={`btn-row ${s.panelCtas}`}>
+                    {links ? <Button href={links.booking} variant="naver" srSuffix={` — ${st.shortName}`}>예약하기</Button> : null}
+                    <Button href={`/stores/${st.id}`} variant="outline" srSuffix={` — ${st.shortName}`}>매장 정보</Button>
+                  </div>
                 </div>
-              </div>
-            </li>
+              </li>
             </Fragment>
           );
         })}

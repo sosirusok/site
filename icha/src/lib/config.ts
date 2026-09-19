@@ -53,6 +53,10 @@ export type Rules = {
   tiers: { key: string; name: string; minSpend: number }[];
   /** 이벤트 진행 여부. false면 인증을 받지 않고 안내 문구만 노출 */
   eventActive: boolean;
+  /** 이벤트 시작일 'YYYY-MM-DD'. 빈 값이면 손님 화면에 기간 대신 "상시 운영"으로 적는다 — 확인 안 된 날짜를 지어내지 않는다 */
+  eventStart: string;
+  /** 이벤트 종료일 'YYYY-MM-DD'. 빈 값이면 "종료일은 매장 공지"로 적는다 */
+  eventEnd: string;
   /** 홈/지갑 상단 공지 (비우면 숨김) */
   notice: string;
 };
@@ -76,6 +80,8 @@ export const DEFAULT_RULES: Rules = {
     { key: "vvip", name: "VVIP", minSpend: 700000 },
   ],
   eventActive: true,
+  eventStart: "",
+  eventEnd: "",
   notice: "",
 };
 

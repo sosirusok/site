@@ -1,3 +1,3 @@
-.form { display: grid; gap: 16px; }
-.phone { height: 56px; font-size: 20px; font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+.form { display: grid; gap: 18px; }
+.phone { height: 58px; font-family: var(--font-label); font-size: 24px; font-variant-numeric: tabular-nums; letter-spacing: 0.1em; }
 .err { margin-top: 8px; }

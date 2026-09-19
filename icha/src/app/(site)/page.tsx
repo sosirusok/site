@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Directions } from "@/components/home/Directions";
 import { FaqTeaser } from "@/components/home/FaqTeaser";
-import { Hero } from "@/components/home/Hero";
+import { Hero, HeroMarquee } from "@/components/home/Hero";
 import { HowToSteps } from "@/components/home/HowToSteps";
 import { StoreCards } from "@/components/home/StoreCards";
 import { BRAND, STORE_IDS, type StoreId } from "@/lib/config";
@@ -30,6 +30,7 @@ export default async function HomePage() {
   return (
     <>
       <Hero rules={rules} />
+      <HeroMarquee />
       {(rules.notice || !rules.eventActive) && (
         <p className={styles.notice}><b className={styles.noticeTag}>공지</b>{rules.notice || "이벤트 기간이 아닙니다"}</p>
       )}

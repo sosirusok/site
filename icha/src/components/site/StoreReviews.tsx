@@ -11,17 +11,16 @@ export function StoreReviews({ store, limit = 2, reviewUrl, benefit = null }: { 
     <div className={styles.root}>
       {r && (
         <p className={styles.rating}>
-          <span className={styles.star} aria-hidden="true">★</span>
-          <b className={`num ${styles.score}`}>{r.score.toFixed(2)}</b>
-          <span className="small muted num">네이버 방문자 리뷰 {r.count.toLocaleString("ko-KR")}개 · {r.asOf.slice(0, 7).replace("-", ".")} 기준</span>
+          <b className={styles.score}>{r.score.toFixed(2)}</b>
+          <span className="small muted num">★★★★★<br />네이버 방문자 리뷰 {r.count.toLocaleString("ko-KR")}개 · {r.asOf.slice(0, 7).replace("-", ".")} 기준</span>
         </p>
       )}
       {quotes.length > 0 && (
         <ul className={styles.list}>
           {quotes.map((q) => (
-            <li key={q.date + q.text.slice(0, 8)} className={`box ${styles.quote}`}>
+            <li key={q.date + q.text.slice(0, 8)} className={styles.quote}>
               <p className={styles.text}>{q.text}</p>
-              <p className={`small faint ${styles.meta}`}>네이버 방문자 리뷰 · {q.date}</p>
+              <p className={styles.meta}>네이버 리뷰 · {q.date}</p>
             </li>
           ))}
         </ul>

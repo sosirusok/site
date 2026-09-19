@@ -1,12 +1,16 @@
-/* 예약 시트 — 아래에서 올라오는 흰 패널. z 60(탭 40·고정 바 35 위) */
-.backdrop { position: fixed; inset: 0; z-index: 60; background: rgba(4, 2, 8, 0.72); display: flex; align-items: flex-end; justify-content: center; }
-.sheet { position: relative; width: min(100%, var(--app-max)); max-height: 88dvh; overflow-y: auto; background: var(--bg-2); color: var(--ink); border-top: 1px solid var(--line-2); border-radius: 20px 20px 0 0; padding: 10px var(--gutter) calc(20px + env(safe-area-inset-bottom)); display: grid; gap: 14px; animation: up 0.22s var(--ease-out); }
+/* 예약 시트 — 각진 패널. 위 가장자리에 형광 3px 띠. z 60(탭 40·고정 바 35 위) */
+.backdrop { position: fixed; inset: 0; z-index: 60; background: rgba(3, 1, 6, 0.8); display: flex; align-items: flex-end; justify-content: center; }
+.sheet { position: relative; width: min(100%, var(--app-max)); max-height: 88dvh; overflow-y: auto; background: #0c0518; color: var(--ink); border-radius: 0; padding: 16px var(--gutter) calc(20px + env(safe-area-inset-bottom)); display: grid; gap: 16px; animation: up 0.22s var(--ease-out); }
+.sheet::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--mag), #7a00ff 42%, var(--cyan) 72%, var(--lime)); box-shadow: 0 0 16px rgba(255, 46, 136, 0.6); }
 @keyframes up { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
-.grip { display: block; width: 36px; height: 4px; border-radius: 2px; background: var(--line-2); margin: 0 auto; }
-.head { display: grid; gap: 2px; }
+.grip { display: block; width: 44px; height: 3px; background: var(--line-2); margin: 0 auto; }
+.head { display: grid; gap: 5px; }
+.headEn { font-family: var(--font-label); font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--naver); }
+.headKo { font-family: var(--font-poster); font-size: 25px; line-height: 1.1; color: #fff; }
 .list { display: grid; }
-.item { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 10px 0; border-top: 1px solid var(--line); }
-.course { flex: none; }
-.body { flex: 1; min-width: 0; display: grid; gap: 2px; }
-.name { font-size: 15px; font-weight: 700; }
-.sub { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.item { display: grid; grid-template-columns: 38px 1fr auto; align-items: center; column-gap: 12px; min-height: 68px; padding: 12px 0; border-top: 1px solid var(--line); }
+.course { font-family: var(--font-label); font-size: 32px; line-height: 0.82; color: transparent; -webkit-text-stroke: 1.8px var(--store); }
+.body { min-width: 0; display: grid; gap: 3px; }
+.name { font-family: var(--font-poster); font-size: 19px; line-height: 1.15; color: #fff; }
+.sub { font-size: 12px; color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.close { justify-self: center; }

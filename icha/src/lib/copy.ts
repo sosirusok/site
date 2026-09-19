@@ -21,3 +21,37 @@ export function ruleLine(rules: Rules): string {
     `유효기간 ${rules.couponValidDays}일`,
   ].filter(Boolean).join(" · ");
 }
+
+/**
+ * 이벤트 기간 한 줄. 사장님이 관리자 화면에 날짜를 넣기 전에는 날짜를 지어내지 않는다 —
+ * 시작·종료가 다 비면 "상시 운영 · 종료일은 매장 공지", 시작만 있으면 "10월 1일 시작 · 종료일은 매장 공지".
+ */
+export function eventPeriodLine(rules: Rules): string {
+  const md = (iso: string) => {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso.trim());
+    return m ? `${Number(m[2])}월 ${Number(m[3])}일` : "";
+  };
+  const a = md(rules.eventStart ?? "");
+  const b = md(rules.eventEnd ?? "");
+  if (a && b) return `${a} ~ ${b}`;
+  if (a) return `${a} 시작 · 종료일은 매장 공지`;
+  if (b) return `${b}까지`;
+  return "상시 운영 · 종료일은 매장 공지";
+}
+
+/**
+ * 이용 안내의 "알아 두실 점" — 관리자 설정(유효기간·1일 한도)을 그대로 읽어 적는다.
+ * 문장을 화면에 직접 적어 두면 사장님이 설정을 바꿔도 안내가 옛 숫자로 남는다.
+ */
+export function noticeLines(rules: Rules): string[] {
+  return [
+    "쿠폰은 계산할 때 직원에게 휴대폰 번호를 말씀하시면 발급됩니다.",
+    `쿠폰 1장당 사용 매장은 1곳이고, 발급 후 매장 변경은 되지 않습니다.`,
+    `유효기간은 발급일로부터 ${rules.couponValidDays}일입니다.`,
+    `한 번호로 하루 ${rules.dailyLimitPerMember}장까지 받으실 수 있습니다.`,
+    "쿠폰을 쓰실 매장에서 메인안주 1개를 주문하셔야 혜택이 적용됩니다.",
+    "테이블당 1회, 다른 할인·행사와 중복되지 않습니다.",
+    "혜택 품목은 매장 사정에 따라 같은 값의 다른 품목으로 바뀔 수 있습니다.",
+    "사용하실 때 직원에게 쿠폰 화면을 보여 주시면 됩니다.",
+  ];
+}

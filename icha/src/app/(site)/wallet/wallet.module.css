@@ -1,11 +1,18 @@
-.page { display: grid; padding-bottom: 16px; }
-.top { display: grid; gap: 6px; padding: 28px var(--gutter) 16px; }
-/* 관리자 공지 — 노란 상자 */
-.notice { display: flex; align-items: flex-start; gap: 10px; margin: 0 var(--gutter) 12px; padding: 12px 14px; background: var(--brand-dim); border: 1px solid rgba(255, 212, 0, 0.35); border-radius: var(--radius-sm); font-size: 14px; line-height: 1.5; }
-.noticeTag { flex: none; font-weight: 800; color: var(--brand); }
-.sec { padding: 8px var(--gutter) 16px; }
-.head { display: grid; gap: 2px; margin-bottom: 12px; }
-.count { color: var(--ink-3); font-weight: 600; margin-left: 4px; }
+.page { display: grid; padding-bottom: 18px; }
+.top { position: relative; display: grid; gap: 10px; padding: 34px var(--gutter) 18px; }
+.top::before { content: ""; position: absolute; left: -22%; top: -20px; width: 78%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(255, 46, 136, 0.28), transparent 66%); pointer-events: none; z-index: -1; }
+.top :global(.h1) { color: #fff; text-shadow: 0 0 2px #fff, 0 0 14px rgba(255, 46, 136, 0.8), 0 0 40px rgba(122, 0, 255, 0.5); }
+/* 내 번호 — Anton 으로 크게 */
+.topPhone { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 10px; }
+.topNum { font-family: var(--font-label); font-size: 19px; letter-spacing: 0.06em; color: var(--lime); }
+.topHint { font-size: 12.5px; color: var(--ink-2); }
+/* 관리자 공지 */
+.notice { display: flex; align-items: flex-start; gap: 10px; margin: 0 var(--gutter) 14px; padding: 12px 14px; background: rgba(204, 255, 0, 0.09); border: 2px solid rgba(204, 255, 0, 0.5); font-size: 14px; line-height: 1.5; }
+.noticeTag { flex: none; font-family: var(--font-label); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--lime); padding-top: 2px; }
+.sec { padding: 10px var(--gutter) 18px; }
+.head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 2px solid var(--mag); }
+.head :global(.h3) { font-family: var(--font-poster); font-size: 21px; font-weight: 400; }
+.count { font-family: var(--font-label); font-size: 22px; color: var(--lime); }
 .none { line-height: 1.55; }
-.foot { display: grid; gap: 12px; justify-items: start; padding-top: 16px; }
+.foot { display: grid; gap: 14px; justify-items: start; padding-top: 18px; }
 .foot :global(.notice) { justify-self: stretch; }

@@ -75,9 +75,8 @@ export default async function WalletPage() {
   return (
     <div className={styles.page}>
       <header className={styles.top}>
-        <span className="eyebrow">My coupons</span>
         <h1 className="h1">쿠폰함</h1>
-        <p className="small muted num">{maskPhone(session.phone)} · 사용 시 직원에게 이 화면을 보여 주세요</p>
+        <p className={styles.topPhone}><span className={`num ${styles.topNum}`}>{maskPhone(session.phone)}</span><span className={styles.topHint}>사용 시 직원에게 이 화면을 보여 주세요</span></p>
       </header>
 
       {rules.notice && <p className={styles.notice}><b className={styles.noticeTag}>공지</b>{rules.notice}</p>}
@@ -92,7 +91,8 @@ export default async function WalletPage() {
 
           <section className={styles.sec} aria-labelledby="wallet-active">
             <div className={styles.head}>
-              <h2 id="wallet-active" className="h3">사용 가능 쿠폰 <span className={styles.count}>{active.length}</span></h2>
+              <h2 id="wallet-active" className="h3">사용 가능 쿠폰</h2>
+              <span className={styles.count} aria-hidden="true">{String(active.length).padStart(2, "0")}</span>
             </div>
             {active.length > 0 ? <ActiveCoupons coupons={active} /> : <p className={`box small muted ${styles.none}`}>{relays.length > 0 ? "받은 쿠폰에서 사용 매장을 선택하면 여기에 표시됩니다." : "사용 가능한 쿠폰이 없습니다."}</p>}
           </section>

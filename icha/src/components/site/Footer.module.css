@@ -1,14 +1,22 @@
-/* 맨 아래 — 한 단계 더 어두운 바탕, 13px 회색 글자. 전화번호는 제 줄(44px 누르는 상자) */
-.footer { margin-top: 8px; padding: 28px var(--gutter) 24px; background: #08060d; color: var(--ink-2); font-size: 13px; line-height: 1.55; display: grid; gap: 16px; border-top: 1px solid var(--line); }
-.brand { font-size: 14px; font-weight: 800; color: var(--ink); }
-.brandSub { font-weight: 600; color: var(--ink-3); margin-left: 6px; }
-.stores { display: grid; gap: 10px; }
-.store { display: grid; gap: 1px; line-height: 1.5; }
-.storeName { font-weight: 700; color: var(--ink); }
-.addr { color: var(--ink-2); }
-.tel { display: inline-flex; align-items: center; justify-self: start; min-height: 44px; min-width: 44px; margin: -4px 0 -8px; color: var(--ink); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line-2); }
+/* 맨 아래 — 플라이어 뒷면. 위 가장자리에 형광 띠, 간판 글자는 크게 */
+.footer { position: relative; margin-top: 10px; padding: 34px var(--gutter) 26px; background: #030106; color: var(--ink-2); font-size: 13px; line-height: 1.55; display: grid; gap: 20px; }
+.footer::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--lime), var(--cyan) 40%, var(--mag)); box-shadow: 0 0 16px rgba(255, 46, 136, 0.55); }
+.head { display: grid; gap: 4px; }
+.mark { font-family: var(--font-poster); font-size: 36px; line-height: 1; color: #fff; text-shadow: 0 0 2px #fff, 0 0 14px rgba(255, 46, 136, 0.8), 0 0 40px rgba(122, 0, 255, 0.55); }
+.markEn { font-family: var(--font-label); font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--cyan); }
+
+.stores { display: grid; gap: 14px; }
+.store { display: grid; grid-template-columns: 34px 1fr; column-gap: 10px; }
+.storeNo { font-family: var(--font-label); font-size: 26px; line-height: 0.9; color: transparent; -webkit-text-stroke: 1.5px var(--store); }
+.storeBody { display: grid; gap: 1px; min-width: 0; }
+.storeName { font-family: var(--font-poster); font-size: 16px; line-height: 1.25; color: #fff; }
+.addr { color: var(--ink-2); font-size: 12.5px; }
+.tel { display: inline-flex; align-items: center; justify-self: start; min-height: 44px; min-width: 44px; margin: -2px 0 -8px; font-family: var(--font-label); font-size: 15px; letter-spacing: 0.04em; color: var(--lime); border-bottom: 2px solid rgba(204, 255, 0, 0.5); }
+
 .links { display: flex; flex-wrap: wrap; gap: 0 18px; }
-.link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; font-weight: 600; color: var(--ink); }
-.warn { font-size: 12px; line-height: 1.55; color: var(--ink-3); }
-.copy { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--ink-3); }
-.staff { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; margin: -12px 0; color: var(--ink-3); text-decoration: underline; text-underline-offset: 3px; }
+.link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; font-family: var(--font-label); font-size: 12px; letter-spacing: 0.16em; color: var(--cyan); border-bottom: 2px solid rgba(33, 240, 255, 0.4); align-self: start; }
+
+.warn { display: grid; gap: 6px; font-size: 12px; line-height: 1.6; color: var(--ink-2); border: 1px solid rgba(255, 46, 136, 0.5); border-left-width: 3px; padding: 12px 14px; }
+.warnTag { font-family: var(--font-label); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mag); font-weight: 400; }
+.copy { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13px; font-family: var(--font-label); letter-spacing: 0.12em; color: var(--ink-3); }
+.staff { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; margin: -12px 0; color: var(--ink-3); border-bottom: 1px solid var(--line-2); }

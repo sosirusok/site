@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { giftWhat } from "@/components/home/StoreCards";
 import { NextStop } from "@/components/site/NextStop";
+import { StoreActionBar } from "@/components/site/StoreActionBar";
 import { StoreGallery } from "@/components/site/StoreGallery";
 import { StoreHero } from "@/components/site/StoreHero";
 import { MenuThumb, StoreMenu } from "@/components/site/StoreMenu";
@@ -60,10 +61,11 @@ export default async function StorePage({ params }: Props) {
 
       {notice && <p className={styles.notice}><b className={styles.noticeTag}>공지</b>{notice}</p>}
 
-      <Section id="gift" eyebrow="Coupon" title="쿠폰 혜택" lead="다른 매장에서 받은 쿠폰을 이 매장에서 쓰면">
+      <Section id="gift" head="slab" tone="yellow" title="쿠폰 혜택" lead="다른 매장에서 받은 쿠폰을 이 매장에서 쓰면" pt={46} pb={34}>
         <div className={`box-brand ${styles.giftBox}`}>
-          <p className={styles.giftLine}><b>{what}</b> 무료</p>
-          <p className="small muted">{BRAND.condition}{gifts.length > 1 ? " · 택 1" : ""}</p>
+          <span className={styles.giftTag} aria-hidden="true">이 매장 혜택</span>
+          <p className={styles.giftLine}>{what} <b>무료</b></p>
+          <p className={styles.giftCond}>{BRAND.condition}{gifts.length > 1 ? " · 택 1" : ""}</p>
         </div>
         {gifts.length > 0 && (
           <ul className={styles.giftList}>
@@ -76,7 +78,7 @@ export default async function StorePage({ params }: Props) {
                 </span>
                 <span className={styles.giftPrice}>
                   {g.price != null && <s className="strike num">{formatWon(g.price)}</s>}
-                  <span className="badge badge-brand">무료</span>
+                  <span className="badge badge-brand">0원</span>
                 </span>
               </li>
             ))}
@@ -84,20 +86,20 @@ export default async function StorePage({ params }: Props) {
         )}
       </Section>
 
-      <Section id="photos" eyebrow="Photos" title="사진" alt>
+      <Section id="photos" eyebrow="Photos" title="가게 구경" tone="cyan" alt flush pt={44} pb={26}>
         <StoreGallery store={store} photoUrl={links?.photo ?? null} />
       </Section>
 
-      <Section id="menu" eyebrow="Menu" title="메뉴" lead={items(menu.length)}>
+      <Section id="menu" tone="mag" title="메뉴" lead={items(menu.length)} pt={54} pb={38}>
         <StoreMenu store={store} items={menu} menuUrl={links?.menu ?? null} />
       </Section>
 
-      <Section id="visit" eyebrow="Map" title="오시는 길" lead="세 매장 모두 50m 이내" alt>
+      <Section id="visit" head="slab" tone="cyan" title="오시는 길" lead="세 매장 모두 50m 이내" alt pt={50} pb={34}>
         <StoreVisit store={store} />
       </Section>
 
       {(store.quotes.length > 0 || store.naverRating) && (
-        <Section id="reviews" eyebrow="Reviews" title="리뷰">
+        <Section id="reviews" title="가 본 사람들" tone="lime" pt={44} pb={30}>
           <StoreReviews store={store} limit={2} reviewUrl={links?.review ?? null} benefit={reviewBenefit || null} />
         </Section>
       )}
@@ -107,18 +109,18 @@ export default async function StorePage({ params }: Props) {
       </div>
 
       {links && (
-        <div className="fixed-col sticky-bar">
+        <StoreActionBar>
           <div className="btn-row">
-            <Button href={links.booking} variant="naver" size="lg" className="btn-main" srSuffix={` — ${store.shortName}`}>네이버 예약하기</Button>
-            <Button href={links.directions} variant="outline" size="lg" srSuffix={` — ${store.shortName}`}>길찾기</Button>
-            {store.phone && <Button href={`tel:${store.phone.replace(/-/g, "")}`} variant="outline" size="lg" srSuffix={` ${store.phone}`}>전화</Button>}
+            <Button href={links.booking} variant="naver" className="btn-main" srSuffix={` — ${store.shortName}`}>예약하기</Button>
+            <Button href={links.directions} variant="outline" srSuffix={` — ${store.shortName}`}>길찾기</Button>
+            {store.phone && <Button href={`tel:${store.phone.replace(/-/g, "")}`} variant="outline" srSuffix={` ${store.phone}`}>전화</Button>}
           </div>
-        </div>
+        </StoreActionBar>
       )}
     </article>
   );
 }
 
 function items(n: number): string {
-  return n > 0 ? `${n}개 · 쿠폰 혜택 품목이 맨 위에 있습니다` : "준비 중";
+  return n > 0 ? `${n}개 · 쿠폰 혜택 품목이 맨 위` : "준비 중";
 }

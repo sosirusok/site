@@ -170,7 +170,6 @@ export function CouponTicket({ coupon, store }: { coupon: TicketCoupon; store: T
   return (
     <article className={styles.root} data-status="active">
       <header className={styles.state}>
-        <span className="eyebrow">Coupon</span>
         <h1 className="h1">{store.shortName} 쿠폰</h1>
         <p className="lead">메인안주 1개 주문 시 직원에게 이 화면을 보여 주세요.</p>
       </header>

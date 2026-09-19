@@ -61,6 +61,17 @@ export function SettingsForm({ rules }: { rules: Rules }) {
               <span className={ui.help}>끄면 카운터에서 쿠폰을 줄 수 없고, 손님 사이트에는 안내만 보입니다. 이미 준 쿠폰은 그대로 쓸 수 있습니다.</span>
             </div>
             <div className={ui.field}>
+              <label className={ui.label} htmlFor="st-start">
+                이벤트 기간
+              </label>
+              <div className={s.numUnit}>
+                <input id="st-start" name="eventStart" type="date" className={`${ui.input} ${ui.inputMono}`} defaultValue={rules.eventStart} />
+                <span>~</span>
+                <input id="st-end" name="eventEnd" type="date" className={`${ui.input} ${ui.inputMono}`} defaultValue={rules.eventEnd} />
+              </div>
+              <span className={ui.help}>비워 두면 손님 화면에 "상시 운영 · 종료일은 매장 공지"로 나갑니다. 날짜를 넣으면 홈과 이용 안내에 그 기간이 그대로 보입니다.</span>
+            </div>
+            <div className={ui.field}>
               <label className={ui.label} htmlFor="st-notice">
                 손님 화면 상단 공지
               </label>

@@ -19,8 +19,8 @@ export function StoreVisit({ store }: { store: Store }) {
   return (
     <div className={styles.block}>
       {mapStore && (
-        <div className={`card ${styles.map}`}>
-          <LazyStoreMap stores={[mapStore]} focusId={store.id} compact height={200} />
+        <div className={styles.map}>
+          <LazyStoreMap stores={[mapStore]} focusId={store.id} compact height={220} />
         </div>
       )}
       <dl className="kv">
@@ -28,7 +28,7 @@ export function StoreVisit({ store }: { store: Store }) {
         <dt>지하철</dt><dd>{loc.subway}</dd>
         <dt>층</dt><dd>{loc.floor}</dd>
         <dt>주차</dt><dd>{loc.parking}</dd>
-        <dt>오는 길</dt><dd>{loc.directions}</dd>
+        <dt>가는 길</dt><dd>{loc.directions}</dd>
       </dl>
       {links && <Button href={links.directions} variant="outline" block srSuffix={` — ${store.shortName}`}>네이버 지도 길찾기</Button>}
     </div>

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { CSSProperties, MouseEventHandler, ReactNode } from "react";
 
-export type ButtonVariant = "primary" | "naver" | "brand" | "outline" | "soft" | "ghost";
+export type ButtonVariant = "primary" | "naver" | "brand" | "outline" | "soft" | "ghost" | "dark" | "darkline";
 export type ButtonSize = "lg" | "md" | "sm" | "xs";
 
 type Props = {
@@ -24,7 +24,7 @@ type Props = {
 };
 
 /**
- * 버튼 — 모양은 하나(globals.css .btn), 색만 다르다: primary(검정) · naver(예약, 짙은 초록) · brand(노랑) · outline · soft · ghost.
+ * 버튼 — 모양은 하나(globals.css .btn), 색만 다르다: primary(라임) · naver(예약, 초록) · brand · outline(네온 테두리) · soft · ghost(밑줄) · dark/darkline(라임 색면 위).
  * 크기 md 48px · lg 52px · sm 40px · xs 34px. block 이면 가로 가득.
  */
 export function Button({ href, variant = "primary", size = "md", block = false, className = "", style, children, onClick, type = "button", disabled, id, srSuffix, ...rest }: Props) {

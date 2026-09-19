@@ -1,63 +1,119 @@
-/* 홈 — 포스터 히어로, 흰/연회색 섹션, 카드. 좌표 계산 없음 */
+/* ─── 홈 — v15c 클럽 플라이어 ─────────────────────────────────
+   전면 사진 패널, 속 빈 거대 숫자, 형광 스펙 시트, 가로 스크롤 스트립. 카드 그리드 없음. */
 
-/* ── 첫 화면 — 포스터가 아래 22% 에서 바탕색으로 녹아들고(경계선 없음), 그 아래 글자 뒤에 네온 번짐 두 점 ── */
+/* ══ 첫 화면 ══ */
 .hero { position: relative; display: grid; }
 .kv { position: relative; background: var(--bg); }
 .kvImg { width: 100%; height: auto; }
-.intro { position: relative; display: grid; gap: 14px; padding: 4px var(--gutter) 28px; margin-top: -14px; }
-.intro::before { content: ""; position: absolute; left: -20%; top: -40px; width: 80%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(255, 61, 154, 0.20), transparent 68%); pointer-events: none; z-index: -1; }
-.intro::after { content: ""; position: absolute; right: -25%; top: 40px; width: 70%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(45, 226, 230, 0.14), transparent 68%); pointer-events: none; z-index: -1; }
-.ctas { margin-top: 4px; }
-.facts { display: grid; gap: 8px; margin-top: 6px; padding-top: 18px; border-top: 1px solid var(--line-2); }
-.fact { display: grid; grid-template-columns: 64px 1fr; gap: 12px; font-size: 13px; line-height: 1.5; }
-.fact dt { color: var(--ink-3); font-weight: 600; }
-.fact dd { color: var(--ink-2); }
+/* 포스터 아래쪽에 구워진 바탕색(#0b0810)과 사이트 바탕(#06030c)의 경계를 지운다 */
+.kv::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 34%; background: linear-gradient(to bottom, transparent, rgba(6, 3, 12, 0.72) 52%, var(--bg) 88%); pointer-events: none; }
 
-/* ── 참여 매장 카드 ── */
-.cards { display: grid; gap: 8px; }
-.card { display: grid; }
-/* 카드 사이 연결 — 가운데 세로선 + '도보 N분' */
-.walk { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 4px 0; font-size: 12px; font-weight: 600; color: var(--ink-3); }
-.walkLine { width: 1px; height: 12px; background: var(--line-2); }
-.photo { position: relative; aspect-ratio: 16 / 10; background: var(--bg-3); }
-/* 사진 아래를 카드 면으로 살짝 이어 준다 — 어두운 카드 위에서 사진이 잘린 종이처럼 보이지 않게 */
-.photo::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 28%; background: linear-gradient(to bottom, transparent, rgba(21, 17, 29, 0.85)); pointer-events: none; }
-.photoImg { object-fit: cover; }
-.cardBody { display: grid; gap: 8px; padding: 16px 16px 18px; }
-.badges { display: flex; flex-wrap: wrap; gap: 6px; }
-.name { margin-top: 2px; font-size: 19px; }
-.gift { font-size: 15px; line-height: 1.5; }
-.giftLabel { font-size: 12px; font-weight: 700; color: var(--ink-2); margin-right: 4px; }
-.meta { margin-bottom: 6px; }
-.notice { color: var(--ink); font-weight: 600; }
+.intro { position: relative; z-index: 2; display: grid; gap: 16px; margin-top: -58px; padding: 0 var(--gutter) 34px; }
+/* 글자 뒤 색 번짐 두 점 */
+.intro::before { content: ""; position: absolute; left: -28%; top: -30px; width: 86%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(255, 46, 136, 0.34), transparent 66%); pointer-events: none; z-index: -1; }
+.intro::after { content: ""; position: absolute; right: -32%; top: 90px; width: 78%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(33, 240, 255, 0.22), transparent 66%); pointer-events: none; z-index: -1; }
 
-/* ── 이용 방법 ── */
-.steps { display: grid; gap: 4px; }
-.step { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.title { display: grid; gap: 2px; font-size: clamp(46px, 15vw, 66px); }
+/* 작은 윗줄(28px) + 거대한 아랫줄(62px) — 한 제목 안에서도 크기 차이를 크게 */
+.titleTop { font-size: 0.41em; line-height: 1.1; color: var(--cyan); text-shadow: 0 0 8px rgba(33, 240, 255, 0.8), 0 0 26px rgba(33, 240, 255, 0.4); letter-spacing: 0.01em; }
+.titleBig { color: #fff; text-shadow: 0 0 2px rgba(255, 255, 255, 0.9), 0 0 14px rgba(255, 46, 136, 0.85), 0 0 38px rgba(255, 46, 136, 0.5), 0 0 76px rgba(122, 0, 255, 0.5); }
+.introLead { max-width: 33em; }
+
+.bookBtn { margin-top: 2px; }
+.subCtas { display: flex; align-items: center; gap: 14px; margin-top: -4px; }
+.subCtas > :global(.btn-outline) { flex: none; min-width: 132px; }
+
+/* 조건 세 줄 — 형광 라벨이 붙은 스펙 시트. 줄마다 색이 다르다(회색 한 톤 금지) */
+.facts { display: grid; margin-top: 8px; border-top: 2px solid var(--line-2); }
+.fact { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding: 13px 0 13px 10px; border-bottom: 1px solid var(--line); border-left: 3px solid var(--fc, var(--mag)); }
+.toneMag { --fc: var(--mag); }
+.toneCyan { --fc: var(--cyan); }
+.toneLime { --fc: var(--lime); }
+.factKey { display: grid; gap: 2px; }
+.factEn { font-family: var(--font-label); font-size: 12px; line-height: 1; letter-spacing: 0.18em; text-transform: uppercase; color: var(--fc); text-shadow: 0 0 10px color-mix(in srgb, var(--fc) 55%, transparent); }
+.factKo { font-size: 12px; font-weight: 700; color: var(--ink-3); }
+.factVal { font-size: 14.5px; line-height: 1.5; color: var(--ink); }
+/* 네 줄 중 쿠폰 줄 하나만 라임 채움으로 올린다 — 같은 모양 네 번이면 표가 되고, 표는 읽히지 않는다 */
+.factHi { background: var(--brand-dim); border-left-width: 5px; padding-top: 15px; padding-bottom: 15px; }
+.factHi .factVal { font-family: var(--font-poster); font-size: 17px; line-height: 1.35; color: var(--lime); }
+
+/* ══ 참여 매장 — 전면 플라이어 패널 ══ */
+.panels { display: grid; }
+
+/* 패널 사이 — 형광 세로 막대 + 도보 시간(한글/영문 두 줄) */
+.walk { display: grid; justify-items: center; gap: 7px; padding: 20px 0 22px; }
+.walkBar { width: 2px; height: 20px; background: linear-gradient(var(--store), transparent); box-shadow: 0 0 10px var(--store); }
+.walkText { font-family: var(--font-poster); font-size: 17px; line-height: 1; color: var(--store); text-shadow: 0 0 14px color-mix(in srgb, var(--store) 60%, transparent); }
+.walkEn { font-family: var(--font-label); font-size: 12px; letter-spacing: 0.3em; color: var(--ink-3); }
+
+.panel { position: relative; }
+/* 전면 사진 — 듀오톤(globals .duo) */
+.shot { position: relative; aspect-ratio: 4 / 3; overflow: hidden; }
+.shotImg { object-fit: cover; }
+/* 속 빈 거대 차수 숫자 — 사진 위 왼쪽 위. 짝수 패널은 오른쪽 */
+.shotNo { top: 8px; left: 12px; font-family: var(--font-label); font-size: 104px; line-height: 0.74; color: transparent; -webkit-text-stroke: 2px var(--store); opacity: 0.95; filter: drop-shadow(0 0 16px color-mix(in srgb, var(--store) 70%, transparent)); }
+.panelFlip .shotNo { left: auto; right: 12px; }
+/* 상호 — 사진 아래 왼쪽. Black Han Sans 로 크게, 흰 글자 + 색 번짐 */
+.shotText { left: var(--gutter); right: var(--gutter); bottom: 14px; display: grid; gap: 7px; }
+.panelFlip .shotText { text-align: right; }
+.shotDrink { justify-self: start; padding: 4px 9px; background: var(--store); color: #06030c; font-size: 13px; letter-spacing: 0.14em; text-shadow: none; box-shadow: 0 0 20px -4px var(--store); }
+.shotName { color: #fff; text-shadow: 0 0 3px rgba(0, 0, 0, 0.9), 0 0 16px rgba(255, 46, 136, 0.75), 0 0 44px rgba(122, 0, 255, 0.6); }
+
+/* 사진 바로 아래 영업 상태 띠 — 그 집 색 3px 왼쪽 기둥 */
+.statusBar { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; padding: 9px var(--gutter); background: rgba(255, 255, 255, 0.05); border-left: 3px solid var(--store); font-size: 12.5px; }
+.statusBadge { background: transparent; border-left: 0; padding: 0; color: var(--ink); font-family: var(--font-sans); font-weight: 700; font-size: 12.5px; letter-spacing: 0; }
+.statusHours { color: var(--lime); font-weight: 700; }
+.statusWalk { color: var(--ink-3); }
+
+.panelBody { display: grid; gap: 14px; padding: 16px var(--gutter) 6px; }
+.giftLine { display: grid; gap: 5px; }
+.giftLabel { color: var(--mag); text-shadow: 0 0 10px rgba(255, 46, 136, 0.7); }
+.giftWhat { font-family: var(--font-poster); font-size: clamp(20px, 5.8vw, 24px); line-height: 1.18; letter-spacing: -0.012em; }
+.panelNotice { font-size: 13px; line-height: 1.5; color: var(--ink-2); border-left: 3px solid var(--mag); padding-left: 10px; }
+.panelNotice b { color: var(--mag); margin-right: 4px; }
+
+/* 가로 스크롤 사진 스트립 — 패널 안에서 화면 끝까지 흘린다 */
+.thumbs { margin: 0 calc(var(--gutter) * -1); }
+.thumb { width: 150px; display: grid; gap: 6px; }
+.thumbFrame { position: relative; display: block; width: 150px; aspect-ratio: 3 / 2; overflow: hidden; border: 1px solid var(--line-2); }
+.thumbImg { object-fit: cover; }
+.thumbCap { font-size: 13px; line-height: 1.35; color: var(--ink-3); white-space: normal; }
+.panelCtas { padding-bottom: 6px; }
+
+/* ══ 이용 방법 ══ */
+.steps { display: grid; gap: 2px; }
+.step { display: grid; grid-template-columns: 62px 1fr; align-items: start; column-gap: 12px; padding: 15px 0; border-bottom: 1px solid var(--line); }
 .step:last-child { border-bottom: 0; }
-.stepNo { flex: none; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--brand); color: var(--ink); font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums; }
-.stepBody { display: grid; gap: 2px; padding-top: 4px; }
-.stepTitle { font-size: 16px; font-weight: 700; line-height: 1.4; }
-.stepSub { line-height: 1.5; }
-.rules { margin-top: 20px; }
-.walletBtn { margin-top: 14px; }
+.step[data-tone="mag"] { --sc: var(--mag); }
+.step[data-tone="cyan"] { --sc: var(--cyan); }
+.step[data-tone="lime"] { --sc: var(--lime); }
+.stepNo { font-size: 52px; color: transparent; -webkit-text-stroke: 2px var(--sc); filter: drop-shadow(0 0 10px color-mix(in srgb, var(--sc) 55%, transparent)); }
+.stepBody { display: grid; gap: 4px; min-width: 0; }
+.stepTitle { font-family: var(--font-poster); font-size: 19px; line-height: 1.28; letter-spacing: -0.01em; color: #fff; }
+.stepSub { font-size: 13px; line-height: 1.55; color: var(--ink-2); }
+.rules { margin-top: 22px; }
+.walletBtn { margin-top: 18px; }
 
-/* ── 오시는 길 ── */
-.mapCard { padding: 0; }
-.mapCard :global(.leaflet-control-zoom) { display: none; }
-.addrs { display: grid; margin-top: 4px; }
-.addr { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+/* ══ 오시는 길 ══ */
+.mapWrap { position: relative; margin-bottom: 18px; border-top: 2px solid var(--cyan); border-bottom: 2px solid var(--mag); box-shadow: 0 0 26px -8px rgba(33, 240, 255, 0.7); }
+.mapWrap :global(.leaflet-control-zoom) { display: none; }
+.addrs { display: grid; padding: 0 var(--gutter); }
+.addr { display: grid; grid-template-columns: 46px 1fr auto; align-items: center; column-gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
 .addr:last-child { border-bottom: 0; }
-.addrNo { flex: none; }
-.addrBody { flex: 1; min-width: 0; display: grid; gap: 2px; }
-.addrName { font-size: 15px; font-weight: 700; }
-.addrSub { line-height: 1.45; }
-.searchLink { margin-top: 8px; }
+.addrNo { font-size: 38px; color: transparent; -webkit-text-stroke: 2px var(--store); filter: drop-shadow(0 0 10px color-mix(in srgb, var(--store) 55%, transparent)); }
+.addrBody { min-width: 0; display: grid; gap: 3px; }
+.addrName { font-family: var(--font-poster); font-size: 19px; line-height: 1.1; color: #fff; }
+.addrSub { font-size: 12.5px; line-height: 1.45; color: var(--ink-2); }
+.searchLine { padding: 16px var(--gutter) 0; }
 
-/* ── 자주 묻는 질문 ── */
-.faq { display: grid; border-top: 1px solid var(--line); }
-.faqItem { border-bottom: 1px solid var(--line); }
-.faqQ { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 56px; padding: 14px 0; font-size: 15px; font-weight: 600; line-height: 1.45; }
-.faqIcon { flex: none; color: var(--ink-3); transition: transform 0.2s; }
-.faqItem[open] .faqIcon { transform: rotate(180deg); }
-.faqA { padding: 0 0 16px; font-size: 14px; line-height: 1.65; color: var(--ink-2); }
+/* ══ 자주 묻는 질문 ══ */
+.faq { display: grid; }
+.faqItem { border-bottom: 1px solid var(--line); scroll-margin-top: 72px; }
+.faqQ { display: grid; grid-template-columns: auto 1fr auto; align-items: center; column-gap: 11px; min-height: 58px; padding: 13px 0; cursor: pointer; }
+.faqNo { font-family: var(--font-label); font-size: 17px; letter-spacing: 0.04em; color: var(--mag); text-shadow: 0 0 12px rgba(255, 46, 136, 0.7); }
+.faqText { font-size: 15px; font-weight: 700; line-height: 1.45; color: #fff; }
+/* 여닫는 표시 — 선 아이콘이 아니라 Anton 의 + / − */
+.faqToggle { display: inline-flex; align-items: center; justify-content: center; align-self: center; width: 44px; height: 44px; margin-right: -12px; font-family: var(--font-label); font-size: 22px; line-height: 1; color: var(--lime); }
+.faqToggle::before { content: "+"; }
+.faqItem[open] .faqToggle::before { content: "−"; color: var(--cyan); }
+.faqA { padding: 0 0 18px 28px; font-size: 14px; line-height: 1.7; color: var(--ink-2); border-left: 2px solid rgba(255, 46, 136, 0.35); margin-left: 6px; }

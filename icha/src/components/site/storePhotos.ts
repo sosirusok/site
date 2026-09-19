@@ -18,11 +18,22 @@ export const HERO_POS: Record<StoreId, string> = {
  */
 export type FanPhoto = { src: string; cap: string; pos?: string };
 
+/**
+ * 매장 화면 맨 위 한 장 — 그 가게의 실제 밤 간판 사진. 포스터에 그려진 세 간판과 같은 간판이고,
+ * 아래 갤러리 첫 장(대표 안주)과 겹치지 않는다. pos 는 간판 글자가 잘리지 않는 자리로 하나씩 잘라 보고 정했다(2026-09).
+ */
+export const HERO_PHOTO: Record<StoreId, FanPhoto> = {
+  tokyo: { src: "/images/stores/tokyo/exterior-light-sign.jpg", cap: "도쿄스탠드 서면점 입간판", pos: "50% 42%" },
+  joseon: { src: "/images/stores/joseon/exterior-sign-night.jpg", cap: "조선칼국수와통막걸리 밤 간판", pos: "50% 45%" },
+  wareureu: { src: "/images/stores/wareureu/exterior-sign-night.jpg", cap: "와르르맨숀 2층 간판", pos: "50% 45%" },
+};
+
+
 /** 홈에서 매장마다 붙이는 폴라로이드 세 장 — [0] 안주(큰 카드, 왼쪽), [1] 술 또는 둘째 안주(큰 카드, 오른쪽 아래), [2] 매장 입구(작은 카드) */
 export const FAN_PHOTOS: Record<StoreId, FanPhoto[]> = {
   tokyo: [
-    { src: "/images/stores/tokyo/cold-ham-plate-top.jpg", cap: "시그니처 콜드햄 플레이트 · 13,900원", pos: "50% 56%" },
     { src: "/images/stores/tokyo/draft-tap.jpg", cap: "산토리 프리미엄 생맥주 · 8,900원", pos: "50% 50%" },
+    { src: "/images/stores/tokyo/cold-ham-plate-top.jpg", cap: "시그니처 콜드햄 플레이트 · 13,900원", pos: "50% 56%" },
     { src: "/images/stores/tokyo/hero.jpg", cap: "매장 입구", pos: "50% 50%" },
   ],
   joseon: [
@@ -31,8 +42,8 @@ export const FAN_PHOTOS: Record<StoreId, FanPhoto[]> = {
     { src: "/images/stores/joseon/exterior-sign-night.jpg", cap: "매장 입구", pos: "50% 55%" },
   ],
   wareureu: [
-    { src: "/images/stores/wareureu/bulsuji.jpg", cap: "와르르 키리모찌불스지 · 25,900원", pos: "50% 50%" },
     { src: "/images/stores/wareureu/chadol-yukjeon.jpg", cap: "차돌육전 한 판 · 22,900원", pos: "50% 50%" },
+    { src: "/images/stores/wareureu/bulsuji.jpg", cap: "와르르 키리모찌불스지 · 25,900원", pos: "50% 50%" },
     { src: "/images/stores/wareureu/exterior-sign-night.jpg", cap: "매장 입구", pos: "50% 50%" },
   ],
 };

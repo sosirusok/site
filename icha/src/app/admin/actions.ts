@@ -60,6 +60,8 @@ const num = (fd: FormData, k: string): number | null => {
   const n = Number(v);
   return Number.isFinite(n) ? n : null;
 };
+/** 폼의 날짜 칸 — 'YYYY-MM-DD' 만 통과시키고 나머지(빈 칸 포함)는 빈 문자열로 둔다 */
+const isoDate = (v: string): string => (/^\d{4}-\d{2}-\d{2}$/.test(v) ? v : "");
 const isStoreId = (v: string): v is StoreId => (STORE_IDS as string[]).includes(v);
 /** 폼의 정수 id (menu_items.id 등). 아니면 null */
 const intId = (fd: FormData, k: string): number | null => {
@@ -389,6 +391,9 @@ export async function saveRulesAction(_prev: ActionState, fd: FormData): Promise
       couponValidDays: Math.round(couponValidDays),
       dailyLimitPerMember: Math.round(dailyLimitPerMember),
       eventActive: fd.get("eventActive") === "on",
+      // 날짜는 비워 둘 수 있다 — 확인 안 된 기간을 손님 화면이 지어내지 않게 빈 값을 그대로 저장한다
+      eventStart: isoDate(str(fd, "eventStart")),
+      eventEnd: isoDate(str(fd, "eventEnd")),
       notice: str(fd, "notice").slice(0, 200),
       storeNotices,
       reviewBenefit,

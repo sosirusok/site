@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { GiftLines } from "@/components/site/GiftLines";
 import { PlaceButton } from "@/components/site/PlaceButton";
 import type { PlaceSheetStore } from "@/components/site/PlaceSheet";
 import { Button } from "@/components/ui/Button";
@@ -88,7 +89,7 @@ export function PastCoupons({ coupons }: { coupons: WalletCoupon[] }) {
     <details id="wallet-past" className={styles.past}>
       <summary className={styles.pastSummary}>
         <span>지난 쿠폰 {coupons.length}장</span>
-        <svg className={styles.pastIcon} width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5" /></svg>
+        <span className={styles.pastIcon} aria-hidden="true" />
       </summary>
       <ul className={styles.stack}>
         {coupons.map((c) => (
@@ -112,11 +113,12 @@ export function EmptyWallet({ stores }: { stores: PlaceSheetStore[] }) {
   return (
     <div className={`card ${styles.empty}`}>
       <span className={styles.emptyIcon} aria-hidden="true">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4zM9 6v12" /></svg>
+        <span aria-hidden="true">0</span>
       </span>
       <p className="h3">받은 쿠폰이 없습니다</p>
       <p className="small muted">계산 시 직원에게 휴대폰 번호를 말씀하시면 이 번호로 쿠폰이 발급됩니다.</p>
       <PlaceButton stores={stores} variant="naver" className={styles.emptyBtn}>매장 예약하기</PlaceButton>
+      <GiftLines title="쿠폰으로 받으시는 혜택" />
     </div>
   );
 }

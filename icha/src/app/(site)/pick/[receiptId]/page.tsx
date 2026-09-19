@@ -34,7 +34,6 @@ export default async function PickPage({ params }: { params: Promise<{ receiptId
     return (
       <section className={styles.page} aria-labelledby="pick-title">
         <header className={styles.head}>
-          <span className="eyebrow">Expired</span>
           <h1 id="pick-title" className="h1">선택 기간 만료</h1>
           <p className="lead">{store.shortName} 발급 쿠폰의 선택 기간이 {fmtMD(deadline)}에 종료되었습니다. 다음 계산 시 휴대폰 번호를 말씀하시면 새 쿠폰이 발급됩니다.</p>
         </header>
@@ -69,7 +68,6 @@ export default async function PickPage({ params }: { params: Promise<{ receiptId
   return (
     <section className={styles.page} aria-labelledby="pick-title" data-store={store.id}>
       <header className={styles.head}>
-        <span className="eyebrow">Choose a store</span>
         <h1 id="pick-title" className="h1">사용 매장 선택</h1>
         <p className="lead"><b>{store.shortName}</b>에서 받은 쿠폰입니다. 어느 매장에서 어떤 혜택으로 쓸지 고르세요. {fmtMD(deadline)}까지 선택할 수 있습니다.</p>
       </header>

@@ -1,3 +1,4 @@
-.block { display: grid; gap: 16px; }
-.map { padding: 0; }
+.block { display: grid; gap: 18px; }
+/* 지도 — 카드가 아니라 위아래 형광 경계만 */
+.map { position: relative; margin: 0 calc(var(--gutter) * -1); border-top: 2px solid var(--cyan); border-bottom: 2px solid var(--mag); box-shadow: 0 0 26px -8px rgba(33, 240, 255, 0.6); }
 .map :global(.leaflet-control-zoom) { display: none; }

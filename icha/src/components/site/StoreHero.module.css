@@ -1,13 +1,25 @@
-/* 매장 첫 화면 — 사진 16:10 → 흰 바탕 정보 */
+/* 매장 첫 화면 — 듀오톤 전면 사진 위에 거대 차수 숫자와 간판 상호 */
 .hero { display: grid; }
-.shotWrap { position: relative; aspect-ratio: 16 / 10; background: var(--bg-3); }
+.shotWrap { position: relative; aspect-ratio: 4 / 3; overflow: hidden; }
 .shot { object-fit: cover; }
-/* 사진 아래 26% 가 바탕색으로 녹아든다 — 흰 사이트의 '잘린 사진' 느낌을 없앤다 */
-.shotWrap::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 26%; background: linear-gradient(to bottom, transparent, var(--bg) 92%); pointer-events: none; }
-.body { display: grid; gap: 10px; padding: 8px var(--gutter) 24px; border-bottom: 1px solid var(--line); }
-.badges { display: flex; flex-wrap: wrap; gap: 6px; }
-.name { font-size: 24px; }
-.rating { display: flex; align-items: center; gap: 4px; }
-.star { color: #ffc34d; }
-.kv { margin-top: 4px; }
-.other { display: block; margin-top: 2px; }
+.shotNo { top: 4px; left: 10px; font-family: var(--font-label); font-size: 124px; line-height: 0.72; color: transparent; -webkit-text-stroke: 2px var(--store); filter: drop-shadow(0 0 18px color-mix(in srgb, var(--store) 70%, transparent)); }
+.shotText { left: var(--gutter); right: var(--gutter); bottom: 16px; display: grid; gap: 8px; }
+.shotDrink { justify-self: start; padding: 4px 9px; background: var(--store); color: #06030c; font-size: 13px; letter-spacing: 0.14em; text-shadow: none; box-shadow: 0 0 20px -4px var(--store); }
+.name { color: #fff; text-shadow: 0 0 3px rgba(0, 0, 0, 0.9), 0 0 16px rgba(255, 46, 136, 0.8), 0 0 46px rgba(122, 0, 255, 0.6); }
+
+.statusBar { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; padding: 10px var(--gutter); background: rgba(255, 255, 255, 0.05); border-left: 3px solid var(--store); font-size: 12.5px; }
+.statusBadge { background: transparent; border-left: 0; padding: 0; color: var(--ink); font-family: var(--font-sans); font-weight: 700; font-size: 12.5px; letter-spacing: 0; }
+.statusHours { color: var(--lime); font-weight: 700; }
+.statusLo { color: var(--ink-3); }
+
+.body { display: grid; gap: 16px; padding: 20px var(--gutter) 26px; }
+
+/* 별점 — 숫자를 Anton 으로 크게. 작은 회색 한 줄이 아니다 */
+.rating { display: flex; align-items: center; gap: 12px; }
+.score { font-family: var(--font-label); font-size: 44px; line-height: 0.86; color: var(--lime); text-shadow: 0 0 14px rgba(204, 255, 0, 0.6), 0 0 40px rgba(204, 255, 0, 0.3); }
+.ratingBody { display: grid; gap: 3px; min-width: 0; }
+.stars { font-size: 14px; letter-spacing: 0.18em; color: var(--lime); }
+.ratingSub { font-size: 12.5px; color: var(--ink-2); }
+
+.kv { margin-top: 2px; }
+.other { display: block; margin-top: 3px; font-size: 12.5px; color: var(--ink-2); }

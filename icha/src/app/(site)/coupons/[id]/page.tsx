@@ -44,7 +44,7 @@ export default async function CouponPage({ params }: { params: Promise<{ id: str
   return (
     <section className={styles.page} data-store={store.id}>
       <p>
-        <Link href="/wallet" className={styles.back}><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 5l-5 5 5 5" /></svg>쿠폰함</Link>
+        <Link href="/wallet" className={styles.back}><span aria-hidden="true">←</span> 쿠폰함</Link>
       </p>
       <CouponTicket coupon={tc} store={ts} />
     </section>

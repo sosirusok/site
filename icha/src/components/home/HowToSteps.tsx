@@ -6,17 +6,17 @@ import s from "./home.module.css";
 
 const STEP_SUB = ["사진 촬영이나 앱 설치 없이, 번호만 말씀하시면 됩니다.", "로그인은 그 휴대폰 번호로 합니다.", "세 매장 모두 서면역 6번 출구 근처, 서로 50m 이내입니다.", "쿠폰 화면을 직원에게 보여 주시면 됩니다."] as const;
 
-/** 이용 방법 — 번호 원(노랑) + 한 줄 + 설명 한 줄, 네 단계. 아래 조건 상자와 [쿠폰함 열기]. */
+/** 이용 방법 — 속 빈 거대 숫자(01~04) 옆에 한글 간판 글자 한 줄. 단계마다 형광색이 바뀐다(마젠타→시안→라임→마젠타) */
 export function HowToSteps({ rules }: { rules: Rules }) {
   return (
-    <Section id="howto" eyebrow="How to" title="이렇게 받으세요" lead={BRAND.eventTag}>
+    <Section id="howto" tone="cyan" eyebrow="How to" title="이렇게 받으세요" lead={BRAND.eventTag} pt={58} pb={40}>
       <ol className={s.steps}>
         {STEP_LINES.map((text, i) => (
-          <li key={text} className={s.step}>
-            <span className={s.stepNo} aria-hidden="true">{i + 1}</span>
+          <li key={text} className={s.step} data-tone={["mag", "cyan", "lime", "mag"][i]}>
+            <span className={`bignum ${s.stepNo}`} aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
             <div className={s.stepBody}>
               <p className={s.stepTitle}><span className="sr-only">{i + 1}단계. </span>{text}</p>
-              <p className={`small muted ${s.stepSub}`}>{STEP_SUB[i]}</p>
+              <p className={s.stepSub}>{STEP_SUB[i]}</p>
             </div>
           </li>
         ))}

@@ -4,6 +4,7 @@ import { HowToSteps } from "@/components/home/HowToSteps";
 import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { BRAND } from "@/lib/config";
+import { eventPeriodLine, noticeLines } from "@/lib/copy";
 import { faqItems } from "@/lib/faq";
 import { LOCATIONS } from "@/lib/locations";
 import { placeLinks } from "@/lib/naver";
@@ -27,29 +28,30 @@ export default async function GuidePage() {
   const rules = await getRules();
   const faq = faqItems(rules);
   const reviews = ORDERED.map((s) => ({ s, text: rules.reviewBenefit[s.id].trim() })).filter((x) => x.text !== "");
+  // 유효기간·하루 한도 같은 숫자는 관리자 설정에서 읽어 적는다 — 화면에 숫자를 박아 두면 설정을 바꿔도 안내가 옛날 값으로 남는다
+  const notices = noticeLines(rules);
 
   return (
     <div className={styles.page}>
       <header className={styles.top}>
-        <span className="eyebrow">Guide</span>
-        <h1 className="h1">이용 안내</h1>
+        <h1 className={`d1 ${styles.topTitle}`}>이용 안내</h1>
         <p className="lead">{BRAND.name} {BRAND.eventTag} — 쿠폰을 받는 법, 쓰는 법, 예약과 자주 묻는 질문입니다.</p>
       </header>
 
       <HowToSteps rules={rules} />
 
-      <Section id="book" eyebrow="Reservation" title="매장 예약" lead="네이버 예약으로 접수합니다" alt>
+      <Section id="book" no="01" tone="lime" eyebrow="Reservation" title="매장 예약" lead="네이버 예약으로 접수합니다" alt pt={52} pb={36}>
         <ul className={styles.bookList}>
           {ORDERED.map((s) => {
             const l = placeLinks(s);
             return (
               <li key={s.id} className={styles.bookItem} data-store={s.id}>
-                <span className="badge badge-store">{s.course.n}차</span>
+                <span className={styles.bookNo} aria-hidden="true">{String(s.course.n).padStart(2, "0")}</span>
                 <span className={styles.bookBody}>
                   <span className={styles.bookName}>{s.shortName}</span>
-                  <span className="small muted">{LOCATIONS[s.id].subway}</span>
+                  <span className={styles.bookSub}>{LOCATIONS[s.id].subway}</span>
                 </span>
-                {l && <Button href={l.booking} variant="naver" size="sm" srSuffix={` — ${s.shortName}`}>예약하기</Button>}
+                {l && <Button href={l.booking} variant="naver" size="sm" srSuffix={` — ${s.course.n}차 ${s.shortName}`}>예약</Button>}
               </li>
             );
           })}
@@ -64,14 +66,21 @@ export default async function GuidePage() {
         )}
       </Section>
 
-      <Section id="faq" eyebrow="FAQ" title="자주 묻는 질문">
+      <Section id="notice" title="알아 두실 점" lead={`이벤트 기간 ${eventPeriodLine(rules)}`} tone="cyan" pt={48} pb={32}>
+        <ul className={styles.noticeList}>
+          {notices.map((line) => <li key={line}>{line}</li>)}
+        </ul>
+      </Section>
+
+      <Section id="faq" head="slab" title="자주 묻는 질문" tone="lime" pt={46} pb={34}>
         <ul className={styles.faq}>
           {faq.map((it) => (
             <li key={it.id}>
               <details className={styles.faqItem} id={it.id}>
                 <summary className={styles.faqQ}>
-                  <span>{it.q}</span>
-                  <svg className={styles.faqIcon} width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5" /></svg>
+                  <span className={styles.faqNo} aria-hidden="true">Q{String(faq.indexOf(it) + 1).padStart(2, "0")}</span>
+                  <span className={styles.faqText}>{it.q}</span>
+                  <span className={styles.faqToggle} aria-hidden="true" />
                 </summary>
                 <p className={styles.faqA}>{it.a}</p>
               </details>
@@ -80,11 +89,20 @@ export default async function GuidePage() {
         </ul>
       </Section>
 
-      <Section id="poster" eyebrow="Poster" title="이벤트 포스터" lead="매장에 붙어 있는 포스터 원본" alt>
-        <figure className={`card ${styles.poster}`}>
+      <Section id="poster" title="포스터 원본" lead="매장에 붙어 있는 그 포스터" tone="cyan" alt flush pt={46} pb={30}>
+        <figure className={styles.poster}>
           <Image src="/images/event/poster.jpg" alt={`${BRAND.name} 포스터 — ${BRAND.unionName}, ${BRAND.eventTag}`} width={1080} height={1350} sizes="(min-width: 480px) 440px, calc(100vw - 40px)" className={styles.posterImg} />
         </figure>
       </Section>
+
+      {/* 페이지가 사진으로 끝나면 만들다 만 화면처럼 보인다 — 라임 색면 하나로 닫고 다음 행동을 준다 */}
+      <div className={styles.closer}>
+        <p className={styles.closerTitle}>번호만 말씀하시면 쿠폰이 쌓입니다</p>
+        <div className={styles.closerRow}>
+          <Button href="/wallet" variant="dark" size="lg">내 쿠폰함 열기</Button>
+          <Button href="/#stores" variant="darkline">참여 매장 보기</Button>
+        </div>
+      </div>
     </div>
   );
 }
