@@ -2,7 +2,8 @@ import { LOCATIONS } from "@/lib/locations";
 import { placeLinks } from "@/lib/naver";
 import type { Store } from "@/lib/stores";
 import { StickerButton } from "./Kit";
-import { StoreMap, type MapStore } from "./StoreMap";
+import { LazyStoreMap } from "./LazyStoreMap";
+import type { MapStore } from "./StoreMap";
 import styles from "./StoreVisit.module.css";
 
 /**
@@ -23,7 +24,7 @@ export function StoreVisit({ store }: { store: Store }) {
     <div className={styles.block}>
       {mapStore && (
         <div className={`map-paper ${styles.map}`}>
-          <StoreMap stores={[mapStore]} focusId={store.id} compact height={200} />
+          <LazyStoreMap stores={[mapStore]} focusId={store.id} compact height={200} />
         </div>
       )}
       <div className={`paper ${styles.paper}`}>

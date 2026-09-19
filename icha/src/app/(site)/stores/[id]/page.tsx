@@ -10,14 +10,19 @@ import { StoreHero } from "@/components/site/StoreHero";
 import { MenuThumb, StoreMenu } from "@/components/site/StoreMenu";
 import { StoreReviews } from "@/components/site/StoreReviews";
 import { StoreVisit } from "@/components/site/StoreVisit";
-import { BRAND, formatWon, type StoreId } from "@/lib/config";
+import { BRAND, formatWon, STORE_IDS, type StoreId } from "@/lib/config";
 import { listMenu, type MenuItem } from "@/lib/db/queries";
 import { placeLinks } from "@/lib/naver";
 import { getRules } from "@/lib/settings";
 import { getStore } from "@/lib/stores";
 import styles from "./page.module.css";
 
-export const dynamic = "force-dynamic";
+/** 정적(ISR) — 세 매장을 빌드 때 만들어 두고 60초마다 뒤에서 새로 만든다. 관리자가 메뉴·공지를 저장하면 revalidatePath("/stores/[id]") 로 바로. 없는 id 는 notFound(그 결과도 60초 캐시). */
+export const revalidate = 60;
+
+export function generateStaticParams(): { id: StoreId }[] {
+  return STORE_IDS.map((id) => ({ id }));
+}
 
 type Props = { params: Promise<{ id: string }> };
 

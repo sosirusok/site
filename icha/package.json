@@ -5,14 +5,15 @@
   "description": "서면 2차 연합 — 영수증 인증 무료 사이드 쿠폰 사이트 (조선칼국수 · 도쿄스탠드 · 와르르맨숀 서면점)",
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/kit-manifest.mjs && node scripts/kit-icons.mjs",
+    "prebuild": "node scripts/kit-manifest.mjs && node scripts/kit-icons.mjs && node scripts/kit-variants.mjs && node scripts/fonts-local.mjs",
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "test": "node --import tsx --test src/**/*.test.ts",
     "seed": "tsx scripts/seed.ts",
     "admin:create": "tsx scripts/create-admin.ts",
-    "kit": "node scripts/kit-manifest.mjs && node scripts/kit-icons.mjs"
+    "kit": "node scripts/kit-manifest.mjs && node scripts/kit-icons.mjs && node scripts/kit-variants.mjs",
+    "fonts": "node scripts/fonts-local.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.126.0",

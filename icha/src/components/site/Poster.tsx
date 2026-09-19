@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { CSSProperties } from "react";
 import type { StoreId } from "@/lib/config";
-import { kitAlt, kitPiece } from "@/lib/kit";
+import { KIT_QUALITY, kitAlt, kitPiece } from "@/lib/kit";
 
 /**
  * 사장님 포스터(public/images/event/poster.jpg)에서 오려 낸 조각들.
@@ -83,7 +83,7 @@ export function Piece({ name, decorative = false, rotate, className = "", sizes,
   const st: CSSProperties = { ...(rotate != null ? ({ "--r": `${rotate}deg` } as CSSProperties) : {}), ...style };
   return (
     <span className={`${bare ? "" : "stk"} ${p.kit ? "stk-kit" : ""} ${className}`} style={st} data-piece={name}>
-      <Image src={p.src} alt={decorative ? "" : p.alt} aria-hidden={decorative || undefined} width={p.w} height={p.h} sizes={sizes ?? "(min-width: 480px) 480px, 100vw"} priority={priority} draggable={false} />
+      <Image src={p.src} alt={decorative ? "" : p.alt} aria-hidden={decorative || undefined} width={p.w} height={p.h} sizes={sizes ?? "(min-width: 480px) 480px, 100vw"} quality={KIT_QUALITY} priority={priority} draggable={false} />
     </span>
   );
 }

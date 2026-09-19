@@ -5,10 +5,16 @@
  */
 import type { CSSProperties } from "react";
 import manifest from "./kit-manifest.json";
+import variants from "./kit-variants.json";
 
 export type KitEntry = { src: string; w: number; h: number };
 
+/** 키트 장식 그림(스티커·제목판·메모·컷아웃·도장)의 next/image 품질 — 사진(기본 75)보다 조금 낮게. next.config images.qualities 에 있어야 한다 */
+export const KIT_QUALITY = 70;
+
 const M: Record<string, KitEntry | undefined> = manifest;
+/** scripts/kit-variants.mjs 가 만든 WebP 판(public/images/bg/) — 이름 → [{ w, src }] 작은 것부터 */
+const V: Record<string, { w: number; src: string }[] | undefined> = variants;
 
 /** 키트에 그 이름의 그림이 있으면 { src, w, h }, 없으면 null */
 export function kitPiece(name: string): KitEntry | null {
@@ -120,11 +126,24 @@ export function kitAlt(name: string): string {
   return (KIT_ALT as Record<string, string | undefined>)[name] ?? "";
 }
 
+/** src 의 확장자로 MIME — image-set() 의 type() 에 쓴다 */
+function mimeOf(src: string): string {
+  const ext = src.toLowerCase().replace(/^.*\./, "");
+  return ext === "jpg" || ext === "jpeg" ? "image/jpeg" : ext === "webp" ? "image/webp" : ext === "avif" ? "image/avif" : "image/png";
+}
+
+/** WebP 판을 먼저, 못 읽는 브라우저는 원본 — image-set() 한 줄. globals.css 는 @supports 로 감싸 image-set 자체를 모르는 브라우저에는 --kit-* 의 url() 을 쓴다 */
+function imageSet(webp: string, original: string): string {
+  return `image-set(url("${webp}") type("image/webp"), url("${original}") type("${mimeOf(original)}"))`;
+}
+
 /**
  * (site) 레이아웃의 .app 에 얹는 CSS 변수 — 키트에 있는 것만 넣는다.
- *  --kit-bg / --kit-bg-wide : 바탕(bg-night, bg-night-wide). 없으면 globals.css 의 bokeh-soft.jpg
- *  --kit-tape               : 테이프(tape, opacity .85). 없으면 CSS 크림 띠
- *  --kit-arrow              : 순서 사이 화살표(arrow). 없으면 CSS 빨간 화살표
+ *  --kit-bg / --kit-bg-wide           : 바탕(bg-night, bg-night-wide) 원본 url(). 없으면 globals.css 의 bokeh-soft.jpg
+ *  --kit-bg-sm / --kit-bg-lg           : 바탕의 WebP 판 image-set() — 휴대폰(≤480px)은 780px, 넓은 화면은 원본 폭 1080px(1560 을 요청하지만 원본을 넘기지 않는다; globals.css 가 고른다)
+ *  --kit-bg-wide-sm / --kit-bg-wide-lg : 가로 화면 바탕의 WebP 판(1280 / 1920)
+ *  --kit-tape / --kit-tape-set         : 테이프(tape, opacity .85) 원본 / WebP image-set(). 없으면 CSS 크림 띠
+ *  --kit-arrow / --kit-arrow-set       : 순서 사이 화살표(arrow) 원본 / WebP image-set(). 없으면 CSS 빨간 화살표
  */
 export function kitCssVars(): CSSProperties | undefined {
   const v: Record<string, string> = {};
@@ -132,14 +151,30 @@ export function kitCssVars(): CSSProperties | undefined {
   const wide = kitPiece("bg-night-wide");
   const tape = kitPiece("tape");
   const arrow = kitPiece("arrow");
-  if (bg) v["--kit-bg"] = `url("${bg.src}")`;
-  if (wide) v["--kit-bg-wide"] = `url("${wide.src}")`;
+  if (bg) {
+    v["--kit-bg"] = `url("${bg.src}")`;
+    const [sm, lg] = V["bg-night"] ?? [];
+    if (sm) v["--kit-bg-sm"] = imageSet(sm.src, bg.src);
+    if (lg) v["--kit-bg-lg"] = imageSet(lg.src, bg.src);
+  }
+  if (wide) {
+    v["--kit-bg-wide"] = `url("${wide.src}")`;
+    const [sm, lg] = V["bg-night-wide"] ?? [];
+    if (sm) v["--kit-bg-wide-sm"] = imageSet(sm.src, wide.src);
+    if (lg) v["--kit-bg-wide-lg"] = imageSet(lg.src, wide.src);
+  }
   if (tape) {
     v["--kit-tape"] = `url("${tape.src}")`;
+    const t = V["tape"]?.[0];
+    if (t) v["--kit-tape-set"] = imageSet(t.src, tape.src);
     v["--kit-tape-fill"] = "transparent";
     v["--kit-tape-shadow"] = "none";
     v["--kit-tape-opacity"] = "0.85"; // tape.png 는 알파가 약해(≈247/255) 화면에서 살짝 비치게
   }
-  if (arrow) v["--kit-arrow"] = `url("${arrow.src}")`;
+  if (arrow) {
+    v["--kit-arrow"] = `url("${arrow.src}")`;
+    const a = V["arrow"]?.[0];
+    if (a) v["--kit-arrow-set"] = imageSet(a.src, arrow.src);
+  }
   return Object.keys(v).length ? (v as CSSProperties) : undefined;
 }

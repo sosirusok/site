@@ -46,6 +46,13 @@ async function run(fn: () => Promise<{ message: string; data?: Record<string, st
   }
 }
 
+/** 손님 화면(홈·이용 안내·매장)은 정적(ISR, 60초) — 규칙·메뉴·공지를 저장하면 바로 새로 만들게 한다 */
+function revalidateCustomerPages(): void {
+  revalidatePath("/");
+  revalidatePath("/guide");
+  revalidatePath("/stores/[id]", "page");
+}
+
 const str = (fd: FormData, k: string) => String(fd.get(k) ?? "").trim();
 const num = (fd: FormData, k: string): number | null => {
   const v = str(fd, k).replace(/[,\s원]/g, "");
@@ -295,6 +302,7 @@ export async function saveMenuAction(_prev: ActionState, fd: FormData): Promise<
       await audit(s.adminId, "menu.image", String(id), { removed: true });
     }
     await audit(s.adminId, "menu.save", String(savedId), { storeId, name, price, isGift, active, created: !id });
+    revalidateCustomerPages();
     return { message: id ? `'${name}' 을(를) 저장했습니다.` : `'${name}' 을(를) 추가했습니다.`, data: { id: savedId } };
   });
 }
@@ -308,6 +316,7 @@ export async function toggleMenuGiftAction(_prev: ActionState, fd: FormData): Pr
     const isGift = !item.isGift;
     await upsertMenuItem({ ...item, id: item.id, isGift });
     await audit(s.adminId, "menu.gift", String(id), { name: item.name, isGift });
+    revalidateCustomerPages();
     return { message: isGift ? `'${item.name}' 을(를) 무료 증정 품목으로 넣었습니다.` : `'${item.name}' 을(를) 무료 증정에서 뺐습니다.` };
   });
 }
@@ -321,6 +330,7 @@ export async function toggleMenuActiveAction(_prev: ActionState, fd: FormData): 
     const active = !item.active;
     await upsertMenuItem({ ...item, id: item.id, active });
     await audit(s.adminId, "menu.active", String(id), { name: item.name, active });
+    revalidateCustomerPages();
     return { message: active ? `'${item.name}' 을(를) 다시 노출합니다.` : `'${item.name}' 을(를) 숨겼습니다.` };
   });
 }
@@ -340,6 +350,7 @@ export async function moveMenuAction(_prev: ActionState, fd: FormData): Promise<
     [order[idx], order[swap]] = [order[swap]!, order[idx]!];
     for (let i = 0; i < order.length; i++) await query(`update menu_items set sort=$2 where id=$1`, [order[i], i]);
     await audit(s.adminId, "menu.sort", String(id), { dir: dir < 0 ? "up" : "down" });
+    revalidateCustomerPages();
     return { message: "순서를 바꿨습니다." };
   });
 }
@@ -352,6 +363,7 @@ export async function deleteMenuAction(_prev: ActionState, fd: FormData): Promis
     if (!item || !id) throw new ActionError("메뉴를 찾을 수 없습니다.");
     const removed = await deleteMenuItem(id);
     await audit(s.adminId, "menu.delete", String(id), { name: item.name, hard: removed });
+    revalidateCustomerPages();
     return { message: removed ? `'${item.name}' 을(를) 삭제했습니다.` : `'${item.name}' 은(는) 발급된 쿠폰이 있어 삭제 대신 숨김·무료 증정 해제 처리했습니다.` };
   });
 }
@@ -383,6 +395,7 @@ export async function saveRulesAction(_prev: ActionState, fd: FormData): Promise
     };
     await saveRules(patch);
     await audit(s.adminId, "settings.save", "rules", patch);
+    revalidateCustomerPages();
     return { message: "저장했습니다. 손님 사이트와 카운터에 바로 반영됩니다." };
   });
 }

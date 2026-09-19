@@ -55,6 +55,14 @@ body { color: var(--fg); font-family: var(--font-sans); font-size: 15px; line-he
 .app { --u: calc(min(100vw, var(--app-max)) / 390); position: relative; isolation: isolate; max-width: var(--app-max); min-height: 100dvh; margin: 0 auto; padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 16px); overflow-x: clip; }
 .app::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(rgba(12, 8, 20, 0.5), rgba(12, 8, 20, 0.5)), var(--kit-bg, url("/images/poster/bokeh-soft.jpg")) center / cover no-repeat #14101c; }
 @media (min-aspect-ratio: 1 / 1) { .app::before { background-image: linear-gradient(rgba(12, 8, 20, 0.5), rgba(12, 8, 20, 0.5)), var(--kit-bg-wide, var(--kit-bg, url("/images/poster/bokeh-soft.jpg"))); } }
+/* 바탕·테이프의 WebP 판(scripts/kit-variants.mjs → public/images/bg/, kit.ts 의 --kit-*-sm/-lg/-set 은 image-set(webp, 원본)) — 휴대폰(≤480px, 한 단 폭)은 780px 판(원본 jpg 786KB → 약 70KB), 넓은 화면은 1560px, 가로 화면은 wide 1280/1920.
+   image-set()+type() 을 모르는 브라우저는 이 블록을 건너뛰고 위의 원본 url() 을 그대로 쓴다. 보이는 그림은 같다(같은 사진, 같은 어두운 겹). */
+@supports (background-image: image-set(url("i.webp") type("image/webp"))) {
+  .app::before { background-image: linear-gradient(rgba(12, 8, 20, 0.5), rgba(12, 8, 20, 0.5)), var(--kit-bg-lg, var(--kit-bg, url("/images/poster/bokeh-soft.jpg"))); }
+  @media (max-width: 480px) { .app::before { background-image: linear-gradient(rgba(12, 8, 20, 0.5), rgba(12, 8, 20, 0.5)), var(--kit-bg-sm, var(--kit-bg, url("/images/poster/bokeh-soft.jpg"))); } }
+  @media (min-aspect-ratio: 1 / 1) { .app::before { background-image: linear-gradient(rgba(12, 8, 20, 0.5), rgba(12, 8, 20, 0.5)), var(--kit-bg-wide-lg, var(--kit-bg-wide, var(--kit-bg, url("/images/poster/bokeh-soft.jpg")))); } }
+  @media (min-aspect-ratio: 1 / 1) and (max-width: 1280px) { .app::before { background-image: linear-gradient(rgba(12, 8, 20, 0.5), rgba(12, 8, 20, 0.5)), var(--kit-bg-wide-sm, var(--kit-bg-wide, var(--kit-bg, url("/images/poster/bokeh-soft.jpg")))); } }
+}
 /* 아래 고정 크림 바가 있는 화면은 탭 + 바 + 16px 만큼 본문 아래를 비운다 — 무엇도 가려지지 않는다 */
 .app:has(.sticky-bar) { padding-bottom: calc(var(--tabbar-h) + var(--stickybar-h) + env(safe-area-inset-bottom) + 16px); }
 .fixed-col { position: fixed; left: 50%; transform: translateX(-50%); width: min(100%, var(--app-max)); }
@@ -243,3 +251,8 @@ summary.btn { list-style: none; }
 .chip-on::before { background: var(--naver); }
 /* 어두운 받침 위 밑줄 글자 — 보케 위 작은 이동(더보기, 리뷰 작성). 44px 터치 */
 .link-d { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; background: #111; color: var(--cream); font-family: var(--font-display); font-size: 16px; font-weight: 400; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; border-radius: 0; }
+
+/* 테이프의 WebP 판(--kit-tape-set, kit.ts) — 위의 .tape*·.map-paper 기본 규칙보다 뒤에 있어야 이긴다(같은 특이성). image-set() 을 아는 브라우저만. 그림은 같다 */
+@supports (background-image: image-set(url("i.webp") type("image/webp"))) {
+  .tape::after, .tape-tl::after, .tape-tr::after, .map-paper::before, .map-paper::after { background-image: var(--kit-tape-set, var(--kit-tape, none)); }
+}

@@ -5,13 +5,14 @@
 파일을 넣거나 바꾼 뒤에는 아래 두 명령만 돌리면 돼요. 코드는 안 고쳐도 돼요.
 
 ```bash
-npm run kit     # public/images/kit/ 를 훑어 src/lib/kit-manifest.json(이름 → 경로·가로·세로)을 다시 만들어요 (+ 앱 아이콘)
+npm run kit     # public/images/kit/ 를 훑어 src/lib/kit-manifest.json(이름 → 경로·가로·세로)을 다시 만들어요 (+ 앱 아이콘, + 바탕·테이프·화살표의 WebP 판 public/images/bg/ → src/lib/kit-variants.json)
 npm run build   # 그 목록으로 화면을 다시 만들어요 (개발 중에는 next dev 가 알아서 다시 읽어요; prebuild 가 kit 을 먼저 돌려요)
 ```
 
 - 크기가 예정과 달라도 그대로 써요(코드가 실제 크기를 읽어요). 다르면 `npm run kit` 이 경고만 해요.
 - 그림에 적힌 글자가 아래 표와 다르면 `src/lib/kit.ts` 의 `KIT_ALT` 에서 그 한 줄만 고쳐요(보조기기가 읽는 글자 = 그림에 적힌 글자예요).
 - 파일을 지우면 다시 지금 화면(포스터 조각·CSS)으로 돌아가요.
+- CSS 배경으로 쓰는 넉 장(`bg-night`·`bg-night-wide`·`tape`·`arrow`)은 `scripts/kit-variants.mjs` 가 가벼운 WebP 판(`public/images/bg/`)을 만들어 `image-set()` 으로 먼저 쓰고, 원본은 그대로 대체용으로 남아요(휴대폰 바탕 786KB → 84KB). 원본을 바꾸면 `npm run kit` 을 다시 돌려요.
 
 ## v10 규칙 — 디자이너 README 그대로
 

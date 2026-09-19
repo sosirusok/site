@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import { SectionLabel, StickerButton } from "@/components/site/Kit";
-import { StoreMap, type MapStore } from "@/components/site/StoreMap";
+import { LazyStoreMap } from "@/components/site/LazyStoreMap";
+import type { MapStore } from "@/components/site/StoreMap";
 import { LOCATIONS } from "@/lib/locations";
 import { naverSearchUrl, placeLinks } from "@/lib/naver";
 import { STORES } from "@/lib/stores";
@@ -42,7 +43,7 @@ export function Directions() {
       </div>
       <div className={s.mapWrap}>
         <div className={`map-paper ${s.mapPaper}`}>
-          <StoreMap stores={mapStores} compact hidePanel height={200} />
+          <LazyStoreMap stores={mapStores} compact hidePanel height={200} />
         </div>
         <div className={`paper ${s.addrPaper}`} style={{ "--r": "2deg" } as CSSProperties}>
           <ul className={s.addrs}>

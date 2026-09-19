@@ -23,7 +23,7 @@ export function StoreGallery({ store, photoUrl = null }: { store: Store; photoUr
           const [capName, capPrice] = capParts(p.cap);
           return (
             <li key={p.src} className={`pola ${styles.pola} ${styles[`g${i}`]}`} style={{ "--r": `${R[i]}deg` } as CSSProperties}>
-              <Image src={p.src} alt={photoAlt(store.images, p)} width={i === 0 ? 720 : 480} height={i === 0 ? 540 : 360} sizes={i === 0 ? "(min-width: 480px) 448px, 100vw" : i === 1 || i === 2 ? "220px" : "140px"} priority={i < 2} style={{ objectPosition: p.pos }} />
+              <Image src={p.src} alt={photoAlt(store.images, p)} width={i === 0 ? 720 : 480} height={i === 0 ? 540 : 360} sizes={i === 0 ? "(min-width: 480px) 448px, 100vw" : i === 1 || i === 2 ? "220px" : "140px"} style={{ objectPosition: p.pos }} />
               <span className="cap">{capName}{capPrice && <> <span className="cap-price">{capPrice}</span></>}</span>
             </li>
           );

@@ -13,7 +13,8 @@ import { getRules } from "@/lib/settings";
 import { STORES } from "@/lib/stores";
 import styles from "./page.module.css";
 
-export const dynamic = "force-dynamic";
+/** 정적(ISR) — 규칙(유효기간·한도·리뷰 이벤트)만 DB 에서 읽는다. 60초마다, 그리고 관리자가 저장할 때 바로 새로 만든다. */
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "이용 안내",

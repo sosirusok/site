@@ -6,7 +6,7 @@
 import Image from "next/image";
 import type { CSSProperties, ReactNode } from "react";
 import { StickerButton as KitStickerButton, type ButtonKind } from "@/components/site/Kit";
-import { kitPiece, type KitEntry } from "@/lib/kit";
+import { KIT_QUALITY, kitPiece, type KitEntry } from "@/lib/kit";
 import k from "./kit.module.css";
 
 export { KIT_ALT, kitAlt, kitPiece } from "@/lib/kit";
@@ -67,7 +67,7 @@ export function KitCut({ name, width, className = "", fallback = null, style, pr
   if (!p) return <>{fallback}</>;
   return (
     <span className={`${k.cut} ${className}`} style={{ width, ...style }} aria-hidden="true" data-piece={name}>
-      <Image src={p.src} alt="" width={p.w} height={p.h} sizes={`${width}px`} draggable={false} priority={priority} />
+      <Image src={p.src} alt="" width={p.w} height={p.h} sizes={`${width}px`} quality={KIT_QUALITY} draggable={false} priority={priority} />
     </span>
   );
 }

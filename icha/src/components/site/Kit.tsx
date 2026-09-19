@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
-import { kitAlt, kitPiece } from "@/lib/kit";
+import { KIT_QUALITY, kitAlt, kitPiece } from "@/lib/kit";
 import s from "./Kit.module.css";
 
 /*
@@ -69,7 +69,7 @@ export function StickerButton({ kind, href, onClick, type = "button", disabled, 
     const sizes = block ? "270px" : tag ? "120px" : size === "sm" ? "190px" : "220px";
     inner = (
       <>
-        <Image src={k.src} alt="" aria-hidden="true" width={k.w} height={k.h} sizes={sizes} draggable={false} className={s.kbtnImg} />
+        <Image src={k.src} alt="" aria-hidden="true" width={k.w} height={k.h} sizes={sizes} quality={KIT_QUALITY} draggable={false} className={s.kbtnImg} />
         <span className="sr-only">{srText ?? kitAlt(name)}{suffix}</span>
       </>
     );
@@ -119,7 +119,7 @@ export function SectionLabel({ kind, color = "red", as: Tag = "h2", id, classNam
   const alt = kitAlt(name);
   return (
     <Tag id={id} className={`${s.klabel} ${big ? s.klabelBig : ""} ${className}`} style={style}>
-      <Image src={k.src} alt={alt} width={k.w} height={k.h} sizes={big ? "220px" : "170px"} draggable={false} className={s.klabelImg} />
+      <Image src={k.src} alt={alt} width={k.w} height={k.h} sizes={big ? "220px" : "170px"} quality={KIT_QUALITY} draggable={false} className={s.klabelImg} />
       {!alt && <span className="sr-only">{children}</span>}
     </Tag>
   );
@@ -131,7 +131,7 @@ export type TabIconKind = "home" | "wallet" | "place" | "info";
 export function TabIcon({ kind, fallback }: { kind: TabIconKind; fallback: ReactNode }) {
   const k = kitPiece(`icon-${kind}`);
   if (!k) return <>{fallback}</>;
-  return <Image src={k.src} alt="" aria-hidden="true" width={24} height={24} sizes="24px" draggable={false} className={s.tabIcon} />;
+  return <Image src={k.src} alt="" aria-hidden="true" width={24} height={24} sizes="24px" quality={KIT_QUALITY} draggable={false} className={s.tabIcon} />;
 }
 
 type KitPieceProps = {
@@ -158,7 +158,7 @@ export function KitPiece({ name, fallback = null, decorative = false, rotate, cl
   const st: CSSProperties = { ...(rotate != null ? ({ "--r": `${rotate}deg` } as CSSProperties) : {}), ...style };
   return (
     <span className={`${bare ? s.bare : "stk stk-kit"} ${className}`} style={st} data-piece={name}>
-      <Image src={k.src} alt={alt} aria-hidden={alt === "" || undefined} width={k.w} height={k.h} sizes={sizes ?? "(min-width: 480px) 480px, 100vw"} priority={priority} draggable={false} />
+      <Image src={k.src} alt={alt} aria-hidden={alt === "" || undefined} width={k.w} height={k.h} sizes={sizes ?? "(min-width: 480px) 480px, 100vw"} quality={KIT_QUALITY} priority={priority} draggable={false} />
     </span>
   );
 }
@@ -169,7 +169,7 @@ export function KitDivider({ name, className = "" }: { name: string; className?:
   if (!k) return null;
   return (
     <span className={`${s.divider} ${className}`} aria-hidden="true" data-piece={name}>
-      <Image src={k.src} alt="" width={k.w} height={k.h} sizes="240px" draggable={false} />
+      <Image src={k.src} alt="" width={k.w} height={k.h} sizes="240px" quality={KIT_QUALITY} draggable={false} />
     </span>
   );
 }

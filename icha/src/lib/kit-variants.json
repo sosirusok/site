@@ -1,0 +1,34 @@
+{
+ "bg-night": [
+  {
+   "w": 780,
+   "src": "/images/bg/bg-night-780.webp"
+  },
+  {
+   "w": 1080,
+   "src": "/images/bg/bg-night-1080.webp"
+  }
+ ],
+ "bg-night-wide": [
+  {
+   "w": 1280,
+   "src": "/images/bg/bg-night-wide-1280.webp"
+  },
+  {
+   "w": 1920,
+   "src": "/images/bg/bg-night-wide-1920.webp"
+  }
+ ],
+ "tape": [
+  {
+   "w": 272,
+   "src": "/images/bg/tape.webp"
+  }
+ ],
+ "arrow": [
+  {
+   "w": 176,
+   "src": "/images/bg/arrow.webp"
+  }
+ ]
+}
