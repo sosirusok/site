@@ -1,6 +1,7 @@
 /**
  * 매장 마스터 데이터 (정적). DB stores/menu_items 는 최초 기동 시 여기서 시드된다.
  * 조사 근거: 네이버 플레이스 / 네이버 검색 결과 / 방문 블로그 메뉴판 사진 (2026-09-15 기준). 확인되지 않은 값은 null.
+ * 메뉴 사진·가격: 네이버 플레이스 업체 등록 메뉴(2026-09-19 수집)와 맞췄다. 네이버에 없는 메뉴는 메뉴판 사진 기준.
  * 사진은 scripts/import-store-images.mjs 가 public/images/stores/<id>/ 로 복사한다.
  */
 import type { StoreId } from "./config";
@@ -136,7 +137,8 @@ export const STORES: Store[] = [
       { src: `${J}/menu-board-anju.jpg`, alt: "안주류 메뉴판(2026년 2월). 해물파전·모듬전 14,000원, 전류 12,000원", kind: "menu" },
       { src: `${J}/menu-board-drinks.jpg`, alt: "주류 메뉴판(2026년 2월). 조선막걸리 1통 5,500원, 2통 1반 11,500원", kind: "menu" },
     ],
-    // 가격: 2026-02 메뉴판 사진 기준, 2026-06 매장 앞 현수막·태블릿 사진과 일치 확인.
+    // 가격: 네이버 등록 메뉴(2026-09-19 수집)에 있는 항목은 네이버 등록가, 나머지는 2026-02 메뉴판 사진 기준(2026-06 매장 앞 현수막·태블릿 사진과 일치 확인).
+    // 네이버와 메뉴판이 다른 항목은 줄 끝 주석에 적었다. 사진은 업체 등록 메뉴 사진(네이버에 없는 메뉴는 방문 사진).
     menu: [
       // 식사류(면)
       { name: "조선 칼국수", price: 7000, description: "맑은 멸치 육수", image: `${J}/menu/kalguksu.jpg` },
@@ -160,11 +162,11 @@ export const STORES: Store[] = [
       { name: "공기밥", price: 1000 },
       // 안주류
       { name: "조선 계란말이", price: 7000, description: "두툼하게 말아 썰어 내는 계란말이" },
-      { name: "조선 해물파전", price: 14000, description: "쪽파와 해물을 넣은 큰 파전", image: `${J}/menu/haemul-pajeon.jpg` }, // 매장 메뉴판 14,000원(네이버 13,500원은 이전 가격)
+      { name: "조선 해물파전", price: 14000, description: "쪽파와 해물을 넣은 큰 파전", image: `${J}/menu/haemul-pajeon.jpg` }, // 매장 메뉴판 사진(2026-02) 14,000원 기준. 네이버 등록가는 13,500원(2026-09-19 확인) — 사장님 확인 필요
       { name: "조선 반반전(김치+정구지)", price: 12000, description: "김치전 반, 정구지(부추)전 반", image: `${J}/menu/banban-jeon.jpg` },
       { name: "조선 김치전", price: 12000, image: `${J}/menu/kimchi-jeon.jpg` },
       { name: "조선 땡초정구지전", price: 12000, description: "청양고추를 넣은 부추전" },
-      { name: "조선 호박전", price: 12000, image: `${J}/menu/hobak-jeon.jpg` }, // 매장 메뉴판 12,000원(네이버 11,500원은 이전 가격)
+      { name: "조선 호박전", price: 12000, image: `${J}/menu/hobak-jeon.jpg` }, // 매장 메뉴판 사진(2026-02) 12,000원 기준. 네이버 등록가는 11,500원(2026-09-19 확인) — 사장님 확인 필요
       { name: "조선 빈대떡", price: 12000, description: "녹두 빈대떡", image: `${J}/menu/bindaetteok.jpg` },
       { name: "조선 모듬전", price: 14000, description: "김치전·호박전·빈대떡·감자전·땡초정구지전 다섯 가지", image: `${J}/menu/modeum-jeon.jpg` },
       { name: "조선 두부김치", price: 11500, image: `${J}/menu/dubu-kimchi.jpg` },
@@ -255,14 +257,14 @@ export const STORES: Store[] = [
       { src: `${T}/menu-board-beers.jpg`, alt: "맥주 메뉴판. 산토리 생맥주 3종·도쿄 윗 비어 8,900원, 코젤 다크 10,900원", kind: "menu" },
       { src: `${T}/menu-board-food.jpg`, alt: "안주 메뉴판. 시그니처 콜드햄 플레이트 13,900원부터 디저트까지", kind: "menu" },
     ],
-    // 가격: 네이버 등록 메뉴(2026-09-10)와 매장 메뉴판 사진(2026-09-11) 일치.
+    // 가격: 네이버 등록 메뉴(2026-09-19 다시 확인)와 매장 메뉴판 사진(2026-09-11) 일치. 사진은 업체 등록 메뉴 사진.
     menu: [
       // 맥주
       { name: "산토리 프리미엄 생맥주", price: 8900, description: "퍼펙트 푸어링 크리미 거품", image: `${T}/menu/suntory-creamy.png`, gift: true },
       { name: "산토리 소프트 생맥주", price: 8900, description: "쫀쫀한 거품에 탄산이 또렷한 잔", image: `${T}/menu/suntory-soft.png` },
       { name: "산토리 밀코 생맥주", price: 8900, description: "우유처럼 하얀 거품이 잔을 덮는 생맥주", image: `${T}/menu/suntory-milko.png` },
-      { name: "도쿄 윗 비어", price: 8900, description: "직접 만든 호가든 스타일 밀맥주. 오렌지 슬라이스를 올려 냅니다" },
-      { name: "코젤다크 생맥주", price: 10900, description: "카라멜 풍미의 체코 흑맥주" },
+      { name: "도쿄 윗 비어", price: 8900, description: "직접 만든 호가든 스타일 밀맥주. 오렌지 슬라이스를 올려 냅니다", image: `${T}/menu/wheat-beer.png` },
+      { name: "코젤다크 생맥주", price: 10900, description: "카라멜 풍미의 체코 흑맥주", image: `${T}/menu/kozel-dark.png` },
       // 콜드햄
       { name: "시그니처 콜드햄 플레이트", price: 13900, description: "비어슁켄·약드부어스트·본레스 수제 햄 12조각 · 대표 메뉴", image: `${T}/menu/signature-cold-ham-plate.png` },
       { name: "시그니처 햄세트", price: 28900, description: "생맥주 2잔 + 시그니처 콜드햄 플레이트", image: `${T}/menu/signature-ham-set.png` }, // 네이버 메뉴 기준(매장 메뉴판에는 없음)
@@ -356,87 +358,88 @@ export const STORES: Store[] = [
       { src: `${W}/menu-board-signature.jpg`, alt: "시그니처 메뉴판. 불스지 25,900원, 아롱사태스지전골 28,900원 등", kind: "menu" },
       { src: `${W}/kiosk-new-menu.jpg`, alt: "테이블 태블릿의 신메뉴 화면. 통모짜렐라튀김+웨지감자 10,900원, 쫀득감자 8,900원", kind: "menu" },
     ],
-    // 가격: 매장 메뉴판 사진(2026-07-15) 기준. 네이버 등록가와 다른 항목은 줄 끝 주석에 적었다(손님 화면에는 보이지 않음).
+    // 가격: 네이버 등록 메뉴(2026-09-19 수집)에 있는 항목은 네이버 등록가, 나머지는 매장 메뉴판 사진(2026-07-15) 기준.
+    // 네이버와 메뉴판이 다른 항목은 줄 끝 주석에 적었다(손님 화면에는 보이지 않음). 사진은 업체 등록 메뉴 사진.
     menu: [
       // 시즌 한정
-      { name: "동해초코오징어통찜", price: 32900, description: "시즌 한정. 동해 오징어를 통으로 쪄 냅니다" },
-      { name: "신안당일바리생새우회", price: 35900, description: "시즌 한정. 하루 10접시" },
+      { name: "동해초코오징어통찜", price: 32900, description: "시즌 한정. 동해 오징어를 통으로 쪄 냅니다", image: `${W}/menu/ojingeo-tongjjim.jpg` },
+      { name: "신안당일바리생새우회", price: 35900, description: "시즌 한정. 하루 10접시", image: `${W}/menu/saengsaewoo-hoe.jpg` },
       // 와르르 시그니처
       { name: "매일 삶는 가브리모둠수육", price: 36900, description: "미나리 향 고기 육수에 수육 모둠", image: `${W}/menu/modum-suyuk.jpg` },
       { name: "얼큰아롱사태스지전골", price: 28900, description: "다섯 시간 삶은 아롱사태와 스지. 주문 많은 전골", image: `${W}/menu/suji-jeongol.jpg` },
       { name: "사천마라스지전골", price: 26900, description: "한국식으로 맞춘 마라 스지전골", image: `${W}/menu/mara-suji-jeongol.jpg` },
       { name: "와르르 키리모찌불스지", price: 25900, description: "불향 나게 볶은 스지에 키리모찌(구운 떡)", image: `${W}/menu/bulsuji.jpg` },
       { name: "한우대창묵도리탕(묵은지)", price: 27900, description: "묵은지·한우대창·닭고기를 넣은 닭도리탕", image: `${W}/menu/daechang-dakdoritang.jpg` },
-      { name: "얼큰토마토해장빼쉐", price: 19900, description: "조개를 넣은 얼큰한 토마토 국물" },
+      { name: "얼큰토마토해장빼쉐", price: 19900, description: "조개를 넣은 얼큰한 토마토 국물", image: `${W}/menu/tomato-haejang-ppaeswe.jpg` },
       // 전골류
       { name: "와르르반점 크림짬뽕", price: 19900, description: "크림 베이스 매운 짬뽕 · 대표 메뉴", image: `${W}/menu/cream-jjamppong.jpg` },
-      { name: "맨숀밀푀유나베", price: 21900, description: "간장 베이스의 맑은 국물" },
-      { name: "돈짬(돈까스짬뽕탕)", price: 20900, description: "짬뽕탕 위에 돈까스" },
-      { name: "와르르꼬꼬야끼", price: 21900, description: "닭고기와 차돌을 넣은 얼큰한 닭 전골" },
+      { name: "맨숀밀푀유나베", price: 21900, description: "간장 베이스의 맑은 국물", image: `${W}/menu/mille-feuille-nabe.jpg` },
+      { name: "돈짬(돈까스짬뽕탕)", price: 20900, description: "짬뽕탕 위에 돈까스", image: `${W}/menu/donjjam.jpg` },
+      { name: "와르르꼬꼬야끼", price: 21900, description: "닭고기와 차돌을 넣은 얼큰한 닭 전골", image: `${W}/menu/kkokko-yaki.jpg` },
       { name: "무뼈국물닭발", price: 17900, image: `${W}/menu/gukmul-dakbal.jpg` },
       // 요리류
-      { name: "투뿔한우육회차돌쌈", price: 29900, description: "1++ 한우 육회와 차돌", image: `${W}/menu/yukhoe-chadol-ssam.jpg` }, // 매장 메뉴판 29,900원(네이버 28,900원)
-      { name: "투뿔한우육회&김부각", price: 26900 }, // 매장 메뉴판 26,900원(네이버 25,900원)
-      { name: "육회불닭양파쌈", price: 27900, description: "육회에 불닭, 매운맛 뺀 양파와 김부각", image: `${W}/menu/yukhoe-buldak.jpg` }, // 매장 메뉴판 27,900원(네이버 26,900원)
-      { name: "가브리수육 칼빔면", price: 27900, description: "가브리살 수육을 매콤새콤 칼국수 비빔면에 싸서", image: `${W}/menu/suyuk-kalbimmyeon.jpg` }, // 매장 메뉴판 27,900원(네이버 25,900원)
+      { name: "투뿔한우육회차돌쌈", price: 29900, description: "1++ 한우 육회와 차돌", image: `${W}/menu/yukhoe-chadol-ssam.jpg` }, // 매장 메뉴판 사진(2026-07) 29,900원 기준. 네이버 등록가는 28,900원(2026-09-19 확인) — 사장님 확인 필요
+      { name: "투뿔한우육회&김부각", price: 26900, image: `${W}/menu/yukhoe-gimbugak.jpg` }, // 매장 메뉴판 사진(2026-07) 26,900원 기준. 네이버 등록가는 25,900원(2026-09-19 확인) — 사장님 확인 필요
+      { name: "육회불닭양파쌈", price: 27900, description: "육회에 불닭, 매운맛 뺀 양파와 김부각", image: `${W}/menu/yukhoe-buldak.jpg` }, // 매장 메뉴판 사진(2026-07) 27,900원 기준. 네이버 등록가는 26,900원(2026-09-19 확인) — 사장님 확인 필요
+      { name: "가브리수육 칼빔면", price: 27900, description: "가브리살 수육을 매콤새콤 칼국수 비빔면에 싸서", image: `${W}/menu/suyuk-kalbimmyeon.jpg` }, // 매장 메뉴판 사진(2026-07) 27,900원 기준. 네이버 등록가는 25,900원(2026-09-19 확인) — 사장님 확인 필요
       { name: "노포 묵골뱅이소면", price: 23900, description: "매콤새콤 골뱅이에 소면과 김부각", image: `${W}/menu/muk-golbaengi.jpg` },
-      { name: "차돌육전 한 판", price: 22900, description: "계란옷 입혀 부친 차돌 위에 부추 무침", image: `${W}/menu/chadol-yukjeon.jpg` }, // 매장 메뉴판 22,900원(네이버 20,900원)
-      { name: "차돌새우미나리전", price: 23900 }, // 매장 메뉴판 23,900원(네이버 20,900원)
-      { name: "불고기치즈김치전", price: 18900 }, // 매장 메뉴판 18,900원(네이버 17,900원)
-      { name: "살얼음 김치말이묵국수", price: 14900 }, // 매장 메뉴판 14,900원(네이버 14,500원)
-      { name: "오리훈제 한판", price: 23900 },
-      { name: "명란치즈감자채전", price: 16900 },
+      { name: "차돌육전 한 판", price: 22900, description: "계란옷 입혀 부친 차돌 위에 부추 무침", image: `${W}/menu/chadol-yukjeon.jpg` }, // 매장 메뉴판 사진(2026-07) 22,900원 기준. 네이버 등록가는 20,900원(2026-09-19 확인) — 사장님 확인 필요
+      { name: "차돌새우미나리전", price: 23900, image: `${W}/menu/chadol-saewoo-minari-jeon.jpg` }, // 매장 메뉴판 사진(2026-07) 23,900원 기준. 네이버 등록가는 20,900원(2026-09-19 확인) — 사장님 확인 필요
+      { name: "불고기치즈김치전", price: 18900, image: `${W}/menu/bulgogi-cheese-kimchi-jeon.jpg` }, // 매장 메뉴판 사진(2026-07) 18,900원 기준. 네이버 등록가는 17,900원(2026-09-19 확인) — 사장님 확인 필요
+      { name: "살얼음 김치말이묵국수", price: 14900, image: `${W}/menu/kimchimari-muk-guksu.jpg` }, // 매장 메뉴판 사진(2026-07) 14,900원 기준. 네이버 등록가는 14,500원(2026-09-19 확인) — 사장님 확인 필요
+      { name: "오리훈제 한판", price: 23900, image: `${W}/menu/ori-hunje.jpg` },
+      { name: "명란치즈감자채전", price: 16900, image: `${W}/menu/myeongran-cheese-gamja-jeon.jpg` },
       { name: "매콤무뼈닭발", price: 16900, image: `${W}/menu/maekom-dakbal.jpg` },
-      { name: "차돌숙주볶음", price: 14900 },
-      { name: "돼지두부김치삼합", price: 14900 },
+      { name: "차돌숙주볶음", price: 14900, image: `${W}/menu/chadol-sukju-bokkeum.jpg` },
+      { name: "돼지두부김치삼합", price: 14900, image: `${W}/menu/dubu-kimchi-samhap.jpg` },
       // 튀김류
-      { name: "통모짜렐라튀김(2pcs)+웨지감자", price: 10900, description: "매콤한 양념의 통모짜렐라 튀김에 웨지감자" },
+      { name: "통모짜렐라튀김(2pcs)+웨지감자", price: 10900, description: "매콤한 양념의 통모짜렐라 튀김에 웨지감자", image: `${W}/menu/tongmozzarella-twigim.jpg` },
       { name: "뿌링통모짜(2pcs)+뿌링감자", price: 10900 },
       { name: "와르르 쫀득감자", price: 8900, description: "2026년 신메뉴. 쫀득한 감자볼에 소스 두 가지", image: `${W}/potato-balls.jpg` },
       { name: "김치피자탕수육", price: 18500, description: "탕수육에 김치와 치즈. 줄여서 '김피탕'", image: `${W}/menu/kimchi-pizza-tangsuyuk.jpg` },
-      { name: "감자크림탕수육", price: 17500 },
-      { name: "수제등심탕수육", price: 17500 },
-      { name: "오지치즈프라이", price: 13500 },
-      { name: "불고기프렌치프라이", price: 12500 },
-      { name: "버터갈릭프라이", price: 8900 },
-      { name: "매콤똥집튀김", price: 13900 },
-      { name: "종갓집양념순살치킨", price: 12500 },
-      { name: "뿌륑순살치킨", price: 12500 },
-      { name: "뿌륑뿌륑치즈볼", price: 12500 },
-      { name: "모듬감자튀김", price: 12500 },
-      { name: "와르르 우유튀김", price: 11500 }, // 네이버 메뉴 기준(7월 메뉴판에는 없음)
-      { name: "키다리고구마치즈스틱", price: 11500 },
-      { name: "와르르 오코노미야끼", price: 8900 },
-      { name: "와르르 타코야끼", price: 7900 },
+      { name: "감자크림탕수육", price: 17500, image: `${W}/menu/gamja-cream-tangsuyuk.jpg` },
+      { name: "수제등심탕수육", price: 17500, image: `${W}/menu/deungsim-tangsuyuk.jpg` },
+      { name: "오지치즈프라이", price: 13500, image: `${W}/menu/aussie-cheese-fries.jpg` },
+      { name: "불고기프렌치프라이", price: 12500, image: `${W}/menu/bulgogi-fries.jpg` },
+      { name: "버터갈릭프라이", price: 8900, image: `${W}/menu/butter-garlic-fries.jpg` },
+      { name: "매콤똥집튀김", price: 13900, image: `${W}/menu/maekom-ttongjip.jpg` },
+      { name: "종갓집양념순살치킨", price: 12500, image: `${W}/menu/yangnyeom-chicken.jpg` },
+      { name: "뿌륑순살치킨", price: 12500, image: `${W}/menu/ppuring-chicken.jpg` },
+      { name: "뿌륑뿌륑치즈볼", price: 12500, image: `${W}/menu/ppuring-cheese-ball.jpg` },
+      { name: "모듬감자튀김", price: 12500, image: `${W}/menu/modum-fries.jpg` },
+      { name: "와르르 우유튀김", price: 11500, image: `${W}/menu/uyu-twigim.jpg` }, // 네이버 메뉴 기준(7월 메뉴판에는 없음)
+      { name: "키다리고구마치즈스틱", price: 11500, image: `${W}/menu/goguma-cheese-stick.jpg` },
+      { name: "와르르 오코노미야끼", price: 8900, image: `${W}/menu/okonomiyaki.jpg` },
+      { name: "와르르 타코야끼", price: 7900, image: `${W}/menu/takoyaki.jpg` },
       // 파스타·피자
       { name: "와르르황제에디션크로와상피자", price: 24000, description: "크로와상 도우에 페퍼로니·새우·베이컨", image: `${W}/menu/croissant-pizza.jpg` },
-      { name: "베이컨쉬림프크로와상피자", price: 23000 },
-      { name: "불고기페퍼로니반반크로와상피자", price: 23000 },
-      { name: "페퍼로니대폭발크로와상피자", price: 21000 },
-      { name: "명란청양크림파스타", price: 16900 },
+      { name: "베이컨쉬림프크로와상피자", price: 23000, image: `${W}/menu/bacon-shrimp-croissant-pizza.jpg` },
+      { name: "불고기페퍼로니반반크로와상피자", price: 23000, image: `${W}/menu/bulgogi-pepperoni-croissant-pizza.jpg` },
+      { name: "페퍼로니대폭발크로와상피자", price: 21000, image: `${W}/menu/pepperoni-croissant-pizza.jpg` },
+      { name: "명란청양크림파스타", price: 16900, image: `${W}/menu/myeongran-cream-pasta.jpg` },
       // 과일·디저트
       { name: "와르르요거트(시그니처) 300g", price: 14500, description: "요거트에 초코쉘·벌집꿀·샤인머스켓·초코그래놀라", image: `${W}/menu/yogurt.jpg` },
       { name: "와르르요거트(초코쉘)", price: 6500, image: `${W}/menu/yogurt.jpg`, gift: true },
-      { name: "샤인머스켓크림치즈곶감말이", price: 14500 },
-      { name: "무화과 크림치즈", price: 12500 }, // 네이버 메뉴 기준(7월 메뉴판에는 없음)
+      { name: "샤인머스켓크림치즈곶감말이", price: 14500, image: `${W}/menu/gotgam-mari.jpg` },
+      { name: "무화과 크림치즈", price: 12500, image: `${W}/menu/muhwagwa-cream-cheese.jpg` }, // 네이버 메뉴 기준(7월 메뉴판에는 없음)
       { name: "계절과일플래터", price: 16500 },
       { name: "수박 완전와르르", price: 14900 },
-      { name: "메반파반", price: 13500, description: "메론 반, 파인애플 반" },
-      { name: "메론", price: 13500 },
+      { name: "메반파반", price: 13500, description: "메론 반, 파인애플 반", image: `${W}/menu/meban-paban.jpg` },
+      { name: "메론", price: 13500, image: `${W}/menu/melon.jpg` },
       { name: "파인애플", price: 13500 },
-      { name: "설탕토마토", price: 10500 },
+      { name: "설탕토마토", price: 10500, image: `${W}/menu/seoltang-tomato.jpg` },
       { name: "큐브치즈캬라멜팝콘아이스크림", price: 9500 },
       // 사이드·마른안주
-      { name: "바삭바삭먹태", price: 13500 },
-      { name: "계란식빵토스트", price: 11000 },
-      { name: "꿀버터 반건오징어", price: 9900 },
-      { name: "도리토스나쵸칩", price: 7900 }, // 매장 메뉴판 7,900원(네이버 7,500원)
-      { name: "와르르 잔치국수", price: 7500 },
-      { name: "콘치이이이즈", price: 7500, description: "콘치즈" },
-      { name: "통실통실물만두", price: 7500 },
-      { name: "계란후라이", price: 5000 }, // 매장 메뉴판 5,000원(네이버 5,500원)
-      { name: "혜자간장순두부", price: 4000 },
-      { name: "간장버터계란밥", price: 3500 },
+      { name: "바삭바삭먹태", price: 13500, image: `${W}/menu/meoktae.jpg` },
+      { name: "계란식빵토스트", price: 11000, image: `${W}/menu/gyeran-toast.jpg` },
+      { name: "꿀버터 반건오징어", price: 9900, image: `${W}/menu/honey-butter-ojingeo.jpg` },
+      { name: "도리토스나쵸칩", price: 7900, image: `${W}/menu/doritos-nacho.jpg` }, // 매장 메뉴판 사진(2026-07) 7,900원 기준. 네이버 등록가는 7,500원(2026-09-19 확인) — 사장님 확인 필요
+      { name: "와르르 잔치국수", price: 7500, image: `${W}/menu/janchi-guksu.jpg` },
+      { name: "콘치이이이즈", price: 7500, description: "콘치즈", image: `${W}/menu/corn-cheese.jpg` },
+      { name: "통실통실물만두", price: 7500, image: `${W}/menu/mul-mandu.jpg` },
+      { name: "계란후라이", price: 5000, image: `${W}/menu/gyeran-fry.jpg` }, // 매장 메뉴판 사진(2026-07) 5,000원 기준. 네이버 등록가는 5,500원(2026-09-19 확인) — 사장님 확인 필요
+      { name: "혜자간장순두부", price: 4000, image: `${W}/menu/ganjang-sundubu.jpg` },
+      { name: "간장버터계란밥", price: 3500, image: `${W}/menu/ganjang-butter-gyeranbap.jpg` },
       { name: "나 한입만 셀프라면", price: 3500 },
       { name: "주먹밥", price: 3000 },
       { name: "공기밥", price: 1500 },
