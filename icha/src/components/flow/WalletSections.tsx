@@ -114,8 +114,9 @@ export function EmptyWallet({ stores }: { stores: PlaceSheetStore[] }) {
   return (
     <div className={styles.empty}>
       {/* 가운데 정렬 아이콘·제목·설명·버튼 세트를 쓰지 않는다 — 어느 AI 템플릿에서나 나오는 빈 화면이다.
-          대신 빈 표 자리를 그대로 보여 준다: 점선으로 뜯긴 자리에 "아직 없음" 한 마디. */}
-      <p className={styles.emptySlot} aria-hidden="true">아직 없음</p>
+          404 와 같이 큰 0 을 왼쪽 밖으로 흘리고 그 위에 문장을 겹친다. */}
+      <p className={styles.emptySlot} aria-hidden="true">0</p>
+      <p className={`d2 ${styles.emptyTitle}`}>아직 한 장도 없습니다</p>
       <p className={styles.emptyLine}>계산할 때 번호만 말씀하시면 이 번호로 쌓입니다.</p>
       <PlaceButton stores={stores} variant="naver" className={styles.emptyBtn}>매장 예약하기</PlaceButton>
       <GiftLines title="쿠폰으로 받으시는 혜택" />

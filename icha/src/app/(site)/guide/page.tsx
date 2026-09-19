@@ -85,7 +85,7 @@ export default async function GuidePage() {
       <div className={styles.closer}>
         <p className={styles.closerTitle}>번호만 말씀하시면 쿠폰이 쌓입니다</p>
         <div className={styles.closerRow}>
-          <Button href="/wallet" variant="dark" size="lg">내 쿠폰함 열기</Button>
+          <Button href="/wallet" variant="dark" size="lg">내 쿠폰함 열기 →</Button>
           <Button href="/#stores" variant="darkline">참여 매장 보기</Button>
         </div>
       </div>

@@ -179,13 +179,22 @@ async function seedStores(db: Queryable) {
       // 비어 있으면 채우고, 코드에서 파일 이름이 바뀌었으면(예: .jpg → 배경 지운 .png) 바꿔 준다.
       // 관리자가 올린 사진(image_data)이나 /images/stores/ 밖의 경로는 건드리지 않는다.
       for (const m of s.menu) {
-        if (!m.image) continue;
-        await db.query(
-          `update menu_items set image_path=$3
-           where store_id=$1 and name=$2 and image_data is null
-             and (image_path is null or (image_path like '/images/stores/%' and image_path <> $3))`,
-          [s.id, m.name, m.image],
-        );
+        if (m.image) {
+          await db.query(
+            `update menu_items set image_path=$3
+             where store_id=$1 and name=$2 and image_data is null
+               and (image_path is null or (image_path like '/images/stores/%' and image_path <> $3))`,
+            [s.id, m.name, m.image],
+          );
+        } else {
+          // 코드에서 사진을 뗀 품목(생성 일러스트를 걷어낸 자리)은 DB 에서도 비운다.
+          // 비우지 않으면 예전에 시드된 그림이 계속 남아 화면에 나온다.
+          await db.query(
+            `update menu_items set image_path=null
+             where store_id=$1 and name=$2 and image_data is null and image_path like '/images/stores/%'`,
+            [s.id, m.name],
+          );
+        }
       }
     }
   }

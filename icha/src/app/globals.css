@@ -220,23 +220,22 @@ details > summary::-webkit-details-marker { display: none; }
 
 /* ══ 버튼 ══════════════════════════════════════════════════════
    네 가지가 눈에 띄게 다르다. 공통은 "최소 48px, 모서리 각짐" 뿐 */
+/* 화살표는 CSS 로 박지 않는다 — 실제로 다른 화면으로 넘어가는 버튼에만 마크업에서 직접 쓴다 */
 .btn { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 18px; border-radius: 0; font-size: 15px; font-weight: 800; line-height: 1.15; letter-spacing: -0.01em; white-space: nowrap; border: 0; transition: background-color 0.14s, color 0.14s, box-shadow 0.14s, transform 0.08s; user-select: none; }
 .btn:active { transform: translateY(1px); }
 .btn:disabled { opacity: 0.42; cursor: not-allowed; transform: none; filter: none; }
 
 /* ① 네이버 예약 — 가장 크고 유일하게 초록으로 꽉 찬 바. 모서리 둘을 비스듬히 잘라 낸다 + 화살표 */
 .btn-naver {
-  min-height: 56px; padding: 0 20px; background: var(--naver); color: #04170b;
+  min-height: 56px; padding: 0 20px; background: var(--naver); color: #04170b; font-size: 20px;
   font-family: var(--font-poster); font-size: 19px; font-weight: 400; letter-spacing: 0.01em;
   clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
   filter: drop-shadow(0 0 14px rgba(3, 199, 90, 0.45));
 }
-.btn-naver::after { content: "→"; font-family: var(--font-sans); font-size: 17px; font-weight: 900; }
 .btn-naver:active { background: #02a94c; filter: drop-shadow(0 0 22px rgba(3, 199, 90, 0.8)); }
 
 /* ② 라임으로 꽉 찬 바 — 이벤트의 주 동작(쿠폰함·확인). 아래에 두꺼운 그림자 턱 */
-.btn-primary { min-height: 54px; background: var(--lime); color: #100c00; font-family: var(--font-poster); font-size: 18px; font-weight: 400; letter-spacing: 0.01em; box-shadow: 0 4px 0 0 #6f8c00, 0 0 24px rgba(204, 255, 0, 0.35); }
-.btn-primary::after { content: "→"; font-family: var(--font-sans); font-size: 16px; font-weight: 900; }
+.btn-primary { min-height: 54px; background: var(--lime); color: #100c00; font-family: var(--font-poster); font-size: 21px; font-weight: 400; letter-spacing: 0.01em; box-shadow: 0 4px 0 0 #6f8c00, 0 0 24px rgba(204, 255, 0, 0.35); }
 .btn-primary:active { box-shadow: 0 1px 0 0 #6f8c00, 0 0 30px rgba(204, 255, 0, 0.6); transform: translateY(3px); }
 .btn-brand { background: var(--lime); color: #100c00; font-weight: 800; }
 
@@ -257,7 +256,7 @@ details > summary::-webkit-details-marker { display: none; }
 .btn-soft:active { background: #22103b; }
 
 /* ⑤ 밑줄 링크형 — 상자가 아니다 */
-.btn-ghost { background: none; color: #6af5ff; min-height: 44px; padding: 0 2px; font-family: var(--font-poster); font-size: 16px; letter-spacing: -0.01em; font-weight: 400; border-bottom: 2px solid currentColor; }
+.btn-ghost { background: none; color: #6af5ff; min-height: 44px; padding: 0 2px; font-family: var(--font-sans); font-weight: 800; font-size: 15px; letter-spacing: -0.01em; font-weight: 400; border-bottom: 2px solid currentColor; }
 .btn-ghost:active { color: var(--lime); }
 
 .btn-lg { min-height: 56px; font-size: 17px; padding: 0 22px; }
@@ -267,10 +266,9 @@ details > summary::-webkit-details-marker { display: none; }
 .btn-naver.btn-sm { min-height: 46px; font-size: 16px; --cut: 8px; }
 .btn-xs { min-height: 44px; font-size: 13px; padding: 0 12px; }
 /* 라임·노랑 색면 위에 얹는 버튼 — 색면 위에서는 형광색이 보이지 않으니 검정으로 뒤집는다 */
-.btn-dark { background: #0b0011; color: var(--lime); font-family: var(--font-poster); font-size: 18px; letter-spacing: -0.01em; }
-.btn-dark::after { content: "→"; font-family: var(--font-sans); font-size: 16px; font-weight: 900; }
+.btn-dark { background: #0b0011; color: var(--lime); font-family: var(--font-poster); font-size: 21px; letter-spacing: -0.01em; }
 .btn-dark:active { background: #1c0a2e; }
-.btn-darkline { background: none; color: #0b0011; border: 2px solid #0b0011; font-family: var(--font-poster); font-size: 17px; letter-spacing: -0.01em; }
+.btn-darkline { background: none; color: #0b0011; border: 2px solid #0b0011; font-family: var(--font-poster); font-size: 20px; letter-spacing: -0.01em; }
 .btn-darkline:active { background: rgba(11, 0, 17, 0.12); }
 
 .btn-block { display: flex; width: 100%; }
@@ -392,8 +390,12 @@ summary.btn { list-style: none; }
 .giftlines { margin: 30px var(--gutter) 0; }
 .giftlines-title { margin: 0 0 14px; font-family: var(--font-poster); font-weight: 400; font-size: 21px; line-height: 1.1; letter-spacing: -0.015em; color: var(--ink); }
 .giftlines-list { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; border-top: 2px solid var(--line-2); }
-.giftlines-item { display: grid; padding: 13px 0 13px 11px; border-bottom: 1px solid var(--line); border-left: 3px solid var(--store); }
+/* 왼쪽 색 막대를 세우지 않는다 — 1·2·3차 차례는 들여쓰기와 글자 크기로 보인다 */
+.giftlines-item { display: grid; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.giftlines-item:nth-child(2) { padding-left: 16px; }
+.giftlines-item:nth-child(3) { padding-left: 32px; }
+.giftlines-item:nth-child(n+2) .giftlines-name { font-size: 17px; }
 .giftlines-body { display: grid; gap: 3px; min-width: 0; }
-.giftlines-name { display: inline-flex; align-items: center; min-height: 44px; margin-bottom: -8px; font-family: var(--font-poster); font-size: 17px; line-height: 1.15; color: var(--ink); text-decoration: none; }
+.giftlines-name { display: inline-flex; align-items: center; min-height: 44px; margin-bottom: -6px; font-family: var(--font-poster); font-size: 20px; line-height: 1.15; color: var(--ink); text-decoration: none; }
 .giftlines-name::after { content: " →"; font-family: var(--font-label); color: var(--store); }
 .giftlines-what { font-size: 14px; line-height: 1.45; color: var(--store); }

@@ -26,7 +26,7 @@ export function Hero({ rules }: { rules: Rules }) {
         </h1>
         <p className={`lead ${s.introLead}`}>1차 맥주, 2차 막걸리, 3차 소주. 세 집이 50m 안에 붙어 있습니다. 한 집에서 마시면 다음 집 혜택이 열립니다.</p>
 
-        <Button href="#stores" variant="naver" size="lg" block className={s.bookBtn}>매장 예약하기</Button>
+        <Button href="#stores" variant="naver" size="lg" block className={s.bookBtn}>매장 예약하기 →</Button>
         <div className={s.subCtas}>
           <Button href="/wallet" variant="outline">내 쿠폰함</Button>
           <Button href="/guide" variant="ghost">이용 안내</Button>

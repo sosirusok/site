@@ -6,7 +6,6 @@ import { nowText, openStatus } from "@/components/site/StoreHelpers";
 import { FAN_PHOTOS, photoAlt } from "@/components/site/storePhotos";
 import type { Rules, StoreId } from "@/lib/config";
 import { distanceM, walkMinutes } from "@/lib/geo";
-import { LOCATIONS } from "@/lib/locations";
 import { placeLinks } from "@/lib/naver";
 import { STORES, type Store } from "@/lib/stores";
 import s from "./home.module.css";
@@ -79,7 +78,6 @@ export function StoreCards({ now, rules, gifts }: { now: Date; rules: Rules; gif
                 <p className={s.statusBar}>
                   <span className={`badge ${today.open ? "dot-on" : "dot-off"} ${s.statusBadge}`}>{today.state}</span>
                   <span className={`num ${s.statusHours}`}>{today.hours ? `오늘 ${today.hours}` : "오늘 휴무"}</span>
-                  <span className={s.statusWalk}>{LOCATIONS[st.id].subway}</span>
                 </p>
 
                 <div className={s.panelBody}>

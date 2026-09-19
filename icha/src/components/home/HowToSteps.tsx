@@ -45,7 +45,7 @@ export function HowToSteps({ rules, compact = false }: { rules: Rules; compact?:
           </li>
         ))}
       </ol>
-      <Button href="/wallet" variant="primary" size="lg" block className={s.walletBtn}>쿠폰함 열기</Button>
+      <Button href="/wallet" variant="primary" size="lg" block className={s.walletBtn}>쿠폰함 열기 →</Button>
     </Section>
   );
 }

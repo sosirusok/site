@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { BRAND, formatWon, STORE_IDS, type StoreId } from "@/lib/config";
 import { listMenu } from "@/lib/db/queries";
+import { LOCATIONS } from "@/lib/locations";
 import { placeLinks } from "@/lib/naver";
 import { getRules } from "@/lib/settings";
 import { getStore } from "@/lib/stores";
@@ -94,7 +95,7 @@ export default async function StorePage({ params }: Props) {
         <StoreMenu store={store} items={menu} menuUrl={links?.menu ?? null} />
       </Section>
 
-      <Section id="visit" head="slab" title="오시는 길" lead="세 매장 모두 50m 이내" alt pt={50} pb={34}>
+      <Section id="visit" head="slab" title="오시는 길" lead={LOCATIONS[store.id].subway} alt pt={50} pb={34}>
         <StoreVisit store={store} />
       </Section>
 

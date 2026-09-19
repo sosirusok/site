@@ -8,7 +8,7 @@ export default function NotFound() {
       <span className={styles.big} aria-hidden="true">404</span>
       <h1 className="d2">이런 주소는 없습니다</h1>
       <p className="lead">주소를 다시 확인해 주시거나, 아래로 홈에 가 주세요.</p>
-      <Button href="/" variant="primary" className={styles.btn}>홈으로</Button>
+      <Button href="/" variant="primary" className={styles.btn}>홈으로 →</Button>
     </div>
   );
 }

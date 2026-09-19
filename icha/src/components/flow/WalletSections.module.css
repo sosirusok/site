@@ -25,7 +25,10 @@
 .emptyBtn { margin-top: 12px; }
 
 /* 빈 쿠폰함 — 아이콘·가운데정렬 세트 대신, 표가 뜯겨 나간 빈 자리를 그대로 보여 준다 */
-.empty { display: grid; gap: 14px; justify-items: stretch; }
-.emptySlot { display: grid; place-items: center; min-height: 116px; margin: 0; border: 2px dashed var(--line-2); font-family: var(--font-poster); font-size: 22px; color: var(--ink-3); }
-.emptyLine { margin: 0; font-size: 15px; line-height: 1.6; color: var(--ink-2); }
+.empty { position: relative; display: grid; gap: 14px; justify-items: start; overflow: hidden; }
+/* 가운데 정렬 빈 상태를 쓰지 않는다 — 404 와 같이 큰 글자를 왼쪽 밖으로 흘리고 그 위에 문장을 겹친다 */
+.emptySlot { position: absolute; left: -18px; top: -30px; z-index: 0; margin: 0; font-family: var(--font-label); font-size: 150px; line-height: 0.78; color: transparent; -webkit-text-stroke: 2px var(--mag); opacity: 0.45; user-select: none; pointer-events: none; }
+.empty > :not(.emptySlot) { position: relative; z-index: 1; }
+.emptyTitle { margin: 92px 0 0; }
+.emptyLine { margin: 0; max-width: 22em; font-size: 15px; line-height: 1.6; color: var(--ink-2); }
 .empty > :global(.giftlines) { margin-left: 0; margin-right: 0; }

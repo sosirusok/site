@@ -48,28 +48,27 @@ export const FAN_PHOTOS: Record<StoreId, FanPhoto[]> = {
   ],
 };
 
-/** 매장 화면 폴라로이드 다섯 장 — [0] 대표 안주(한 줄 가득), [1]·[2] 안주·술(큰 카드), [3] 매장 안(작은 카드), [4] 매장 입구(작은 카드) */
+/**
+ * 매장 화면 "가게 구경" — 가게 사진만. 가격이 붙은 안주 사진은 바로 아래 메뉴 목록과 같은 품목·같은 값이라
+ * 갤러리가 메뉴판 재탕이 된다. 캡션도 가격 나열 대신 그 자리에서 실제로 쓰는 말로.
+ * 집마다 장수가 다르다(3·4·3) — 세 집이 똑같이 다섯 장이면 그게 틀이다.
+ */
 export const STORE_FAN: Record<StoreId, FanPhoto[]> = {
   tokyo: [
-    { src: "/images/stores/tokyo/cold-ham-plate-top.jpg", cap: "시그니처 콜드햄 플레이트 · 13,900원", pos: "50% 56%" },
-    { src: "/images/stores/tokyo/wheat-beer.jpg", cap: "도쿄 윗 비어 · 8,900원", pos: "50% 50%" },
-    { src: "/images/stores/tokyo/draft-tap.jpg", cap: "산토리 프리미엄 생맥주 · 8,900원", pos: "50% 50%" },
     { src: "/images/stores/tokyo/interior-keg-fridge.jpg", cap: "생맥주 대기실", pos: "50% 45%" },
+    { src: "/images/stores/tokyo/interior-counter.jpg", cap: "서서 마시는 자리", pos: "50% 50%" },
     { src: "/images/stores/tokyo/hero.jpg", cap: "매장 입구", pos: "50% 50%" },
   ],
   joseon: [
-    { src: "/images/stores/joseon/kimchi-jeon.jpg", cap: "조선 김치전 · 12,000원", pos: "50% 45%" },
-    { src: "/images/stores/joseon/menu/haemul-pajeon.jpg", cap: "조선 해물파전 · 14,000원", pos: "50% 0%" },
-    { src: "/images/stores/joseon/menu/joseon-makgeolli.jpg", cap: "조선막걸리 1통 · 5,500원", pos: "50% 45%" },
     { src: "/images/stores/joseon/interior-hall.jpg", cap: "1층 홀", pos: "50% 55%" },
-    { src: "/images/stores/joseon/exterior-sign-night.jpg", cap: "매장 입구", pos: "50% 55%" },
+    { src: "/images/stores/joseon/interior-2f-room.jpg", cap: "2층 방", pos: "50% 50%" },
+    { src: "/images/stores/joseon/entrance-garden.jpg", cap: "물 흐르는 진입로", pos: "50% 50%" },
+    { src: "/images/stores/joseon/exterior-sign-night.jpg", cap: "밤의 간판", pos: "50% 55%" },
   ],
   wareureu: [
-    { src: "/images/stores/wareureu/bulsuji.jpg", cap: "와르르 키리모찌불스지 · 25,900원", pos: "50% 50%" },
-    { src: "/images/stores/wareureu/menu/yukhoe-chadol-ssam.jpg", cap: "투뿔한우육회차돌쌈 · 29,900원", pos: "50% 50%" },
-    { src: "/images/stores/wareureu/menu/kimchi-pizza-tangsuyuk.jpg", cap: "김치피자탕수육 · 18,500원", pos: "50% 50%" },
     { src: "/images/stores/wareureu/interior-hall.jpg", cap: "2층 홀", pos: "50% 50%" },
-    { src: "/images/stores/wareureu/exterior-sign-night.jpg", cap: "매장 입구", pos: "50% 50%" },
+    { src: "/images/stores/wareureu/interior-stained-glass.jpg", cap: "스테인드글라스 자리", pos: "50% 50%" },
+    { src: "/images/stores/wareureu/exterior-dusk.jpg", cap: "해 질 무렵 골목", pos: "50% 50%" },
   ],
 };
 
