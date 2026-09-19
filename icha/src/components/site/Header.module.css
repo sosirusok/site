@@ -1,7 +1,6 @@
-/* 맨 위 흰 바 — 붙박이(sticky), 아래 선 1px. 로고는 포스터 제목 글자(1400x480 → 높이 30px = 88px 폭) */
-.header { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; justify-content: space-between; gap: 12px; height: var(--header-h); padding: 0 var(--gutter); background: rgba(255, 255, 255, 0.96); backdrop-filter: saturate(1.2) blur(8px); border-bottom: 1px solid var(--line); }
+/* 맨 위 검은 바 — 붙박이, 아래 1px 선. 로고는 포스터 제목 글자(1400x480 → 높이 30px) */
+.header { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; justify-content: space-between; gap: 12px; height: var(--header-h); padding: 0 var(--gutter); background: rgba(11, 8, 16, 0.86); backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--line); }
 .brand { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; }
 .logo { width: auto; height: 30px; }
-.brandSub { font-size: 12px; font-weight: 600; color: var(--ink-3); letter-spacing: -0.01em; }
 .me { display: inline-flex; align-items: center; min-height: 44px; }
 .meTag { height: 32px; padding: 0 12px; font-size: 13px; font-weight: 700; }

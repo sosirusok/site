@@ -1,8 +1,8 @@
 .wrap { display: grid; gap: 14px; }
 /* 지도 상자 — 높이는 인라인 style(height)로 명시. 안의 Leaflet z-index 는 isolation 으로 가둔다 */
-.mapBox { position: relative; width: 100%; overflow: hidden; background: #e9e9ec; isolation: isolate; }
+.mapBox { position: relative; width: 100%; overflow: hidden; background: var(--bg-3); isolation: isolate; }
 .map { position: absolute; inset: 0; }
-.loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ink-2); font-size: 14px; background: #e9e9ec; }
+.loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ink-2); font-size: 14px; background: var(--bg-3); }
 .loading a { text-decoration: underline; font-weight: 700; }
 .list { display: grid; border-top: 1px solid var(--line); }
 .item { width: 100%; display: grid; grid-template-columns: 30px 1fr; gap: 12px; align-items: center; text-align: left; padding: 12px 6px; border: 0; border-bottom: 1px solid var(--line); background: none; color: inherit; border-radius: 0; }

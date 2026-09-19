@@ -1,8 +1,8 @@
 /* 매장 화면 — 섹션은 흰/연회색 교차. 아래 고정 바(.sticky-bar)까지의 여백은 .app:has(.sticky-bar) 가 준다 */
 .page { padding-bottom: 0; }
 /* 매장 공지 — 노란 상자 한 줄(사진 아래) */
-.notice { display: flex; align-items: flex-start; gap: 10px; margin: 16px var(--gutter) -16px; padding: 12px 14px; background: var(--brand-soft); border-radius: var(--radius-sm); font-size: 14px; line-height: 1.5; }
-.noticeTag { flex: none; font-weight: 800; }
+.notice { display: flex; align-items: flex-start; gap: 10px; margin: 16px var(--gutter) -16px; padding: 12px 14px; background: var(--brand-dim); border: 1px solid rgba(255, 212, 0, 0.35); border-radius: var(--radius-sm); font-size: 14px; line-height: 1.5; }
+.noticeTag { flex: none; font-weight: 800; color: var(--brand); }
 /* 쿠폰 혜택 — 노란 상자 + 품목 줄 */
 .giftBox { display: grid; gap: 4px; }
 .giftLine { font-size: 18px; line-height: 1.4; }

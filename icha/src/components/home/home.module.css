@@ -1,12 +1,14 @@
 /* 홈 — 포스터 히어로, 흰/연회색 섹션, 카드. 좌표 계산 없음 */
 
-/* ── 첫 화면 ── */
-.hero { display: grid; }
-.kv { position: relative; background: #0d0a14; }
+/* ── 첫 화면 — 포스터가 아래 22% 에서 바탕색으로 녹아들고(경계선 없음), 그 아래 글자 뒤에 네온 번짐 두 점 ── */
+.hero { position: relative; display: grid; }
+.kv { position: relative; background: var(--bg); }
 .kvImg { width: 100%; height: auto; }
-.intro { display: grid; gap: 14px; padding: 24px var(--gutter) 28px; }
+.intro { position: relative; display: grid; gap: 14px; padding: 4px var(--gutter) 28px; margin-top: -14px; }
+.intro::before { content: ""; position: absolute; left: -20%; top: -40px; width: 80%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(255, 61, 154, 0.20), transparent 68%); pointer-events: none; z-index: -1; }
+.intro::after { content: ""; position: absolute; right: -25%; top: 40px; width: 70%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(45, 226, 230, 0.14), transparent 68%); pointer-events: none; z-index: -1; }
 .ctas { margin-top: 4px; }
-.facts { display: grid; gap: 8px; margin-top: 6px; padding-top: 18px; border-top: 1px solid var(--line); }
+.facts { display: grid; gap: 8px; margin-top: 6px; padding-top: 18px; border-top: 1px solid var(--line-2); }
 .fact { display: grid; grid-template-columns: 64px 1fr; gap: 12px; font-size: 13px; line-height: 1.5; }
 .fact dt { color: var(--ink-3); font-weight: 600; }
 .fact dd { color: var(--ink-2); }
@@ -18,12 +20,14 @@
 .walk { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 4px 0; font-size: 12px; font-weight: 600; color: var(--ink-3); }
 .walkLine { width: 1px; height: 12px; background: var(--line-2); }
 .photo { position: relative; aspect-ratio: 16 / 10; background: var(--bg-3); }
+/* 사진 아래를 카드 면으로 살짝 이어 준다 — 어두운 카드 위에서 사진이 잘린 종이처럼 보이지 않게 */
+.photo::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 28%; background: linear-gradient(to bottom, transparent, rgba(21, 17, 29, 0.85)); pointer-events: none; }
 .photoImg { object-fit: cover; }
 .cardBody { display: grid; gap: 8px; padding: 16px 16px 18px; }
 .badges { display: flex; flex-wrap: wrap; gap: 6px; }
 .name { margin-top: 2px; font-size: 19px; }
 .gift { font-size: 15px; line-height: 1.5; }
-.giftLabel { font-size: 12px; font-weight: 700; color: var(--ink-3); margin-right: 4px; }
+.giftLabel { font-size: 12px; font-weight: 700; color: var(--ink-2); margin-right: 4px; }
 .meta { margin-bottom: 6px; }
 .notice { color: var(--ink); font-weight: 600; }
 

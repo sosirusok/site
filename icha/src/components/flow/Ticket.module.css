@@ -1,23 +1,28 @@
 /* 쿠폰 카드 — 흰 카드, 왼쪽 매장색 띠 6px */
-.card { position: relative; display: flex; align-items: center; gap: 14px; padding: 16px 16px 16px 20px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.card { position: relative; display: flex; align-items: center; gap: 14px; padding: 16px 16px 16px 20px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+/* 그 집 색이 카드 왼쪽에서 은은하게 번진다 — 어두운 바탕에서 쿠폰이 '빛나는 표'처럼 */
+.card::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 45%; background: linear-gradient(90deg, color-mix(in srgb, var(--store, #888) 16%, transparent), transparent); pointer-events: none; }
+.card > * { position: relative; z-index: 1; }
 .card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--store, var(--ink)); }
 .body { flex: 1; min-width: 0; display: grid; gap: 4px; }
 .badges { display: flex; flex-wrap: wrap; gap: 6px; }
 .name { font-size: 17px; font-weight: 700; line-height: 1.35; letter-spacing: -0.01em; }
-.free { display: inline-block; margin-left: 4px; padding: 1px 6px; border-radius: 6px; background: var(--brand); color: var(--ink); font-size: 12px; font-weight: 800; vertical-align: 2px; }
-.code { font-size: 22px; font-weight: 700; line-height: 1.2; color: var(--ink); }
+.free { display: inline-block; margin-left: 4px; padding: 1px 6px; border-radius: 6px; background: var(--brand); color: #100c05; font-size: 12px; font-weight: 800; vertical-align: 2px; }
+.code { font-size: 22px; font-weight: 700; line-height: 1.2; color: var(--ink); text-shadow: 0 0 18px color-mix(in srgb, var(--store, #fff) 45%, transparent); }
 .meta { margin-top: 2px; }
-.thumb { flex: none; object-fit: cover; border-radius: 10px; background: var(--bg-2); }
-.thumbCut { flex: none; object-fit: contain; border-radius: 10px; background: var(--bg-2); padding: 6px; }
-.thumbEmpty { flex: none; display: grid; place-items: center; border-radius: 10px; background: var(--bg-2); color: var(--ink-3); }
+.thumb { flex: none; object-fit: cover; border-radius: 10px; background: var(--bg-3); }
+.thumbCut { flex: none; object-fit: contain; border-radius: 10px; background: var(--bg-3); padding: 6px; }
+.thumbEmpty { flex: none; display: grid; place-items: center; border-radius: 10px; background: var(--bg-3); color: var(--ink-3); }
 .lg { padding: 20px 18px 20px 22px; }
 .lg .name { font-size: 20px; }
 .lg .code { font-size: 28px; }
 .dim { border-color: var(--line); }
 .dim::before { background: var(--line-2); }
+.dim::after { display: none; }
+.dim .code { text-shadow: none; }
 .dim .name, .dim .code { color: var(--ink-3); }
 .dim .free { background: var(--bg-3); color: var(--ink-2); }
 .dim :global(.badge-store) { background: var(--ink-3); }
 .dim .thumb, .dim .thumbCut { opacity: 0.5; filter: grayscale(1); }
 /* 상태 표시 — 오른쪽 위 검정 배지 */
-.stamp { position: absolute; right: 12px; top: 12px; height: 24px; display: inline-flex; align-items: center; padding: 0 9px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 12px; font-weight: 700; opacity: 1; }
+.stamp { position: absolute; right: 12px; top: 12px; z-index: 2; height: 24px; display: inline-flex; align-items: center; padding: 0 9px; border-radius: 999px; background: rgba(255, 255, 255, 0.14); color: var(--ink); font-size: 12px; font-weight: 700; }

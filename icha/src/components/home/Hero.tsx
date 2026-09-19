@@ -6,15 +6,15 @@ import { STORES } from "@/lib/stores";
 import s from "./home.module.css";
 
 /**
- * 첫 화면 — 사장님 포스터의 윗부분(1080x672, 제목·부제·세 간판)을 화면 폭 가득 보여 주고, 그 아래 흰 바탕에 제목·설명·버튼 둘·사실 세 줄.
- * 실제 이벤트 사이트처럼 포스터는 그림 한 장으로 두고, 글자와 버튼은 HTML 로 둔다.
+ * 첫 화면 — 사장님 포스터의 윗부분(제목·부제·세 간판까지, 1080x900)을 화면 폭 가득. 그림의 아래 끝은 사이트 바탕색(#0b0810)으로 녹아들게 구워 두어(scripts 없이 sharp 로 한 번 만든 poster-hero.jpg)
+ * 포스터가 화면으로 그대로 이어진다. 그 아래 제목·설명·버튼 둘·사실 세 줄은 HTML — 실제 이벤트 사이트가 KV 를 쓰는 방식.
  */
 export function Hero({ rules }: { rules: Rules }) {
   const ordered = [...STORES].sort((a, b) => a.course.n - b.course.n);
   return (
     <section className={s.hero} aria-labelledby="hero-title">
       <div className={s.kv}>
-        <Image src="/images/event/poster-top.jpg" alt={`${BRAND.name} 포스터 — 소주·맥주·막걸리, ${BRAND.unionName}, ${BRAND.course}`} width={1080} height={672} priority sizes="(min-width: 480px) 480px, 100vw" className={s.kvImg} />
+        <Image src="/images/event/poster-hero.jpg" alt={`${BRAND.name} 포스터 — 소주·맥주·막걸리, ${BRAND.unionName}, ${BRAND.course}. 1차 도쿄스탠드 서면, 2차 조선칼국수와 통막걸리 밀리오레점, 3차 와르르맨숀 서면`} width={1080} height={900} priority fetchPriority="high" sizes="(min-width: 480px) 480px, 100vw" className={s.kvImg} />
       </div>
       <div className={s.intro}>
         <span className="eyebrow">Seomyeon · 3 bars · 50m</span>

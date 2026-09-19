@@ -1,6 +1,6 @@
 .root { display: grid; gap: 12px; }
 .rating { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
-.star { color: #f5a623; font-size: 18px; }
+.star { color: #ffc34d; font-size: 18px; }
 .score { font-size: 18px; }
 .list { display: grid; gap: 10px; }
 .quote { display: grid; gap: 6px; }

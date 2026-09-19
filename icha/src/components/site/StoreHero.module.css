@@ -2,10 +2,12 @@
 .hero { display: grid; }
 .shotWrap { position: relative; aspect-ratio: 16 / 10; background: var(--bg-3); }
 .shot { object-fit: cover; }
-.body { display: grid; gap: 10px; padding: 20px var(--gutter) 24px; border-bottom: 1px solid var(--line); }
+/* 사진 아래 26% 가 바탕색으로 녹아든다 — 흰 사이트의 '잘린 사진' 느낌을 없앤다 */
+.shotWrap::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 26%; background: linear-gradient(to bottom, transparent, var(--bg) 92%); pointer-events: none; }
+.body { display: grid; gap: 10px; padding: 8px var(--gutter) 24px; border-bottom: 1px solid var(--line); }
 .badges { display: flex; flex-wrap: wrap; gap: 6px; }
 .name { font-size: 24px; }
 .rating { display: flex; align-items: center; gap: 4px; }
-.star { color: #f5a623; }
+.star { color: #ffc34d; }
 .kv { margin-top: 4px; }
 .other { display: block; margin-top: 2px; }

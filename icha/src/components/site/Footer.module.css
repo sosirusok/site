@@ -1,5 +1,5 @@
-/* 맨 아래 — 연회색, 13px 회색 글자. 전화번호는 제 줄(44px 누르는 상자) */
-.footer { margin-top: 8px; padding: 28px var(--gutter) 24px; background: var(--bg-2); color: var(--ink-2); font-size: 13px; line-height: 1.55; display: grid; gap: 16px; border-top: 1px solid var(--line); }
+/* 맨 아래 — 한 단계 더 어두운 바탕, 13px 회색 글자. 전화번호는 제 줄(44px 누르는 상자) */
+.footer { margin-top: 8px; padding: 28px var(--gutter) 24px; background: #08060d; color: var(--ink-2); font-size: 13px; line-height: 1.55; display: grid; gap: 16px; border-top: 1px solid var(--line); }
 .brand { font-size: 14px; font-weight: 800; color: var(--ink); }
 .brandSub { font-weight: 600; color: var(--ink-3); margin-left: 6px; }
 .stores { display: grid; gap: 10px; }

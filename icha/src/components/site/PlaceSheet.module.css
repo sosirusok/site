@@ -1,6 +1,6 @@
 /* 예약 시트 — 아래에서 올라오는 흰 패널. z 60(탭 40·고정 바 35 위) */
-.backdrop { position: fixed; inset: 0; z-index: 60; background: rgba(23, 23, 26, 0.5); display: flex; align-items: flex-end; justify-content: center; }
-.sheet { position: relative; width: min(100%, var(--app-max)); max-height: 88dvh; overflow-y: auto; background: #fff; color: var(--ink); border-radius: 20px 20px 0 0; padding: 10px var(--gutter) calc(20px + env(safe-area-inset-bottom)); display: grid; gap: 14px; animation: up 0.22s var(--ease-out); }
+.backdrop { position: fixed; inset: 0; z-index: 60; background: rgba(4, 2, 8, 0.72); display: flex; align-items: flex-end; justify-content: center; }
+.sheet { position: relative; width: min(100%, var(--app-max)); max-height: 88dvh; overflow-y: auto; background: var(--bg-2); color: var(--ink); border-top: 1px solid var(--line-2); border-radius: 20px 20px 0 0; padding: 10px var(--gutter) calc(20px + env(safe-area-inset-bottom)); display: grid; gap: 14px; animation: up 0.22s var(--ease-out); }
 @keyframes up { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
 .grip { display: block; width: 36px; height: 4px; border-radius: 2px; background: var(--line-2); margin: 0 auto; }
 .head { display: grid; gap: 2px; }

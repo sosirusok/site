@@ -1,8 +1,8 @@
 .page { display: grid; padding-bottom: 16px; }
 .top { display: grid; gap: 6px; padding: 28px var(--gutter) 16px; }
 /* 관리자 공지 — 노란 상자 */
-.notice { display: flex; align-items: flex-start; gap: 10px; margin: 0 var(--gutter) 12px; padding: 12px 14px; background: var(--brand-soft); border-radius: var(--radius-sm); font-size: 14px; line-height: 1.5; }
-.noticeTag { flex: none; font-weight: 800; }
+.notice { display: flex; align-items: flex-start; gap: 10px; margin: 0 var(--gutter) 12px; padding: 12px 14px; background: var(--brand-dim); border: 1px solid rgba(255, 212, 0, 0.35); border-radius: var(--radius-sm); font-size: 14px; line-height: 1.5; }
+.noticeTag { flex: none; font-weight: 800; color: var(--brand); }
 .sec { padding: 8px var(--gutter) 16px; }
 .head { display: grid; gap: 2px; margin-bottom: 12px; }
 .count { color: var(--ink-3); font-weight: 600; margin-left: 4px; }

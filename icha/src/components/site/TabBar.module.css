@@ -1,8 +1,9 @@
-/* 하단 탭 — 흰 바탕, 위 선 1px, 네 칸. 아이콘 24px + 글자 11px */
-.bar { bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(4, 1fr); height: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: rgba(255, 255, 255, 0.98); border-top: 1px solid var(--line); }
+/* 하단 탭 — 검정 반투명, 위 가장자리 네온 1px 선. 아이콘 24px + 글자 11px, 고른 탭은 노랑 */
+.bar { bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(4, 1fr); height: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: rgba(11, 8, 16, 0.94); backdrop-filter: saturate(1.4) blur(12px); border-top: 1px solid var(--line); }
+.bar::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255, 61, 154, 0.5), rgba(45, 226, 230, 0.4), transparent); }
 .item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 44px; color: var(--ink-3); font-size: 11px; font-weight: 600; line-height: 1; letter-spacing: -0.01em; }
-.item:active { background: var(--bg-2); }
+.item:active { background: rgba(255, 255, 255, 0.06); }
 .icon { display: block; }
 .label { display: block; }
-.active { color: var(--ink); }
+.active { color: var(--brand); }
 .active .label { font-weight: 700; }
