@@ -33,9 +33,12 @@ type Props = {
  * 한글 제목 옆에 같은 뜻의 영문 라벨을 붙이지 않는다 — 정보가 0인 장식이고, 서면 술집 손님이 읽을 말도 아니다.
  * 숫자를 주지 않으면 한 칸 머리, flush 면 좌우 여백 없이 내용이 화면 끝까지 간다. 여백은 섹션마다 다르게 준다.
  */
-export function Section({ id, title, lead, alt = false, no, head, tone = "mag", flush = false, pt, pb, action, className = "", children }: Props) {
+export function Section({ id, title, lead, alt = false, no, head, tone, flush = false, pt, pb, action, className = "", children }: Props) {
   const hid = id ? `${id}-title` : undefined;
-  const style: CSSProperties = { ["--tone" as string]: TONE[tone] };
+  // tone 을 주지 않으면 인라인 --tone 을 아예 찍지 않는다. 그래야 globals.css 의
+  // [data-store] .section { --tone: var(--store) } 가 살아서 매장 화면 머리가 그 집 색으로 나온다 —
+  // 기본값 "mag" 를 박아 두면 시안 가게 페이지의 메뉴 머리가 조선칼국수 마젠타로 칠해진다.
+  const style: CSSProperties = tone ? { ["--tone" as string]: TONE[tone] } : {};
   if (pt != null) style["--pt" as keyof CSSProperties] = `${pt}px` as never;
   if (pb != null) style["--pb" as keyof CSSProperties] = `${pb}px` as never;
   return (

@@ -39,7 +39,7 @@ export function giftWhat(names: string[], fallback: string): string {
 export function StoreCards({ now, rules, gifts }: { now: Date; rules: Rules; gifts: Record<StoreId, string[]> }) {
   const ordered = [...STORES].sort((a, b) => a.course.n - b.course.n);
   return (
-    <Section id="stores" head="slab" tone="yellow" title="오늘 밤 세 집" lead="서면역 6번 출구 도보 2~4분 · 세 매장 모두 50m 이내" alt flush pt={54} pb={30}>
+    <Section id="stores" head="slab" tone="yellow" title="오늘 밤 세 집" alt flush pt={54} pb={30}>
       <ul className={s.panels}>
         {ordered.map((st, i) => {
           const links = placeLinks(st);
