@@ -2,6 +2,7 @@ import Link from "next/link";
 import { formatPhone, normalizePhone } from "@/lib/config";
 import { counterState } from "@/lib/counter";
 import { listMenu } from "@/lib/db/queries";
+import { identityEnabled } from "@/lib/identity/portone";
 import { getRules } from "@/lib/settings";
 import { STORES, getStore, giftStoresFor } from "@/lib/stores";
 import { requireAdminPage } from "@/components/admin/guard";
@@ -52,8 +53,11 @@ export default async function CounterPage({ searchParams }: { searchParams: Prom
           <h1 className={ui.pageTitle}>카운터</h1>
           <p className={ui.pageDesc}>손님 번호를 넣고 조회하면 두 가지만 하면 됩니다 — 쿠폰 주기, 사용 처리.</p>
         </div>
-        {/* 신분증을 안 가져온 손님은 본인 폰으로 여기서 확인한다. 쿠폰과는 무관한 별개 도구다. */}
-        <Link href="/adult" target="_blank" rel="noreferrer" className={`${ui.button} ${ui.buttonGhost}`}>성인 확인</Link>
+        {/* 신분증을 안 가져온 손님은 본인 폰으로 여기서 확인한다. 쿠폰과는 무관한 별개 도구다.
+            계약 전에는 눌러도 안 되므로 아예 안 보인다 — 직원 앞에 죽은 버튼을 두지 않는다. */}
+        {identityEnabled() && (
+          <Link href="/adult" target="_blank" rel="noreferrer" className={`${ui.button} ${ui.buttonGhost}`}>성인 확인</Link>
+        )}
       </div>
 
       {owner ? (
