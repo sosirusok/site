@@ -1,0 +1,23 @@
+/* 결과 판 — 멀리서도 한 글자로 읽혀야 한다. 직원이 손님 폰을 넘겨다보는 화면이다. */
+.wrap { display: grid; gap: 10px; padding: 26px var(--gutter) 24px; margin: 0 calc(var(--gutter) * -1); }
+.wrap[data-tone="ok"] { background: var(--lime); }
+.wrap[data-tone="no"] { background: var(--mag); }
+.wrap[data-tone="stale"] { background: #150a26; }
+
+.big { margin: 0; font-family: var(--font-poster); font-size: clamp(60px, 22vw, 96px); line-height: 0.92; letter-spacing: -0.02em; }
+.wrap[data-tone="ok"] .big { color: #0b0011; }
+.wrap[data-tone="no"] .big { color: #fff; }
+.wrap[data-tone="stale"] .big { color: var(--ink-3); }
+
+.sub { margin: 0; font-family: var(--font-label); font-size: 17px; letter-spacing: 0.04em; font-variant-numeric: tabular-nums; }
+.wrap[data-tone="ok"] .sub { color: rgba(11, 0, 17, 0.75); }
+.wrap[data-tone="no"] .sub { color: rgba(255, 255, 255, 0.85); }
+.wrap[data-tone="stale"] .sub { color: var(--ink-2); font-family: var(--font-sans); font-size: 15px; letter-spacing: 0; }
+
+/* 살아 움직이는 초 — 캡처해 둔 화면과 구별되는 유일한 표시 */
+.live { margin: 2px 0 10px; font-size: 14px; font-variant-numeric: tabular-nums; }
+.wrap[data-tone="ok"] .live { color: rgba(11, 0, 17, 0.6); }
+.wrap[data-tone="no"] .live { color: rgba(255, 255, 255, 0.7); }
+
+.wrap[data-tone="ok"] :global(.btn-outline), .wrap[data-tone="no"] :global(.btn-outline) { --neon: #0b0011; color: #0b0011; }
+.wrap[data-tone="no"] :global(.btn-outline) { --neon: #fff; color: #fff; }

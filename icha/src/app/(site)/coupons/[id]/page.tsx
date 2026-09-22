@@ -3,7 +3,6 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { CouponTicket, type TicketCoupon, type TicketStore } from "@/components/flow/CouponTicket";
 import { getMemberSession } from "@/lib/auth/session";
-import { requireAdult } from "@/lib/identity/guard";
 import { getCoupon, listMenu } from "@/lib/db/queries";
 import { menuImageUrl } from "@/lib/menu-image";
 import { placeLinks } from "@/lib/naver";
@@ -17,7 +16,6 @@ export default async function CouponPage({ params }: { params: Promise<{ id: str
   const { id } = await params;
   const session = await getMemberSession();
   if (!session) redirect(`/login?next=/coupons/${encodeURIComponent(id)}`);
-  await requireAdult(session.memberId, `/coupons/${id}`);
   if (!/^[0-9a-f-]{36}$/i.test(id)) notFound();
 
   const coupon = await getCoupon(id);

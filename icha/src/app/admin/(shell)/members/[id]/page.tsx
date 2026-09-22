@@ -55,10 +55,6 @@ export default async function MemberDetailPage({ params }: { params: Promise<{ i
               <span className={s.factLabel}>누적 금액 (입력분)</span>
               <span className={s.factValue}>{m.totalSpend > 0 ? won(m.totalSpend) : "-"}</span>
             </div>
-            <div className={s.fact}>
-              <span className={s.factLabel}>성인 확인</span>
-              <span className={s.factValue}>{m.adultVerifiedAt ? fmtDateTime(m.adultVerifiedAt) : "안 함"}</span>
-            </div>
           </div>
           <p style={{ marginTop: 12 }}>
             <Link href={`/admin/counter?phone=${m.phone}`} className={`${ui.button} ${ui.buttonGhost}`}>
