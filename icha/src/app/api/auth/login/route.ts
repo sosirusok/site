@@ -1,5 +1,5 @@
 import { normalizePhone } from "@/lib/config";
-import { findOrCreateMember, getMemberByPhone, markAdultVerified } from "@/lib/db/queries";
+import { countMembersByIdentity, findOrCreateMember, getMemberByPhone, markAdultVerified } from "@/lib/db/queries";
 import { errorResponse, fail, json } from "@/lib/http";
 import { clearAdultTicket, readAdultTicket } from "@/lib/identity/pending";
 import { identityEnabled, identityMock } from "@/lib/identity/portone";
@@ -27,6 +27,18 @@ export async function POST(req: Request) {
     if (gate && !ticket) {
       const existing = await getMemberByPhone(phone);
       if (!existing?.adultVerifiedAt) return fail("먼저 휴대폰 본인확인을 해 주세요.", 403, { needIdentity: true });
+    }
+
+    // 다날 기본 계약은 통신사가 번호를 주지 않아, 성인 확인을 마친 손님이 번호를 직접 적는다. 그대로 두면
+    // "내 이름으로 본인확인을 하고 남의 번호를 적는" 길이 남아, 이 기능을 붙인 이유(남의 쿠폰함)가 그대로다.
+    // 한 사람(identityKey)은 한 번호에만 묶어 그 길을 막는다.
+    // 계약에 전화번호 제공이 들어가면 인증 결과의 번호로 바로 로그인되어 이 경로 자체를 쓰지 않는다.
+    if (ticket?.identityKey) {
+      const mine = await getMemberByPhone(phone);
+      if ((await countMembersByIdentity(ticket.identityKey, mine?.id ?? null)) > 0) {
+        await clearAdultTicket();
+        return fail("이미 다른 번호로 본인확인을 하셨습니다. 그 번호로 들어와 주세요.", 403);
+      }
     }
 
     const member = await findOrCreateMember(phone);

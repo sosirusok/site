@@ -70,9 +70,16 @@ export async function markAdultVerified(memberId: string, identityKey: string | 
   );
 }
 
-/** 같은 사람(identityKey)이 쓰고 있는 다른 번호의 수 — 관리자 화면에서 부정 사용을 볼 때 쓴다 */
-export async function countMembersByIdentity(identityKey: string, exceptMemberId: string): Promise<number> {
-  const r = await one<{ n: string }>(`select count(*)::text as n from members where identity_key=$1 and id<>$2`, [identityKey, exceptMemberId]);
+/**
+ * 같은 사람(identityKey)이 쓰고 있는 다른 번호의 수.
+ * exceptMemberId 가 없으면(아직 그 번호로 만든 회원이 없을 때) 그 사람의 모든 번호를 센다.
+ */
+export async function countMembersByIdentity(identityKey: string, exceptMemberId: string | null): Promise<number> {
+  const except = exceptMemberId && isUuid(exceptMemberId) ? exceptMemberId : null;
+  const r = await one<{ n: string }>(
+    `select count(*)::text as n from members where identity_key=$1 and ($2::uuid is null or id <> $2::uuid)`,
+    [identityKey, except],
+  );
   return r ? Number(r.n) : 0;
 }
 

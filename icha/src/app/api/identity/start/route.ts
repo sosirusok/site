@@ -1,8 +1,7 @@
-import { randomUUID } from "node:crypto";
 import { safeNext } from "@/components/flow/format";
 import { getMemberSession } from "@/lib/auth/session";
 import { errorResponse, fail, json } from "@/lib/http";
-import { identityConfig, identityMock } from "@/lib/identity/portone";
+import { identityConfig, identityMock, newVerificationId } from "@/lib/identity/portone";
 import { setPending } from "@/lib/identity/pending";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
 
@@ -26,7 +25,7 @@ export async function POST(req: Request) {
     const body = (await req.json().catch(() => ({}))) as { next?: string };
     const next = safeNext(body.next, "/wallet");
     const session = await getMemberSession();
-    const ivId = `iv-${randomUUID()}`;
+    const ivId = newVerificationId();
     await setPending({ ivId, next, memberId: session?.memberId });
 
     // 인증창은 대부분 모바일에서 리다이렉트로 돌아온다. 지금 보고 있는 주소로 돌려보내야
@@ -46,10 +45,15 @@ export async function POST(req: Request) {
       identityVerificationId: ivId,
       redirectUrl,
       next,
-      // PG 마다 넘길 수 있는 값이 다르다. 다날은 인증창에서 미성년자를 아예 막을 수 있다.
+      // PG 마다 넘길 수 있는 값이 다르다. 다날은 인증창에서 나이로 먼저 걸러 준다.
+      //
+      // AGELIMIT 은 "만" 나이인데 주류의 성인 기준은 연 나이다(청소년보호법 제2조 제1호). 19 로 적으면
+      // 2007년 12월생처럼 올해 이미 성인이 된 손님이 아직 만 18세라는 이유로 막힌다 — 그것도 다날 화면에서
+      // 막혀 우리 안내조차 못 보여 준다. 연 19세인 사람의 만 나이는 최소 18 이므로 여기서는 18 로
+      // 성인일 수 없는 사람만 걷어내고, 진짜 판정은 서버가 생년월일로 한다(lib/identity/adult.ts).
       bypass:
         cfg.pg === "danal"
-          ? { danal: { CPTITLE: cfg.serviceName, AGELIMIT: 19 } }
+          ? { danal: { CPTITLE: cfg.serviceName, AGELIMIT: 18 } }
           : undefined,
     });
   } catch (e) {

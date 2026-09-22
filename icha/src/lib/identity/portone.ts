@@ -15,9 +15,22 @@
  * 규격 출처(2026-09 확인): https://developers.portone.io/opi/ko/extra/identity-verification/readme-v2
  * 응답 타입은 @portone/server-sdk 의 VerifiedIdentityVerification 과 맞춰 두었다.
  */
+import { randomUUID } from "node:crypto";
 import { z } from "zod";
 
 const API_BASE = "https://api.portone.io";
+
+/**
+ * 본인인증 건 ID 를 새로 만든다. 이 값은 모바일에서 주소창에 그대로 붙어 돌아온다.
+ *
+ * NHN KCP 는 이 값을 "영어 대소문자와 숫자만 사용 가능하며 40자 이하"로 받는다
+ * (https://developers.portone.io/opi/ko/integration/pg/v2/kcp-v2-identity-verification — identityVerificationId 파라미터 유의사항).
+ * 포트원 예제는 하이픈이 든 uuid 를 쓰는데, 그대로 두면 KCP 로 계약했을 때만 조용히 실패한다.
+ * 어디로 계약해도 통하는 34자 영숫자로 만든다.
+ */
+export function newVerificationId(): string {
+  return `iv${randomUUID().replaceAll("-", "")}`;
+}
 
 /** 포트원 콘솔에서 발급받는 값들. 셋 다 있어야 본인확인을 켠다 */
 export type IdentityConfig = {
@@ -62,16 +75,23 @@ const Operator = z.enum(["SKT", "KT", "LGU", "SKT_MVNO", "KT_MVNO", "LGU_MVNO"])
 const VerifiedCustomer = z.object({
   id: z.string().optional(),
   name: z.string(),
+  /** 통신사. 다날은 별도 계약이 있어야 주고, KG이니시스는 아예 주지 않는다 */
   operator: Operator.optional(),
-  /** 하이픈 없는 숫자만. 다날은 별도 계약, KCP·KG이니시스는 항상 제공 */
+  /**
+   * 하이픈 없는 숫자만.
+   * 다날 기본 계약은 이름·성별·생년월일만 주고 번호를 주지 않는다 — 번호까지 받으려면 계약 뒤 별도 신청이다.
+   * KG이니시스는 항상 준다. KCP 는 포트원 문서에 적혀 있지 않으니 계약할 때 직접 확인할 것.
+   * 이 값이 비면 손님이 번호를 손으로 적는 경로로 빠진다(api/auth/login 의 "한 사람 한 번호" 검사 참고).
+   */
   phoneNumber: z.string().optional(),
   /** yyyy-MM-dd. 포트원 V2 본인인증 건은 항상 존재 */
   birthDate: z.string().optional(),
   gender: z.string().optional(),
+  /** 다날은 별도 계약이 있어야 준다 */
   isForeigner: z.boolean().optional(),
   /** 사람마다 고유. 서비스가 달라도 같다 — 우리는 저장하지 않는다 */
   ci: z.string().optional(),
-  /** 우리 사이트 안에서만 고유. 중복 가입 확인용 */
+  /** 우리 사이트 안에서만 고유. 중복 가입 확인용. 다날은 항상 주고, KG이니시스는 주지 않는다 */
   di: z.string().optional(),
 });
 

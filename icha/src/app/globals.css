@@ -455,3 +455,9 @@ summary.btn { list-style: none; }
 .badge-store { box-shadow: none; filter: drop-shadow(0 0 10px color-mix(in srgb, var(--store, var(--cyan)) 60%, transparent)); }
 /* 폼 판 — 1px 테두리 상자를 두르지 않는다. 위아래가 찢긴 종이 조각으로 바꾼다 */
 .card.torn-tb { border: 0; padding-top: 32px; padding-bottom: 40px; }
+
+/* ══ 성인 확인 판 ══════════════════════════════════════════════
+   판은 늘 HTML 에 들어 있고, 이미 확인한 손님은 인라인 스크립트가 html 에 age-ok 를 붙여 감춘다.
+   기본값을 "보임"으로 두는 이유: 스크립트가 아예 안 돌면(JS 꺼짐) 판이 덮인 채로 남아야 맞다. */
+html.age-ok #agegate { display: none; }
+html:not(.age-ok) body { overflow: hidden; }
