@@ -25,11 +25,14 @@ export type Member = {
   visitCount: number;
   tier: string;
   memo: string | null;
+  /** 휴대폰 본인확인으로 성인임이 확인된 시각. null 이면 아직 확인 전 */
+  adultVerifiedAt: Date | null;
 };
 
 type MemberRow = {
   id: string; phone: string; created_at: unknown; last_login_at: unknown;
   total_spend: number; visit_count: number; tier: string; memo: string | null;
+  adult_verified_at?: unknown;
 };
 
 const mapMember = (r: MemberRow): Member => ({
@@ -41,6 +44,7 @@ const mapMember = (r: MemberRow): Member => ({
   visitCount: Number(r.visit_count),
   tier: r.tier,
   memo: r.memo,
+  adultVerifiedAt: toDate(r.adult_verified_at),
 });
 
 export async function findOrCreateMember(phone: string): Promise<Member> {
@@ -51,6 +55,25 @@ export async function findOrCreateMember(phone: string): Promise<Member> {
     [phone],
   );
   return mapMember(rows[0]!);
+}
+
+/**
+ * 본인확인 결과를 회원에 새긴다 — 성인 확인 시각과, 같은 사람이 번호만 바꿔 계정을 늘리는지 보는 식별값.
+ * identityKey 는 PG 가 준 DI(우리 사이트 안에서만 고유한 값)를 다시 해시한 것이라 되돌릴 수 없다.
+ * 이름·생년월일·성별·통신사·CI 는 받기만 하고 저장하지 않는다(개인정보 최소수집).
+ */
+export async function markAdultVerified(memberId: string, identityKey: string | null): Promise<void> {
+  if (!isUuid(memberId)) return;
+  await query(
+    `update members set adult_verified_at = now(), identity_key = coalesce($2, identity_key) where id = $1`,
+    [memberId, identityKey],
+  );
+}
+
+/** 같은 사람(identityKey)이 쓰고 있는 다른 번호의 수 — 관리자 화면에서 부정 사용을 볼 때 쓴다 */
+export async function countMembersByIdentity(identityKey: string, exceptMemberId: string): Promise<number> {
+  const r = await one<{ n: string }>(`select count(*)::text as n from members where identity_key=$1 and id<>$2`, [identityKey, exceptMemberId]);
+  return r ? Number(r.n) : 0;
 }
 
 export async function getMember(id: string): Promise<Member | null> {

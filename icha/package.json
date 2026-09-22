@@ -20,6 +20,7 @@
     "@electric-sql/pglite": "0.5.8",
     "@fontsource/do-hyeon": "^5.3.0",
     "@fontsource/nanum-pen-script": "^5.3.0",
+    "@portone/browser-sdk": "^0.1.11",
     "jose": "6.2.12",
     "leaflet": "^1.9.4",
     "next": "16.3.5",

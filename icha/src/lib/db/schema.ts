@@ -45,6 +45,10 @@ create table if not exists members (
   memo          text
 );
 
+alter table members add column if not exists adult_verified_at timestamptz;
+alter table members add column if not exists identity_key text;
+create index if not exists members_identity_key_idx on members(identity_key);
+
 create table if not exists receipts (
   id           uuid primary key default gen_random_uuid(),
   member_id    uuid not null references members(id),

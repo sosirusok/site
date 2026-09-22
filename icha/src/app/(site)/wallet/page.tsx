@@ -4,6 +4,7 @@ import { DotLine } from "@/components/flow/kit";
 import { LogoutButton } from "@/components/flow/LogoutButton";
 import { ActiveCoupons, EmptyWallet, PastCoupons, RelayCards, type WalletCoupon, type WalletRelay } from "@/components/flow/WalletSections";
 import { getMemberSession } from "@/lib/auth/session";
+import { requireAdult } from "@/lib/identity/guard";
 import { BRAND, maskPhone, STORE_IDS, type StoreId } from "@/lib/config";
 import { ruleLine } from "@/lib/copy";
 import { isPickExpired, pickDeadlineFor } from "@/lib/coupons";
@@ -43,6 +44,7 @@ async function menuPhotoIndex(): Promise<(storeId: StoreId, menuItemId: number |
 export default async function WalletPage() {
   const session = await getMemberSession();
   if (!session) redirect("/login?next=/wallet");
+  await requireAdult(session.memberId, "/wallet");
   const [coupons, receipts, rules, photoOf] = await Promise.all([
     listCouponsForMember(session.memberId),
     listReceiptsForMember(session.memberId, 60),

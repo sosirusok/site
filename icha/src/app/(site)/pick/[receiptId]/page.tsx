@@ -4,6 +4,7 @@ import { MenuPicker, type PickStore } from "@/components/flow/MenuPicker";
 import { fmtMD } from "@/components/flow/format";
 import { Button } from "@/components/ui/Button";
 import { getMemberSession } from "@/lib/auth/session";
+import { requireAdult } from "@/lib/identity/guard";
 import { isPickExpired, pickDeadlineFor } from "@/lib/coupons";
 import { getReceipt, listMenu, menuImageUrl } from "@/lib/db/queries";
 import { placeLinks } from "@/lib/naver";
@@ -18,6 +19,7 @@ export default async function PickPage({ params }: { params: Promise<{ receiptId
   const { receiptId } = await params;
   const session = await getMemberSession();
   if (!session) redirect(`/login?next=/pick/${encodeURIComponent(receiptId)}`);
+  await requireAdult(session.memberId, `/pick/${receiptId}`);
   if (!/^[0-9a-f-]{36}$/i.test(receiptId)) notFound();
 
   const receipt = await getReceipt(receiptId);

@@ -1,0 +1,6 @@
+.wrap { display: grid; gap: 14px; }
+/* 성인 확인이 끝났다는 줄 — 라임 왼쪽 기둥 없이 색 글자 한 줄 */
+.okline { margin: 0; font-family: var(--font-poster); font-size: 16px; line-height: 1.35; color: var(--lime); }
+.note { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--ink-3); }
+.note b { font-weight: 400; color: var(--ink); }
+.err { margin: 0; }
