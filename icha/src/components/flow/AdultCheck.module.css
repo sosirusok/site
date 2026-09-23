@@ -21,3 +21,4 @@
 .year { height: 62px; font-size: 30px; letter-spacing: 0.16em; font-variant-numeric: tabular-nums; }
 
 .phone { display: grid; gap: 8px; padding-top: 6px; border-top: 1px solid var(--line-2); }
+.verdict:focus { outline: none; }

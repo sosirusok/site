@@ -38,17 +38,12 @@ export async function confirmIdentity(identityVerificationId: string): Promise<I
   return { kind: "result", adult: data.adult === true, verifiedAt: typeof data.verifiedAt === "string" ? data.verifiedAt : new Date().toISOString() };
 }
 
-/**
- * 통신사 본인확인창을 연다.
- * @param onUnavailable 아직 계약 전이라 쓸 수 없을 때
- */
-export async function runIdentityVerification(onUnavailable: () => void): Promise<IdentityOutcome> {
+/** 통신사 본인확인창을 연다. */
+export async function runIdentityVerification(): Promise<IdentityOutcome> {
   const { status, data } = await post("/api/identity/start", {});
   if (data.ok !== true) {
-    if (status === 503) {
-      onUnavailable();
-      return { kind: "error", message: "성인 확인이 아직 연결되지 않았습니다." };
-    }
+    // 503 = 포트원 키가 없다(버튼이 뜬 뒤에 키를 뺀 경우뿐)
+    if (status === 503) return { kind: "error", message: "휴대폰 본인확인은 지금 쓸 수 없습니다." };
     return { kind: "error", message: typeof data.error === "string" ? data.error : "시작할 수 없습니다." };
   }
   const info = data as unknown as StartInfo;

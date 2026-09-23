@@ -18,21 +18,20 @@ type Carrier = { s: "idle" } | { s: "busy" } | { s: "done"; adult: boolean; veri
  * @param year 한국 기준 올해(서버가 요청 때 센 값) — 화면을 켜 둔 채 해가 바뀌면 1분 안에 따라 바뀐다
  * @param carrier 포트원 본인확인 계약이 있을 때만 휴대폰 본인확인 버튼을 덧붙인다
  */
-export function AdultCheck({ year: initialYear, carrier }: { year: number; carrier: boolean }) {
+export function AdultCheck({ year: initialYear, appUrl: initialAppUrl, carrier }: { year: number; appUrl: string; carrier: boolean }) {
   const id = useId();
   const input = useRef<HTMLInputElement>(null);
   const result = useRef<HTMLDivElement>(null);
   const [year, setYear] = useState(initialYear);
-  const [appUrl, setAppUrl] = useState<string>(VERIFIER_APP.android);
+  const [appUrl, setAppUrl] = useState(initialAppUrl);
   const [digits, setDigits] = useState("");
   const [verdict, setVerdict] = useState<Verdict | null>(null);
   const [typo, setTypo] = useState(false);
   const [phone, setPhone] = useState<Carrier>({ s: "idle" });
 
   useEffect(() => {
-    // 아이폰이면 앱스토어로 — 서버는 기기를 모르니 붙은 뒤에 바꾼다
-    const url = verifierAppUrl(navigator.userAgent, navigator.maxTouchPoints);
-    if (url !== VERIFIER_APP.android) setAppUrl(url);
+    // 서버는 User-Agent 로 골랐다. 아이패드는 맥이라고 말해서 터치 수까지 봐야 가려진다
+    setAppUrl(verifierAppUrl(navigator.userAgent, navigator.maxTouchPoints));
     const t = setInterval(() => setYear(koreanYear(new Date())), 60_000);
     return () => clearInterval(t);
   }, []);
@@ -52,28 +51,38 @@ export function AdultCheck({ year: initialYear, carrier }: { year: number; carri
       return;
     }
     setVerdict({ year: y, adult: isAdultBirthYear(y, now) });
-    // 자판을 내려야 판정이 보인다 — 네 자리를 다 치면 바로 내리고 판정으로 내려간다
-    e.target.blur();
   }
 
+  // 네 자리를 다 치면 판정으로 포커스를 옮긴다 — 자판이 내려가야 판정이 보이고, 화면낭독기도 판정을 읽는다
   useEffect(() => {
     if (!verdict) return;
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    result.current?.focus({ preventScroll: true });
     result.current?.scrollIntoView({ block: "center", behavior: still ? "auto" : "smooth" });
   }, [verdict]);
 
-  function next() {
+  /** 판정이 남은 채로 칸을 다시 누르면 새 손님이다 — 네 자리가 꽉 차 있어 새 숫자가 안 먹으니 비운다 */
+  function onFocusYear() {
+    if (verdict || typo) clearYear();
+  }
+
+  function clearYear() {
     setDigits("");
     setVerdict(null);
     setTypo(false);
+  }
+
+  function next() {
+    clearYear();
     input.current?.focus();
   }
 
   async function startPhone() {
+    clearYear(); // 앞 손님 판정이 새 결과 위에 남지 않게
     setPhone({ s: "busy" });
     let out: IdentityOutcome;
     try {
-      out = await runIdentityVerification(() => setPhone({ s: "error", message: "지금은 쓸 수 없습니다." }));
+      out = await runIdentityVerification();
     } catch {
       setPhone({ s: "error", message: "인증창을 열지 못했습니다." });
       return;
@@ -87,7 +96,7 @@ export function AdultCheck({ year: initialYear, carrier }: { year: number; carri
     return (
       <div className={styles.page} data-footer="short">
         <h1 className="h1">성인 확인</h1>
-        <AdultResult adult={phone.adult} verifiedAt={phone.verifiedAt} onAgain={() => setPhone({ s: "idle" })} />
+        <AdultResult adult={phone.adult} verifiedAt={phone.verifiedAt} onAgain={() => { clearYear(); setPhone({ s: "idle" }); }} />
       </div>
     );
   }
@@ -103,7 +112,7 @@ export function AdultCheck({ year: initialYear, carrier }: { year: number; carri
 
       <ol className={styles.steps}>
         <li>
-          <Button href={appUrl} variant="primary" size="lg" block srSuffix={` — ${VERIFIER_APP.name}`}>
+          <Button href={appUrl} sameTab variant="primary" size="lg" block srSuffix={` — ${VERIFIER_APP.name}`}>
             검증앱 열기
           </Button>
           <span className={styles.app}>{VERIFIER_APP.name} · 행정안전부</span>
@@ -127,6 +136,7 @@ export function AdultCheck({ year: initialYear, carrier }: { year: number; carri
             maxLength={4}
             value={digits}
             onChange={onYear}
+            onFocus={onFocusYear}
             aria-invalid={typo || undefined}
             aria-describedby={typo ? `${id}-err` : undefined}
           />
@@ -135,8 +145,8 @@ export function AdultCheck({ year: initialYear, carrier }: { year: number; carri
       </ol>
 
       {verdict && (
-        <div ref={result}>
-          <AdultResult adult={verdict.adult} detail={`${verdict.year}년생`} onAgain={next} />
+        <div ref={result} tabIndex={-1} className={styles.verdict}>
+          <AdultResult adult={verdict.adult} detail={`입력 ${verdict.year}년생`} onAgain={next} />
         </div>
       )}
 

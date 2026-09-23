@@ -1,4 +1,4 @@
-/* 결과 판 — 멀리서도 한 글자로 읽혀야 한다. 직원이 손님 폰을 넘겨다보는 화면이다. */
+/* 결과 판 — 멀리서도 한 글자로 읽혀야 한다. */
 .wrap { display: grid; gap: 10px; padding: 26px var(--gutter) 24px; margin: 0 calc(var(--gutter) * -1); }
 .wrap[data-tone="ok"] { background: var(--lime); }
 .wrap[data-tone="no"] { background: var(--mag); }
@@ -21,3 +21,11 @@
 
 .wrap[data-tone="ok"] :global(.btn-outline), .wrap[data-tone="no"] :global(.btn-outline) { --neon: #0b0011; color: #0b0011; }
 .wrap[data-tone="no"] :global(.btn-outline) { --neon: #fff; color: #fff; }
+
+/* 직원이 친 연도로 계산만 한 판 — 테두리만. 꽉 찬 색판(휴대폰 본인확인 결과)과 한눈에 달라야 한다 */
+.wrap[data-tone="in-ok"], .wrap[data-tone="in-no"] { margin: 0; padding: 18px 18px 18px; background: rgba(255, 255, 255, 0.03); border: 3px solid; }
+.wrap[data-tone="in-ok"] { border-color: var(--lime); }
+.wrap[data-tone="in-no"] { border-color: var(--mag); }
+.wrap[data-tone="in-ok"] .big { color: var(--lime); }
+.wrap[data-tone="in-no"] .big { color: var(--mag); }
+.wrap[data-tone="in-ok"] .sub, .wrap[data-tone="in-no"] .sub { color: var(--ink-2); margin-bottom: 6px; }

@@ -18,8 +18,9 @@ function clock(iso: string): string {
 
 /**
  * 직원이 보는 판 — 결과 한 글자.
- * verifiedAt 이 있으면(손님 폰으로 본인확인한 결과) 방금 확인한 것이라는 증거로 초가 살아 움직이고, 3분 지나면 더 안 믿는다.
- * 없으면(직원이 검증앱에서 본 출생연도를 친 경우) detail 에 그 연도를 다시 보여 줘 오타를 잡게 한다.
+ * verifiedAt 이 있으면(휴대폰 본인확인 결과) 꽉 찬 색판에 방금 확인한 것이라는 증거로 초가 살아 움직이고, 3분 지나면 더 안 믿는다.
+ * 없으면(직원이 검증앱에서 본 출생연도를 친 것) 테두리만 있는 판 — 사이트가 확인한 게 아니라 계산만 한 것이라
+ * 확인 결과와 헷갈리지 않게 모양을 다르게 두고, detail 에 친 연도를 다시 보여 줘 오타를 잡게 한다.
  */
 export function AdultResult({ adult, verifiedAt, detail, onAgain }: { adult: boolean; verifiedAt?: string; detail?: string; onAgain: () => void }) {
   const [now, setNow] = useState(() => Date.now());
@@ -42,7 +43,7 @@ export function AdultResult({ adult, verifiedAt, detail, onAgain }: { adult: boo
   }
 
   return (
-    <div className={styles.wrap} data-tone={adult ? "ok" : "no"} role="status">
+    <div className={styles.wrap} data-tone={verifiedAt ? (adult ? "ok" : "no") : adult ? "in-ok" : "in-no"} role="status">
       <p className={styles.big}>{adult ? "성인" : "미성년"}</p>
       {detail && <p className={styles.sub}>{detail}</p>}
       {verifiedAt && (
