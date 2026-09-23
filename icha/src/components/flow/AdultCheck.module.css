@@ -1,1 +1,23 @@
-.page { display: grid; gap: 16px; padding: 40px var(--gutter) 30px; }
+.page { display: grid; gap: 18px; padding: 40px var(--gutter) 30px; }
+
+/* 올해 몇 년생까지 — 카운터에서 제일 먼저 눈에 들어와야 하는 한 줄 */
+.cutoff { margin: 0; display: grid; gap: 6px; }
+.cutoff b { font-family: var(--font-poster); font-weight: 400; font-size: clamp(46px, 15vw, 72px); line-height: 0.95; letter-spacing: -0.02em; color: var(--lime); font-variant-numeric: tabular-nums; }
+.cutoff span { font-family: var(--font-label); font-size: 14px; letter-spacing: 0.18em; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+
+/* 차례 — 앱 열기 → QR 찍기 → 연도 치기. 번호는 실제 순서라 붙인다 */
+.steps { margin: 0; padding: 0; list-style: none; counter-reset: step; display: grid; gap: 18px; }
+.steps > li { counter-increment: step; position: relative; display: grid; gap: 8px; padding-left: 38px; }
+.steps > li::before {
+  content: counter(step);
+  position: absolute; left: 0; top: 0;
+  width: 26px; height: 26px; display: grid; place-items: center;
+  font-family: var(--font-label); font-size: 15px; line-height: 1;
+  color: #0b0011; background: var(--cyan);
+}
+.app { font-size: 13px; color: var(--ink-3); }
+.say { margin: 0; font-size: 17px; font-weight: 800; line-height: 1.4; letter-spacing: -0.02em; color: var(--ink); }
+.aside { margin: 0; font-size: 13px; color: var(--ink-3); }
+.year { height: 62px; font-size: 30px; letter-spacing: 0.16em; font-variant-numeric: tabular-nums; }
+
+.phone { display: grid; gap: 8px; padding-top: 6px; border-top: 1px solid var(--line-2); }

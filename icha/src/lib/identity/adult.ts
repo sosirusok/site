@@ -18,7 +18,7 @@ export const ADULT_AGE = 19;
  * 서버가 아직 작년이라고 답하고, 그 아홉 시간 동안 그 해에 막 성인이 된 손님이 부당하게 막힌다.
  * 한국은 서머타임이 없으므로 UTC+9 를 그대로 더해 읽으면 된다.
  */
-function koreanYear(now: Date): number {
+export function koreanYear(now: Date): number {
   return new Date(now.getTime() + 9 * 60 * 60 * 1000).getUTCFullYear();
 }
 
@@ -35,11 +35,16 @@ export function birthYearOf(birthDate: string | undefined | null): number | null
   return y;
 }
 
+/** 출생연도만으로 판정한다 — 연 나이라 월·일은 결과를 바꾸지 않는다. 있을 수 없는 해는 성인으로 보지 않는다 */
+export function isAdultBirthYear(year: number, now: Date): boolean {
+  return Number.isInteger(year) && year >= 1900 && year <= koreanYear(now) - ADULT_AGE;
+}
+
 /** 오늘(now) 기준으로 술을 마실 수 있는 나이인가 */
 export function isAdultKr(birthDate: string | undefined | null, now: Date): boolean {
   const year = birthYearOf(birthDate);
   if (year == null) return false;
-  return year <= koreanYear(now) - ADULT_AGE;
+  return isAdultBirthYear(year, now);
 }
 
 /** 안내 문구용 — 올해 기준 몇 년생부터 입장 가능한지 */

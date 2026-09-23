@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { adultBornOnOrBefore, birthYearOf, isAdultKr } from "./adult";
+import { adultBornOnOrBefore, birthYearOf, isAdultBirthYear, isAdultKr, koreanYear } from "./adult";
 
 /**
  * 주류의 성인 기준은 만 나이가 아니다. 청소년보호법 제2조 제1호에 따라
@@ -42,4 +42,22 @@ test("생년월일이 없거나 이상하면 성인으로 보지 않는다", () 
   assert.equal(isAdultKr("", NEW_YEAR_2026), false);
   assert.equal(isAdultKr("abcd-ef-gh", NEW_YEAR_2026), false);
   assert.equal(isAdultKr("0001-01-01", NEW_YEAR_2026), false);
+});
+
+test("출생연도만 넣어도 같은 판정이 나온다", () => {
+  assert.equal(isAdultBirthYear(2007, NEW_YEAR_2026), true);
+  assert.equal(isAdultBirthYear(1960, NEW_YEAR_2026), true);
+  assert.equal(isAdultBirthYear(2008, DEC_2026), false);
+  assert.equal(isAdultBirthYear(1899, NEW_YEAR_2026), false); // 잘못 친 연도
+  assert.equal(isAdultBirthYear(2007.5, NEW_YEAR_2026), false);
+  assert.equal(isAdultBirthYear(Number.NaN, NEW_YEAR_2026), false);
+});
+
+test("해가 바뀌는 순간은 한국 시각으로 센다", () => {
+  // 한국 1월 1일 0시 30분 = UTC 로는 아직 12월 31일
+  const kst0030 = new Date("2027-01-01T00:30:00+09:00");
+  assert.equal(kst0030.getUTCFullYear(), 2026);
+  assert.equal(koreanYear(kst0030), 2027);
+  assert.equal(isAdultBirthYear(2008, kst0030), true);
+  assert.equal(isAdultBirthYear(2008, new Date("2026-12-31T23:59:00+09:00")), false);
 });
