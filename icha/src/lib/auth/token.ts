@@ -24,15 +24,6 @@ export async function signToken(payload: Record<string, unknown>, days: number):
     .sign(secret());
 }
 
-/** 짧게 쓰고 버리는 토큰 — 본인확인 진행 중 상태처럼 분 단위로 만료되어야 하는 값에 쓴다 */
-export async function signShortToken(payload: Record<string, unknown>, minutes: number): Promise<string> {
-  return new SignJWT(payload)
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime(`${Math.max(1, Math.round(minutes))}m`)
-    .sign(secret());
-}
-
 export async function verifyToken<T>(token: string | undefined): Promise<T | null> {
   if (!token) return null;
   try {

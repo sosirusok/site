@@ -52,8 +52,6 @@ export default async function CounterPage({ searchParams }: { searchParams: Prom
           <h1 className={ui.pageTitle}>카운터</h1>
           <p className={ui.pageDesc}>손님 번호를 넣고 조회하면 두 가지만 하면 됩니다 — 쿠폰 주기, 사용 처리.</p>
         </div>
-        {/* 신분증을 안 가져온 손님 — 모바일 신분증 QR 을 정부 검증앱으로 찍는 화면. 쿠폰과는 무관한 별개 도구다. */}
-        <Link href="/adult" target="_blank" rel="noreferrer" className={`${ui.button} ${ui.buttonGhost}`}>성인 확인</Link>
       </div>
 
       {owner ? (
