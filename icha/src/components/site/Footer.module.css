@@ -13,14 +13,14 @@
 
 .full { display: grid; gap: 28px; }
 .head { display: grid; gap: 7px; }
-.mark { font-family: var(--font-sans); font-size: 34px; line-height: .95; font-weight: 950; letter-spacing: -.055em; color: #f4f0e8; }
-.markEn { font-size: 13px; line-height: 1.4; font-weight: 700; letter-spacing: -.01em; color: #9d97a1; }
+.mark { font-size: 28px; line-height: 1; font-weight: 850; letter-spacing: -.055em; color: #f4f0e8; }
+.footerLine { font-size: 11px; line-height: 1.45; color: #85808a; }
 
 .stores { display: grid; border-top: 1px solid #353139; }
 .store { display: grid; padding: 17px 0 18px; border-bottom: 1px solid #252229; }
 .storeBody { display: grid; gap: 4px; min-width: 0; }
 .storeName { font-size: 15px; line-height: 1.35; font-weight: 850; letter-spacing: -.02em; color: #f4f0e8; }
-.storeCourse { margin-right: 5px; font-family: var(--font-sans); font-weight: 850; letter-spacing: 0; color: #f0492f; }
+.storeCourse { margin-right: 5px; font-family: var(--font-sans); font-weight: 850; letter-spacing: 0; color: #aaa4ae; }
 .addr { color: #aaa4ae; font-size: 12px; }
 .tel { display: inline-flex; align-items: center; justify-self: start; min-height: 44px; min-width: 44px; margin-bottom: -8px; font-family: var(--font-sans); font-size: 14px; font-variant-numeric: tabular-nums; letter-spacing: .01em; color: #f4f0e8; border-bottom: 1px solid #5b5660; }
 
@@ -33,7 +33,7 @@
 
 /* 두 벌 — 기본은 전체, 흐름 화면(data-footer="short")에서는 짧은 벌. 고르는 일은 globals.css 가 한다. */
 .short { display: none; padding: 0; }
-.shortMark { margin: 0 0 18px; font-family: var(--font-sans); font-size: 24px; line-height: 1; font-weight: 950; letter-spacing: -.05em; color: #f4f0e8; }
+.shortMark { margin: 0 0 18px; font-size: 22px; line-height: 1; font-weight: 850; letter-spacing: -.05em; color: #f4f0e8; }
 .shortTel { display: grid; margin: 0; padding: 0; list-style: none; border-top: 1px solid #353139; }
 .shortTel li { border-bottom: 1px solid #252229; }
 .shortTel a { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; color: #f4f0e8; font-size: 13px; }
@@ -44,7 +44,6 @@
 @container (min-width: 820px) {
   .full { grid-template-columns: minmax(220px, .75fr) minmax(0, 2.25fr); gap: 34px clamp(42px, 6vw, 90px); }
   .head { grid-column: 1; grid-row: 1; align-content: start; }
-  .mark { font-size: 48px; }
   .stores { grid-column: 2; grid-row: 1; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 0; }
   .store { padding: 0 20px; border-bottom: 0; border-left: 1px solid #353139; }
   .links { grid-column: 1; grid-row: 2; align-self: start; }

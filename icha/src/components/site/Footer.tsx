@@ -40,7 +40,7 @@ export function Footer() {
       <div className={styles.full}>
       <div className={styles.head}>
         <p className={styles.mark}>{BRAND.name}</p>
-        <p className={styles.markEn}>{BRAND.unionName} · 소주 맥주 막걸리</p>
+        <p className={styles.footerLine}>서면 세 곳 · 50m</p>
       </div>
       <ul className={styles.stores}>
         {ordered.map((s) => (

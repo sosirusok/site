@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { BRAND, type Rules } from "@/lib/config";
@@ -19,20 +20,24 @@ const STEP_SUB = ["앱도 사진도 필요 없습니다", "", "세 집 다 50m �
 export function HowToSteps({ rules, compact = false }: { rules: Rules; compact?: boolean }) {
   if (compact) {
     return (
-      <Section id="howto" tone="cyan" title="혜택은 이렇게 받습니다" lead="앱 설치도, 영수증 사진도 필요 없습니다." pt={96} pb={104} className={s.howtoSection}>
-        <ol className={s.flow}>
-          {STEP_LINES.map((text, i) => (
-            <li key={text} className={s.flowStep}>
-              <span className={s.flowNo} aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
-              <p className={s.flowText}><span className="sr-only">{i + 1}단계. </span>{text}</p>
+      <section id="howto" className={s.howtoArtwork} aria-labelledby="howto-title">
+        <div className={s.howIntro}>
+          <p className={s.sectionIndex}>02</p>
+          <h2 id="howto-title">이용 방법</h2>
+        </div>
+        <ol className={s.howSteps}>
+          {STEP_LINES.map((text, index) => (
+            <li key={text} className={s.howStep}>
+              <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+              <p>{text}</p>
             </li>
           ))}
         </ol>
-        <div className={s.flowFoot}>
-          <p>{ruleLine(rules)}</p>
-          <Button href="/guide" variant="ghost" className={s.walletBtn}>이용 조건 전체 보기 <span aria-hidden="true">→</span></Button>
+        <div className={s.howBottom}>
+          <p className={s.howCondition}>{ruleLine(rules)} · {BRAND.condition}</p>
+          <Link href="/wallet" className={s.textLink}>쿠폰 열기</Link>
         </div>
-      </Section>
+      </section>
     );
   }
   return (

@@ -25,12 +25,11 @@
 }
 
 .item:first-child { border-left: 0; }
-.ko { font-family: var(--font-sans); font-weight: 800; font-size: 14px; line-height: 1; letter-spacing: -.02em; }
+.ko { font-family: var(--font-sans); font-weight: 700; font-size: 11px; line-height: 1; letter-spacing: -.02em; }
 .item:active { background: #17141a; }
 .active { color: #f5f1e8; }
-.active::before { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 3px; background: #f0492f; }
-.book { color: #65de94; }
-.book::before { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 3px; background: var(--naver); }
+.active::before { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: #f5f1e8; }
+.book { color: #b8b2bc; }
 
 @media (prefers-reduced-motion: reduce) {
   .item { transition: none; }

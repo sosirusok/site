@@ -1,0 +1,10 @@
+# Local visual-review captures
+audit-*.png
+critique-*.png
+UsersrukarDocuments*.png
+
+# Rejected draft artwork retained only in the working folder
+public/images/editorial/
+public/images/afterdark/wordmark-stack.png
+public/images/afterdark/wordmark-wide.png
+public/images/afterdark/wordmark-optical.png

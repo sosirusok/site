@@ -456,11 +456,10 @@ summary.btn { list-style: none; }
 /* 폼 판 — 1px 테두리 상자를 두르지 않는다. 위아래가 찢긴 종이 조각으로 바꾼다 */
 .card.torn-tb { border: 0; padding-top: 32px; padding-bottom: 40px; }
 
-/* ══ Wide editorial home ══════════════════════════════════════
-   쿠폰·매장 상세는 480px 앱을 유지하고, 공개 홈만 실제 사진 중심의 넓은 편집면으로 쓴다. */
+/* 공개 홈만 넓게 쓰고, 시각 재료는 실사진과 생성된 UI PNG가 맡는다. */
 .app:has([data-page="home"]) {
   --app-max: 1440px;
-  background: #f1eee6;
+  background: #050505;
   box-shadow: none;
   padding-bottom: 0;
 }
@@ -470,7 +469,7 @@ summary.btn { list-style: none; }
 .app:has([data-page="home"])::before {
   display: none;
 }
-.app:has([data-page="home"]) .section-alt { background: #ddd8cc; }
+.app:has([data-page="home"]) .section-alt { background: #0b0b0c; }
 .app:has([data-page="home"]) .section + .section::before { display: none; }
 .app:has([data-page="home"]) .tabbar { display: none; }
 
