@@ -3,6 +3,13 @@ audit-*.png
 critique-*.png
 UsersrukarDocuments*.png
 
+# Local builds and development data
+.next/
+.next-*/
+.data/
+.agents/
+.claude/
+
 # Rejected draft artwork retained only in the working folder
 public/images/editorial/
 public/images/afterdark/wordmark-stack.png
