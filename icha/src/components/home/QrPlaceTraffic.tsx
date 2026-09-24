@@ -23,7 +23,10 @@ export function PlaceTraffic() {
       const remainingHash = hashParams.toString();
       currentUrl.hash = remainingHash ? remainingHash : "";
       try {
-        window.history.replaceState(
+        // Next.js가 감싼 replaceState는 hydration 도중 라우터 갱신을 일으킬 수 있다.
+        // QR 표식은 hash 전용이므로 브라우저 원본 메서드로 주소만 조용히 정리한다.
+        History.prototype.replaceState.call(
+          window.history,
           window.history.state,
           "",
           `${currentUrl.pathname}${currentUrl.search}${currentUrl.hash}`,
