@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Directions } from "@/components/home/Directions";
 import { Hero } from "@/components/home/Hero";
 import { HowToSteps } from "@/components/home/HowToSteps";
-import { QrPlaceTraffic } from "@/components/home/QrPlaceTraffic";
+import { PlaceTraffic } from "@/components/home/QrPlaceTraffic";
 import { StoreCards } from "@/components/home/StoreCards";
 import { BRAND, STORE_IDS, type StoreId } from "@/lib/config";
 import { listMenu } from "@/lib/db/queries";
@@ -30,7 +30,7 @@ export default async function HomePage() {
   const now = new Date();
   return (
     <>
-        <QrPlaceTraffic />
+      <PlaceTraffic />
       <div className={styles.home} data-page="home">
         <Hero rules={rules} />
         {(rules.notice || !rules.eventActive) && (
