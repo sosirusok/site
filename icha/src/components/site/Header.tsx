@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { BRAND } from "@/lib/config";
 import { useMemberPhone } from "./useMember";
 import styles from "./Header.module.css";
@@ -13,14 +14,20 @@ import styles from "./Header.module.css";
 export function Header() {
   const phone = useMemberPhone();
   const path = usePathname() ?? "/";
+  const [mounted, setMounted] = useState(false);
+
+  // 정적 생성 시에는 경로를 확정할 수 없으므로 서버와 첫 브라우저 렌더를 비워서 일치시킨다.
+  useEffect(() => setMounted(true), []);
+
+  const isHome = mounted && path === "/";
   return (
-    <header className={styles.header} data-home={path === "/" ? "true" : undefined}>
+    <header className={styles.header} data-home={isHome ? "true" : undefined}>
       <div className={styles.inner}>
         <Link href="/" className={styles.brand} aria-label={`${BRAND.name} 홈`}>
           <Image src="/images/afterdark/wordmark-header.png" alt="" aria-hidden="true" width={900} height={210} sizes="112px" priority className={styles.markImage} />
         </Link>
         <div className={styles.actions}>
-          {path === "/" ? (
+          {!mounted ? null : isHome ? (
             <Link href="/wallet" className={styles.actionLink}>쿠폰함</Link>
           ) : phone ? (
             path !== "/wallet" ? <Link href="/wallet" className={styles.actionLink}>쿠폰</Link> : null
