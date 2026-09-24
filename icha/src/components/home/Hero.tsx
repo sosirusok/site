@@ -4,7 +4,7 @@ import type { Rules } from "@/lib/config";
 import { ruleLine } from "@/lib/copy";
 import s from "./home.module.css";
 
-/** 사진 한 장과 검정 여백으로 시작한다. 분위기를 흉내 내는 생성 효과는 쓰지 않는다. */
+/** 사진 한 장과 검정 여백으로 시작한다. 장식 대신 실제 바의 질감과 밤 조명으로 분위기를 만든다. */
 export function Hero({ rules }: { rules: Rules }) {
   return (
     <section className={s.hero} aria-labelledby="hero-title">
@@ -30,7 +30,7 @@ export function Hero({ rules }: { rules: Rules }) {
       </div>
       <div className={s.heroImage}>
         <Image
-          src="/images/stores/tokyo/draft-tap.jpg"
+          src="/images/afterdark/hero-tap-night.webp"
           alt="도쿄스탠드에서 생맥주를 따르는 순간"
           fill
           priority
@@ -41,3 +41,4 @@ export function Hero({ rules }: { rules: Rules }) {
     </section>
   );
 }
+
