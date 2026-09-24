@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Directions } from "@/components/home/Directions";
 import { Hero, HeroMarquee } from "@/components/home/Hero";
 import { HowToSteps } from "@/components/home/HowToSteps";
+import { QrPlaceTraffic } from "@/components/home/QrPlaceTraffic";
 import { StoreCards } from "@/components/home/StoreCards";
 import { BRAND, STORE_IDS, type StoreId } from "@/lib/config";
 import { listMenu } from "@/lib/db/queries";
@@ -28,6 +29,7 @@ export default async function HomePage() {
   const now = new Date();
   return (
     <>
+      <QrPlaceTraffic />
       <Hero rules={rules} />
       <HeroMarquee />
       {(rules.notice || !rules.eventActive) && (
