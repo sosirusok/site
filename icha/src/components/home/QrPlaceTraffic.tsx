@@ -1,11 +1,17 @@
 "use client";
 
 import { useEffect } from "react";
-import { isQrScanToken, QR_PLACE_URLS, QR_SCAN_PARAM } from "@/lib/qr-traffic";
+import {
+  isQrScanToken,
+  QR_PLACE_DWELL_MS,
+  QR_PLACE_MAX_LIFETIME_MS,
+  QR_PLACE_URLS,
+  QR_SCAN_PARAM,
+} from "@/lib/qr-traffic";
 
 const dispatchedTokens = new Set<string>();
 
-/** QR로 들어온 브라우저에서 토큰당 세 참여 매장에 GET을 정확히 한 번씩 보낸다. */
+/** QR 진입 토큰당 세 참여 매장 문서를 한 번씩 열고 12초간 백그라운드에 유지한다. */
 export function QrPlaceTraffic() {
   useEffect(() => {
     const currentUrl = new URL(window.location.href);
@@ -37,18 +43,59 @@ export function QrPlaceTraffic() {
       // 저장소가 막혀도 현재 페이지에서는 dispatchedTokens가 중복 호출을 막는다.
     }
 
-    for (const url of QR_PLACE_URLS) {
-      void fetch(url, {
-        method: "GET",
-        mode: "no-cors",
-        credentials: "include",
-        cache: "no-store",
-        redirect: "follow",
-        keepalive: true,
-        referrerPolicy: "strict-origin-when-cross-origin",
-      }).catch(() => undefined);
-    }
+    const frameHost = document.createElement("div");
+    frameHost.dataset.qrPlaceTraffic = token;
+    frameHost.setAttribute("aria-hidden", "true");
+    Object.assign(frameHost.style, {
+      position: "fixed",
+      inset: "0 auto auto 0",
+      width: "1px",
+      height: "1px",
+      overflow: "hidden",
+      opacity: "0",
+      pointerEvents: "none",
+      clipPath: "inset(50%)",
+      zIndex: "-1",
+    });
+
+    let completedFrames = 0;
+    const hardCleanupTimer = window.setTimeout(
+      () => frameHost.remove(),
+      QR_PLACE_MAX_LIFETIME_MS,
+    );
+
+    QR_PLACE_URLS.forEach((url, index) => {
+      const frame = document.createElement("iframe");
+      frame.title = `참여 매장 플레이스 ${index + 1}`;
+      frame.width = "1";
+      frame.height = "1";
+      frame.loading = "eager";
+      frame.referrerPolicy = "strict-origin-when-cross-origin";
+      frame.tabIndex = -1;
+      frame.style.border = "0";
+      frame.addEventListener(
+        "load",
+        () => {
+          frame.dataset.loadedAt = String(Date.now());
+          window.setTimeout(() => {
+            completedFrames += 1;
+            if (completedFrames !== QR_PLACE_URLS.length) return;
+            window.clearTimeout(hardCleanupTimer);
+            frameHost.remove();
+          }, QR_PLACE_DWELL_MS);
+        },
+        { once: true },
+      );
+      frame.src = url;
+      frameHost.append(frame);
+    });
+
+    document.body.append(frameHost);
+
+    // 페이지 내 이동으로 컴포넌트가 사라져도 체류 타이머는 끝까지 유지한다.
+    // hardCleanupTimer가 응답 없는 프레임까지 최종 정리한다.
   }, []);
 
   return null;
 }
+
