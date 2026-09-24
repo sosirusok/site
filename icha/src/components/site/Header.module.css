@@ -1,8 +1,23 @@
-/* 맨 위 바 — 아래 가장자리에 형광 2px 띠. 로고는 이미지가 아니라 Black Han Sans 글자 */
-.header { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; justify-content: space-between; gap: 12px; height: var(--header-h); padding: 0 var(--gutter); background: linear-gradient(180deg, #120727, #06030c 78%); }
-.header::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: linear-gradient(90deg, var(--mag), #7a00ff 45%, var(--cyan) 80%, transparent); box-shadow: 0 0 12px rgba(255, 46, 136, 0.6); }
-.brand { display: grid; gap: 1px; align-content: center; min-height: 44px; }
-.mark { font-family: var(--font-poster); font-size: 22px; line-height: 1; letter-spacing: -0.01em; color: #fff; text-shadow: 0 0 2px #fff, 0 0 12px rgba(255, 46, 136, 0.95), 0 0 30px rgba(255, 46, 136, 0.6), 0 0 56px rgba(33, 240, 255, 0.35); }
-.markEn { font-family: var(--font-label); font-size: 11px; line-height: 1; letter-spacing: 0.3em; color: var(--cyan); }
+.header { position: sticky; top: 0; z-index: 30; height: var(--header-h); border-bottom: 1px solid rgba(255,255,255,.08); background: rgba(7,5,11,.88); backdrop-filter: blur(18px) saturate(1.2); }
+.inner { width: 100%; height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding-inline: var(--gutter); }
+.brand { flex: none; display: grid; gap: 2px; align-content: center; min-height: 44px; }
+.mark { display: flex; align-items: center; gap: 7px; font-family: var(--font-poster); font-size: 22px; line-height: 1; letter-spacing: -.02em; color: #fff; }
+.mark i { display: block; width: 7px; height: 7px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 12px rgba(217,255,67,.55); }
+.markEn { font-family: var(--font-label); font-size: 8px; line-height: 1; letter-spacing: .25em; color: var(--ink-3); }
+.nav { display: none; }
+.actions { display: flex; justify-content: flex-end; min-width: 76px; }
 .me { display: inline-flex; align-items: center; min-height: 44px; }
-.meTag { display: inline-flex; align-items: center; height: 34px; padding: 0 12px; font-family: var(--font-sans); font-weight: 800; font-size: 15px; letter-spacing: -0.01em; color: var(--lime); border: 1px solid rgba(204, 255, 0, 0.5); box-shadow: inset 0 0 14px -8px var(--lime); }
+.meTag,
+.login { display: inline-flex; align-items: center; justify-content: center; min-height: 38px !important; padding: 0 13px !important; border: 1px solid rgba(255,255,255,.14) !important; border-radius: 99px !important; background: rgba(255,255,255,.035) !important; color: #fff !important; font-family: var(--font-sans) !important; font-size: 13px !important; font-weight: 800 !important; box-shadow: none !important; filter: none !important; -webkit-mask-box-image-source: none !important; mask-border-source: none !important; }
+.login::before { display: none !important; }
+
+@media (min-width: 960px) {
+  .header[data-home="true"] .inner { max-width: 1280px; margin-inline: auto; padding-inline: clamp(48px, 7vw, 108px); }
+  .header[data-home="true"] .mark { font-size: 25px; }
+  .header[data-home="true"] .nav { display: flex; align-items: center; justify-content: center; gap: clamp(24px, 3vw, 40px); margin-left: auto; }
+  .nav a { position: relative; display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; font-weight: 750; color: #aaa2b4; transition: color .2s ease; }
+  .nav a::after { content: ""; position: absolute; left: 0; right: 100%; bottom: 7px; height: 1px; background: var(--lime); transition: right .25s var(--ease-out); }
+  .nav a:hover { color: #fff; }
+  .nav a:hover::after { right: 0; }
+  .header[data-home="true"] .actions { margin-left: clamp(12px, 2vw, 24px); }
+}

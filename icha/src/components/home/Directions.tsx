@@ -31,28 +31,33 @@ export function Directions() {
     id: st.id, name: st.name, shortName: st.shortName, drink: st.drink, lat: st.lat!, lng: st.lng!, address: st.address, naverPlaceId: st.naverPlaceId,
   }));
   return (
-    <Section id="map" tone="lime" title="오시는 길" lead={`${walkLine()} · 세 매장 모두 50m 이내`} alt flush pt={54} pb={34}>
-      <div className={s.mapWrap}>
-        <LazyStoreMap stores={mapStores} compact hidePanel height={230} />
+    <Section id="map" tone="lime" title="50m 안에 다 있어요" lead={`${walkLine()} · 세 매장 모두 걸어서 이동`} alt pt={88} pb={92}>
+      <div className={s.directionsGrid}>
+        <div className={s.mapWrap}>
+          <LazyStoreMap stores={mapStores} compact hidePanel height={360} />
+          <p className={s.mapBadge}><span aria-hidden="true">●</span> ALL SPOTS IN 50M</p>
+        </div>
+        <div className={s.directionSide}>
+          <ul className={s.addrs}>
+            {ordered.map((st) => {
+              const links = placeLinks(st);
+              return (
+                <li key={st.id} className={s.addr} data-store={st.id}>
+                  <span className={s.addrNo} aria-hidden="true">{String(st.course.n).padStart(2, "0")}</span>
+                  <div className={s.addrBody}>
+                    <p className={s.addrName}>{st.shortName}</p>
+                    <p className={s.addrSub}>{shortAddress(st.address)}<br />{LOCATIONS[st.id].subway}</p>
+                  </div>
+                  {links ? <Button href={links.directions} variant="outline" size="sm" srSuffix={` — ${st.shortName}`} className={s.directionBtn}>길찾기</Button> : null}
+                </li>
+              );
+            })}
+          </ul>
+          <p className={s.searchLine}>
+            <a href={naverSearchUrl(SEARCH_QUERY)} target="_blank" rel="noreferrer" className="link link-naver">네이버에서 전체 코스 보기 <span aria-hidden="true">↗</span></a>
+          </p>
+        </div>
       </div>
-      <ul className={s.addrs}>
-        {ordered.map((st) => {
-          const links = placeLinks(st);
-          return (
-            <li key={st.id} className={s.addr} data-store={st.id}>
-              <span className={`bignum ${s.addrNo}`} aria-hidden="true">{String(st.course.n).padStart(2, "0")}</span>
-              <div className={s.addrBody}>
-                <p className={s.addrName}>{st.shortName}</p>
-                <p className={s.addrSub}>{shortAddress(st.address)}<br />{LOCATIONS[st.id].subway}</p>
-              </div>
-              {links && <Button href={links.directions} variant="outline" size="sm" srSuffix={` — ${st.shortName}`}>길찾기</Button>}
-            </li>
-          );
-        })}
-      </ul>
-      <p className={s.searchLine}>
-        <a href={naverSearchUrl(SEARCH_QUERY)} target="_blank" rel="noreferrer" className="link link-naver">네이버 &lsquo;{SEARCH_QUERY}&rsquo; 검색 →</a>
-      </p>
     </Section>
   );
 }

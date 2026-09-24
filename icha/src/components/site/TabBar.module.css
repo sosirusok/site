@@ -1,17 +1,25 @@
-/* 하단 탭 — 아이콘 없음. Anton 영문 + Black Han Sans 한글 두 줄.
-   지금 있는 칸만 색면으로 뒤집고(라임 판 + 검은 글자), 예약 칸은 초록 글자 + 위 초록선으로 낮춘다.
-   예약 칸을 초록으로 채워 두면 어느 화면에서나 그 칸이 '지금 여기'처럼 읽힌다. */
-.bar { bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(4, 1fr); height: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: linear-gradient(0deg, #100622, #06030c 78%); }
-.bar::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, var(--mag), #7a00ff 38%, var(--cyan) 70%, var(--lime)); box-shadow: 0 0 14px rgba(255, 46, 136, 0.6); }
-.item { position: relative; display: flex; align-items: center; justify-content: center; min-height: 44px; color: var(--ink-3); }
-.ko { font-family: var(--font-sans); font-weight: 800; font-size: 16px; line-height: 1; letter-spacing: -0.02em; }
-.item:active { background: rgba(255, 255, 255, 0.07); }
+.bar {
+  bottom: max(8px, env(safe-area-inset-bottom));
+  z-index: 40;
+  width: min(calc(100% - 20px), 440px) !important;
+  height: 62px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 5px;
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 18px;
+  background: rgba(13,10,19,.9);
+  box-shadow: 0 14px 44px rgba(0,0,0,.52);
+  backdrop-filter: blur(18px) saturate(1.2);
+}
+.item { position: relative; display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 13px; color: #91899c; transition: color .18s ease, background-color .18s ease; }
+.ko { font-family: var(--font-sans); font-weight: 800; font-size: 14px; line-height: 1; letter-spacing: -.02em; }
+.item:active { background: rgba(255,255,255,.07); }
+.active { background: rgba(217,255,67,.11); color: var(--lime); }
+.active::after { content: ""; position: absolute; left: 50%; bottom: 5px; width: 16px; height: 2px; border-radius: 99px; background: var(--lime); transform: translateX(-50%); box-shadow: 0 0 9px rgba(217,255,67,.55); }
+.book { color: #58df91; }
+.book::after { content: ""; position: absolute; left: 50%; top: 6px; width: 4px; height: 4px; border-radius: 50%; background: #03c75a; transform: translateX(-50%); box-shadow: 0 0 8px rgba(3,199,90,.7); }
 
-/* 지금 있는 칸 — 칸 전체가 라임 판이 된다. 네 칸 중 색면은 언제나 이 하나뿐이다 */
-.active { background: var(--lime); color: #0b0011; box-shadow: 0 0 22px -6px var(--lime); }
-.active:active { background: #b8e600; }
-
-/* 예약 — 색면 대신 초록 글자 + 칸 위쪽 2px 초록선 */
-.book { color: var(--naver); }
-.book::after { content: ""; position: absolute; top: 2px; left: 0; right: 0; height: 2px; background: var(--naver); box-shadow: 0 0 12px rgba(3, 199, 90, 0.75); }
-.book:active { background: rgba(3, 199, 90, 0.14); }
+@media (prefers-reduced-motion: reduce) {
+  .item { transition: none; }
+}

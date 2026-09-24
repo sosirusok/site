@@ -455,3 +455,48 @@ summary.btn { list-style: none; }
 .badge-store { box-shadow: none; filter: drop-shadow(0 0 10px color-mix(in srgb, var(--store, var(--cyan)) 60%, transparent)); }
 /* 폼 판 — 1px 테두리 상자를 두르지 않는다. 위아래가 찢긴 종이 조각으로 바꾼다 */
 .card.torn-tb { border: 0; padding-top: 32px; padding-bottom: 40px; }
+
+/* ══ Wide editorial home ══════════════════════════════════════
+   The coupon/store detail product remains the focused 480px web app. Only the
+   public home becomes a responsive marketing surface. */
+.app:has([data-page="home"]) {
+  --app-max: 1440px;
+  background: #07060b;
+  box-shadow: 0 0 100px rgba(0, 0, 0, .5);
+}
+.app:has([data-page="home"])::after {
+  opacity: .15;
+  background-image: radial-gradient(rgba(255,255,255,.045) .7px, transparent .8px);
+  background-size: 7px 7px;
+}
+.app:has([data-page="home"])::before {
+  opacity: .035;
+  mix-blend-mode: screen;
+  background-image: url("/images/print/grain.webp");
+  background-size: 260px 260px;
+}
+.app:has([data-page="home"]) .section-alt { background: #0d0b12; }
+.app:has([data-page="home"]) .section + .section::before { left: var(--gutter); right: var(--gutter); height: 1px; background: rgba(255,255,255,.08); box-shadow: none; }
+.app:has([data-page="home"]) .marquee {
+  min-height: 52px;
+  margin: 0;
+  border: 0;
+  background: #d9ff43;
+  color: #09070d;
+  box-shadow: none;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.app:has([data-page="home"]) .marquee::after { display: none; }
+.app:has([data-page="home"]) .marquee-track { gap: 18px; padding: 10px 9px; animation-duration: 30s; }
+.app:has([data-page="home"]) .marquee-track > * { font-size: 13px; letter-spacing: .14em; }
+.app:has([data-page="home"]) .marquee-track > .ko { font-family: var(--font-sans); font-size: 13px; font-weight: 900; letter-spacing: -.02em; }
+
+@media (min-width: 960px) {
+  .app:has([data-page="home"]) {
+    --header-h: 72px;
+    padding-bottom: 0;
+  }
+  .app:has([data-page="home"]) .tabbar { display: none; }
+  .app:has([data-page="home"]) .marquee { margin-block: 0; }
+}

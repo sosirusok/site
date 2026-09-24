@@ -15,18 +15,29 @@ export function Header() {
   const phone = useMemberPhone();
   const path = usePathname() ?? "/";
   return (
-    <header className={styles.header}>
-      <Link href="/" className={styles.brand} aria-label={`${BRAND.name} 홈`}>
-        <span className={styles.mark}>{BRAND.name}</span>
-        <span className={styles.markEn} aria-hidden="true">SEOMYEON 3 BARS</span>
-      </Link>
-      {phone ? (
-        <Link href="/wallet" className={styles.me} aria-label="내 쿠폰함">
-          <span className={styles.meTag}>쿠폰함</span>
+    <header className={styles.header} data-home={path === "/" ? "true" : undefined}>
+      <div className={styles.inner}>
+        <Link href="/" className={styles.brand} aria-label={`${BRAND.name} 홈`}>
+          <span className={styles.mark}>{BRAND.name}<i aria-hidden="true" /></span>
+          <span className={styles.markEn} aria-hidden="true">SEOMYEON NIGHT ROUTE</span>
         </Link>
-      ) : path !== "/login" ? (
-        <Link href="/login" className="btn btn-outline btn-sm">로그인</Link>
-      ) : null}
+        {path === "/" ? (
+          <nav className={styles.nav} aria-label="홈 주요 메뉴">
+            <a href="#stores">세 집 코스</a>
+            <a href="#howto">혜택 받기</a>
+            <a href="#map">오시는 길</a>
+          </nav>
+        ) : null}
+        <div className={styles.actions}>
+          {phone ? (
+            <Link href="/wallet" className={styles.me} aria-label="내 쿠폰함">
+              <span className={styles.meTag}>내 쿠폰함</span>
+            </Link>
+          ) : path !== "/login" ? (
+            <Link href="/login" className={`btn btn-outline btn-sm ${styles.login}`}>로그인</Link>
+          ) : null}
+        </div>
+      </div>
     </header>
   );
 }

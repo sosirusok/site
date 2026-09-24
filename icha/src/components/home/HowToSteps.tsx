@@ -28,7 +28,10 @@ export function HowToSteps({ rules, compact = false }: { rules: Rules; compact?:
             </li>
           ))}
         </ol>
-        <Button href="/guide" variant="ghost" className={s.walletBtn}>자세히 보기</Button>
+        <div className={s.flowFoot}>
+          <p>{ruleLine(rules)}</p>
+          <Button href="/guide" variant="ghost" className={s.walletBtn}>이용 조건 자세히 보기 <span aria-hidden="true">→</span></Button>
+        </div>
       </Section>
     );
   }

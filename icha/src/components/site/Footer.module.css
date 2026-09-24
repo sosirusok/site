@@ -1,8 +1,9 @@
 /* 맨 아래 — 플라이어 뒷면. 위 가장자리에 형광 띠, 간판 글자는 크게 */
-.footer { position: relative; margin-top: 10px; padding: 34px var(--gutter) 26px; background: #030106; color: var(--ink-2); font-size: 13px; line-height: 1.55; display: grid; gap: 20px; }
-.footer::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--lime), var(--cyan) 40%, var(--mag)); box-shadow: 0 0 16px rgba(255, 46, 136, 0.55); }
+.footer { position: relative; container-type: inline-size; margin-top: 0; padding: 40px var(--gutter) 28px; border-top: 1px solid rgba(255,255,255,.09); background: #050408; color: var(--ink-2); font-size: 13px; line-height: 1.55; display: grid; gap: 20px; }
+.footer::before { content: ""; position: absolute; left: var(--gutter); right: var(--gutter); top: -1px; height: 1px; background: linear-gradient(90deg, var(--mag), var(--cyan) 52%, var(--lime)); opacity: .75; }
+.full { display: grid; gap: 22px; }
 .head { display: grid; gap: 4px; }
-.mark { font-family: var(--font-poster); font-size: 36px; line-height: 1; color: #fff; text-shadow: 0 0 2px #fff, 0 0 14px rgba(255, 46, 136, 0.8), 0 0 40px rgba(122, 0, 255, 0.55); }
+.mark { font-family: var(--font-poster); font-size: 34px; line-height: 1; color: #fff; }
 .markEn { font-family: var(--font-poster); font-size: 15px; letter-spacing: -0.01em; color: var(--cyan); }
 
 .stores { display: grid; gap: 14px; }
@@ -29,3 +30,15 @@
 .shortWarn { margin: 14px 0 0; font-size: 13px; line-height: 1.5; color: var(--ink-3); }
 
 .storeCourse { font-weight: 400; color: var(--store, var(--cyan)); }
+
+@container (min-width: 820px) {
+  .footer { padding: 62px clamp(48px, 7vw, 108px) 34px; }
+  .full { grid-template-columns: .8fr 2.2fr; gap: 30px clamp(42px, 6vw, 90px); }
+  .head { grid-column: 1; grid-row: 1; align-content: start; }
+  .mark { font-size: 46px; }
+  .stores { grid-column: 2; grid-row: 1; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+  .store { border-left: 1px solid rgba(255,255,255,.1); padding-left: 18px; }
+  .links { grid-column: 1; grid-row: 2; align-self: start; }
+  .warn { grid-column: 2; grid-row: 2; max-width: 72em; }
+  .copy { grid-column: 1 / -1; grid-row: 3; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.08); }
+}

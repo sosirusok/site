@@ -30,14 +30,16 @@ export default async function HomePage() {
   return (
     <>
       <QrPlaceTraffic />
-      <Hero rules={rules} />
-      <HeroMarquee />
-      {(rules.notice || !rules.eventActive) && (
-        <p className={styles.notice}><b className={styles.noticeTag}>공지</b>{rules.notice || "이벤트 기간이 아닙니다"}</p>
-      )}
-      <StoreCards now={now} rules={rules} gifts={gifts} />
-      <HowToSteps rules={rules} compact />
-      <Directions />
+      <div className={styles.home} data-page="home">
+        <Hero rules={rules} />
+        <HeroMarquee />
+        {(rules.notice || !rules.eventActive) && (
+          <p className={styles.notice}><b className={styles.noticeTag}>공지</b>{rules.notice || "이벤트 기간이 아닙니다"}</p>
+        )}
+        <StoreCards now={now} rules={rules} gifts={gifts} />
+        <HowToSteps rules={rules} compact />
+        <Directions />
+      </div>
     </>
   );
 }
