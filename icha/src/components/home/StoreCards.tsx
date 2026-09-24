@@ -8,19 +8,19 @@ import s from "./home.module.css";
 
 const STORY: Record<StoreId, { photo: string; pos: string; alt: string }> = {
   tokyo: {
-    photo: "/images/stores/tokyo/interior-keg-fridge.jpg",
-    pos: "50% 48%",
-    alt: "도쿄스탠드의 푸른 조명과 생맥주 케그 냉장고",
+    photo: "/images/premium/tokyo-night.webp",
+    pos: "50% 50%",
+    alt: "도쿄스탠드의 생맥주 두 잔과 햄 플레이트",
   },
   joseon: {
-    photo: "/images/stores/joseon/makgeolli-cheers.jpg",
-    pos: "50% 46%",
-    alt: "조선칼국수와 통막걸리에서 막걸리 잔을 맞대는 순간",
+    photo: "/images/premium/joseon-night.webp",
+    pos: "50% 50%",
+    alt: "조선칼국수와 통막걸리의 차가운 막걸리 주전자",
   },
   wareureu: {
-    photo: "/images/stores/wareureu/exterior-sign-night.jpg",
-    pos: "50% 46%",
-    alt: "밤의 와르르맨숀 서면점 외관과 간판",
+    photo: "/images/stores/wareureu/exterior-dusk.jpg",
+    pos: "52% 42%",
+    alt: "블루아워의 와르르맨숀 서면점 외관과 간판",
   },
 };
 
@@ -76,8 +76,8 @@ export function StoreCards({ now, rules, gifts }: { now: Date; rules: Rules; gif
                 {notice ? <div><dt>공지</dt><dd>{notice}</dd></div> : null}
               </dl>
               <nav className={s.storyLinks} aria-label={`${store.shortName} 바로가기`}>
-                <Link href={`/stores/${store.id}`}>매장 보기</Link>
-                {links ? <a href={links.booking} target="_blank" rel="noreferrer">예약</a> : null}
+                <Link href={`/stores/${store.id}`}>상세 보기</Link>
+                {links ? <a href={links.booking} target="_blank" rel="noreferrer">네이버 예약</a> : null}
               </nav>
             </div>
           </article>

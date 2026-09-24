@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { BRAND } from "@/lib/config";
 import { naverSearchUrl } from "@/lib/naver";
@@ -22,7 +23,7 @@ export function Footer() {
     <footer className={styles.footer}>
       {/* 짧은 벌 — 전화 세 곳과 안내 링크, 경고 한 줄 */}
       <div className={styles.short}>
-        <p className={styles.shortMark}>{BRAND.name}</p>
+        <Image className={styles.shortMark} src="/images/afterdark/wordmark-header.png" alt={BRAND.name} width={900} height={210} sizes="132px" />
         <ul className={styles.shortTel}>
           {tel.map((s) => (
             <li key={s.id} data-store={s.id}>
@@ -39,7 +40,7 @@ export function Footer() {
 
       <div className={styles.full}>
       <div className={styles.head}>
-        <p className={styles.mark}>{BRAND.name}</p>
+        <Image className={styles.mark} src="/images/afterdark/wordmark-header.png" alt={BRAND.name} width={900} height={210} sizes="148px" />
         <p className={styles.footerLine}>서면 세 곳 · 50m</p>
       </div>
       <ul className={styles.stores}>

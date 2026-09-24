@@ -22,7 +22,7 @@ export function HowToSteps({ rules, compact = false }: { rules: Rules; compact?:
     return (
       <section id="howto" className={s.howtoArtwork} aria-labelledby="howto-title">
         <div className={s.howIntro}>
-          <p className={s.sectionIndex}>02</p>
+          <p className={s.sectionIndex}>04</p>
           <h2 id="howto-title">이용 방법</h2>
         </div>
         <ol className={s.howSteps}>

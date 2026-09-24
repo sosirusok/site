@@ -26,7 +26,7 @@ export function Directions() {
     <section id="map" className={s.mapSection} aria-labelledby="map-title">
       <h2 id="map-title" className="sr-only">오시는 길</h2>
       <div className={s.mapHeading}>
-        <p className={s.sectionIndex}>03</p>
+        <p className={s.sectionIndex}>05</p>
         <p className={s.mapTitle}>위치</p>
         <p>{walkLine()} · 세 매장 모두 50m 이내</p>
       </div>

@@ -459,6 +459,14 @@ summary.btn { list-style: none; }
 /* 공개 홈만 넓게 쓰고, 시각 재료는 실사진과 생성된 UI PNG가 맡는다. */
 .app:has([data-page="home"]) {
   --app-max: 1440px;
+  --bg: #050505;
+  --bg-2: #0d0c0b;
+  --bg-3: #11100e;
+  --ink: #eae6dd;
+  --ink-2: #b4afa6;
+  --ink-3: #8f8b83;
+  --line: rgba(234, 230, 221, .12);
+  --line-2: rgba(155, 131, 88, .42);
   background: #050505;
   box-shadow: none;
   padding-bottom: 0;
@@ -472,6 +480,8 @@ summary.btn { list-style: none; }
 .app:has([data-page="home"]) .section-alt { background: #0b0b0c; }
 .app:has([data-page="home"]) .section + .section::before { display: none; }
 .app:has([data-page="home"]) .tabbar { display: none; }
+.app:has([data-page="home"]) [data-store] { --store: #9b8358; }
+.app:has([data-page="home"]) :focus-visible { outline-color: #9b8358; }
 
 @media (min-width: 960px) {
   .app:has([data-page="home"]) {

@@ -7,7 +7,11 @@
   background: #050505;
 }
 
-.header[data-home="true"] { position: relative; }
+.header[data-home="true"] {
+  position: relative;
+  border-bottom-color: rgba(155, 131, 88, .34);
+  background: #050505;
+}
 
 .inner {
   display: flex;
@@ -37,6 +41,24 @@
   font-size: 11px;
   font-weight: 700;
   text-decoration: none;
+}
+
+.header[data-home="true"] .actionLink {
+  position: relative;
+  color: #eae6dd;
+  font-size: 10px;
+  font-weight: 630;
+  letter-spacing: .04em;
+}
+
+.header[data-home="true"] .actionLink::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 7px;
+  left: 0;
+  height: 1px;
+  background: #9b8358;
 }
 
 @media (min-width: 960px) {

@@ -1,51 +1,51 @@
-/* 운영 정보가 담긴 검은 인덱스. 색효과 대신 직선과 조판으로 구분한다. */
+/* 운영 정보가 담긴 검은 인덱스. 황동은 짧은 선에만 남긴다. */
 .footer {
   position: relative;
   container-type: inline-size;
   margin-top: 0;
   padding: 42px var(--gutter) 28px;
-  border-top: 1px solid #353139;
+  border-top: 1px solid rgba(155, 131, 88, .34);
   background: #050505;
-  color: #b8b2bc;
+  color: #aaa69e;
   font-size: 13px;
   line-height: 1.55;
 }
 
 .full { display: grid; gap: 28px; }
 .head { display: grid; gap: 7px; }
-.mark { font-size: 28px; line-height: 1; font-weight: 850; letter-spacing: -.055em; color: #f4f0e8; }
-.footerLine { font-size: 11px; line-height: 1.45; color: #85808a; }
+.mark { display: block; width: 148px; height: auto; }
+.footerLine { font-size: 10px; line-height: 1.45; color: #8c887f; }
 
-.stores { display: grid; border-top: 1px solid #353139; }
-.store { display: grid; padding: 17px 0 18px; border-bottom: 1px solid #252229; }
+.stores { display: grid; border-top: 1px solid rgba(234, 230, 221, .15); }
+.store { display: grid; padding: 17px 0 18px; border-bottom: 1px solid rgba(234, 230, 221, .1); }
 .storeBody { display: grid; gap: 4px; min-width: 0; }
-.storeName { font-size: 15px; line-height: 1.35; font-weight: 850; letter-spacing: -.02em; color: #f4f0e8; }
-.storeCourse { margin-right: 5px; font-family: var(--font-sans); font-weight: 850; letter-spacing: 0; color: #aaa4ae; }
-.addr { color: #aaa4ae; font-size: 12px; }
-.tel { display: inline-flex; align-items: center; justify-self: start; min-height: 44px; min-width: 44px; margin-bottom: -8px; font-family: var(--font-sans); font-size: 14px; font-variant-numeric: tabular-nums; letter-spacing: .01em; color: #f4f0e8; border-bottom: 1px solid #5b5660; }
+.storeName { font-size: 15px; line-height: 1.35; font-weight: 700; letter-spacing: -.02em; color: #eae6dd; }
+.storeCourse { margin-right: 5px; font-family: var(--font-sans); font-weight: 700; letter-spacing: 0; color: #9b8358; }
+.addr { color: #8f8b83; font-size: 12px; }
+.tel { display: inline-flex; align-items: center; justify-self: start; min-height: 44px; min-width: 44px; margin-bottom: -8px; font-family: var(--font-sans); font-size: 14px; font-variant-numeric: tabular-nums; letter-spacing: .01em; color: #eae6dd; border-bottom: 1px solid rgba(155, 131, 88, .58); }
 
-.links { display: flex; flex-wrap: wrap; gap: 0 22px; border-top: 1px solid #353139; }
-.link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; font-size: 14px; font-weight: 800; letter-spacing: -.01em; color: #f4f0e8; border-bottom: 1px solid #5b5660; align-self: start; }
+.links { display: flex; flex-wrap: wrap; gap: 0 22px; border-top: 1px solid rgba(234, 230, 221, .15); }
+.link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; font-size: 13px; font-weight: 650; letter-spacing: -.01em; color: #eae6dd; border-bottom: 1px solid rgba(155, 131, 88, .58); align-self: start; }
 
-.warn { margin: 0; max-width: 72em; font-size: 12px; line-height: 1.65; color: #85808a; }
-.copy { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 18px; border-top: 1px solid #252229; font-family: var(--font-sans); font-size: 11px; letter-spacing: .04em; color: #85808a; }
-.staff { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; color: #9d97a1; border-bottom: 1px solid #4a454e; }
+.warn { margin: 0; max-width: 72em; font-size: 11px; line-height: 1.65; color: #8c887f; }
+.copy { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 18px; border-top: 1px solid rgba(234, 230, 221, .1); font-family: var(--font-sans); font-size: 10px; letter-spacing: .04em; color: #8c887f; }
+.staff { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; color: #8f8b83; border-bottom: 1px solid rgba(155, 131, 88, .44); }
 
 /* 두 벌 — 기본은 전체, 흐름 화면(data-footer="short")에서는 짧은 벌. 고르는 일은 globals.css 가 한다. */
 .short { display: none; padding: 0; }
-.shortMark { margin: 0 0 18px; font-size: 22px; line-height: 1; font-weight: 850; letter-spacing: -.05em; color: #f4f0e8; }
-.shortTel { display: grid; margin: 0; padding: 0; list-style: none; border-top: 1px solid #353139; }
-.shortTel li { border-bottom: 1px solid #252229; }
-.shortTel a { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; color: #f4f0e8; font-size: 13px; }
-.shortName { font-size: 14px; font-weight: 850; color: #f4f0e8; }
+.shortMark { display: block; width: 132px; height: auto; margin: 0 0 18px; }
+.shortTel { display: grid; margin: 0; padding: 0; list-style: none; border-top: 1px solid rgba(234, 230, 221, .15); }
+.shortTel li { border-bottom: 1px solid rgba(234, 230, 221, .1); }
+.shortTel a { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; color: #eae6dd; font-size: 13px; }
+.shortName { font-size: 14px; font-weight: 700; color: #eae6dd; }
 .shortLinks { display: flex; flex-wrap: wrap; gap: 0 20px; margin-top: 14px; }
-.shortWarn { margin: 16px 0 0; padding-top: 14px; border-top: 1px solid #252229; font-size: 12px; line-height: 1.55; color: #85808a; }
+.shortWarn { margin: 16px 0 0; padding-top: 14px; border-top: 1px solid rgba(234, 230, 221, .1); font-size: 12px; line-height: 1.55; color: #8c887f; }
 
 @container (min-width: 820px) {
   .full { grid-template-columns: minmax(220px, .75fr) minmax(0, 2.25fr); gap: 34px clamp(42px, 6vw, 90px); }
   .head { grid-column: 1; grid-row: 1; align-content: start; }
   .stores { grid-column: 2; grid-row: 1; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 0; }
-  .store { padding: 0 20px; border-bottom: 0; border-left: 1px solid #353139; }
+  .store { padding: 0 20px; border-bottom: 0; border-left: 1px solid rgba(234, 230, 221, .15); }
   .links { grid-column: 1; grid-row: 2; align-self: start; }
   .warn { grid-column: 2; grid-row: 2; }
   .copy { grid-column: 1 / -1; grid-row: 3; }
