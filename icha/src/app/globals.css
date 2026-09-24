@@ -378,11 +378,11 @@ summary.btn { list-style: none; }
 .strip-hint { display: flex; align-items: center; gap: 7px; margin: 2px var(--gutter) 0; font-family: var(--font-label); font-size: 12px; letter-spacing: 0.16em; color: var(--ink-3); }
 .strip-hint::after { content: ""; flex: none; width: 26px; height: 2px; background: linear-gradient(90deg, currentColor, transparent); }
 
-/* ══ 지도 — 밝은 OSM 타일을 이 화면의 색으로 끌어온다(타일 판만 반전·색 회전, 핀과 이름표는 그대로) ══ */
-.leaflet-container.leaflet-container { background: #17092b; font-family: var(--font-sans); }
-.leaflet-container .leaflet-tile-pane { filter: invert(1) hue-rotate(188deg) saturate(0.85) brightness(0.92) contrast(1.05); }
-.leaflet-container.leaflet-container .leaflet-control-attribution { background: #06030c; color: #d6c8f0; font-size: 10px; line-height: 1.4; margin: 0; padding: 1px 5px; }
-.leaflet-container.leaflet-container .leaflet-control-attribution a { color: #fff; }
+/* ══ 지도 — OSM 원래 정보성을 살리고 채도만 낮춘다 ══ */
+.leaflet-container.leaflet-container { background: #ddd8cc; font-family: var(--font-sans); }
+.leaflet-container .leaflet-tile-pane { filter: grayscale(.18) saturate(.72) contrast(.94) brightness(1.04); }
+.leaflet-container.leaflet-container .leaflet-control-attribution { background: rgba(241, 238, 230, .94); color: #4b4842; font-size: 10px; line-height: 1.4; margin: 0; padding: 1px 5px; }
+.leaflet-container.leaflet-container .leaflet-control-attribution a { color: #151411; }
 .leaflet-container .leaflet-attribution-flag { display: none; }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; } }
@@ -457,46 +457,25 @@ summary.btn { list-style: none; }
 .card.torn-tb { border: 0; padding-top: 32px; padding-bottom: 40px; }
 
 /* ══ Wide editorial home ══════════════════════════════════════
-   The coupon/store detail product remains the focused 480px web app. Only the
-   public home becomes a responsive marketing surface. */
+   쿠폰·매장 상세는 480px 앱을 유지하고, 공개 홈만 실제 사진 중심의 넓은 편집면으로 쓴다. */
 .app:has([data-page="home"]) {
   --app-max: 1440px;
-  background: #07060b;
-  box-shadow: 0 0 100px rgba(0, 0, 0, .5);
+  background: #f1eee6;
+  box-shadow: none;
+  padding-bottom: 0;
 }
 .app:has([data-page="home"])::after {
-  opacity: .15;
-  background-image: radial-gradient(rgba(255,255,255,.045) .7px, transparent .8px);
-  background-size: 7px 7px;
+  display: none;
 }
 .app:has([data-page="home"])::before {
-  opacity: .035;
-  mix-blend-mode: screen;
-  background-image: url("/images/print/grain.webp");
-  background-size: 260px 260px;
+  display: none;
 }
-.app:has([data-page="home"]) .section-alt { background: #0d0b12; }
-.app:has([data-page="home"]) .section + .section::before { left: var(--gutter); right: var(--gutter); height: 1px; background: rgba(255,255,255,.08); box-shadow: none; }
-.app:has([data-page="home"]) .marquee {
-  min-height: 52px;
-  margin: 0;
-  border: 0;
-  background: #d9ff43;
-  color: #09070d;
-  box-shadow: none;
-  -webkit-mask-image: none;
-  mask-image: none;
-}
-.app:has([data-page="home"]) .marquee::after { display: none; }
-.app:has([data-page="home"]) .marquee-track { gap: 18px; padding: 10px 9px; animation-duration: 30s; }
-.app:has([data-page="home"]) .marquee-track > * { font-size: 13px; letter-spacing: .14em; }
-.app:has([data-page="home"]) .marquee-track > .ko { font-family: var(--font-sans); font-size: 13px; font-weight: 900; letter-spacing: -.02em; }
+.app:has([data-page="home"]) .section-alt { background: #ddd8cc; }
+.app:has([data-page="home"]) .section + .section::before { display: none; }
+.app:has([data-page="home"]) .tabbar { display: none; }
 
 @media (min-width: 960px) {
   .app:has([data-page="home"]) {
-    --header-h: 72px;
-    padding-bottom: 0;
+    --header-h: 68px;
   }
-  .app:has([data-page="home"]) .tabbar { display: none; }
-  .app:has([data-page="home"]) .marquee { margin-block: 0; }
 }

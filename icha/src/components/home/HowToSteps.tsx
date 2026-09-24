@@ -19,18 +19,18 @@ const STEP_SUB = ["앱도 사진도 필요 없습니다", "", "세 집 다 50m �
 export function HowToSteps({ rules, compact = false }: { rules: Rules; compact?: boolean }) {
   if (compact) {
     return (
-      <Section id="howto" tone="cyan" title="이렇게 받으세요" pt={50} pb={34}>
+      <Section id="howto" tone="cyan" title="혜택은 이렇게 받습니다" lead="앱 설치도, 영수증 사진도 필요 없습니다." pt={96} pb={104} className={s.howtoSection}>
         <ol className={s.flow}>
           {STEP_LINES.map((text, i) => (
             <li key={text} className={s.flowStep}>
-              <span className={s.flowNo} aria-hidden="true">{i + 1}</span>
-              <span className={s.flowText}>{text}</span>
+              <span className={s.flowNo} aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+              <p className={s.flowText}><span className="sr-only">{i + 1}단계. </span>{text}</p>
             </li>
           ))}
         </ol>
         <div className={s.flowFoot}>
           <p>{ruleLine(rules)}</p>
-          <Button href="/guide" variant="ghost" className={s.walletBtn}>이용 조건 자세히 보기 <span aria-hidden="true">→</span></Button>
+          <Button href="/guide" variant="ghost" className={s.walletBtn}>이용 조건 전체 보기 <span aria-hidden="true">→</span></Button>
         </div>
       </Section>
     );

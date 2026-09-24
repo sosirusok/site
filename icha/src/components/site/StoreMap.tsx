@@ -160,7 +160,7 @@ export function StoreMap({ stores, focusId, height = 440, compact = false, hideP
       L.control.attribution({ position: "topleft", prefix: "" }).addTo(map);
       // 어두운 밤거리 화면에 흰 지도가 끼면 그 칸만 낮이 된다.
       // CARTO 다크 타일은 키를 요구해 "API KEY REQUIRED" 그림이 오므로, OSM 타일을 그대로 받아
-      // .leaflet-tile-pane 에 CSS 필터(반전 + 색상 회전)를 걸어 어둡게 만든다(StoreMap.css).
+      // .leaflet-tile-pane 은 StoreMap.css 에서 정보가 흐려지지 않을 만큼만 채도를 낮춘다.
       L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 기여자',

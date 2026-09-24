@@ -1,44 +1,57 @@
-/* 맨 아래 — 플라이어 뒷면. 위 가장자리에 형광 띠, 간판 글자는 크게 */
-.footer { position: relative; container-type: inline-size; margin-top: 0; padding: 40px var(--gutter) 28px; border-top: 1px solid rgba(255,255,255,.09); background: #050408; color: var(--ink-2); font-size: 13px; line-height: 1.55; display: grid; gap: 20px; }
-.footer::before { content: ""; position: absolute; left: var(--gutter); right: var(--gutter); top: -1px; height: 1px; background: linear-gradient(90deg, var(--mag), var(--cyan) 52%, var(--lime)); opacity: .75; }
-.full { display: grid; gap: 22px; }
-.head { display: grid; gap: 4px; }
-.mark { font-family: var(--font-poster); font-size: 34px; line-height: 1; color: #fff; }
-.markEn { font-family: var(--font-poster); font-size: 15px; letter-spacing: -0.01em; color: var(--cyan); }
+/* 운영 정보가 담긴 검은 인덱스. 색효과 대신 직선과 조판으로 구분한다. */
+.footer {
+  position: relative;
+  container-type: inline-size;
+  margin-top: 0;
+  padding: 42px var(--gutter) 28px;
+  border-top: 1px solid #353139;
+  background: #050505;
+  color: #b8b2bc;
+  font-size: 13px;
+  line-height: 1.55;
+}
 
-.stores { display: grid; gap: 14px; }
-.store { display: grid;  column-gap: 10px; }
-.storeBody { display: grid; gap: 1px; min-width: 0; }
-.storeName { font-family: var(--font-poster); font-size: 16px; line-height: 1.25; color: #fff; }
-.addr { color: var(--ink-2); font-size: 12.5px; }
-.tel { display: inline-flex; align-items: center; justify-self: start; min-height: 44px; min-width: 44px; margin: -2px 0 -8px; font-family: var(--font-label); font-size: 15px; letter-spacing: 0.04em; color: var(--lime); border-bottom: 2px solid rgba(204, 255, 0, 0.5); }
+.full { display: grid; gap: 28px; }
+.head { display: grid; gap: 7px; }
+.mark { font-family: var(--font-sans); font-size: 34px; line-height: .95; font-weight: 950; letter-spacing: -.055em; color: #f4f0e8; }
+.markEn { font-size: 13px; line-height: 1.4; font-weight: 700; letter-spacing: -.01em; color: #9d97a1; }
 
-.links { display: flex; flex-wrap: wrap; gap: 0 18px; }
-.link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; font-family: var(--font-poster); font-size: 16px; letter-spacing: -0.01em; color: var(--cyan); border-bottom: 2px solid rgba(33, 240, 255, 0.4); align-self: start; }
+.stores { display: grid; border-top: 1px solid #353139; }
+.store { display: grid; padding: 17px 0 18px; border-bottom: 1px solid #252229; }
+.storeBody { display: grid; gap: 4px; min-width: 0; }
+.storeName { font-size: 15px; line-height: 1.35; font-weight: 850; letter-spacing: -.02em; color: #f4f0e8; }
+.storeCourse { margin-right: 5px; font-family: var(--font-sans); font-weight: 850; letter-spacing: 0; color: #f0492f; }
+.addr { color: #aaa4ae; font-size: 12px; }
+.tel { display: inline-flex; align-items: center; justify-self: start; min-height: 44px; min-width: 44px; margin-bottom: -8px; font-family: var(--font-sans); font-size: 14px; font-variant-numeric: tabular-nums; letter-spacing: .01em; color: #f4f0e8; border-bottom: 1px solid #5b5660; }
 
-.warn { margin: 0; font-size: 13px; line-height: 1.6; color: var(--ink-3); }
-.copy { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 4px; font-size: 13px; font-family: var(--font-label); letter-spacing: 0.12em; color: var(--ink-3); }
-.staff { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; color: var(--ink-3); border-bottom: 1px solid var(--line-2); }
+.links { display: flex; flex-wrap: wrap; gap: 0 22px; border-top: 1px solid #353139; }
+.link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; font-size: 14px; font-weight: 800; letter-spacing: -.01em; color: #f4f0e8; border-bottom: 1px solid #5b5660; align-self: start; }
 
-/* 두 벌 — 기본은 전체, 흐름 화면(data-footer="short")에서는 짧은 벌. 고르는 일은 globals.css 가 한다 */
-.short { display: none; padding: 26px var(--gutter) 30px; }
-.shortMark { margin: 0 0 12px; font-family: var(--font-poster); font-size: 22px; line-height: 1; color: #fff; text-shadow: 0 0 2px #fff, 0 0 14px rgba(255, 46, 136, 0.8); }
-.shortTel { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
-.shortTel a { display: flex; align-items: center; gap: 9px; min-height: 46px; color: var(--ink); font-size: 15px; }
-.shortName { font-family: var(--font-poster); font-size: 15px; color: var(--store, var(--cyan)); }
-.shortLinks { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; }
-.shortWarn { margin: 14px 0 0; font-size: 13px; line-height: 1.5; color: var(--ink-3); }
+.warn { margin: 0; max-width: 72em; font-size: 12px; line-height: 1.65; color: #85808a; }
+.copy { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 18px; border-top: 1px solid #252229; font-family: var(--font-sans); font-size: 11px; letter-spacing: .04em; color: #85808a; }
+.staff { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; color: #9d97a1; border-bottom: 1px solid #4a454e; }
 
-.storeCourse { font-weight: 400; color: var(--store, var(--cyan)); }
+/* 두 벌 — 기본은 전체, 흐름 화면(data-footer="short")에서는 짧은 벌. 고르는 일은 globals.css 가 한다. */
+.short { display: none; padding: 0; }
+.shortMark { margin: 0 0 18px; font-family: var(--font-sans); font-size: 24px; line-height: 1; font-weight: 950; letter-spacing: -.05em; color: #f4f0e8; }
+.shortTel { display: grid; margin: 0; padding: 0; list-style: none; border-top: 1px solid #353139; }
+.shortTel li { border-bottom: 1px solid #252229; }
+.shortTel a { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; color: #f4f0e8; font-size: 13px; }
+.shortName { font-size: 14px; font-weight: 850; color: #f4f0e8; }
+.shortLinks { display: flex; flex-wrap: wrap; gap: 0 20px; margin-top: 14px; }
+.shortWarn { margin: 16px 0 0; padding-top: 14px; border-top: 1px solid #252229; font-size: 12px; line-height: 1.55; color: #85808a; }
 
 @container (min-width: 820px) {
-  .footer { padding: 62px clamp(48px, 7vw, 108px) 34px; }
-  .full { grid-template-columns: .8fr 2.2fr; gap: 30px clamp(42px, 6vw, 90px); }
+  .full { grid-template-columns: minmax(220px, .75fr) minmax(0, 2.25fr); gap: 34px clamp(42px, 6vw, 90px); }
   .head { grid-column: 1; grid-row: 1; align-content: start; }
-  .mark { font-size: 46px; }
-  .stores { grid-column: 2; grid-row: 1; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
-  .store { border-left: 1px solid rgba(255,255,255,.1); padding-left: 18px; }
+  .mark { font-size: 48px; }
+  .stores { grid-column: 2; grid-row: 1; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 0; }
+  .store { padding: 0 20px; border-bottom: 0; border-left: 1px solid #353139; }
   .links { grid-column: 1; grid-row: 2; align-self: start; }
-  .warn { grid-column: 2; grid-row: 2; max-width: 72em; }
-  .copy { grid-column: 1 / -1; grid-row: 3; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.08); }
+  .warn { grid-column: 2; grid-row: 2; }
+  .copy { grid-column: 1 / -1; grid-row: 3; }
+}
+
+@media (min-width: 960px) {
+  :global(.app:has([data-page="home"])) .footer { padding: 64px clamp(48px, 7vw, 108px) 34px; }
 }

@@ -24,18 +24,18 @@ export function shortAddress(a: string): string {
 /** 네이버 검색창에 그대로 넣는 말 */
 const SEARCH_QUERY = "서면 알콜부시기";
 
-/** 오시는 길 — 지도(폭 가득, 테두리 대신 형광 rim light) 아래 매장마다 줄 하나: 속 빈 차수 숫자 · 상호(간판체) · 주소 · [길찾기]. */
+/** 오시는 길 — 지도와 세 매장 주소를 한눈에 보는 운영 정보. */
 export function Directions() {
   const ordered = [...STORES].sort((a, b) => a.course.n - b.course.n);
   const mapStores: MapStore[] = ordered.filter((st) => st.lat != null && st.lng != null).map((st) => ({
     id: st.id, name: st.name, shortName: st.shortName, drink: st.drink, lat: st.lat!, lng: st.lng!, address: st.address, naverPlaceId: st.naverPlaceId,
   }));
   return (
-    <Section id="map" tone="lime" title="50m 안에 다 있어요" lead={`${walkLine()} · 세 매장 모두 걸어서 이동`} alt pt={88} pb={92}>
+    <Section id="map" tone="lime" title="세 집은 걸어서 50m" lead={`${walkLine()} · 골목 하나 안에서 모두 이동`} alt pt={96} pb={104} className={s.mapSection}>
       <div className={s.directionsGrid}>
         <div className={s.mapWrap}>
           <LazyStoreMap stores={mapStores} compact hidePanel height={360} />
-          <p className={s.mapBadge}><span aria-hidden="true">●</span> ALL SPOTS IN 50M</p>
+          <p className={s.mapBadge}><span aria-hidden="true">●</span> 세 매장 · 도보 50m</p>
         </div>
         <div className={s.directionSide}>
           <ul className={s.addrs}>
@@ -54,7 +54,7 @@ export function Directions() {
             })}
           </ul>
           <p className={s.searchLine}>
-            <a href={naverSearchUrl(SEARCH_QUERY)} target="_blank" rel="noreferrer" className="link link-naver">네이버에서 전체 코스 보기 <span aria-hidden="true">↗</span></a>
+            <a href={naverSearchUrl(SEARCH_QUERY)} target="_blank" rel="noreferrer" className={s.courseLink}>네이버에서 전체 코스 보기 <span aria-hidden="true">↗</span></a>
           </p>
         </div>
       </div>

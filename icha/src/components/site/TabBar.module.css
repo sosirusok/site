@@ -1,24 +1,36 @@
 .bar {
-  bottom: max(8px, env(safe-area-inset-bottom));
+  bottom: 0;
   z-index: 40;
-  width: min(calc(100% - 20px), 440px) !important;
-  height: 62px;
+  width: min(100%, var(--app-max)) !important;
+  height: calc(var(--tabbar-h) + env(safe-area-inset-bottom));
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  padding: 5px;
-  border: 1px solid rgba(255,255,255,.13);
-  border-radius: 18px;
-  background: rgba(13,10,19,.9);
-  box-shadow: 0 14px 44px rgba(0,0,0,.52);
-  backdrop-filter: blur(18px) saturate(1.2);
+  padding: 0 0 env(safe-area-inset-bottom);
+  border-top: 1px solid #353139;
+  border-radius: 0;
+  background: #08070a;
+  box-shadow: none;
 }
-.item { position: relative; display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 13px; color: #91899c; transition: color .18s ease, background-color .18s ease; }
+
+.item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border-left: 1px solid #252229;
+  border-radius: 0;
+  color: #938d98;
+  transition: color .16s ease, background-color .16s ease;
+}
+
+.item:first-child { border-left: 0; }
 .ko { font-family: var(--font-sans); font-weight: 800; font-size: 14px; line-height: 1; letter-spacing: -.02em; }
-.item:active { background: rgba(255,255,255,.07); }
-.active { background: rgba(217,255,67,.11); color: var(--lime); }
-.active::after { content: ""; position: absolute; left: 50%; bottom: 5px; width: 16px; height: 2px; border-radius: 99px; background: var(--lime); transform: translateX(-50%); box-shadow: 0 0 9px rgba(217,255,67,.55); }
-.book { color: #58df91; }
-.book::after { content: ""; position: absolute; left: 50%; top: 6px; width: 4px; height: 4px; border-radius: 50%; background: #03c75a; transform: translateX(-50%); box-shadow: 0 0 8px rgba(3,199,90,.7); }
+.item:active { background: #17141a; }
+.active { color: #f5f1e8; }
+.active::before { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 3px; background: #f0492f; }
+.book { color: #65de94; }
+.book::before { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 3px; background: var(--naver); }
 
 @media (prefers-reduced-motion: reduce) {
   .item { transition: none; }
