@@ -6,18 +6,30 @@ import { STORES, type Store } from "@/lib/stores";
 import { VenueShowcase } from "./VenueShowcase";
 import s from "./vip-lower.module.css";
 
-const STORY: Record<StoreId, { photo: string; alt: string }> = {
+const STORY: Record<StoreId, { photo: string; alt: string; gallery: Array<{ src: string; alt: string; label: string }> }> = {
   tokyo: {
-    photo: "/images/privilege/tokyo-photo.webp",
-    alt: "도쿄스탠드의 생맥주 — 매장 원본 사진 기반의 이미지",
+    photo: "/images/stores/tokyo/cold-ham-plate-beers.jpg",
+    alt: "도쿄스탠드의 생맥주 두 잔과 콜드햄 플레이트",
+    gallery: [
+      { src: "/images/stores/tokyo/draft-foam.jpg", alt: "도쿄스탠드 생맥주를 따르는 모습", label: "생맥주" },
+      { src: "/images/stores/tokyo/interior-noren.jpg", alt: "도쿄스탠드 매장 내부", label: "매장 분위기" },
+    ],
   },
   joseon: {
-    photo: "/images/privilege/joseon-photo.webp",
-    alt: "조선칼국수의 막걸리 — 매장 원본 사진 기반의 이미지",
+    photo: "/images/stores/joseon/makgeolli-cheers.jpg",
+    alt: "조선칼국수에서 막걸리 잔을 맞대는 모습",
+    gallery: [
+      { src: "/images/stores/joseon/modeum-jeon.jpg", alt: "조선칼국수의 모둠전", label: "모둠전" },
+      { src: "/images/stores/joseon/interior-window.jpg", alt: "조선칼국수 창가 좌석", label: "매장 분위기" },
+    ],
   },
   wareureu: {
-    photo: "/images/privilege/wareureu-photo.webp",
-    alt: "와르르맨숀의 공간 — 매장 원본 사진 기반의 이미지",
+    photo: "/images/stores/wareureu/interior-hall.jpg",
+    alt: "와르르맨숀의 로고 벽과 좌석",
+    gallery: [
+      { src: "/images/stores/wareureu/yukhoe-chadol-ssam.jpg", alt: "와르르맨숀의 육회차돌쌈", label: "육회차돌쌈" },
+      { src: "/images/stores/wareureu/interior-overview.jpg", alt: "와르르맨숀 홀 전경", label: "매장 분위기" },
+    ],
   },
 };
 

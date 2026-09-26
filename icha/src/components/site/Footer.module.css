@@ -60,23 +60,24 @@
   margin-inline: auto;
 }
 
-.homeHead { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-width: 0; }
+.homeHead { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; min-width: 0; }
 .homeMark { display: block; width: 140px; height: auto; }
-.homeLinks { display: flex; align-items: center; gap: 16px; flex: none; }
+.homeLinks { display: flex; align-items: center; gap: 24px; flex: none; }
 .homeLinks a,
-.homeBottom a { display: inline-flex; align-items: center; min-height: 44px; font-size: 12px; color: #d5d5da; }
+.homeBottom a { display: inline-flex; align-items: center; min-height: 52px; font-size: 16px; color: #eee6dc; }
 .homeTel { display: grid; list-style: none; margin: 0; padding: 0; border-top: 1px solid #29292d; }
 .homeTel li { min-width: 0; border-bottom: 1px solid #222226; }
-.homeTel a { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; color: #d5d5da; font-size: 13px; }
-.homeNumber { font-variant-numeric: tabular-nums; font-size: 12px; color: #a5a5ad; }
+.homeTel a { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 12px; min-height: 60px; padding-block: 10px; color: #eee6dc; font-size: 16px; font-weight: 500; }
+.homeNumber { font-variant-numeric: tabular-nums; font-size: 16px; color: #d1c8bf; }
 .homeBusiness { border-bottom: 1px solid #29292d; }
-.homeBusiness summary { min-height: 44px; padding: 12px 0; cursor: pointer; font-size: 12px; color: #b9b9c1; }
+.homeBusiness summary { min-height: 52px; padding: 14px 0; cursor: pointer; font-size: 16px; color: #e2d9d0; }
 .homeBusinessList { display: grid; gap: 20px; list-style: none; margin: 0; padding: 4px 0 20px; }
-.homeBusinessList li { display: grid; align-content: start; gap: 5px; min-width: 0; font-size: 12px; line-height: 1.65; }
-.homeBusinessList strong { color: #d5d5da; font-size: 13px; font-weight: 600; }
-.homeWarn { margin: 0; max-width: 90em; font-size: 12px; line-height: 1.7; color: #92929d; }
-.homeBottom { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 44px; font-size: 12px; }
+.homeBusinessList li { display: grid; align-content: start; gap: 5px; min-width: 0; font-size: 16px; line-height: 1.65; color: #c9c1b9; word-break: keep-all; overflow-wrap: anywhere; }
+.homeBusinessList strong { color: #eee6dc; font-size: 17px; font-weight: 600; }
+.homeWarn { margin: 0; max-width: 90em; font-size: 15px; line-height: 1.7; color: #bbb4ad; word-break: keep-all; }
+.homeBottom { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 52px; font-size: 14px; color: #bbb4ad; }
 .home a:hover { color: #fff; }
+.home :is(a, summary):focus-visible { outline: 2px solid #ddcbb1; outline-offset: 4px; }
 
 @container (min-width: 820px) {
   .full { grid-template-columns: minmax(220px, .75fr) minmax(0, 2.25fr); gap: 34px clamp(42px, 6vw, 90px); }
@@ -95,8 +96,8 @@
   .homeMark { width: 180px; }
   .homeTel { grid-template-columns: repeat(3, minmax(0, 1fr)); align-self: start; border-top: 0; gap: 24px; }
   .homeTel li { border-bottom: 0; }
-  .homeTel a { align-items: flex-start; flex-direction: column; justify-content: center; gap: 6px; min-height: 64px; font-size: 14px; }
-  .homeNumber { font-size: 13px; }
+  .homeTel a { align-items: flex-start; flex-direction: column; justify-content: center; gap: 6px; min-height: 74px; font-size: 17px; }
+  .homeNumber { font-size: 16px; }
   .homeBusiness,
   .homeWarn,
   .homeBottom { grid-column: 1 / -1; }

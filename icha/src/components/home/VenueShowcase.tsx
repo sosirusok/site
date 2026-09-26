@@ -2,24 +2,17 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import type { StoreId } from "@/lib/config";
 import s from "./vip-lower.module.css";
 
+type Photo = { src: string; alt: string; label: string };
 type Venue = {
-  id: StoreId;
-  name: string;
-  shortName: string;
-  drink: string;
-  course: number;
-  photo: string;
-  alt: string;
+  id: StoreId; name: string; shortName: string; drink: string; course: number;
+  photo: string; alt: string; gallery: Photo[];
   today: { open: boolean; state: string; hours: string };
-  notice: string;
-  benefit: string;
-  booking: string | null;
+  notice: string; benefit: string; booking: string | null;
 };
-
 const TITLE_ART: Record<StoreId, { src: string; height: number }> = {
   tokyo: { src: "/images/privilege/tokyo-title.webp", height: 150 },
   joseon: { src: "/images/privilege/joseon-title.webp", height: 160 },
@@ -28,74 +21,128 @@ const TITLE_ART: Record<StoreId, { src: string; height: number }> = {
 
 export function VenueShowcase({ venues }: { venues: Venue[] }) {
   const [selected, setSelected] = useState(0);
-  const tabs = useRef<Array<HTMLButtonElement | null>>([]);
+  const [playing, setPlaying] = useState(true);
+  const [reducedMotion, setReducedMotion] = useState(true);
+  const [inView, setInView] = useState(false);
+  const [pageVisible, setPageVisible] = useState(true);
+  const stage = useRef<HTMLDivElement>(null);
+  const gesture = useRef<{ x: number; y: number } | null>(null);
+  const swiped = useRef(false);
+  const count = venues.length;
+  const canPlay = playing && !reducedMotion && inView && pageVisible && count > 1;
 
-  function selectWithKeyboard(event: KeyboardEvent<HTMLButtonElement>, index: number) {
-    let next = index;
-    if (event.key === "ArrowRight") next = (index + 1) % venues.length;
-    else if (event.key === "ArrowLeft") next = (index + venues.length - 1) % venues.length;
-    else if (event.key === "Home") next = 0;
-    else if (event.key === "End") next = venues.length - 1;
-    else return;
-    event.preventDefault();
-    setSelected(next);
-    tabs.current[next]?.focus();
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => { setReducedMotion(media.matches); if (media.matches) setPlaying(false); };
+    const visibility = () => setPageVisible(!document.hidden);
+    sync(); visibility();
+    media.addEventListener("change", sync);
+    document.addEventListener("visibilitychange", visibility);
+    const observer = new IntersectionObserver(([entry]) => setInView((entry?.intersectionRatio ?? 0) >= .2), { threshold: .2 });
+    if (stage.current) observer.observe(stage.current);
+    return () => { observer.disconnect(); media.removeEventListener("change", sync); document.removeEventListener("visibilitychange", visibility); };
+  }, []);
+
+  useEffect(() => {
+    if (!canPlay) return;
+    const timer = window.setInterval(() => setSelected(index => (index + 1) % count), 8000);
+    return () => window.clearInterval(timer);
+  }, [canPlay, count]);
+
+  function select(index: number) {
+    setPlaying(false);
+    setSelected((index + count) % count);
+  }
+  function keyboard(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.target instanceof HTMLAnchorElement) return;
+    if (event.key === "ArrowRight") { event.preventDefault(); select(selected + 1); }
+    if (event.key === "ArrowLeft") { event.preventDefault(); select(selected - 1); }
+    if (event.key === "Home") { event.preventDefault(); select(0); }
+    if (event.key === "End") { event.preventDefault(); select(count - 1); }
+  }
+  function pointerStart(event: PointerEvent<HTMLDivElement>) {
+    if (!event.isPrimary || event.pointerType === "mouse") return;
+    setPlaying(false);
+    swiped.current = false;
+    gesture.current = { x: event.clientX, y: event.clientY };
+  }
+  function pointerEnd(event: PointerEvent<HTMLDivElement>) {
+    const start = gesture.current;
+    gesture.current = null;
+    if (!start) return;
+    const dx = event.clientX - start.x, dy = event.clientY - start.y;
+    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) {
+      swiped.current = true;
+      select(selected + (dx < 0 ? 1 : -1));
+    }
   }
 
   return (
-    <div className={s.venueShowcase}>
-      <div className={s.venueTabs} role="tablist" aria-label="매장 선택">
+    <div className={s.venueShowcase} role="region" aria-roledescription="캐러셀" aria-label="세 매장 사진과 혜택"
+      onKeyDown={keyboard} onFocusCapture={event => {
+        if (!(event.target instanceof HTMLElement && event.target.closest("[data-play-control]"))) setPlaying(false);
+      }}>
+      <div className={s.carouselHeading}>
+        <button type="button" className={s.arrowButton} aria-label="이전 매장" onClick={() => select(selected - 1)}>←</button>
+        <div className={s.nameWindow} aria-hidden="true">
+          {venues.map((venue, index) => (
+            <Image key={venue.id} src={TITLE_ART[venue.id].src} alt="" width={720} height={TITLE_ART[venue.id].height}
+              sizes="(min-width: 760px) 360px, 220px" className={s.animatedName} data-active={index === selected} />
+          ))}
+        </div>
+        <button type="button" className={s.arrowButton} aria-label="다음 매장" onClick={() => select(selected + 1)}>→</button>
+      </div>
+
+      <div className={s.carouselMeta}>
+        <p aria-live={playing ? "off" : "polite"} aria-atomic="true">{selected + 1} / {count} <span>{venues[selected]?.shortName}</span></p>
+        {!reducedMotion && <button type="button" className={s.playButton} data-play-control aria-pressed={playing}
+          onClick={() => setPlaying(value => !value)}>{playing ? "Ⅱ 자동 넘김 멈춤" : "▷ 자동 넘김"}</button>}
+      </div>
+
+      <div ref={stage} className={s.venueStage} data-playing={canPlay} onPointerEnter={event => { if (event.pointerType === "mouse") setPlaying(false); }}
+        onPointerDown={pointerStart} onPointerUp={pointerEnd} onPointerCancel={() => { gesture.current = null; }}
+        onClickCapture={event => { if (swiped.current) { event.preventDefault(); event.stopPropagation(); swiped.current = false; } }}>
         {venues.map((venue, index) => (
-          <button
-            key={venue.id}
-            ref={(element) => { tabs.current[index] = element; }}
-            id={`venue-tab-${venue.id}`}
-            type="button"
-            role="tab"
-            aria-selected={selected === index}
-            aria-controls={`venue-panel-${venue.id}`}
-            tabIndex={selected === index ? 0 : -1}
-            onClick={() => setSelected(index)}
-            onKeyDown={(event) => selectWithKeyboard(event, index)}
-          >
-            <Image src={TITLE_ART[venue.id].src} alt={venue.shortName} width={720} height={TITLE_ART[venue.id].height} sizes="(min-width: 760px) 160px, 100px" className={s.tabLettering} />
-            <span className={s.tabArrow} aria-hidden="true">↗</span>
+          <article key={venue.id} id={`venue-panel-${venue.id}`} className={s.venuePanel} data-active={selected === index}
+            data-store={venue.id} aria-hidden={selected !== index} inert={selected !== index}
+            role="group" aria-roledescription="슬라이드" aria-label={`${index + 1} / ${count} · ${venue.name}`}>
+            <div className={s.photos}>
+              <Link href={`/stores/${venue.id}`} className={s.venuePhoto} aria-label={`${venue.name} 사진과 메뉴 보기`} draggable={false}>
+                <Image src={venue.photo} alt={venue.alt} fill sizes="(min-width: 1200px) 680px, (min-width: 760px) 55vw, calc(100vw - 32px)"
+                  loading={index === 0 ? "eager" : "lazy"} className={s.venueImage} draggable={false} />
+              </Link>
+              <div className={s.photoGallery}>
+                {venue.gallery.map(photo => (
+                  <Link href={`/stores/${venue.id}`} key={photo.src} className={s.galleryItem} draggable={false}>
+                    <span className={s.galleryFrame}><Image src={photo.src} alt={photo.alt} fill
+                      sizes="(min-width: 1200px) 330px, (min-width: 760px) 27vw, calc((100vw - 44px) / 2)" draggable={false} /></span>
+                    <span>{photo.label} <span aria-hidden="true">↗</span></span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+            <div className={s.venueInformation}>
+              <h3 className="sr-only">{venue.name}</h3>
+              <p className={s.venueCategory}>{venue.drink} · {venue.id === "joseon" ? "서면밀레오레본점" : "서면점"}</p>
+              <p className={s.venueHours}><span className={s.openState} data-open={venue.today.open}>{venue.today.state}</span><span>{venue.today.hours}</span></p>
+              <div className={s.venueBenefit}><p>다음 방문 쿠폰 혜택</p><strong>{venue.benefit} 무료</strong></div>
+              {venue.notice ? <p className={s.venueNotice}>{venue.notice}</p> : null}
+              <nav className={s.venueActions} aria-label={`${venue.shortName} 바로가기`}>
+                <Link href={`/stores/${venue.id}`} className={s.mainAction}>사진·메뉴 보기 <span aria-hidden="true">↗</span></Link>
+                {venue.booking ? <a href={venue.booking} target="_blank" rel="noreferrer" className={s.secondaryAction}>네이버 예약 <span aria-hidden="true">↗</span></a> : null}
+              </nav>
+            </div>
+          </article>
+        ))}
+      </div>
+      <div className={s.venueChoices} aria-label="매장 바로 선택">
+        {venues.map((venue, index) => (
+          <button key={venue.id} type="button" aria-label={`${venue.shortName} 선택`} aria-pressed={index === selected}
+            aria-controls={`venue-panel-${venue.id}`} onClick={() => select(index)}>
+            <span>{venue.shortName}</span><span className={s.choiceLine} aria-hidden="true" />
           </button>
         ))}
       </div>
-      {venues.map((venue, index) => (
-        <div
-          key={venue.id}
-          id={`venue-panel-${venue.id}`}
-          role="tabpanel"
-          aria-labelledby={`venue-tab-${venue.id}`}
-          hidden={selected !== index}
-          tabIndex={0}
-          className={s.venuePanel}
-          data-store={venue.id}
-        >
-          <Link href={`/stores/${venue.id}`} className={s.venuePhoto} aria-label={`${venue.name} 매장 보기`}>
-            <Image src={venue.photo} alt={venue.alt} fill sizes="(min-width: 1200px) 680px, (min-width: 760px) 55vw, calc(100vw - 48px)" className={s.venueImage} />
-          </Link>
-          <div className={s.venueInformation}>
-            <div className={s.venueHeading}>
-              <p className={s.venueCategory}>{venue.drink}<span aria-hidden="true"> / </span>{venue.id === "joseon" ? "서면밀레오레본점" : "서면점"}</p>
-              <h3><Link href={`/stores/${venue.id}`} aria-label={`${venue.name} 매장 정보`}>
-                <Image src={TITLE_ART[venue.id].src} alt={venue.shortName} width={720} height={TITLE_ART[venue.id].height} sizes="(min-width: 960px) 255px, 220px" className={s.venueLettering} />
-              </Link></h3>
-              <p className={s.venueHours}><span className={s.openState} data-open={venue.today.open}>{venue.today.state}</span>{venue.today.hours ? <span>{venue.today.hours}</span> : null}</p>
-            </div>
-            <dl className={s.venueFacts}>
-              <div><dt>쿠폰 혜택</dt><dd>{venue.benefit} 무료</dd></div>
-              {venue.notice ? <div><dt>매장 공지</dt><dd>{venue.notice}</dd></div> : null}
-            </dl>
-            <nav className={s.venueActions} aria-label={`${venue.shortName} 바로가기`}>
-              <Link href={`/stores/${venue.id}`}>매장 둘러보기 <span aria-hidden="true">↗</span></Link>
-              {venue.booking ? <a href={venue.booking} target="_blank" rel="noreferrer">네이버 예약 <span aria-hidden="true">↗</span></a> : null}
-            </nav>
-          </div>
-        </div>
-      ))}
     </div>
   );
 }

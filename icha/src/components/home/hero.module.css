@@ -1,41 +1,40 @@
-.hero { position: relative; isolation: isolate; overflow: hidden; background: transparent; color: #ded4c6; }
-.edition { position: absolute; z-index: 1; top: 22px; left: 0; width: 100%; text-align: center; font-size: 9px; letter-spacing: .23em; color: #e0d7cb; }
-.edition span { display: inline-block; margin-inline: 12px; color: #96887d; }
-.artwork { display: block; width: 100%; overflow: hidden; }
-.keyVisual { display: block; width: 100%; height: auto; mask-image: linear-gradient(#000 83%, transparent 100%); }
-.invitation { position: relative; display: grid; justify-items: center; gap: 23px; margin-top: -95px; padding: 0 24px 33px; text-align: center; }
-.intro { display: grid; gap: 9px; }
-.location { font-size: 13px; font-weight: 350; letter-spacing: -.025em; line-height: 1.8; }
-.condition { max-width: 32em; font-size: 11px; line-height: 1.8; color: #aba5a0; word-break: keep-all; }
-.actions { display: flex; align-items: center; justify-content: center; gap: 24px; width: 100%; }
-.enter { display: block; width: 218px; max-width: 65%; flex: none; transition: transform .3s ease; }
+.hero { position: relative; isolation: isolate; overflow: hidden; background: transparent; color: #f2ebe1; }
+.artwork { display: block; width: 100%; aspect-ratio: 1.625; overflow: hidden; mask-image: linear-gradient(#000 84%, transparent 100%); }
+.keyVisual { display: block; width: 100%; height: auto; transform: translateY(-20%); }
+.previews { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; width: 100%; max-width: 580px; margin: 0 auto; padding: 0 20px; }
+.preview { display: grid; gap: 9px; min-width: 0; color: #f2ebe1; }
+.previewPhoto { display: block; position: relative; aspect-ratio: 6 / 7; overflow: hidden; }
+.previewPhoto img { object-fit: cover; }
+.previewName { display: block; text-align: center; font-size: 16px; font-weight: 550; line-height: 1.5; letter-spacing: -.04em; white-space: nowrap; }
+.invitation { position: relative; display: grid; justify-items: center; gap: 16px; margin-top: 22px; padding: 0 20px 20px; text-align: center; }
+.intro { display: grid; gap: 8px; }
+.location { font-size: 18px; font-weight: 500; letter-spacing: -.025em; line-height: 1.55; word-break: keep-all; }
+.condition { max-width: 32em; font-size: 16px; line-height: 1.6; color: #d1c8bf; word-break: keep-all; }
+.actions { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; width: 100%; }
+.enter { display: flex; align-items: center; width: min(100%, 340px); min-height: 60px; flex: none; transition: transform .25s ease; }
 .enter img { display: block; width: 100%; height: auto; }
-.guide { display: inline-flex; gap: 12px; align-items: center; min-height: 48px; white-space: nowrap; color: #d7d1cb; font-size: 12px; }
-.guide span { color: #bbad9e; font-size: 17px; }
-.footnote { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-inline: 24px; min-height: 60px; border-top: 1px solid #2b292b; color: #8f8986; font-size: 9px; line-height: 1.6; }
-.footnote a { display: flex; align-items: center; gap: 12px; min-height: 44px; white-space: nowrap; letter-spacing: .08em; }
-.footnote a span { font-size: 17px; }
+.guide { display: inline-flex; justify-content: center; gap: 12px; align-items: center; min-width: 148px; min-height: 52px; white-space: nowrap; color: #eee5da; font-size: 16px; font-weight: 500; }
+.guide span { color: #d0c1ae; font-size: 20px; }
 .hero a:focus-visible { outline: 2px solid #ddcbb1; outline-offset: 5px; }
 @media (max-width: 359px) {
-  .invitation { margin-top: -67px; padding-inline: 20px; gap: 18px; }
-  .location { font-size: 13px; }
-  .actions { gap: 18px; }
-  .footnote { margin-inline: 20px; font-size: 8px; }
+  .location { max-width: 16em; }
 }
 @media (min-width: 600px) and (max-width: 759px) {
-  .keyVisual { max-height: 720px; object-fit: cover; object-position: center 44%; }
-  .invitation { margin-top: -120px; }
+  .artwork { max-width: 600px; margin-inline: auto; }
 }
 @media (min-width: 760px) {
-  .edition { top: 32px; font-size: 10px; }
-  .keyVisual { aspect-ratio: 2 / 1; max-height: 790px; object-fit: cover; }
-  .invitation { margin-top: -145px; padding-bottom: 44px; gap: 23px; }
-  .location { font-size: 15px; }
-  .condition { max-width: none; font-size: 12px; }
-  .enter { width: 240px; }
-  .guide { font-size: 13px; }
-  .actions { gap: 32px; }
-  .footnote { margin-inline: max(40px, calc((100% - 1280px) / 2)); min-height: 64px; font-size: 11px; }
+  .artwork { aspect-ratio: auto; height: clamp(300px, 30vw, 400px); mask-image: linear-gradient(#000 84%, transparent 100%); }
+  .keyVisual { max-width: 1280px; margin-inline: auto; transform: translateY(-14%); }
+  .previews { max-width: 520px; gap: 14px; }
+  .previewPhoto { aspect-ratio: 4 / 3; }
+  .invitation { max-width: 1140px; margin: 26px auto 0; padding: 0 32px 30px; gap: 20px; }
+  .condition { max-width: none; }
+  .enter { width: 300px; }
+  .actions { flex-direction: row; gap: 24px; }
+}
+@media (min-width: 1100px) {
+  .invitation { grid-template-columns: 1fr auto; align-items: center; justify-items: start; text-align: left; }
+  .actions { width: auto; }
 }
 @media (hover: hover) { .enter:hover { transform: translateY(-2px); } .guide:hover { color: #fff; } }
 @media (prefers-reduced-motion: reduce) { .enter { transition: none; } }

@@ -131,7 +131,7 @@ body:has(.app) { background: #08080a; }
 .app article[data-store] > p { background: #171719; border: 1px solid var(--line-2); }
 .app #book .torn-b4 { background: #19181c; color: var(--ink); padding-top: 14px; padding-bottom: 14px; }
 .app #howto .bignum { font-size: 28px; font-weight: 450; }
-.app #howto li p { font-weight: 350; }
+.app #howto li p { font-weight: 500; }
 .app #poster figure { border-width: 1px; border-color: var(--line-2); box-shadow: none; }
 .app main:has(#faq) > div > .torn-t { background: #141316; border-top: 1px solid var(--line-2); }
 .app main:has(#faq) > div > .torn-t > p { color: var(--ink); font-weight: 550; }
