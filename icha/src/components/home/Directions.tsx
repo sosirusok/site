@@ -1,7 +1,7 @@
 import { LOCATIONS } from "@/lib/locations";
 import { naverSearchUrl, placeLinks } from "@/lib/naver";
 import { STORES } from "@/lib/stores";
-import s from "./home.module.css";
+import s from "./lower-home.module.css";
 
 export function walkLine(): string {
   const values = Object.values(LOCATIONS);
@@ -24,10 +24,8 @@ export function Directions() {
 
   return (
     <section id="map" className={s.mapSection} aria-labelledby="map-title">
-      <h2 id="map-title" className="sr-only">오시는 길</h2>
       <div className={s.mapHeading}>
-        <p className={s.sectionIndex}>05</p>
-        <p className={s.mapTitle}>위치</p>
+        <h2 id="map-title">오시는 길</h2>
         <p>{walkLine()} · 세 매장 모두 50m 이내</p>
       </div>
       <div className={s.directionSide}>
@@ -40,12 +38,12 @@ export function Directions() {
                   <p className={s.addrName}>{store.shortName}</p>
                   <p className={s.addrSub}>{shortAddress(store.address)}<br />{LOCATIONS[store.id].subway}</p>
                 </div>
-                {links ? <a href={links.directions} target="_blank" rel="noreferrer" className={s.directionAction} aria-label={`${store.shortName} 길찾기`}>길찾기</a> : null}
+                {links ? <a href={links.directions} target="_blank" rel="noreferrer" className={s.directionAction} aria-label={`${store.shortName} 길찾기`}>길찾기 <span aria-hidden="true">↗</span></a> : null}
               </li>
             );
           })}
         </ul>
-        <a href={naverSearchUrl(SEARCH_QUERY)} target="_blank" rel="noreferrer" className={s.searchAction}>네이버에서 세 곳 검색</a>
+        <a href={naverSearchUrl(SEARCH_QUERY)} target="_blank" rel="noreferrer" className={s.searchAction}>네이버에서 세 곳 검색 <span aria-hidden="true">↗</span></a>
       </div>
     </section>
   );

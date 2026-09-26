@@ -10,7 +10,7 @@ import { getRules } from "@/lib/settings";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = { description: BRAND.tagline };
-export const viewport: Viewport = { themeColor: "#050505" };
+export const viewport: Viewport = { themeColor: "#08080a" };
 
 /** 정적(ISR) — 60초마다 뒤에서 새로 만든다. 관리자가 규칙·메뉴·공지를 저장하면 revalidatePath("/") 로 바로. */
 export const revalidate = 60;
@@ -22,7 +22,7 @@ async function giftNames(): Promise<Record<StoreId, string[]>> {
 }
 
 /**
- * 홈 — 실사진 히어로 → (공지) → 참여 매장 세 곳 → 이용 방법 → 위치 → 푸터.
+ * 홈 — 브랜드 아트워크 → (공지) → 참여 매장 세 곳 → 이용 방법 → 위치 → 푸터.
  * 아래 고정 버튼은 두지 않고 각 매장 안에서 상세·예약으로 바로 이동한다.
  */
 export default async function HomePage() {

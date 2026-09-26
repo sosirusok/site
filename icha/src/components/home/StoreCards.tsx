@@ -4,23 +4,20 @@ import { nowText, openStatus } from "@/components/site/StoreHelpers";
 import type { Rules, StoreId } from "@/lib/config";
 import { placeLinks } from "@/lib/naver";
 import { STORES, type Store } from "@/lib/stores";
-import s from "./home.module.css";
+import s from "./lower-home.module.css";
 
-const STORY: Record<StoreId, { photo: string; pos: string; alt: string }> = {
+const STORY: Record<StoreId, { photo: string; alt: string }> = {
   tokyo: {
-    photo: "/images/premium/tokyo-night.webp",
-    pos: "50% 50%",
-    alt: "도쿄스탠드의 생맥주 두 잔과 햄 플레이트",
+    photo: "/images/diamond/venue-tokyo-v2.webp",
+    alt: "도쿄스탠드",
   },
   joseon: {
-    photo: "/images/premium/joseon-night.webp",
-    pos: "50% 50%",
-    alt: "조선칼국수와 통막걸리의 차가운 막걸리 주전자",
+    photo: "/images/diamond/venue-joseon-v2.webp",
+    alt: "조선칼국수와 통막걸리",
   },
   wareureu: {
-    photo: "/images/stores/wareureu/exterior-dusk.jpg",
-    pos: "52% 42%",
-    alt: "블루아워의 와르르맨숀 서면점 외관과 간판",
+    photo: "/images/diamond/venue-wareureu-v2.webp",
+    alt: "와르르맨숀",
   },
 };
 
@@ -36,53 +33,60 @@ export function giftWhat(names: string[], fallback: string): string {
   return (names.length ? names : [fallback]).map((t) => t.trim()).join(" 또는 ");
 }
 
-/** 사진이 곧 매장 링크다. 카드·배지·이미지 버튼은 두지 않는다. */
+/** 매장명은 아트워크로, 변동되는 영업시간과 혜택은 읽을 수 있는 텍스트로 제공한다. */
 export function StoreCards({ now, rules, gifts }: { now: Date; rules: Rules; gifts: Record<StoreId, string[]> }) {
   const ordered = [...STORES].sort((a, b) => a.course.n - b.course.n);
   return (
     <section id="stores" className={s.storeStories} aria-labelledby="stores-title">
-      <h2 id="stores-title" className="sr-only">참여 매장 세 곳</h2>
-      {ordered.map((store) => {
-        const story = STORY[store.id];
-        const links = placeLinks(store);
-        const today = todayParts(store, now);
-        const notice = rules.storeNotices?.[store.id]?.trim();
-        const what = giftWhat(gifts[store.id] ?? [], store.benefitLabel);
-        return (
-          <article key={store.id} className={s.storeStory} data-store={store.id}>
-            <Link href={`/stores/${store.id}`} className={s.storyPhoto} aria-label={`${store.name} 매장 보기`}>
-              <Image
-                src={story.photo}
-                alt={story.alt}
-                fill
-                sizes="(min-width: 960px) 66vw, 100vw"
-                className={s.storyPhotoImage}
-                style={{ objectPosition: story.pos }}
-              />
-            </Link>
-            <div className={s.storyInfo}>
-              <p className={s.storyIndex}>{String(store.course.n).padStart(2, "0")}</p>
-              <h3 className={s.storyName}>{store.shortName}</h3>
-              <p className={s.storyFullName}>{store.name}</p>
-              <dl className={s.storyFacts}>
-                <div>
-                  <dt>오늘</dt>
-                  <dd>{today.state}{today.hours ? ` · ${today.hours}` : ""}</dd>
-                </div>
-                <div>
-                  <dt>혜택</dt>
-                  <dd>{what} 무료</dd>
-                </div>
-                {notice ? <div><dt>공지</dt><dd>{notice}</dd></div> : null}
-              </dl>
-              <nav className={s.storyLinks} aria-label={`${store.shortName} 바로가기`}>
-                <Link href={`/stores/${store.id}`}>상세 보기</Link>
-                {links ? <a href={links.booking} target="_blank" rel="noreferrer">네이버 예약</a> : null}
-              </nav>
-            </div>
-          </article>
-        );
-      })}
+      <div className={s.sectionHeading}>
+        <h2 id="stores-title">참여 매장</h2>
+        <p>세 매장 모두 50m 이내</p>
+      </div>
+      <div className={s.storeGrid}>
+        {ordered.map((store) => {
+          const story = STORY[store.id];
+          const links = placeLinks(store);
+          const today = todayParts(store, now);
+          const notice = rules.storeNotices?.[store.id]?.trim();
+          const what = giftWhat(gifts[store.id] ?? [], store.benefitLabel);
+          return (
+            <article key={store.id} className={s.storeStory} data-store={store.id} aria-labelledby={`${store.id}-title`}>
+              <h3 id={`${store.id}-title`} className="sr-only">{store.name}</h3>
+              <div className={s.storeTopline} aria-hidden="true">
+                <span>{String(store.course.n).padStart(2, "0")}</span>
+                <span>{store.drink}</span>
+              </div>
+              <Link href={`/stores/${store.id}`} className={s.storyPhoto} aria-label={`${store.name} 매장 보기`}>
+                <Image
+                  src={story.photo}
+                  alt={story.alt}
+                  fill
+                  sizes="(min-width: 1440px) 420px, (min-width: 960px) 30vw, (min-width: 380px) 315px, calc(100vw - 40px)"
+                  className={s.storyPhotoImage}
+                />
+              </Link>
+              <div className={s.storyInfo}>
+                <p className={s.storyFullName}>{store.name}</p>
+                <dl className={s.storyFacts}>
+                  <div>
+                    <dt>오늘</dt>
+                    <dd><span className={s.openState} data-open={today.open}>{today.state}</span>{today.hours ? ` · ${today.hours}` : ""}</dd>
+                  </div>
+                  <div>
+                    <dt>혜택</dt>
+                    <dd>{what} 무료</dd>
+                  </div>
+                  {notice ? <div><dt>공지</dt><dd>{notice}</dd></div> : null}
+                </dl>
+                <nav className={s.storyLinks} aria-label={`${store.shortName} 바로가기`}>
+                  <Link href={`/stores/${store.id}`}>메뉴 · 매장 정보 <span aria-hidden="true">↗</span></Link>
+                  {links ? <a href={links.booking} target="_blank" rel="noreferrer">네이버 예약 <span aria-hidden="true">↗</span></a> : null}
+                </nav>
+              </div>
+            </article>
+          );
+        })}
+      </div>
     </section>
   );
 }

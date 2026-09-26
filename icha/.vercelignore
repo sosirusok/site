@@ -1,4 +1,5 @@
 # Local visual-review captures
+/*.png
 audit-*.png
 critique-*.png
 UsersrukarDocuments*.png
@@ -16,4 +17,3 @@ public/images/afterdark/wordmark-stack.png
 public/images/afterdark/wordmark-wide.png
 public/images/afterdark/wordmark-optical.png
 public/images/afterdark/hero-tap-night.png
-

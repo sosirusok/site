@@ -458,8 +458,9 @@ summary.btn { list-style: none; }
 
 /* 공개 홈만 넓게 쓰고, 시각 재료는 실사진과 생성된 UI PNG가 맡는다. */
 .app:has([data-page="home"]) {
-  --app-max: 1440px;
-  --bg: #050505;
+  --app-max: 1600px;
+  --header-h: 64px;
+  --bg: #08080a;
   --bg-2: #0d0c0b;
   --bg-3: #11100e;
   --ink: #eae6dd;
@@ -467,7 +468,7 @@ summary.btn { list-style: none; }
   --ink-3: #8f8b83;
   --line: rgba(234, 230, 221, .12);
   --line-2: rgba(155, 131, 88, .42);
-  background: #050505;
+  background: #08080a;
   box-shadow: none;
   padding-bottom: 0;
 }
@@ -485,6 +486,8 @@ summary.btn { list-style: none; }
 
 @media (min-width: 960px) {
   .app:has([data-page="home"]) {
-    --header-h: 68px;
+    --header-h: 80px;
   }
 }
+body:has([data-page="home"]) { background: #08080a; }
+.app:has([data-page="home"]) ::selection { background: #c9b895; color: #08080a; }

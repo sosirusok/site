@@ -11,10 +11,10 @@ const SEARCH_QUERY = "서면 알콜부시기";
 /**
  * 손님 화면 맨 아래 — 플라이어 뒷면.
  *
- * 두 벌을 같이 그려 두고 CSS 가 고른다(globals.css 의 .app:has([data-footer="short"])).
+ * 홈·전체·짧은 벌을 서버에서 그리고 CSS로 현재 화면에 맞는 벌을 고른다.
  * 쿠폰함·쿠폰 상세·매장 고르기·로그인처럼 "지금 할 일"이 있는 화면에서 세 가게 사업자등록번호까지
  * 다시 펼치면 본문보다 꼬리말이 길어진다. 그런 화면에는 전화·안내 한 줄짜리 짧은 벌만 나간다.
- * 서버에서 둘 다 그리므로 자바스크립트가 늘지 않는다.
+ * 홈의 사업자 정보는 기본 HTML details로 접어 두므로 별도 자바스크립트가 필요 없다.
  */
 export function Footer() {
   const ordered = [...STORES].sort((a, b) => a.course.n - b.course.n);
@@ -36,6 +36,43 @@ export function Footer() {
           <Link href="/" className={styles.link}>참여 매장</Link>
         </nav>
         <p className={styles.shortWarn}>만 19세 미만에게는 주류를 판매하지 않습니다.</p>
+      </div>
+
+      <div className={styles.home}>
+        <div className={styles.homeHead}>
+          <Image className={styles.homeMark} src="/images/diamond/wordmark.png" alt={BRAND.name} width={900} height={162} sizes="(min-width: 960px) 180px, 140px" />
+          <nav className={styles.homeLinks} aria-label="하단 링크">
+            <Link href="/guide">이용 안내</Link>
+            <Link href="/wallet">쿠폰함</Link>
+          </nav>
+        </div>
+        <ul className={styles.homeTel} aria-label="매장 전화">
+          {tel.map((s) => (
+            <li key={s.id}>
+              <a href={`tel:${s.phone!.replace(/-/g, "")}`}>
+                <span>{s.shortName}</span>
+                <span className={styles.homeNumber}>{s.phone}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <details className={styles.homeBusiness}>
+          <summary>매장 및 사업자 정보</summary>
+          <ul className={styles.homeBusinessList}>
+            {ordered.map((s) => (
+              <li key={s.id}>
+                <strong>{s.name}</strong>
+                <span>{s.address}</span>
+                {s.bizNo && <span>사업자등록번호 {s.bizNo}</span>}
+              </li>
+            ))}
+          </ul>
+        </details>
+        <p className={styles.homeWarn}>지나친 음주는 뇌졸중, 기억력 손상이나 치매를 유발합니다. 임신 중 음주는 기형아 출생 위험을 높입니다. 만 19세 미만에게는 주류를 판매하지 않습니다.</p>
+        <div className={styles.homeBottom}>
+          <span>© 2026 {BRAND.name}</span>
+          <Link href="/admin/login">관리자</Link>
+        </div>
       </div>
 
       <div className={styles.full}>
