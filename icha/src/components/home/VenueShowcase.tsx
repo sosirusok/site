@@ -61,9 +61,11 @@ export function VenueShowcase({ venues }: { venues: Venue[] }) {
     if (event.key === "End") { event.preventDefault(); select(count - 1); }
   }
   function pointerStart(event: PointerEvent<HTMLDivElement>) {
+    swiped.current = false;
+    gesture.current = null;
+    if (event.target instanceof Element && event.target.closest("[data-carousel-controls]")) return;
     if (!event.isPrimary || event.pointerType === "mouse") return;
     setPlaying(false);
-    swiped.current = false;
     gesture.current = { x: event.clientX, y: event.clientY };
   }
   function pointerEnd(event: PointerEvent<HTMLDivElement>) {
@@ -80,28 +82,37 @@ export function VenueShowcase({ venues }: { venues: Venue[] }) {
   return (
     <div className={s.venueShowcase} role="region" aria-roledescription="캐러셀" aria-label="세 매장 사진과 혜택"
       onKeyDown={keyboard} onFocusCapture={event => {
-        if (!(event.target instanceof HTMLElement && event.target.closest("[data-play-control]"))) setPlaying(false);
+        if (!(event.target instanceof Element && event.target.closest("[data-play-control]"))) setPlaying(false);
       }}>
       <div className={s.carouselHeading}>
-        <button type="button" className={s.arrowButton} aria-label="이전 매장" onClick={() => select(selected - 1)}>←</button>
         <div className={s.nameWindow} aria-hidden="true">
           {venues.map((venue, index) => (
             <Image key={venue.id} src={TITLE_ART[venue.id].src} alt="" width={720} height={TITLE_ART[venue.id].height}
-              sizes="(min-width: 760px) 360px, 220px" className={s.animatedName} data-active={index === selected} />
+              sizes="(min-width: 760px) 340px, 260px" className={s.animatedName} data-active={index === selected} />
           ))}
         </div>
-        <button type="button" className={s.arrowButton} aria-label="다음 매장" onClick={() => select(selected + 1)}>→</button>
       </div>
+      <p className="sr-only" aria-live={playing ? "off" : "polite"} aria-atomic="true">{selected + 1} / {count} · {venues[selected]?.name}</p>
 
-      <div className={s.carouselMeta}>
-        <p aria-live={playing ? "off" : "polite"} aria-atomic="true">{selected + 1} / {count} <span>{venues[selected]?.shortName}</span></p>
-        {!reducedMotion && <button type="button" className={s.playButton} data-play-control aria-pressed={playing}
-          onClick={() => setPlaying(value => !value)}>{playing ? "Ⅱ 자동 넘김 멈춤" : "▷ 자동 넘김"}</button>}
-      </div>
-
-      <div ref={stage} className={s.venueStage} data-playing={canPlay} onPointerEnter={event => { if (event.pointerType === "mouse") setPlaying(false); }}
+      <div ref={stage} className={s.venueStage} data-playing={canPlay}
         onPointerDown={pointerStart} onPointerUp={pointerEnd} onPointerCancel={() => { gesture.current = null; }}
         onClickCapture={event => { if (swiped.current) { event.preventDefault(); event.stopPropagation(); swiped.current = false; } }}>
+        <div className={s.controlLayer}>
+          <div className={s.photoControls} data-carousel-controls role="group" aria-label="매장 사진 전환">
+            <button type="button" aria-label="이전 매장" onClick={() => select(selected - 1)}>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m14 6-6 6 6 6" /></svg>
+            </button>
+            <button type="button" aria-label="다음 매장" onClick={() => select(selected + 1)}>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m10 6 6 6-6 6" /></svg>
+            </button>
+            {!reducedMotion && <button type="button" data-play-control aria-label={playing ? "슬라이드 일시정지" : "슬라이드 재생"}
+              aria-pressed={playing} onClick={() => setPlaying(value => !value)}>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                {playing ? <path d="M9 6v12M15 6v12" /> : <path d="m9 5 10 7-10 7Z" />}
+              </svg>
+            </button>}
+          </div>
+        </div>
         {venues.map((venue, index) => (
           <article key={venue.id} id={`venue-panel-${venue.id}`} className={s.venuePanel} data-active={selected === index}
             data-store={venue.id} aria-hidden={selected !== index} inert={selected !== index}

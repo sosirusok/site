@@ -35,16 +35,11 @@ export function Hero({ rules }: { rules: Rules }) {
         ))}
       </nav>
       <div className={s.invitation}>
-        <div className={s.intro}>
-          <p className={s.location}>서면의 세 매장, 하나로 이어지는 혜택.</p>
+        <p className={s.location}>서면의 세 매장, 하나로 이어지는 혜택.</p>
+        <div className={s.details}>
           <p className={s.condition}>{ruleLine(rules)}</p>
-        </div>
-        <nav className={s.actions} aria-label="첫 화면 바로가기">
-          <a href="#stores" className={s.enter} aria-label="매장 둘러보기">
-            <Image src="/images/privilege/explore.webp" alt="" width={940} height={209} sizes="(min-width: 760px) 300px, (min-width: 390px) 340px, calc(100vw - 40px)" />
-          </a>
           <Link href="/guide" className={s.guide}>이용 안내 <span aria-hidden="true">↗</span></Link>
-        </nav>
+        </div>
       </div>
     </section>
   );

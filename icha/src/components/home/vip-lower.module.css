@@ -11,24 +11,20 @@
   line-height: 1.65;
 }
 .storeStories { padding: 32px max(16px, calc((100% - 1160px) / 2)) 56px; }
-.sectionHeading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 28px; padding-bottom: 20px; }
-.sectionIdentity { min-width: 0; }
-.collectionTitle, .benefitTitle, .directionsTitle { margin: 0; }
-.collectionTitle { width: min(100%, 210px); }
+.benefitTitle, .directionsTitle { margin: 0; }
 .directionsTitle { width: min(100%, 280px); }
 .titleArtwork { display: block; width: 100%; height: auto; }
-.sectionHeading > p { color: var(--soft); font-size: 16px; line-height: 1.6; }
 .venueShowcase { min-width: 0; }
-.carouselHeading { display: grid; grid-template-columns: 52px minmax(0, 1fr) 52px; align-items: center; gap: 10px; }
-.arrowButton { display: grid; place-items: center; width: 52px; height: 52px; border: 1px solid var(--edge); border-radius: 50%; background: rgba(15, 14, 17, .65); color: var(--paper); font: inherit; font-size: 27px; cursor: pointer; }
-.nameWindow { display: grid; align-items: center; justify-items: center; min-width: 0; min-height: 76px; overflow: hidden; }
-.animatedName { grid-area: 1 / 1; display: block; width: min(100%, 250px); height: auto; opacity: 0; transform: translate3d(24px, 0, 0); transition: opacity .55s ease, transform .65s cubic-bezier(.22, .61, .36, 1); }
+.carouselHeading { padding-block: 4px 18px; }
+.nameWindow { display: grid; align-items: center; justify-items: start; min-width: 0; min-height: 62px; overflow: hidden; }
+.animatedName { grid-area: 1 / 1; display: block; width: min(100%, 260px); height: auto; opacity: 0; transform: translate3d(24px, 0, 0); transition: opacity .55s ease, transform .65s cubic-bezier(.22, .61, .36, 1); }
 .animatedName[data-active="true"] { opacity: 1; transform: translate3d(0, 0, 0); }
-.carouselMeta { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 54px; padding-block: 4px 12px; }
-.carouselMeta p { display: flex; align-items: center; gap: 12px; font-size: 16px; color: var(--champagne); font-variant-numeric: tabular-nums; }
-.carouselMeta p > span { color: var(--paper); }
-.playButton { border: 0; padding: 8px 0 8px 8px; background: transparent; color: var(--soft); font: inherit; font-size: 16px; min-height: 52px; cursor: pointer; }
-.venueStage { display: grid; overflow: clip; touch-action: pan-y pinch-zoom; }
+.venueStage { position: relative; display: grid; overflow: clip; touch-action: pan-y pinch-zoom; }
+.controlLayer { grid-area: 1 / 1; display: grid; align-self: start; z-index: 2; pointer-events: none; }
+.photoControls { grid-column: 1; display: flex; align-items: center; justify-self: end; margin: 12px; padding: 0 4px; border: 1px solid rgba(255, 255, 255, .2); border-radius: 28px; background: rgba(8, 8, 10, .82); color: #fff; pointer-events: auto; }
+.photoControls button { display: grid; place-items: center; width: 44px; height: 48px; border: 0; border-radius: 50%; background: transparent; color: #fff; cursor: pointer; }
+.photoControls svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.photoControls button:focus-visible { outline-offset: -4px; }
 .venuePanel { grid-area: 1 / 1; display: grid; align-content: start; min-width: 0; opacity: 0; visibility: hidden; transform: translate3d(18px, 0, 0); pointer-events: none; transition: opacity .55s ease, transform .65s cubic-bezier(.22, .61, .36, 1), visibility 0s .65s; }
 .venuePanel[data-active="true"] { opacity: 1; visibility: visible; transform: translate3d(0, 0, 0); pointer-events: auto; transition-delay: 0s; }
 .photos { min-width: 0; }
@@ -54,8 +50,7 @@
 .venueNotice { font-size: 16px; color: var(--soft); }
 .venueActions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
 .venueActions a { display: flex; justify-content: center; align-items: center; gap: 12px; min-height: 56px; padding: 12px 8px; font-size: 17px; font-weight: 550; line-height: 1.45; text-decoration: none; text-align: center; }
-.mainAction { color: #15120f; background: #d8ccba url('/images/privilege/satin.webp') center / 100% 100%; }
-.secondaryAction { color: var(--paper); border: 1px solid #91816a; background: rgba(20, 18, 22, .55); }
+.mainAction, .secondaryAction { color: var(--paper); border-bottom: 1px solid #91816a; background: transparent; }
 .venueChoices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 28px; }
 .venueChoices button { position: relative; display: grid; gap: 12px; padding: 14px 0; min-width: 0; min-height: 58px; border: 0; background: transparent; color: var(--soft); font: inherit; font-size: 16px; font-weight: 500; cursor: pointer; white-space: nowrap; }
 .choiceLine { display: block; height: 3px; background: #50473b; }
@@ -96,15 +91,10 @@
 
 @media (min-width: 760px) {
   .storeStories { padding-top: 60px; padding-bottom: 70px; }
-  .sectionHeading { padding-bottom: 28px; }
-  .collectionTitle { width: 270px; }
-  .carouselHeading { grid-template-columns: 56px minmax(0, 1fr) 56px; gap: 24px; }
-  .arrowButton { width: 56px; height: 56px; }
-  .nameWindow { min-height: 108px; }
-  .animatedName { width: 360px; }
-  .carouselMeta { padding-bottom: 20px; }
-  .carouselMeta p, .playButton { font-size: 17px; }
-  .venuePanel { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 44px; }
+  .carouselHeading { padding-bottom: 24px; }
+  .nameWindow { min-height: 76px; }
+  .animatedName { width: 340px; }
+  .venuePanel, .controlLayer { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 44px; }
   .venuePhoto { aspect-ratio: 16 / 10; }
   .galleryFrame { aspect-ratio: 16 / 9; }
   .venueInformation { align-content: center; padding-top: 0; gap: 24px; }
@@ -117,7 +107,8 @@
   .directionsTitle { width: min(100%, 320px); }
 }
 @media (hover: hover) {
-  .arrowButton:hover, .secondaryAction:hover { background: #302922; }
+  .photoControls button:hover { background: rgba(255, 255, 255, .14); }
+  .mainAction:hover, .secondaryAction:hover { color: #fff; border-bottom-color: #fff; }
   .venueChoices button:hover { color: #fff; }
   .galleryItem:hover, .utilityAction:hover, .utilityHeading a:hover, .directionAction:hover, .searchAction:hover { color: #fff; }
 }

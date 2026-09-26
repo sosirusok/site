@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { nowText, openStatus } from "@/components/site/StoreHelpers";
 import type { Rules, StoreId } from "@/lib/config";
 import { placeLinks } from "@/lib/naver";
@@ -62,14 +61,7 @@ export function StoreCards({ now, rules, gifts }: { now: Date; rules: Rules; gif
   }));
   return (
     <section id="stores" className={s.storeStories} aria-labelledby="stores-title">
-      <div className={s.sectionHeading}>
-        <div className={s.sectionIdentity}>
-          <h2 id="stores-title" className={s.collectionTitle}>
-            <Image src="/images/privilege/collection-title.webp" alt="세 곳의 취향" width={720} height={155} sizes="(min-width: 760px) 230px, 190px" className={s.titleArtwork} />
-          </h2>
-        </div>
-        <p>서면, 걸어서 이어지는 세 매장</p>
-      </div>
+      <h2 id="stores-title" className="sr-only">참여 매장</h2>
       <VenueShowcase venues={venues} />
     </section>
   );
