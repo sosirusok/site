@@ -1,4 +1,12 @@
 /* Shared visual language for customer routes. Admin keeps its own variables. */
+/* The same photographed glass surface underpins artwork, content and footer. */
+.app:has([data-page="home"]) {
+  background-color: #0b0b0d;
+  background-image: linear-gradient(rgba(11, 11, 13, .64), rgba(11, 11, 13, .64)), url('/images/privilege/surface.webp');
+  background-position: center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
 body:has(.app) { background: #08080a; }
 .app {
   --bg: #08080a;
@@ -63,7 +71,7 @@ body:has(.app) { background: #08080a; }
 .app .section-head-no { color: #cec2a7; -webkit-text-stroke: 0; font-size: 24px; font-weight: 450; line-height: 1.2; }
 
 .app .btn { font-family: var(--font-sans); font-size: 15px; font-weight: 550; line-height: 1.4; letter-spacing: -.015em; filter: none; box-shadow: none; text-shadow: none; outline-offset: 3px; }
-.app :is(.btn-primary, .btn-brand) { color: #171614; background: #cec2a7 url('/images/diamond/plate.webp') center / 100% 100% no-repeat; border: 1px solid rgba(242, 232, 211, .25); }
+.app :is(.btn-primary, .btn-brand) { color: #171614; background: #cec2a7 url('/images/privilege/satin.webp') center / 100% 100% no-repeat; border: 1px solid rgba(242, 232, 211, .25); }
 .app :is(.btn-primary, .btn-brand):active { filter: none; transform: translateY(1px); background-color: #b8ad98; }
 .app .btn-primary.btn-lg,
 .app .btn-naver.btn-lg,
@@ -123,7 +131,7 @@ body:has(.app) { background: #08080a; }
 .app article[data-store] > p { background: #171719; border: 1px solid var(--line-2); }
 .app #book .torn-b4 { background: #19181c; color: var(--ink); padding-top: 14px; padding-bottom: 14px; }
 .app #howto .bignum { font-size: 28px; font-weight: 450; }
-.app #howto li p { font-weight: 500; }
+.app #howto li p { font-weight: 350; }
 .app #poster figure { border-width: 1px; border-color: var(--line-2); box-shadow: none; }
 .app main:has(#faq) > div > .torn-t { background: #141316; border-top: 1px solid var(--line-2); }
 .app main:has(#faq) > div > .torn-t > p { color: var(--ink); font-weight: 550; }

@@ -1,10 +1,11 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { BRAND, type Rules } from "@/lib/config";
 import { ruleLine, STEP_LINES } from "@/lib/copy";
 import s from "./home.module.css";
-import home from "./lower-home.module.css";
+import home from "./vip-lower.module.css";
 
 const STEP_SUB = ["앱도 사진도 필요 없습니다", "", "세 집 다 50m 안", ""] as const;
 
@@ -13,21 +14,26 @@ export function HowToSteps({ rules, compact = false }: { rules: Rules; compact?:
   if (compact) {
     return (
       <section id="howto" className={home.howto} aria-labelledby="howto-title">
-        <div className={home.utilityHeading}>
-          <h2 id="howto-title">쿠폰 이용 안내</h2>
-          <Link href="/guide">자세한 안내 <span aria-hidden="true">↗</span></Link>
-        </div>
-        <ol className={home.howSteps}>
-          {STEP_LINES.map((text, index) => (
-            <li key={text} className={home.howStep}>
-              <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-              <p>{text}</p>
-            </li>
-          ))}
-        </ol>
-        <div className={home.howBottom}>
-          <p className={home.howCondition}>{ruleLine(rules)} · {BRAND.condition}</p>
+        <div className={home.howIntro}>
+          <h2 id="howto-title" className={home.benefitTitle}>
+            <Image src="/images/privilege/benefit-title.webp" alt="다음 매장의 혜택" width={720} height={134} sizes="(min-width: 760px) 310px, 260px" className={home.titleArtwork} />
+          </h2>
+          <p className={home.howCondition}>{ruleLine(rules)}<br />{BRAND.condition}</p>
           <Link href="/wallet" className={home.utilityAction}>내 쿠폰함 <span aria-hidden="true">↗</span></Link>
+        </div>
+        <div className={home.howInstructions}>
+          <div className={home.utilityHeading}>
+            <p>쿠폰 이용 안내</p>
+            <Link href="/guide">자세히 보기 <span aria-hidden="true">↗</span></Link>
+          </div>
+          <ol className={home.howSteps}>
+            {STEP_LINES.map((text, index) => (
+              <li key={text} className={home.howStep}>
+                <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                <p>{text}</p>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
     );

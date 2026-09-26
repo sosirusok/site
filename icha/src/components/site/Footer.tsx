@@ -23,7 +23,7 @@ export function Footer() {
     <footer className={styles.footer}>
       {/* 짧은 벌 — 전화 세 곳과 안내 링크, 경고 한 줄 */}
       <div className={styles.short}>
-        <Image className={styles.shortMark} src="/images/afterdark/wordmark-header.png" alt={BRAND.name} width={900} height={210} sizes="132px" />
+        <Image className={styles.shortMark} src="/images/privilege/wordmark.png" alt={BRAND.name} width={720} height={245} sizes="132px" />
         <ul className={styles.shortTel}>
           {tel.map((s) => (
             <li key={s.id} data-store={s.id}>
@@ -40,7 +40,7 @@ export function Footer() {
 
       <div className={styles.home}>
         <div className={styles.homeHead}>
-          <Image className={styles.homeMark} src="/images/diamond/wordmark.png" alt={BRAND.name} width={900} height={162} sizes="(min-width: 960px) 180px, 140px" />
+          <Image className={styles.homeMark} src="/images/privilege/wordmark.png" alt={BRAND.name} width={720} height={245} sizes="(min-width: 960px) 180px, 140px" />
           <nav className={styles.homeLinks} aria-label="하단 링크">
             <Link href="/guide">이용 안내</Link>
             <Link href="/wallet">쿠폰함</Link>
@@ -77,7 +77,7 @@ export function Footer() {
 
       <div className={styles.full}>
       <div className={styles.head}>
-        <Image className={styles.mark} src="/images/afterdark/wordmark-header.png" alt={BRAND.name} width={900} height={210} sizes="148px" />
+        <Image className={styles.mark} src="/images/privilege/wordmark.png" alt={BRAND.name} width={720} height={245} sizes="148px" />
         <p className={styles.footerLine}>서면 세 곳 · 50m</p>
       </div>
       <ul className={styles.stores}>

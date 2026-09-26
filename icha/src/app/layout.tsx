@@ -16,7 +16,7 @@ const TITLE = `${BRAND.name} — ${BRAND.unionName}`;
 /** 검색·공유 미리보기 — 포스터의 규칙을 매장 안내문처럼 합니다체로 */
 const DESCRIPTION = "서면 50m 이내 3개 매장(도쿄스탠드·조선칼국수·와르르맨숀) 콜라보. 한 매장 계산 시 휴대폰 번호를 말씀하시면 쿠폰이 발급되고, 다른 매장에서 메인안주 1개 주문 시 매장별 특별 혜택을 드립니다.";
 /** 공유 미리보기 — 키트의 밤 술집 사진(1200x630, 카톡·네이버·트위터 큰 카드). 포스터 원본은 두 번째로 둔다 */
-const SHARE_IMAGE = { url: "/images/diamond/share.webp", width: 1200, height: 630, alt: `${BRAND.name} — ${BRAND.unionName}` };
+const SHARE_IMAGE = { url: "/images/privilege/share.webp", width: 1200, height: 630, alt: `${BRAND.name} — ${BRAND.unionName}` };
 const POSTER_IMAGE = { url: "/images/event/poster.jpg", width: 1080, height: 1350, alt: `${BRAND.name} 포스터 — ${BRAND.unionName}` };
 
 export const metadata: Metadata = {

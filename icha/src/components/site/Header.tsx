@@ -24,7 +24,7 @@ export function Header() {
     <header className={styles.header} data-home={isHome ? "true" : undefined}>
       <div className={styles.inner}>
         <Link href="/" className={styles.brand} aria-label={`${BRAND.name} 홈`}>
-          <Image src="/images/diamond/wordmark.png" alt="" aria-hidden="true" width={900} height={162} sizes="160px" className={styles.markImage} />
+          <Image src="/images/privilege/wordmark.png" alt="" aria-hidden="true" width={720} height={245} sizes="120px" loading="eager" className={styles.markImage} />
         </Link>
         <div className={styles.actions}>
           {!mounted ? null : isHome ? (

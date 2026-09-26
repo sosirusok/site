@@ -6,6 +6,11 @@ import styles from "./StoreHero.module.css";
 
 /** 술 종류의 영문 라벨 */
 const DRINK_EN: Record<string, string> = { 맥주: "BEER", 막걸리: "MAKGEOLLI", 소주: "SOJU" };
+const PHOTOS: Record<string, string> = {
+  tokyo: "/images/privilege/tokyo-photo.webp",
+  joseon: "/images/privilege/joseon-photo.webp",
+  wareureu: "/images/privilege/wareureu-photo.webp",
+};
 
 /** 홈과 같은 매장 아트워크에 실제 영업 정보와 이동 링크를 이어 붙인다. */
 export function StoreHero({ store }: { store: Store }) {
@@ -21,12 +26,11 @@ export function StoreHero({ store }: { store: Store }) {
 
   return (
     <header className={styles.hero}>
-      <h1 className="sr-only">{store.name}</h1>
       <div className={styles.shotWrap}>
-        <Image src={`/images/diamond/venue-${store.id}-v2.webp`} alt={`${store.shortName} 매장 아트워크`} fill loading="eager" fetchPriority="high" sizes="(min-width: 480px) 480px, 100vw" className={styles.shot} />
+        <Image src={PHOTOS[store.id] ?? PHOTOS.tokyo!} alt={`${store.shortName} 매장 모습`} fill loading="eager" fetchPriority="high" sizes="(min-width: 480px) 480px, 100vw" className={styles.shot} />
       </div>
       <div className={styles.identity}>
-        <p>{store.name}</p>
+        <h1>{store.name}</h1>
         <span>{String(store.course.n).padStart(2, "0")} · {DRINK_EN[store.drink] ?? store.drink}</span>
       </div>
 

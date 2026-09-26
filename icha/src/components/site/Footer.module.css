@@ -46,7 +46,7 @@
 :global(.app:has([data-page="home"])) .footer {
   padding: 28px var(--gutter) 16px;
   border-top-color: #29292d;
-  background: #08080a;
+  background: transparent;
   color: #a5a5ad;
 }
 

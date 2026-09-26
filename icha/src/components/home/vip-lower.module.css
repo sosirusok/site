@@ -1,0 +1,185 @@
+.storeStories,
+.howto,
+.mapSection {
+  --paper: #ddd8cb;
+  --soft: #aaa69d;
+  --edge: rgba(221, 216, 203, .11);
+  --champagne: #a99b7c;
+  color: var(--paper);
+  background: transparent;
+  scroll-margin-top: calc(var(--header-h, 64px) + 20px);
+  font-family: var(--font-sans);
+  font-weight: 350;
+  line-height: 1.75;
+}
+
+.storeStories {
+  padding: 62px max(24px, calc((100% - 1160px) / 2)) 64px;
+}
+
+.sectionHeading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px 32px;
+  padding-bottom: 28px;
+}
+
+.sectionIdentity { min-width: 0; }
+.collectionTitle,
+.benefitTitle,
+.directionsTitle { margin: 0; }
+.collectionTitle { width: min(100%, 190px); }
+.directionsTitle { width: min(100%, 240px); }
+.titleArtwork { display: block; width: 100%; height: auto; }
+.sectionHeading > p { margin-bottom: 11px; color: var(--soft); font-size: 12px; font-weight: 350; line-height: 1.75; }
+.venueShowcase { min-width: 0; }
+.venueTabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 25px; }
+.venueTabs button { position: relative; display: flex; align-items: center; justify-content: center; gap: 9px; min-height: 62px; padding: 12px 3px; border: 0; border-radius: 0; background: transparent; color: var(--soft); font: inherit; font-size: 12px; font-weight: 350; line-height: 1.75; cursor: pointer; transition: color .2s ease; }
+.venueTabs button::after { position: absolute; content: ""; right: 0; bottom: -1px; left: 0; height: 1px; background: var(--paper); transform: scaleX(0); transition: transform .3s ease; }
+.venueTabs button[aria-selected="true"] { color: var(--paper); }
+.venueTabs button[aria-selected="true"]::after { transform: scaleX(1); }
+.tabIndex { color: var(--champagne); font-family: inherit; font-size: 10px; font-weight: 350; font-variant-numeric: tabular-nums; }
+.tabLettering { display: block; width: clamp(68px, 22vw, 92px); height: auto; opacity: .82; transition: opacity .2s ease; }
+.venueTabs button[aria-selected="true"] .tabLettering { opacity: 1; }
+.tabArrow { display: none; }
+.venuePanel { display: grid; min-width: 0; animation: reveal .45s ease both; }
+.venuePanel[hidden] { display: none; }
+.venuePhoto { position: relative; display: block; min-width: 0; aspect-ratio: 16 / 10; overflow: hidden; background: #171612; }
+.venueImage { object-fit: cover; transition: transform .7s ease; }
+.venuePanel[data-store="tokyo"] .venueImage { object-position: 46% 46%; }
+.venuePanel[data-store="joseon"] .venueImage { object-position: 50% 54%; }
+.venuePanel[data-store="wareureu"] .venueImage { object-position: 50% 38%; }
+.venueInformation { display: flex; flex-direction: column; min-width: 0; padding: 27px 0 0; }
+.venueCategory { color: var(--soft); font-size: 11px; font-weight: 350; line-height: 1.75; }
+.venueCategory > span { padding: 0 8px; color: #635e54; }
+.venueHeading h3 { margin: 12px 0 15px; font-size: 27px; font-weight: 350; line-height: 1.5; letter-spacing: -.045em; word-break: keep-all; }
+.venueHeading h3 a { color: inherit; text-decoration: none; }
+.venueLettering { display: block; width: min(100%, 220px); height: auto; }
+.venueHours { display: flex; flex-wrap: wrap; column-gap: 12px; row-gap: 3px; color: var(--soft); font-size: 12px; font-weight: 350; line-height: 1.75; }
+.openState[data-open="true"] { color: var(--champagne); }
+.venueFacts { display: grid; gap: 14px; margin: 23px 0 0; padding-top: 8px; }
+.venueFacts > div { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 16px; align-items: baseline; font-size: 12px; line-height: 1.75; }
+.venueFacts dt { color: var(--soft); font-weight: 350; }
+.venueFacts dd { margin: 0; color: var(--paper); font-size: 13px; font-weight: 350; word-break: keep-all; overflow-wrap: anywhere; }
+.venueActions { display: flex; align-items: center; flex-wrap: wrap; gap: 0 34px; margin-top: 16px; }
+.venueActions a,
+.utilityHeading a,
+.utilityAction,
+.directionAction,
+.searchAction { display: inline-flex; justify-content: space-between; align-items: center; gap: 17px; min-height: 44px; color: var(--paper); font-size: 12px; font-weight: 350; line-height: 1.75; text-decoration: none; text-underline-offset: 5px; }
+.venueActions a > span,
+.utilityHeading a > span,
+.utilityAction > span,
+.directionAction > span,
+.searchAction > span { color: var(--champagne); font-size: 16px; font-weight: 300; }
+.storeStories a:focus-visible,
+.venueTabs button:focus-visible,
+.venuePanel:focus-visible,
+.howto a:focus-visible,
+.mapSection a:focus-visible,
+.mapSection summary:focus-visible { outline: 2px solid var(--champagne); outline-offset: 5px; }
+
+.howto { display: grid; gap: 38px; padding: 50px max(24px, calc((100% - 1160px) / 2)) 58px; }
+.howIntro { align-content: start; display: grid; justify-items: start; }
+.howIntro .benefitTitle { margin: 0 0 24px; width: min(100%, 260px); }
+.howCondition { color: var(--soft); font-size: 12px; font-weight: 350; line-height: 1.75; word-break: keep-all; }
+.utilityAction { min-width: 156px; margin-top: 20px; padding: 0 0 3px; }
+.howInstructions { min-width: 0; }
+.utilityHeading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 24px; margin-bottom: 10px; }
+.utilityHeading > p { color: var(--paper); font-size: 13px; font-weight: 400; line-height: 1.75; }
+.utilityHeading a { color: var(--soft); }
+.howSteps { display: grid; margin: 0; padding: 0; list-style: none; }
+.howStep { display: grid; grid-template-columns: 30px minmax(0, 1fr); align-items: center; gap: 22px; min-height: 63px; padding: 14px 0; border-bottom: 1px solid var(--edge); }
+.howStep > span { color: var(--champagne); font-family: inherit; font-size: 11px; font-weight: 350; line-height: 1.75; font-variant-numeric: tabular-nums; }
+.howStep:last-child { border-bottom: 0; }
+.howStep p { color: var(--paper); font-size: 13px; line-height: 1.75; font-weight: 350; word-break: keep-all; }
+
+.mapSection { display: grid; gap: 30px; padding: 54px max(24px, calc((100% - 1160px) / 2)) 62px; }
+.mapHeading { display: grid; align-content: start; justify-items: start; gap: 13px; }
+.mapHeading > p { color: var(--soft); font-size: 12px; font-weight: 350; line-height: 1.75; }
+.directionSide { display: grid; align-content: start; gap: 15px; min-width: 0; }
+.addrs { display: grid; margin: 0; padding: 0; list-style: none; }
+.addr { border-bottom: 1px solid var(--edge); }
+.addressDetails summary { display: flex; justify-content: space-between; align-items: center; gap: 24px; min-height: 64px; cursor: pointer; list-style: none; }
+.addressDetails summary::-webkit-details-marker { display: none; }
+.addrName { color: var(--paper); font-size: 14px; font-weight: 350; line-height: 1.75; }
+.expandMark { position: relative; flex: none; width: 14px; height: 14px; }
+.expandMark::before,
+.expandMark::after { position: absolute; content: ""; background: var(--champagne); }
+.expandMark::before { top: 6px; left: 0; width: 14px; height: 1px; }
+.expandMark::after { top: 0; left: 6px; width: 1px; height: 14px; }
+.addressDetails[open] .expandMark::after { display: none; }
+.addrBody { display: flex; align-items: end; justify-content: space-between; flex-wrap: wrap; gap: 10px 24px; padding: 0 0 19px; }
+.addrSub { color: var(--soft); font-size: 12px; font-weight: 350; line-height: 1.75; word-break: keep-all; }
+.directionAction { flex: none; }
+.searchAction { justify-self: start; color: var(--soft); }
+
+@media (min-width: 600px) {
+  .storeStories { padding-top: 78px; padding-bottom: 78px; }
+  .venueTabs button { justify-content: start; gap: 17px; padding: 17px 18px; font-size: 15px; }
+  .tabArrow { display: inline; margin-left: auto; color: var(--champagne); }
+  .venueInformation { padding-top: 33px; }
+  .howto, .mapSection { padding-top: 68px; padding-bottom: 72px; }
+}
+
+@media (min-width: 760px) {
+  .collectionTitle { width: 230px; }
+  .howIntro .benefitTitle { width: min(100%, 310px); }
+  .directionsTitle { width: min(100%, 285px); }
+  .venuePanel { grid-template-columns: minmax(0, 1.45fr) minmax(270px, 1fr); }
+  .venuePhoto { min-height: 380px; aspect-ratio: auto; }
+  .venueInformation { justify-content: center; padding: 32px 0 32px clamp(25px, 4vw, 62px); }
+  .venueHeading h3 { font-size: 29px; }
+  .venueFacts > div { grid-template-columns: 1fr; gap: 5px; }
+  .venueActions { gap: 0 24px; margin-top: 22px; }
+}
+
+@media (min-width: 960px) {
+  .storeStories { padding-top: 96px; padding-bottom: 100px; }
+  .sectionHeading { padding-bottom: 35px; }
+  .venueTabs { margin-bottom: 35px; }
+  .venueTabs button { min-height: 76px; font-size: 16px; }
+  .venuePhoto { min-height: 450px; }
+  .venueHeading h3 { font-size: 34px; }
+  .venueLettering { width: min(100%, 255px); }
+  .venueFacts { margin-top: 29px; padding-top: 10px; }
+  .venueActions { margin-top: 30px; }
+  .howto { grid-template-columns: minmax(270px, .9fr) minmax(0, 1.1fr); column-gap: 100px; padding-top: 80px; padding-bottom: 85px; }
+  .howInstructions { align-self: center; }
+  .mapSection { grid-template-columns: minmax(270px, .9fr) minmax(0, 1.1fr); column-gap: 100px; padding-top: 80px; padding-bottom: 85px; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .venuePhoto:hover .venueImage { transform: scale(1.035); }
+  .venueTabs button:hover { color: #f3eee3; }
+  .venueHeading h3 a:hover,
+  .venueActions a:hover,
+  .utilityHeading a:hover,
+  .utilityAction:hover,
+  .directionAction:hover,
+  .searchAction:hover { color: #f3eee3; text-decoration: underline; }
+  .addressDetails summary:hover .addrName { color: #f3eee3; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .venueImage, .venueTabs button, .venueTabs button::after, .tabLettering { transition: none; }
+  .venuePanel { animation: none; }
+  .venuePhoto:hover .venueImage { transform: none; }
+}
+
+@keyframes reveal { from { opacity: .65; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Information remains readable against the same low-key photographic surface. */
+.sectionHeading > p, .venueCategory, .venueHours, .venueFacts > div,
+.venueFacts dd, .venueActions a, .utilityHeading a, .utilityAction,
+.directionAction, .searchAction, .howCondition, .howStep p,
+.mapHeading > p, .addrSub { font-size: 14px; }
+.venueTabs { grid-template-columns: repeat(3, minmax(112px, 1fr)); overflow-x: auto; scrollbar-width: thin; }
+.venueTabs button { gap: 5px; }
+.venueTabs button img { width: 100px; }
+.venuePanel[data-store] .venueImage { object-position: 50% 50%; }
+@media (min-width: 760px) {
+  .venueTabs button img { width: 160px; }
+}

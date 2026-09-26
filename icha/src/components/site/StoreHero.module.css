@@ -1,9 +1,9 @@
 .hero { display: grid; background: #08080a; }
-.shotWrap { position: relative; aspect-ratio: 3 / 4; overflow: hidden; background: #08080a; }
-.shot { object-fit: contain; }
+.shotWrap { position: relative; aspect-ratio: 5 / 4; overflow: hidden; background: #08080a; }
+.shot { object-fit: cover; }
 
 .identity { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 16px; padding: 20px var(--gutter) 16px; }
-.identity p { color: #e9e6e1; font-size: 14px; font-weight: 550; line-height: 1.5; }
+.identity h1 { color: #e9e6e1; font-size: 25px; font-weight: 450; line-height: 1.5; letter-spacing: -.04em; }
 .identity > span { color: #aaa5ad; font-size: 12px; line-height: 1.5; letter-spacing: .06em; }
 
 .statusBar { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; margin: 0 var(--gutter); padding: 14px 0; border-top: 1px solid rgba(233, 226, 239, .17); border-bottom: 1px solid rgba(233, 226, 239, .17); font-size: 13px; line-height: 1.5; }
