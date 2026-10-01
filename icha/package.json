@@ -9,7 +9,7 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "test": "node --import tsx --test src/**/*.test.ts",
+    "test": "node --import tsx --test \"src/**/*.test.ts\"",
     "seed": "tsx scripts/seed.ts",
     "admin:create": "tsx scripts/create-admin.ts",
     "kit": "node scripts/kit-manifest.mjs && node scripts/kit-icons.mjs && node scripts/kit-variants.mjs && node scripts/print-kit.mjs",

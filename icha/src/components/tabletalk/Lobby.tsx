@@ -93,7 +93,7 @@ export function Lobby({
       {(state.joins.length > 0 || state.asks.length > 0) && (
         <div className={s.slabs} aria-live="polite">
           {state.joins.map((j) => (
-            <div key={j.id} className={`${s.slab} ${s.slabCyan}`}>
+            <div key={j.id} className={`${s.slab} ${s.slabLav}`}>
               <span className={s.slabNo} aria-hidden="true">{state.table}</span>
               <div className={s.slabText}>
                 <span className={s.slabTitle}>새 폰 한 대가 우리 테이블로 들어오려고 합니다</span>

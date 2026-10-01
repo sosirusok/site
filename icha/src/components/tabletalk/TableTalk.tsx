@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo } from "react";
 import { BRAND } from "@/lib/config";
@@ -115,8 +116,7 @@ export function TableTalk({ entry }: { entry: Entry }) {
       {!room && (
         <header className={s.top}>
           <Link href="/" className={s.brand} aria-label={`${BRAND.name} 홈`}>
-            <span className={s.mark}>{BRAND.name}</span>
-            <span className={s.markEn} aria-hidden="true">TABLE TALK</span>
+            <Image src="/images/privilege/wordmark.png" alt="" aria-hidden="true" width={720} height={245} sizes="104px" loading="eager" className={s.brandImg} />
           </Link>
           {table != null && (
             <span className={s.where}>

@@ -46,7 +46,7 @@ export function JoinScreen({ entry, onJoin }: { entry: JoinEntry; onJoin: (mode:
       <Plate table={entry.table} />
       {notice && <p className={s.note}>{notice}</p>}
       {entry.elsewhere && (
-        <p className={`${s.note} ${s.noteCyan}`}>
+        <p className={`${s.note} ${s.noteGold}`}>
           이 폰은 지금 {entry.elsewhere.storeName} {entry.elsewhere.table}번 테이블에 들어가 있습니다. 여기로 들어오면 거기서는 나가집니다.
         </p>
       )}
