@@ -14,7 +14,7 @@ import s from "./tt.module.css";
  * 테이블톡 한 화면 — 입장 → (허락 대기) → 번호판 ↔ 대화방.
  * 대화방은 브라우저 뒤로 가기로도 닫힌다(대화방을 열 때 기록을 하나 쌓는다).
  */
-export function TableTalk({ entry }: { entry: Entry }) {
+export function TableTalk({ entry, pickable = false }: { entry: Entry; pickable?: boolean }) {
   const tt = useTableTalk(entry.kind === "in" ? entry.sync : null);
   const { phase, msgs, pending, closed, offline, toast, openRoom, readUpTo, op, sendText, dropPending, setOpenRoom, markRead, showToast } = tt;
   const code = entry.kind === "join" || entry.kind === "in" ? entry.code : "";
@@ -68,8 +68,8 @@ export function TableTalk({ entry }: { entry: Entry }) {
   const join = (mode: JoinMode) => op("join", { code, mode });
 
   const storeId = state?.store ?? (entry.kind === "join" ? entry.store : phase.kind === "waiting" ? phase.store : undefined);
-  const storeName = state?.storeName ?? (entry.kind === "join" || entry.kind === "off" || entry.kind === "locked" ? entry.storeName : phase.kind === "waiting" ? phase.storeName : "");
-  const table = state?.table ?? (entry.kind === "join" || entry.kind === "locked" ? entry.table : phase.kind === "waiting" ? phase.table : null);
+  const storeName = state?.storeName ?? (entry.kind === "join" || entry.kind === "off" || entry.kind === "locked" || entry.kind === "qronly" ? entry.storeName : phase.kind === "waiting" ? phase.storeName : "");
+  const table = state?.table ?? (entry.kind === "join" || entry.kind === "locked" || entry.kind === "qronly" ? entry.table : phase.kind === "waiting" ? phase.table : null);
 
   let body: React.ReactNode;
   if (phase.kind === "app" && state) {
@@ -103,15 +103,23 @@ export function TableTalk({ entry }: { entry: Entry }) {
       />
     );
   } else if (phase.kind === "out") {
-    body = <NoticeScreen kicker={storeName} title={phase.why === "self" || phase.why === "team" ? "테이블톡에서 나왔습니다" : "대화가 닫혔습니다"} why={phase.why} again={!!code} pick />;
+    // 직원이 닫았거나 막았거나 가게가 껐으면 다른 번호를 고르라고 하지 않는다
+    const pick = pickable && phase.why !== "off" && phase.why !== "locked" && phase.why !== "staff";
+    body = <NoticeScreen kicker={storeName} title={phase.why === "self" || phase.why === "team" ? "테이블톡에서 나왔습니다" : "대화가 닫혔습니다"} why={phase.why} again={!!code} pick={pick} />;
   } else if (entry.kind === "join") {
     body = <JoinScreen entry={entry} onJoin={join} />;
   } else if (entry.kind === "off") {
     body = <NoticeScreen kicker={entry.storeName} title="지금은 테이블톡을 쓰지 않습니다" text="이 가게는 테이블톡을 꺼 두었습니다." />;
+  } else if (entry.kind === "qronly") {
+    body = <NoticeScreen kicker={entry.storeName} title="테이블 QR 로 들어갑니다" text={`이 가게는 테이블에 붙은 테이블톡 QR 을 찍어 들어갑니다. ${entry.table}번 테이블의 QR 을 찍어 주세요.`} />;
   } else if (entry.kind === "locked") {
     body = <NoticeScreen kicker={entry.storeName} title={`${entry.table}번 테이블은 오늘 테이블톡을 쓸 수 없습니다`} text="직원에게 말씀해 주세요." />;
   } else {
-    body = <NoticeScreen title="QR 이 맞지 않습니다" text="테이블에 붙은 QR 을 다시 찍거나, 사이트 [테이블톡]에서 테이블 번호를 골라 주세요." pick />;
+    body = pickable ? (
+      <NoticeScreen title="QR 이 맞지 않습니다" text="테이블에 붙은 QR 을 다시 찍거나, 사이트 [테이블톡]에서 테이블 번호를 골라 주세요." pick />
+    ) : (
+      <NoticeScreen title="QR 이 맞지 않습니다" text="테이블에 붙은 QR 을 다시 찍어 주세요. 사진으로 받은 QR 은 열리지 않을 수 있습니다." />
+    );
   }
 
   return (

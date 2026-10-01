@@ -55,6 +55,15 @@ async function main() {
   sa = await state(a.dev);
   assert.equal(tile(sa, 7), "on", "7번에 불이 들어온다");
 
+  // ── 사이트에서 번호로 온 폰: 열린 자리에는 5분 안이어도 허락을 받는다. 빈 테이블은 바로 연다
+  const p7 = await join({ ...T7, via: "pick" }, "team", null);
+  assert.equal(p7.status, "wait", "번호로 온 폰은 허락 대기");
+  assert.equal((await state(c.dev)).joins.length, 1, "먼저 들어간 폰에 허락 요청");
+  await admit(c.dev, p7.dev, false);
+  const p8 = await join({ store: "tokyo", table: 8, via: "pick" }, "start", null);
+  assert.equal(p8.status, "in", "빈 테이블은 번호로도 바로 연다");
+  await leaveDevice(p8.dev);
+
   // ── 사이트 [테이블톡] 탭: 켜진 테이블과 이 폰이 있는 테이블
   assert.equal((await getTTSettings(true)).tokyo.pick, true, "번호로 들어오기는 기본으로 켜짐");
   assert.deepEqual((await storeTables("tokyo")).live.sort((x, y) => x - y), [3, 7]);
@@ -62,6 +71,7 @@ async function main() {
   assert.equal(await currentTable(null), null);
 
   // 변경 번호가 같으면 한 줄로 끝난다
+  sa = await state(a.dev);
   const same = await sync(a.dev, sa.v, 0);
   assert.equal(same.kind, "same");
 
@@ -168,6 +178,7 @@ async function main() {
   await query(`update tt_seats set seen_at = now() - interval '11 minutes' where store_id='tokyo' and table_no=3 and status='on'`);
   await rejects(join(T3, "fresh", null), "busy");
   await query(`update tt_seats set seen_at = now() - interval '21 minutes' where store_id='tokyo' and table_no=3 and status='on'`);
+  await rejects(join({ ...T3, via: "pick" }, "fresh", null), "busy");
   const newGroup = await join(T3, "fresh", null);
   assert.equal(newGroup.status, "in");
   assert.deepEqual(await sync(a.dev, -1, 0), { kind: "out", why: "new" }, "이전 일행 폰은 나가진다");
@@ -186,6 +197,10 @@ async function main() {
   // ── 마지막 폰이 나가면 자리도 끝난다
   await leaveDevice(e9.dev);
   assert.equal(tile(await state(c.dev), 11), "empty");
+
+  // ── 3시간 아무도 안 본 자리는 정리 전이어도 번호 고르는 화면에서 켜짐이 아니다
+  await query(`update tt_seats set seen_at = now() - interval '4 hours' where store_id='tokyo' and table_no=12 and status='on'`);
+  assert.ok(!(await storeTables("tokyo")).live.includes(12));
 
   // ── 직원: 잠그기 → 그 테이블은 못 들어오고, 열린 자리는 비워진다
   await adminLock("tokyo", 7, true, "owner");

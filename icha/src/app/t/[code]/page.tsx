@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { TableTalk } from "@/components/tabletalk/TableTalk";
-import { parseTableCode } from "@/lib/tabletalk/code";
+import { STORE_IDS } from "@/lib/config";
+import { parseTableCode, storeOfCode } from "@/lib/tabletalk/code";
 import { readDev } from "@/lib/tabletalk/cookie";
 import { entryInfo, sync } from "@/lib/tabletalk/service";
 import { getTTSettings } from "@/lib/tabletalk/settings";
@@ -26,13 +27,19 @@ export default async function TableTalkPage({ params }: { params: Promise<{ code
   const { code } = await params;
   await countHit();
   const settings = await getTTSettings();
-  const ref = parseTableCode(decodeURIComponent(code), (s) => settings[s].gen);
+  const raw = decodeURIComponent(code);
+  const ref = parseTableCode(raw, (s) => settings[s].gen);
   let entry: Entry = { kind: "bad" };
   if (ref) {
     const info = await entryInfo(ref, await readDev());
+    // 이미 들어와 있는 폰은 어느 주소로 와도 이어서 본다. 번호로 받은 주소로 새로 들어오는 것만 사장님 설정을 따른다
     if (info.kind === "in") entry = { kind: "in", code, sync: await withPace(await sync(info.dev, -1, 0)) };
+    else if (info.kind === "join" && ref.via === "pick" && !settings[ref.store].pick) entry = { kind: "qronly", storeName: info.storeName, table: ref.table };
     else if (info.kind === "join") entry = { kind: "join", code, store: ref.store, table: ref.table, storeName: info.storeName, existing: info.existing, elsewhere: info.elsewhere, why: info.why };
     else entry = info;
   }
-  return <TableTalk entry={entry} />;
+  // 안내 화면의 [테이블 번호로 들어가기]는 그 가게(모르면 아무 가게나)가 번호로 들어오기를 받을 때만
+  const st = ref?.store ?? storeOfCode(raw);
+  const pickable = st ? settings[st].on && settings[st].pick : STORE_IDS.some((id) => settings[id].on && settings[id].pick);
+  return <TableTalk entry={entry} pickable={pickable} />;
 }

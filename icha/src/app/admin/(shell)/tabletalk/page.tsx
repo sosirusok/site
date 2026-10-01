@@ -44,7 +44,9 @@ export default async function TableTalkAdminPage({ searchParams }: { searchParam
           ))}
         </div>
       )}
+      {/* 매장 탭은 같은 페이지 안 이동이라 폼이 그대로 남는다 — 매장마다 새로 그려 다른 매장 설정이 섞여 저장되지 않게 */}
       <TableTalkAdmin
+        key={store}
         store={store}
         storeName={getStore(store)?.shortName ?? store}
         seats={view.seats}

@@ -109,7 +109,8 @@
 /* 번호판 — 테이블에 붙은 번호 그대로 */
 .grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; padding: 0 var(--gutter); }
 .tile {
-  position: relative; aspect-ratio: 1 / 1; min-height: 58px;
+  /* 높이는 aspect-ratio 로만 — min-height 를 주면 그만큼 폭도 늘어 320px 폰에서 칸이 겹친다(그래도 49px 이상) */
+  position: relative; aspect-ratio: 1 / 1;
   display: grid; place-content: center; justify-items: center; gap: 4px;
   border: 1px solid transparent; font-size: 25px; font-weight: 300; line-height: 0.95; letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums; -webkit-tap-highlight-color: transparent;

@@ -73,6 +73,7 @@ export async function POST(req: Request) {
       const settings = await getTTSettings();
       const ref = typeof body.code === "string" ? parseTableCode(body.code, (s) => settings[s].gen) : null;
       if (!ref) throw new TTError("QR 이 맞지 않습니다. 테이블에 붙은 QR 을 다시 찍어 주세요.", 400, "badqr");
+      if (ref.via === "pick" && !settings[ref.store].pick) throw new TTError("이 가게는 테이블에 붙은 테이블톡 QR 을 찍어 들어갑니다.", 403, "qronly");
       const mode: JoinMode = body.mode === "team" || body.mode === "fresh" ? body.mode : "start";
       // 거절당하고 또 누르는 걸 끝없이 받지 않는다 — 같은 테이블로 10분에 6번
       if (mode !== "start" && !(await rateLimit(`tt-join-team:${clientIp(req)}:${ref.store}:${ref.table}`, 6, 600))) {

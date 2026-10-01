@@ -38,6 +38,8 @@ export const FRESH_JOIN_MS = Number(process.env.TT_FRESH_JOIN_MS) > 0 ? Number(p
  * 폰을 주머니에 넣고 마시는 일행을, 테이블 주소를 가진 다른 사람이 밀어내지 못할 만큼 길게
  */
 export const QUIET_FOR_NEW_MS = 20 * 60_000;
+/** 사이트에서 번호를 골라 온 폰의 [방금 앉았습니다] — 그 주소는 가게 밖에서도 받을 수 있어 훨씬 오래 조용해야 한다 */
+export const PICK_QUIET_FOR_NEW_MS = 60 * 60_000;
 const IDLE_END = "3 hours";
 const ASK_TTL = "10 minutes";
 const JOIN_TTL = "5 minutes";
@@ -255,6 +257,8 @@ export type JoinResult = { dev: string; status: "in" | "wait" };
  *  start  — 열린 자리가 없다고 보고 누른 [테이블톡 시작]. 그사이 일행이 먼저 열었으면(5분 안) 그 자리로 들어간다
  *  team   — [일행으로 들어가기]. 5분 안이면 바로, 아니면 허락 대기
  *  fresh  — [방금 앉았습니다]. 이전 자리 폰들이 20분 넘게 안 봤을 때만 이전 자리를 닫고 새로 연다
+ * 사이트에서 번호를 골라 온 폰(ref.via = "pick")은 테이블에 앉았다는 증거가 없다 — 열린 자리에는 언제나 허락을 받아 들어가고,
+ * [방금 앉았습니다]는 60분 조용해야 된다. 빈 테이블을 여는 것은 같다.
  */
 export async function join(ref: TableRef, mode: JoinMode, oldDev: string | null, now: Date = new Date()): Promise<JoinResult> {
   const settings = await getTTSettings();
@@ -262,6 +266,7 @@ export async function join(ref: TableRef, mode: JoinMode, oldDev: string | null,
   const day = serviceDay(now);
   const first = oldDev ? await loadDev(oldDev) : null;
 
+  const picked = ref.via === "pick";
   return tx(async (q) => {
     // 이 매장(과, 다른 매장 테이블에서 옮겨 오는 폰이면 그 매장)을 잠근 뒤 폰을 다시 읽는다
     await lockStores(q, ref.store, ...(first ? [first.store] : []));
@@ -279,13 +284,18 @@ export async function join(ref: TableRef, mode: JoinMode, oldDev: string | null,
     let opened = false;
 
     if (seat && mode === "fresh") {
-      if (now.getTime() - asDate(seat.seen_at).getTime() < QUIET_FOR_NEW_MS) {
-        throw new TTError("이 테이블의 이전 대화를 20분 안에 본 폰이 있어 아직 새로 시작할 수 없습니다. 같은 일행이면 [일행으로 들어가기], 아니면 직원에게 비워 달라고 말씀해 주세요.", 409, "busy");
+      const quietFor = picked ? PICK_QUIET_FOR_NEW_MS : QUIET_FOR_NEW_MS;
+      if (now.getTime() - asDate(seat.seen_at).getTime() < quietFor) {
+        throw new TTError(
+          `이 테이블의 이전 대화를 ${quietFor / 60_000}분 안에 본 폰이 있어 아직 새로 시작할 수 없습니다. 같은 일행이면 [일행으로 들어가기], 아니면 직원에게 비워 달라고 말씀해 주세요.`,
+          409,
+          "busy",
+        );
       }
       await endSeats(q, [seat.id], "new");
       seat = null;
     } else if (seat) {
-      const young = now.getTime() - asDate(seat.started_at).getTime() < FRESH_JOIN_MS;
+      const young = !picked && now.getTime() - asDate(seat.started_at).getTime() < FRESH_JOIN_MS;
       if (!young && mode === "start") throw new TTError("이 테이블에 이미 테이블톡을 쓰는 일행이 있습니다.", 409, "exists");
       status = young ? "in" : "wait";
     }
@@ -299,7 +309,8 @@ export async function join(ref: TableRef, mode: JoinMode, oldDev: string | null,
       seat = made[0] ?? (await liveSeatAt(q, ref.store, ref.table, day, true));
       if (!seat) throw new TTError("잠시 후 다시 시도해 주세요.", 503, "retry");
       opened = !!made[0];
-      status = "in";
+      // 번호로 온 폰이 남이 막 연 자리에 붙게 됐으면 허락을 받는다
+      status = opened || !picked ? "in" : "wait";
     }
 
     const dev = await q.query<{ id: string }>(`insert into tt_devs (seat_id, status) values ($1, $2) returning id`, [seat.id, status]);
@@ -339,8 +350,9 @@ export async function entryInfo(ref: TableRef, dev: string | null, now: Date = n
     existing: seat
       ? {
           since: iso(seat.started_at),
-          fresh: now.getTime() - asDate(seat.started_at).getTime() < FRESH_JOIN_MS,
-          quiet: now.getTime() - asDate(seat.seen_at).getTime() >= QUIET_FOR_NEW_MS,
+          // 번호로 온 폰은 5분 안이어도 허락을 받는다(join 과 같은 규칙)
+          fresh: ref.via !== "pick" && now.getTime() - asDate(seat.started_at).getTime() < FRESH_JOIN_MS,
+          quiet: now.getTime() - asDate(seat.seen_at).getTime() >= (ref.via === "pick" ? PICK_QUIET_FOR_NEW_MS : QUIET_FOR_NEW_MS),
         }
       : null,
     elsewhere: c && !why ? { storeName: getStore(c.store)?.shortName ?? "", table: c.table } : null,
@@ -359,7 +371,11 @@ export async function currentTable(dev: string | null, now: Date = new Date()): 
 export async function storeTables(store: StoreId, now: Date = new Date()): Promise<{ live: number[]; locked: number[] }> {
   const day = serviceDay(now);
   const [live, locked] = await Promise.all([
-    query<{ table_no: number }>(`select table_no from tt_seats where store_id=$1 and status='on' and day=$2::date`, [store, day]),
+    // 3시간 아무도 안 본 자리는 정리만 안 됐을 뿐 끝난 자리다 — 켜짐으로 보이지 않게(정리 규칙과 같은 기준)
+    query<{ table_no: number }>(
+      `select table_no from tt_seats where store_id=$1 and status='on' and day=$2::date and seen_at > now() - interval '${IDLE_END}'`,
+      [store, day],
+    ),
     query<{ table_no: number }>(`select table_no from tt_locks where store_id=$1 and day=$2::date`, [store, day]),
   ]);
   return { live: live.map((r) => Number(r.table_no)), locked: locked.map((r) => Number(r.table_no)) };

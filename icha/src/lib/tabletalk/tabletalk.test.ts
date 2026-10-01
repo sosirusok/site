@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { parseTableCode, serviceDay, serviceDayEndsAt, tableCode } from "./code";
+import { parseTableCode, pickCode, serviceDay, serviceDayEndsAt, storeOfCode, tableCode } from "./code";
 import { paceFor, pollDelay } from "./pace";
 import { cleanMessage, cleanNonce, cleanNote, MSG_MAX } from "./text";
 import { hhmm } from "../../components/tabletalk/words";
@@ -10,8 +10,8 @@ const gen1 = () => 1;
 test("테이블 QR 주소는 서명이 맞아야 열린다", () => {
   const code = tableCode("tokyo", 7, 1);
   assert.match(code, /^tokyo-7-[0-9a-z]{6}$/);
-  assert.deepEqual(parseTableCode(code, gen1), { store: "tokyo", table: 7 });
-  assert.deepEqual(parseTableCode(code.toUpperCase(), gen1), { store: "tokyo", table: 7 }, "대문자로 옮겨 적어도");
+  assert.deepEqual(parseTableCode(code, gen1), { store: "tokyo", table: 7, via: "qr" });
+  assert.deepEqual(parseTableCode(code.toUpperCase(), gen1), { store: "tokyo", table: 7, via: "qr" }, "대문자로 옮겨 적어도");
   // 번호만 바꾸면 서명이 안 맞는다 — 한 테이블 QR 로 다른 테이블 주소를 지어낼 수 없다
   const forged = code.replace("tokyo-7-", "tokyo-8-");
   assert.equal(parseTableCode(forged, gen1), null);
@@ -79,4 +79,27 @@ test("시각은 서버(UTC)에서 그려도 한국 시간 — 폰과 같은 글�
   assert.equal(hhmm("2026-10-01T14:05:00.000Z"), "23:05");
   assert.equal(hhmm("2026-10-01T15:30:00.000Z"), "00:30");
   assert.equal(hhmm("2026-10-01T03:00:00.000Z"), "12:00");
+});
+
+test("사이트에서 번호로 받은 주소는 테이블 QR 과 서명이 따로다", () => {
+  const qr = tableCode("tokyo", 7, 1);
+  const pick = pickCode("tokyo", 7, 1);
+  assert.match(pick, /^tokyo-7-n[0-9a-z]{6}$/);
+  assert.deepEqual(parseTableCode(pick, gen1), { store: "tokyo", table: 7, via: "pick" });
+  // 서로 서명을 옮겨 붙여도 안 열린다
+  const qrSig = qr.split("-")[2]!;
+  const pickSig = pick.split("-")[2]!.slice(1);
+  assert.notEqual(qrSig, pickSig);
+  assert.equal(parseTableCode(`tokyo-7-n${qrSig}`, gen1), null);
+  assert.equal(parseTableCode(`tokyo-7-${pickSig}`, gen1), null);
+  // 판을 올리면 번호 주소도 바뀐다
+  assert.equal(parseTableCode(pick, () => 2), null);
+  // QR 서명이 n 으로 시작해도 QR 로 읽힌다(길이로 갈림)
+  for (let t = 1; t <= 99; t++) {
+    const c = tableCode("joseon", t, 1);
+    assert.equal(parseTableCode(c, gen1)?.via, "qr", c);
+    assert.equal(parseTableCode(pickCode("joseon", t, 1), gen1)?.via, "pick");
+  }
+  assert.equal(storeOfCode("wareureu-3-zzzzzz"), "wareureu");
+  assert.equal(storeOfCode("nowhere-3-zzzzzz"), null);
 });

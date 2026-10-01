@@ -90,6 +90,8 @@ export type Entry =
   | { kind: "bad" }
   | { kind: "off"; storeName: string }
   | { kind: "locked"; storeName: string; table: number }
+  /** 사이트에서 번호로 받은 주소인데 이 가게가 [QR 없이 번호로 들어오기]를 껐다 */
+  | { kind: "qronly"; storeName: string; table: number }
   | {
       kind: "join";
       code: string;

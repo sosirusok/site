@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { STORE_IDS, type StoreId } from "@/lib/config";
 import { STORES, getStore } from "@/lib/stores";
-import { tableCode } from "@/lib/tabletalk/code";
+import { pickCode } from "@/lib/tabletalk/code";
 import { readDev } from "@/lib/tabletalk/cookie";
 import { currentTable, storeTables } from "@/lib/tabletalk/service";
 import { getTTSettings } from "@/lib/tabletalk/settings";
@@ -17,15 +17,17 @@ export const metadata: Metadata = {
 };
 
 /**
- * 사이트 하단 [테이블톡] 탭. 가게를 고르고 앉은 테이블 번호를 누르면 그 테이블의 테이블톡(/t/…)으로 간다.
- * 테이블에 붙은 테이블톡 QR 을 찍으면 이 단계 없이 바로 그 화면이다. 이미 들어가 있는 폰이면 [이어서 대화하기].
- * 번호 칸은 미리 불러오지 않는다(prefetch 끔) — 칸마다 서버를 부르면 무료 요금제 한도를 쓴다.
+ * 사이트 [테이블톡]. 가게를 고르고 앉은 테이블 번호를 누르면 그 테이블의 테이블톡(/t/…)으로 간다.
+ * 이 주소(pickCode)는 테이블 QR 과 서명이 달라, 이미 열린 테이블에는 먼저 들어간 폰의 허락을 받아야 들어간다(code.ts).
+ * 이미 들어가 있는 폰이면 [이어서 대화하기]. 번호 칸은 미리 불러오지 않는다(prefetch 끔) — 칸마다 서버를 부르면 무료 요금제 한도를 쓴다.
  */
 export default async function TalkPage({ searchParams }: { searchParams: Promise<{ store?: string }> }) {
   const sp = await searchParams;
   const now = new Date();
   const settings = await getTTSettings();
-  const mine = await currentTable(await readDev(), now).catch(() => null);
+  const current = await currentTable(await readDev(), now).catch(() => null);
+  // 가게가 테이블톡을 껐으면 이어서 할 곳도 없다
+  const mine = current && settings[current.store].on ? current : null;
   const picked = STORE_IDS.includes(sp.store as StoreId) ? (sp.store as StoreId) : null;
   const store = picked ? getStore(picked) : null;
   const conf = picked ? settings[picked] : null;
@@ -46,7 +48,7 @@ export default async function TalkPage({ searchParams }: { searchParams: Promise
           <p className={s.nowText}>
             지금 <b>{getStore(mine.store)?.shortName}</b> <b>{mine.table}번 테이블</b>에 들어가 있습니다.
           </p>
-          <Link prefetch={false} href={`/t/${tableCode(mine.store, mine.table, settings[mine.store].gen)}`} className="btn btn-primary btn-lg btn-block">
+          <Link prefetch={false} href={`/t/${pickCode(mine.store, mine.table, settings[mine.store].gen)}`} className="btn btn-primary btn-lg btn-block">
             이어서 대화하기
           </Link>
         </div>
@@ -63,7 +65,7 @@ export default async function TalkPage({ searchParams }: { searchParams: Promise
             aria-current={st.id === picked ? "true" : undefined}
           >
             {st.shortName}
-            {!settings[st.id].on && <small>지금 쉼</small>}
+            {!settings[st.id].on && <small>테이블톡 안 씀</small>}
           </Link>
         ))}
       </div>
@@ -81,28 +83,27 @@ export default async function TalkPage({ searchParams }: { searchParams: Promise
           ) : (
             <>
               <div className={s.grid}>
-                {Array.from({ length: conf.tables }, (_, i) => i + 1).map((n) =>
-                  locked.has(n) ? (
-                    <span key={n} className={s.tile} data-s="off" aria-label={`${n}번 테이블, 오늘은 쓸 수 없음`}>
-                      {n}
-                    </span>
-                  ) : (
+                {Array.from({ length: conf.tables }, (_, i) => i + 1).map((n) => {
+                  const state = locked.has(n) ? "off" : live.has(n) ? "live" : "pick";
+                  return (
+                    // 막힌 번호도 누를 수 있게 둔다 — 누르면 "직원에게 말씀해 주세요" 안내가 나온다
                     <Link
                       key={n}
                       prefetch={false}
-                      href={`/t/${tableCode(store.id, n, conf.gen)}`}
+                      href={`/t/${pickCode(store.id, n, conf.gen)}`}
                       className={s.tile}
-                      data-s={live.has(n) ? "live" : "pick"}
-                      aria-label={`${n}번 테이블${live.has(n) ? ", 일행이 먼저 켬" : ""}`}
+                      data-s={state}
+                      aria-label={`${n}번 테이블${state === "off" ? ", 오늘은 쓸 수 없음" : state === "live" ? ", 이미 켜짐" : ""}`}
                     >
                       {n}
-                      {live.has(n) && <small>켜짐</small>}
+                      {state === "live" && <small>켜짐</small>}
                     </Link>
-                  ),
-                )}
+                  );
+                })}
               </div>
               <p className={s.fine}>
-                일행이 먼저 켠 테이블은 금색으로 보입니다. 같은 번호를 누르면 같이 들어갑니다. 테이블에 테이블톡 QR 이 붙어 있으면 찍기만 해도 됩니다.
+                금색은 이미 켜진 테이블입니다. 일행이면 같은 번호를 누르고, 먼저 들어간 폰에서 [허락]을 누르면 같이 들어갑니다. 줄 그은 번호는 오늘 쓸 수
+                없습니다.
               </p>
             </>
           )}
