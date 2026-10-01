@@ -1,32 +1,41 @@
 "use client";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { BRAND } from "@/lib/config";
 import { useMemberPhone } from "./useMember";
 import styles from "./Header.module.css";
 
 /**
- * 맨 위 바(54px, 붙박이) — 왼쪽은 이미지가 아니라 Black Han Sans 로 찍은 간판 글자("알콜부시기", 마젠타·시안 발광)와
- * 그 아래 Anton 영문 한 줄. 오른쪽은 [로그인] 또는 [쿠폰함] — 남이 보는 화면에 번호를 띄우지 않는다.
- * 아이콘은 쓰지 않는다. 탭 바에서 아이콘을 다 걷어낸 화면에 선 아이콘 하나만 남으면 그게 더 튄다.
- * 로그인 상태는 정적 HTML 이 모르므로 마운트 뒤 /api/auth/me 로 알아낸다(useMemberPhone). 로그인 화면에서는 오른쪽을 비운다.
+ * 손님 화면 상단 바. 홈에서는 사진 편집 흐름을 방해하지 않도록 한 번만 지나간다.
+ * 공개 홈에서는 로그인 상태와 무관하게 쿠폰함으로 바로 이어진다.
  */
 export function Header() {
   const phone = useMemberPhone();
   const path = usePathname() ?? "/";
+  const [mounted, setMounted] = useState(false);
+
+  // 정적 생성 시에는 경로를 확정할 수 없으므로 서버와 첫 브라우저 렌더를 비워서 일치시킨다.
+  useEffect(() => setMounted(true), []);
+
+  const isHome = mounted && path === "/";
   return (
-    <header className={styles.header}>
-      <Link href="/" className={styles.brand} aria-label={`${BRAND.name} 홈`}>
-        <span className={styles.mark}>{BRAND.name}</span>
-        <span className={styles.markEn} aria-hidden="true">SEOMYEON 3 BARS</span>
-      </Link>
-      {phone ? (
-        <Link href="/wallet" className={styles.me} aria-label="내 쿠폰함">
-          <span className={styles.meTag}>쿠폰함</span>
+    <header className={styles.header} data-home={isHome ? "true" : undefined}>
+      <div className={styles.inner}>
+        <Link href="/" className={styles.brand} aria-label={`${BRAND.name} 홈`}>
+          <Image src="/images/privilege/wordmark.png" alt="" aria-hidden="true" width={720} height={245} sizes="120px" loading="eager" className={styles.markImage} />
         </Link>
-      ) : path !== "/login" ? (
-        <Link href="/login" className="btn btn-outline btn-sm">로그인</Link>
-      ) : null}
+        <div className={styles.actions}>
+          {!mounted ? null : isHome ? (
+            <Link href="/wallet" className={styles.actionLink}>쿠폰함</Link>
+          ) : phone ? (
+            path !== "/wallet" ? <Link href="/wallet" className={styles.actionLink}>쿠폰</Link> : null
+          ) : path !== "/login" ? (
+            <Link href="/login" className={styles.actionLink}>로그인</Link>
+          ) : null}
+        </div>
+      </div>
     </header>
   );
 }

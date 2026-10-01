@@ -1,58 +1,58 @@
-import { LazyStoreMap } from "@/components/site/LazyStoreMap";
-import type { MapStore } from "@/components/site/StoreMap";
-import { Button } from "@/components/ui/Button";
-import { Section } from "@/components/ui/Section";
+import Image from "next/image";
 import { LOCATIONS } from "@/lib/locations";
 import { naverSearchUrl, placeLinks } from "@/lib/naver";
 import { STORES } from "@/lib/stores";
-import s from "./home.module.css";
+import s from "./vip-lower.module.css";
 
-/** "서면역 6번 출구 도보 2~4분" — 값은 lib/locations.ts */
 export function walkLine(): string {
-  const v = Object.values(LOCATIONS);
-  const exits = Array.from(new Set(v.map((l) => l.exit))).join("·");
-  const mins = v.map((l) => l.walkMin);
-  const lo = Math.min(...mins), hi = Math.max(...mins);
-  return `서면역 ${exits}번 출구 도보 ${lo === hi ? `${lo}분` : `${lo}~${hi}분`}`;
+  const values = Object.values(LOCATIONS);
+  const exits = Array.from(new Set(values.map((location) => location.exit))).join("·");
+  const minutes = values.map((location) => location.walkMin);
+  const low = Math.min(...minutes);
+  const high = Math.max(...minutes);
+  return `서면역 ${exits}번 출구 도보 ${low === high ? `${low}분` : `${low}~${high}분`}`;
 }
 
-/** "부산 부산진구 동천로85번길 14 1,2층" → "동천로85번길 14 1,2층" */
-export function shortAddress(a: string): string {
-  return a.replace(/^부산(광역시)?\s*부산진구\s*/, "");
+export function shortAddress(address: string): string {
+  return address.replace(/^부산(광역시)?\s*부산진구\s*/, "");
 }
 
-/** 네이버 검색창에 그대로 넣는 말 */
 const SEARCH_QUERY = "서면 알콜부시기";
 
-/** 오시는 길 — 지도(폭 가득, 테두리 대신 형광 rim light) 아래 매장마다 줄 하나: 속 빈 차수 숫자 · 상호(간판체) · 주소 · [길찾기]. */
+/** 주소 목록은 접어 두고, 필요한 매장만 펼쳐 길찾기로 이동한다. */
 export function Directions() {
   const ordered = [...STORES].sort((a, b) => a.course.n - b.course.n);
-  const mapStores: MapStore[] = ordered.filter((st) => st.lat != null && st.lng != null).map((st) => ({
-    id: st.id, name: st.name, shortName: st.shortName, drink: st.drink, lat: st.lat!, lng: st.lng!, address: st.address, naverPlaceId: st.naverPlaceId,
-  }));
+
   return (
-    <Section id="map" tone="lime" title="오시는 길" lead={`${walkLine()} · 세 매장 모두 50m 이내`} alt flush pt={54} pb={34}>
-      <div className={s.mapWrap}>
-        <LazyStoreMap stores={mapStores} compact hidePanel height={230} />
+    <section id="map" className={s.mapSection} aria-labelledby="map-title">
+      <div className={s.mapHeading}>
+        <h2 id="map-title" className={s.directionsTitle}>
+          <Image src="/images/privilege/directions-title.webp" alt="서면에서 만나요" width={720} height={127} sizes="(min-width: 760px) 285px, 240px" className={s.titleArtwork} />
+        </h2>
+        <p>{walkLine()}<br />세 매장 모두 50m 이내</p>
       </div>
-      <ul className={s.addrs}>
-        {ordered.map((st) => {
-          const links = placeLinks(st);
-          return (
-            <li key={st.id} className={s.addr} data-store={st.id}>
-              <span className={`bignum ${s.addrNo}`} aria-hidden="true">{String(st.course.n).padStart(2, "0")}</span>
-              <div className={s.addrBody}>
-                <p className={s.addrName}>{st.shortName}</p>
-                <p className={s.addrSub}>{shortAddress(st.address)}<br />{LOCATIONS[st.id].subway}</p>
-              </div>
-              {links && <Button href={links.directions} variant="outline" size="sm" srSuffix={` — ${st.shortName}`}>길찾기</Button>}
-            </li>
-          );
-        })}
-      </ul>
-      <p className={s.searchLine}>
-        <a href={naverSearchUrl(SEARCH_QUERY)} target="_blank" rel="noreferrer" className="link link-naver">네이버 &lsquo;{SEARCH_QUERY}&rsquo; 검색 →</a>
-      </p>
-    </Section>
+      <div className={s.directionSide}>
+        <ul className={s.addrs}>
+          {ordered.map((store) => {
+            const links = placeLinks(store);
+            return (
+              <li key={store.id} className={s.addr} data-store={store.id}>
+                <details className={s.addressDetails}>
+                  <summary>
+                    <span className={s.addrName}>{store.shortName}</span>
+                    <span className={s.expandMark} aria-hidden="true" />
+                  </summary>
+                  <div className={s.addrBody}>
+                    <p className={s.addrSub}>{shortAddress(store.address)}<br />{LOCATIONS[store.id].subway}</p>
+                    {links ? <a href={links.directions} target="_blank" rel="noreferrer" className={s.directionAction} aria-label={`${store.shortName} 길찾기`}>네이버 길찾기 <span aria-hidden="true">↗</span></a> : null}
+                  </div>
+                </details>
+              </li>
+            );
+          })}
+        </ul>
+        <a href={naverSearchUrl(SEARCH_QUERY)} target="_blank" rel="noreferrer" className={s.searchAction}>네이버에서 세 곳 검색 <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
   );
 }

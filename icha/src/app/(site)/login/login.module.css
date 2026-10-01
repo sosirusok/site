@@ -1,4 +1,4 @@
 /* 로그인 — 화면을 채워서 푸터가 가운데로 올라오지 않게 */
-.page { display: grid; gap: 20px; align-content: start; padding: 28px var(--gutter) 40px; }
-.top { display: grid; gap: 8px; }
-.card { padding: 20px 18px; }
+.page { display: grid; gap: 24px; align-content: start; padding: 38px var(--gutter) 40px; }
+.top { display: grid; gap: 12px; }
+.card { padding: 24px 20px; }

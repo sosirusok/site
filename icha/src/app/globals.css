@@ -378,11 +378,11 @@ summary.btn { list-style: none; }
 .strip-hint { display: flex; align-items: center; gap: 7px; margin: 2px var(--gutter) 0; font-family: var(--font-label); font-size: 12px; letter-spacing: 0.16em; color: var(--ink-3); }
 .strip-hint::after { content: ""; flex: none; width: 26px; height: 2px; background: linear-gradient(90deg, currentColor, transparent); }
 
-/* ══ 지도 — 밝은 OSM 타일을 이 화면의 색으로 끌어온다(타일 판만 반전·색 회전, 핀과 이름표는 그대로) ══ */
-.leaflet-container.leaflet-container { background: #17092b; font-family: var(--font-sans); }
-.leaflet-container .leaflet-tile-pane { filter: invert(1) hue-rotate(188deg) saturate(0.85) brightness(0.92) contrast(1.05); }
-.leaflet-container.leaflet-container .leaflet-control-attribution { background: #06030c; color: #d6c8f0; font-size: 10px; line-height: 1.4; margin: 0; padding: 1px 5px; }
-.leaflet-container.leaflet-container .leaflet-control-attribution a { color: #fff; }
+/* ══ 지도 — OSM 원래 정보성을 살리고 채도만 낮춘다 ══ */
+.leaflet-container.leaflet-container { background: #ddd8cc; font-family: var(--font-sans); }
+.leaflet-container .leaflet-tile-pane { filter: grayscale(.18) saturate(.72) contrast(.94) brightness(1.04); }
+.leaflet-container.leaflet-container .leaflet-control-attribution { background: rgba(241, 238, 230, .94); color: #4b4842; font-size: 10px; line-height: 1.4; margin: 0; padding: 1px 5px; }
+.leaflet-container.leaflet-container .leaflet-control-attribution a { color: #151411; }
 .leaflet-container .leaflet-attribution-flag { display: none; }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; } }
@@ -455,3 +455,39 @@ summary.btn { list-style: none; }
 .badge-store { box-shadow: none; filter: drop-shadow(0 0 10px color-mix(in srgb, var(--store, var(--cyan)) 60%, transparent)); }
 /* 폼 판 — 1px 테두리 상자를 두르지 않는다. 위아래가 찢긴 종이 조각으로 바꾼다 */
 .card.torn-tb { border: 0; padding-top: 32px; padding-bottom: 40px; }
+
+/* 공개 홈만 넓게 쓰고, 시각 재료는 실사진과 생성된 UI PNG가 맡는다. */
+.app:has([data-page="home"]) {
+  --app-max: 1600px;
+  --header-h: 64px;
+  --bg: #08080a;
+  --bg-2: #0d0c0b;
+  --bg-3: #11100e;
+  --ink: #eae6dd;
+  --ink-2: #b4afa6;
+  --ink-3: #8f8b83;
+  --line: rgba(234, 230, 221, .12);
+  --line-2: rgba(155, 131, 88, .42);
+  background: #08080a;
+  box-shadow: none;
+  padding-bottom: 0;
+}
+.app:has([data-page="home"])::after {
+  display: none;
+}
+.app:has([data-page="home"])::before {
+  display: none;
+}
+.app:has([data-page="home"]) .section-alt { background: #0b0b0c; }
+.app:has([data-page="home"]) .section + .section::before { display: none; }
+.app:has([data-page="home"]) .tabbar { display: none; }
+.app:has([data-page="home"]) [data-store] { --store: #9b8358; }
+.app:has([data-page="home"]) :focus-visible { outline-color: #9b8358; }
+
+@media (min-width: 960px) {
+  .app:has([data-page="home"]) {
+    --header-h: 80px;
+  }
+}
+body:has([data-page="home"]) { background: #08080a; }
+.app:has([data-page="home"]) ::selection { background: #c9b895; color: #08080a; }

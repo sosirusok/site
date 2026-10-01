@@ -1,35 +1,41 @@
+import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { BRAND, type Rules } from "@/lib/config";
 import { ruleLine, STEP_LINES } from "@/lib/copy";
 import s from "./home.module.css";
+import home from "./vip-lower.module.css";
 
 const STEP_SUB = ["앱도 사진도 필요 없습니다", "", "세 집 다 50m 안", ""] as const;
 
-/**
- * 이용 방법 — 속 빈 거대 숫자(01~04) 옆에 한글 한 줄.
- * 단계 색을 배열 인덱스로 돌리지 않는다(mag→cyan→lime→mag 는 4단계에서 1단계 색으로 되감긴다).
- * 형광 3색은 매장을 가르는 데만 쓰고, 여기서는 라임 하나로 통일한다.
- * 보조 설명은 1·3단계에만 — 네 줄을 같은 길이·같은 어미로 채우면 그게 채움말이다.
- */
-/**
- * compact 이면 홈용 — 네 단계를 가로 한 줄로 흘리고 설명은 뺀다.
- * 같은 블록을 홈과 안내에 통째로 두 번 쓰면, 안내 탭을 누른 손님이 방금 본 화면을 또 본다.
- */
+/** 홈은 간결한 안내로, /guide는 기존의 상세 단계로 보여 준다. */
 export function HowToSteps({ rules, compact = false }: { rules: Rules; compact?: boolean }) {
   if (compact) {
     return (
-      <Section id="howto" tone="cyan" title="이렇게 받으세요" pt={50} pb={34}>
-        <ol className={s.flow}>
-          {STEP_LINES.map((text, i) => (
-            <li key={text} className={s.flowStep}>
-              <span className={s.flowNo} aria-hidden="true">{i + 1}</span>
-              <span className={s.flowText}>{text}</span>
-            </li>
-          ))}
-        </ol>
-        <Button href="/guide" variant="ghost" className={s.walletBtn}>자세히 보기</Button>
-      </Section>
+      <section id="howto" className={home.howto} aria-labelledby="howto-title">
+        <div className={home.howIntro}>
+          <h2 id="howto-title" className={home.benefitTitle}>
+            <Image src="/images/privilege/benefit-title.webp" alt="다음 매장의 혜택" width={720} height={134} sizes="(min-width: 760px) 310px, 260px" className={home.titleArtwork} />
+          </h2>
+          <p className={home.howCondition}>{ruleLine(rules)}<br />{BRAND.condition}</p>
+          <Link href="/wallet" className={home.utilityAction}>내 쿠폰함 <span aria-hidden="true">↗</span></Link>
+        </div>
+        <div className={home.howInstructions}>
+          <div className={home.utilityHeading}>
+            <p>쿠폰 이용 안내</p>
+            <Link href="/guide">자세히 보기 <span aria-hidden="true">↗</span></Link>
+          </div>
+          <ol className={home.howSteps}>
+            {STEP_LINES.map((text, index) => (
+              <li key={text} className={home.howStep}>
+                <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                <p>{text}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
     );
   }
   return (

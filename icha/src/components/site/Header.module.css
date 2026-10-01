@@ -1,8 +1,16 @@
-/* 맨 위 바 — 아래 가장자리에 형광 2px 띠. 로고는 이미지가 아니라 Black Han Sans 글자 */
-.header { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; justify-content: space-between; gap: 12px; height: var(--header-h); padding: 0 var(--gutter); background: linear-gradient(180deg, #120727, #06030c 78%); }
-.header::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: linear-gradient(90deg, var(--mag), #7a00ff 45%, var(--cyan) 80%, transparent); box-shadow: 0 0 12px rgba(255, 46, 136, 0.6); }
-.brand { display: grid; gap: 1px; align-content: center; min-height: 44px; }
-.mark { font-family: var(--font-poster); font-size: 22px; line-height: 1; letter-spacing: -0.01em; color: #fff; text-shadow: 0 0 2px #fff, 0 0 12px rgba(255, 46, 136, 0.95), 0 0 30px rgba(255, 46, 136, 0.6), 0 0 56px rgba(33, 240, 255, 0.35); }
-.markEn { font-family: var(--font-label); font-size: 11px; line-height: 1; letter-spacing: 0.3em; color: var(--cyan); }
-.me { display: inline-flex; align-items: center; min-height: 44px; }
-.meTag { display: inline-flex; align-items: center; height: 34px; padding: 0 12px; font-family: var(--font-sans); font-weight: 800; font-size: 15px; letter-spacing: -0.01em; color: var(--lime); border: 1px solid rgba(204, 255, 0, 0.5); box-shadow: inset 0 0 14px -8px var(--lime); }
+.header { position: sticky; top: 0; z-index: 30; height: var(--header-h); border-bottom: 1px solid #292629; background: #0b0b0b; }
+.inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 100%; width: 100%; padding-inline: var(--gutter); }
+.brand { display: inline-flex; align-items: center; flex: none; width: 104px; min-height: 44px; }
+.markImage { display: block; width: 100%; height: auto; }
+.actions { display: flex; align-items: center; justify-content: flex-end; min-width: 76px; }
+.actionLink { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; color: #ded7d0; font-size: 12px; font-weight: 450; text-decoration: none; }
+.actionLink::after { content: "↗"; color: #ad9f8c; }
+:global(.app:has([data-page="home"])) .header { position: relative; background: #0b0b0b; }
+:global(.app:has([data-page="home"])) .inner { max-width: 1440px; margin-inline: auto; padding-inline: 24px; }
+:global(.app:has([data-page="home"])) .brand { width: 126px; min-height: 52px; }
+:global(.app:has([data-page="home"])) .actionLink { min-height: 52px; padding-inline: 6px; color: #f2ebe1; font-size: 16px; font-weight: 550; }
+@media (min-width: 760px) {
+  :global(.app:has([data-page="home"])) .inner { padding-inline: 60px; }
+  :global(.app:has([data-page="home"])) .brand { width: 148px; }
+  .actionLink { font-size: 13px; }
+}

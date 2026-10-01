@@ -1,3 +1,23 @@
-/* 홈 — 관리자 공지는 형광 라임 테두리의 각진 띠(마키 바로 아래) */
-.notice { display: flex; align-items: flex-start; gap: 10px; margin: 14px var(--gutter) 0; padding: 12px 14px; background: rgba(204, 255, 0, 0.09); border: 2px solid rgba(204, 255, 0, 0.55); box-shadow: inset 0 0 20px -10px var(--lime); font-size: 14px; line-height: 1.5; color: var(--ink); }
-.noticeTag { flex: none; font-family: var(--font-label); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--lime); padding-top: 2px; }
+.home {
+  position: relative;
+  background: transparent;
+  color: #f7f7f3;
+}
+
+.home > * { scroll-margin-top: calc(var(--header-h) + 10px); }
+
+.notice {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 10px;
+  width: min(calc(100% - var(--gutter) * 2), 1180px);
+  margin: 0 auto;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(155, 131, 88, .34);
+  background: #050505;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #aaa69e;
+}
+
+.noticeTag { color: #9b8358; font-weight: 700; }
