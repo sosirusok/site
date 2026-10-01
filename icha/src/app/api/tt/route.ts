@@ -3,7 +3,7 @@ import { clientIp, rateLimit } from "@/lib/rate-limit";
 import { parseTableCode } from "@/lib/tabletalk/code";
 import { clearDev, readDev, setDev } from "@/lib/tabletalk/cookie";
 import {
-  TTError, admit, answer, ask, cancelAsk, closeRoom, endTeam, join, leaveDevice, send, sync, type JoinMode,
+  TTError, admit, answer, ask, cancelAsk, closeRoom, endTeam, join, leaveDevice, refuseAsk, send, sync, type JoinMode,
 } from "@/lib/tabletalk/service";
 import { getTTSettings } from "@/lib/tabletalk/settings";
 import { cleanNonce } from "@/lib/tabletalk/text";
@@ -38,9 +38,8 @@ export async function GET(req: Request) {
   try {
     await countHit();
     const url = new URL(req.url);
-    const dev = await readDev();
-    const s = await sync(dev, int(url.searchParams.get("v"), -1), int(url.searchParams.get("after"), 0));
-    if (s.kind === "out" && dev) await clearDev();
+    // 나가진 폰이어도 쿠키는 그대로 둔다 — 같은 폰이 그사이 다시 들어와 새 쿠키를 받았으면, 늦게 도착한 이 응답이 그 새 쿠키를 지우게 된다
+    const s = await sync(await readDev(), int(url.searchParams.get("v"), -1), int(url.searchParams.get("after"), 0));
     return out({ ok: true, sync: await withPace(s) });
   } catch (e) {
     return failure(e);
@@ -68,7 +67,9 @@ export async function POST(req: Request) {
     let dev = await readDev();
 
     if (op === "join") {
-      if (!(await rateLimit(`tt-join:${clientIp(req)}`, 30, 600))) throw new TTError("잠시 후 다시 시도해 주세요.", 429, "rate");
+      // 가게 와이파이·통신사 공유 IP 로 손님 여럿이 같은 IP 일 수 있어 넉넉하게. 같은 테이블 되풀이는 아래에서 따로 막는다
+      if (!(await rateLimit(`tt-join:${clientIp(req)}`, 120, 600))) throw new TTError("잠시 후 다시 시도해 주세요.", 429, "rate");
+      if ((await currentPace()).closed) throw new TTError("오늘은 테이블톡 이용이 많아 새로 들어오기를 잠시 멈췄습니다.", 503, "closed");
       const settings = await getTTSettings();
       const ref = typeof body.code === "string" ? parseTableCode(body.code, (s) => settings[s].gen) : null;
       if (!ref) throw new TTError("QR 이 맞지 않습니다. 테이블에 붙은 QR 을 다시 찍어 주세요.", 400, "badqr");
@@ -92,7 +93,7 @@ export async function POST(req: Request) {
 
     // 여기부터는 들어와 있는 폰만. 예산을 거의 다 쓴 날은 새 글·새 신청을 받지 않는다(보던 대화는 계속 보인다)
     const pace = await currentPace();
-    if (pace.closed && (op === "ask" || op === "send")) {
+    if (pace.closed && (op === "ask" || op === "send" || (op === "answer" && body.ok === true))) {
       throw new TTError("오늘은 테이블톡 이용이 많아 새 글을 잠시 멈췄습니다.", 503, "closed");
     }
     switch (op) {
@@ -104,6 +105,9 @@ export async function POST(req: Request) {
         break;
       case "cancel":
         await cancelAsk(dev, body.ask);
+        break;
+      case "refuse":
+        await refuseAsk(dev, body.ask, body.how === "report" ? "report" : "block");
         break;
       case "send":
         await send(dev, body.room, body.body, cleanNonce(body.nonce));

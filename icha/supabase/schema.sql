@@ -132,6 +132,8 @@ create table if not exists rate_limits (
 -- ── 테이블톡: 같은 가게 테이블끼리 대화 (src/lib/tabletalk) ──
 -- 자리 = 한 테이블에 앉은 일행. 테이블 QR 을 처음 찍은 폰이 열고, 같은 테이블 폰들이 같이 쓴다.
 -- 일행이 떠나거나·직원이 비우거나·3시간 아무도 안 보거나·영업일(한국 낮 12시)이 바뀌면 끝난다. 날짜(day)는 영업일.
+-- v = 이 자리 화면의 변경 번호. 이 자리가 볼 것이 바뀔 때마다 tt_v_seq 에서 새 번호를 받는다(자리끼리 번호가 겹치지 않는다)
+create sequence if not exists tt_v_seq;
 create table if not exists tt_seats (
   id         uuid primary key default gen_random_uuid(),
   store_id   text not null references stores(id),
@@ -141,8 +143,10 @@ create table if not exists tt_seats (
   started_at timestamptz not null default now(),
   seen_at    timestamptz not null default now(),
   ended_at   timestamptz,
-  ended_by   text
+  ended_by   text,
+  v          bigint not null default nextval('tt_v_seq')
 );
+alter table tt_seats add column if not exists v bigint not null default nextval('tt_v_seq');
 create unique index if not exists tt_seats_live_uq on tt_seats(store_id, table_no) where status = 'on';
 create index if not exists tt_seats_store_idx on tt_seats(store_id, status, day);
 create index if not exists tt_seats_day_idx on tt_seats(day);
@@ -204,12 +208,15 @@ create table if not exists tt_msgs (
 create index if not exists tt_msgs_room_idx on tt_msgs(room_id, id);
 create unique index if not exists tt_msgs_nonce_uq on tt_msgs(room_id, nonce) where nonce is not null;
 
+-- 차단 = 막은 자리(seat_id)가 그 테이블 번호(other_table)를 오늘 밤 막는다. 상대가 자리를 떠났다 다시 찍어도(새 자리) 그대로 막힌다
 create table if not exists tt_blocks (
-  seat_id    uuid not null references tt_seats(id) on delete cascade,
-  other_seat uuid not null references tt_seats(id) on delete cascade,
-  created_at timestamptz not null default now(),
+  seat_id     uuid not null references tt_seats(id) on delete cascade,
+  other_seat  uuid not null references tt_seats(id) on delete cascade,
+  other_table int,
+  created_at  timestamptz not null default now(),
   primary key (seat_id, other_seat)
 );
+alter table tt_blocks add column if not exists other_table int;
 
 -- 신고. 자리가 지워져도 직원이 볼 수 있게 테이블 번호와 마지막 글들을 복사해 둔다(14일 보관)
 create table if not exists tt_reports (
@@ -236,7 +243,7 @@ create table if not exists tt_locks (
   primary key (store_id, table_no, day)
 );
 
--- 매장별 변경 번호 — 무엇이든 바뀌면 v 가 오른다. 손님 화면은 v 가 그대로면 아무것도 다시 읽지 않는다
+-- 매장마다 한 줄. 매장의 쓰기는 이 줄을 잠그고 한 줄로 선다(service.ts lockStores). swept_at = 마지막 정리 시각
 create table if not exists tt_state (
   store_id text primary key references stores(id),
   v        bigint not null default 0,
@@ -249,4 +256,5 @@ create table if not exists tt_usage (
   n   bigint not null default 0
 );
 
+-- 매장 줄은 미리 있어야 한다(쓰기가 이 줄을 잠근다). 앱은 매장을 넣은 뒤 한 번 더 넣는다
 insert into tt_state (store_id) select id from stores on conflict (store_id) do nothing;

@@ -45,8 +45,9 @@ export function TableTalk({ entry }: { entry: Entry }) {
     else setOpenRoom(null);
   }, [setOpenRoom]);
   useEffect(() => {
-    // 대화방을 연 채로 새로고침하면 기록에 방 표시가 남는다 — 지금 칸(번호판)에서는 지운다. 안 지우면 뒤로 가기가 엉뚱한 방을 연다
-    if ((window.history.state as { ttRoom?: string } | null)?.ttRoom) window.history.replaceState(null, "");
+    // 대화방·판을 연 채로 새로고침하면 기록에 그 표시가 남는다 — 지금 칸(번호판)에서는 지운다. 안 지우면 뒤로 가기가 엉뚱한 방을 연다
+    const h = window.history.state as { ttRoom?: string; ttSheet?: string } | null;
+    if (h?.ttRoom || h?.ttSheet) window.history.replaceState(null, "");
     const onPop = (e: PopStateEvent) => setOpenRoom((e.state as { ttRoom?: string } | null)?.ttRoom ?? null);
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
@@ -93,7 +94,9 @@ export function TableTalk({ entry }: { entry: Entry }) {
       <WaitingScreen
         storeName={phase.storeName}
         table={phase.table}
-        onCancel={() => void op("leave-phone")}
+        onCancel={async () => {
+          await op("leave-phone");
+        }}
         onFresh={async () => {
           await op("join", { code, mode: "fresh" }).then((r) => !r.ok && r.error && showToast(r.error));
         }}

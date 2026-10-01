@@ -18,7 +18,7 @@ function Plate({ table }: { table: number }) {
 /**
  * QR 을 찍고 처음 보는 화면. 버튼을 눌러야 들어간다 — 카메라 앱·메신저가 주소를 미리 열어 보기만 해도 자리가 생기면 안 된다.
  *  - 열린 자리가 없으면 [테이블톡 시작]
- *  - 있으면 [일행으로 들어가기]. 그 자리 폰들이 10분 넘게 안 봤을 때만 [방금 이 자리에 앉았습니다](이전 대화를 닫고 새로)
+ *  - 있으면 [일행으로 들어가기]. 그 자리 폰들이 20분 넘게 안 봤을 때만 [방금 이 자리에 앉았습니다](이전 대화를 닫고 새로)
  */
 export function JoinScreen({ entry, onJoin }: { entry: JoinEntry; onJoin: (mode: JoinMode) => Promise<{ ok: boolean; code?: string; error?: string }> }) {
   const [busy, setBusy] = useState<JoinMode | null>(null);
@@ -102,9 +102,19 @@ export function JoinScreen({ entry, onJoin }: { entry: JoinEntry; onJoin: (mode:
   );
 }
 
-/** 일행 허락을 기다리는 화면 */
-export function WaitingScreen({ storeName, table, onCancel, onFresh }: { storeName: string; table: number; onCancel: () => void; onFresh: () => Promise<void> }) {
+/** 일행 허락을 기다리는 화면. 단추는 한 번 누르면 답이 올 때까지 잠긴다(두 번 눌러 폰이 둘 생기지 않게) */
+export function WaitingScreen({ storeName, table, onCancel, onFresh }: { storeName: string; table: number; onCancel: () => Promise<void>; onFresh: () => Promise<void> }) {
   const [asking, setAsking] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const hold = (fn: () => Promise<void>) => async () => {
+    if (busy) return;
+    setBusy(true);
+    try {
+      await fn();
+    } finally {
+      setBusy(false);
+    }
+  };
   return (
     <section className={s.entry}>
       <p className={s.kicker}>
@@ -119,15 +129,15 @@ export function WaitingScreen({ storeName, table, onCancel, onFresh }: { storeNa
         <i />
       </span>
       <div className={s.actions}>
-        <button type="button" className={s.plainBtn} onClick={onCancel}>
+        <button type="button" className={s.plainBtn} disabled={busy} onClick={hold(onCancel)}>
           그만두기
         </button>
         {asking ? (
           <div className={s.note}>
-            일행이 아니라 방금 이 자리에 앉았다면, 이전 손님의 대화를 닫고 새로 시작할 수 있습니다. 이전 손님 폰이 10분 넘게 안 봤을 때만 됩니다.
+            일행이 아니라 방금 이 자리에 앉았다면, 이전 손님의 대화를 닫고 새로 시작할 수 있습니다. 이전 손님 폰이 20분 넘게 안 봤을 때만 됩니다.
             <div className="btn-row" style={{ marginTop: 10 }}>
-              <button type="button" className="btn btn-outline btn-sm" onClick={() => void onFresh()}>
-                새로 시작
+              <button type="button" className="btn btn-outline btn-sm" disabled={busy} onClick={hold(onFresh)}>
+                {busy ? "여는 중…" : "새로 시작"}
               </button>
               <button type="button" className={`${s.plainBtn} ${s.plainBtnSm}`} onClick={() => setAsking(false)}>
                 취소

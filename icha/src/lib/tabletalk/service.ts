@@ -9,8 +9,10 @@
  *  3) 대화방은 어느 쪽이든 나가기·차단·신고로 닫는다. 닫힌 뒤 15분은 같은 테이블에 다시 말을 걸 수 없다.
  *  4) 자리는 일행이 [자리 떠나기]를 누르거나, 직원이 비우거나, 3시간 아무 폰도 안 보거나, 영업일이 바뀌면 끝난다.
  *
- * 화면은 몇 초마다 sync() 로 묻는다. 매장마다 변경 번호(tt_state.v)가 있어, 바뀐 게 없으면 한 줄 읽고 끝낸다.
- * 모든 쓰기는 끝에 bump() 로 그 번호를 올린다.
+ * 화면은 몇 초마다 sync() 로 묻는다. 자리마다 변경 번호(tt_seats.v)가 있어, 바뀐 게 없으면 한 줄 읽고 끝낸다.
+ * 쓰기는 맨 앞에서 매장 줄(tt_state)을 잠가 한 줄로 선다(lockStores) — 동시에 누른 두 폰이 서로를 못 보고 엇갈리지 않고,
+ * 글 번호가 커밋 순서대로 보인다(화면은 "마지막 글 번호 뒤"만 받으므로, 늦게 커밋된 앞 번호 글이 있으면 놓친다).
+ * 쓰기가 끝나면 볼 것이 바뀐 자리만 번호를 바꾼다(bumpSeats). 자리가 열리고 닫히는 것처럼 번호판 전체가 바뀌면 매장 전체(bumpStore).
  */
 import { tx, query, one, type Queryable } from "@/lib/db";
 import type { StoreId } from "@/lib/config";
@@ -31,8 +33,11 @@ export class TTError extends Error {
 
 /** 자리가 열리고 이 시간 안에 찍은 폰은 허락 없이 들어온다(같이 온 일행). TT_FRESH_JOIN_MS 로 바꿀 수 있다 */
 export const FRESH_JOIN_MS = Number(process.env.TT_FRESH_JOIN_MS) > 0 ? Number(process.env.TT_FRESH_JOIN_MS) : 5 * 60_000;
-/** [새로 앉았습니다] — 이 시간 넘게 그 자리 폰이 아무도 안 봤을 때만 이전 자리를 닫을 수 있다 */
-export const QUIET_FOR_NEW_MS = 10 * 60_000;
+/**
+ * [새로 앉았습니다] — 이 시간 넘게 그 자리 폰이 아무도 안 봤을 때만 이전 자리를 닫을 수 있다.
+ * 폰을 주머니에 넣고 마시는 일행을, 테이블 주소를 가진 다른 사람이 밀어내지 못할 만큼 길게
+ */
+export const QUIET_FOR_NEW_MS = 20 * 60_000;
 const IDLE_END = "3 hours";
 const ASK_TTL = "10 minutes";
 const JOIN_TTL = "5 minutes";
@@ -46,24 +51,33 @@ type SeatRow = { id: string; table_no: number; started_at: unknown; seen_at: unk
 const asDate = (v: unknown): Date => (v instanceof Date ? v : new Date(String(v)));
 const iso = (v: unknown): string => asDate(v).toISOString();
 
-/* ───────── 변경 번호 · 정리 ───────── */
+/**
+ * 차단이 아직 살아 있나(tt_blocks b 한 줄에 붙이는 조건). 막힌 테이블에 직원이 비웠거나·새 일행이 [방금 앉았습니다]로 앉았거나·
+ * 3시간 비어 끝난 일이 차단 뒤에 있었으면 그 테이블은 다른 손님이라 풀린다. [자리 떠나기] 뒤 다시 찍은 것은 같은 손님일 수 있어 그대로 막는다
+ */
+const BLOCK_LIVE = `not exists (select 1 from tt_seats z where z.store_id = bs.store_id and z.table_no = b.other_table
+  and z.ended_by in ('staff','new','idle') and z.ended_at > b.created_at)`;
 
-async function bump(q: Queryable, store: StoreId): Promise<void> {
-  await q.query(`insert into tt_state (store_id, v) values ($1, 1) on conflict (store_id) do update set v = tt_state.v + 1`, [store]);
+/* ───────── 잠금 · 변경 번호 · 정리 ───────── */
+
+/** 쓰기 트랜잭션 맨 앞에서 매장을 잠근다. 두 매장이면(다른 매장 테이블로 옮기는 폰) 이름 순서로 — 서로 기다리다 멈추지 않게 */
+async function lockStores(q: Queryable, ...stores: StoreId[]): Promise<void> {
+  for (const s of [...new Set(stores)].sort()) {
+    const r = await q.query(`select 1 from tt_state where store_id=$1 for update`, [s]);
+    // 매장 줄이 없으면 만들면서 잠근다(새 매장을 넣고 아직 다시 기동하지 않았을 때)
+    if (!r.length) await q.query(`insert into tt_state (store_id) values ($1) on conflict (store_id) do update set store_id = excluded.store_id`, [s]);
+  }
 }
 
-export async function version(store: StoreId): Promise<number> {
-  const r = await one<{ v: string | number }>(`select v from tt_state where store_id=$1`, [store]);
-  return Number(r?.v ?? 0);
+/** 이 자리들의 화면이 바뀌었다 — 그 자리 폰들만 다음에 물을 때 새로 받는다 */
+async function bumpSeats(q: Queryable, seatIds: (string | null | undefined)[]): Promise<void> {
+  const ids = [...new Set(seatIds.filter((x): x is string => typeof x === "string"))];
+  if (ids.length) await q.query(`update tt_seats set v = nextval('tt_v_seq') where id = any($1::uuid[]) and status='on'`, [ids]);
 }
 
-/** 변경 번호 + 정리할 때가 됐는지(DB 시계 기준 1분) — 한 줄로 */
-async function stateOf(store: StoreId): Promise<{ v: number; due: boolean }> {
-  const r = await one<{ v: string | number; due: boolean }>(
-    `select v, (swept_at is null or swept_at < now() - interval '60 seconds') as due from tt_state where store_id=$1`,
-    [store],
-  );
-  return { v: Number(r?.v ?? 0), due: r ? Boolean(r.due) : true };
+/** 번호판이 바뀌었다(자리가 열림·닫힘, 직원이 막음·풂) — 그 매장 열린 자리 전부 */
+async function bumpStore(q: Queryable, store: StoreId): Promise<void> {
+  await q.query(`update tt_seats set v = nextval('tt_v_seq') where store_id=$1 and status='on'`, [store]);
 }
 
 /**
@@ -72,8 +86,8 @@ async function stateOf(store: StoreId): Promise<{ v: number; due: boolean }> {
  */
 async function endSeats(q: Queryable, seatIds: string[], why: Exclude<OutWhy, "none" | "denied" | "expired" | "locked" | "off">): Promise<number> {
   if (seatIds.length === 0) return 0;
-  const ended = await q.query<{ id: string; table_no: number }>(
-    `update tt_seats set status='off', ended_at=now(), ended_by=$2 where id = any($1::uuid[]) and status='on' returning id, table_no`,
+  const ended = await q.query<{ id: string; table_no: number; store_id: StoreId }>(
+    `update tt_seats set status='off', ended_at=now(), ended_by=$2 where id = any($1::uuid[]) and status='on' returning id, table_no, store_id`,
     [seatIds, why],
   );
   if (ended.length === 0) return 0;
@@ -81,16 +95,17 @@ async function endSeats(q: Queryable, seatIds: string[], why: Exclude<OutWhy, "n
   await q.query(`update tt_devs set status = case when status='wait' then 'no' else 'out' end, out_reason=$2, decided_at=now() where seat_id = any($1::uuid[]) and status in ('in','wait')`, [ids, why]);
   await q.query(`update tt_asks set status='gone', decided_at=now() where status='wait' and (from_seat = any($1::uuid[]) or to_seat = any($1::uuid[]))`, [ids]);
   const rooms = await q.query<{ id: string; seat_a: string; seat_b: string }>(
-    `update tt_rooms set status='closed', closed_at=now(), close_reason='gone',
+    `update tt_rooms set status='closed', closed_at=now(), close_reason = case when $2 = 'staff' then 'staff' else 'gone' end,
        closed_by = case when seat_a = any($1::uuid[]) then seat_a else seat_b end
      where status='open' and (seat_a = any($1::uuid[]) or seat_b = any($1::uuid[])) returning id, seat_a, seat_b`,
-    [ids],
+    [ids, why],
   );
   const tableOf = new Map(ended.map((r) => [r.id, Number(r.table_no)]));
   for (const r of rooms) {
     const leaving = tableOf.has(r.seat_a) ? r.seat_a : r.seat_b;
     await q.query(`insert into tt_msgs (room_id, kind, body) values ($1, $2, $3)`, [r.id, why === "staff" ? "staff" : "gone", String(tableOf.get(leaving) ?? "")]);
   }
+  for (const store of new Set(ended.map((r) => r.store_id))) await bumpStore(q, store);
   return ended.length;
 }
 
@@ -106,6 +121,7 @@ async function maybeSweep(store: StoreId, now: Date): Promise<boolean> {
   if (!won) return false;
   const day = serviceDay(now);
   return tx(async (q) => {
+    await lockStores(q, store);
     const old = await q.query<{ id: string; stale: boolean }>(
       `select id, (day < $2::date) as stale from tt_seats where store_id=$1 and status='on' and (day < $2::date or seen_at < now() - interval '${IDLE_END}')`,
       [store, day],
@@ -113,17 +129,17 @@ async function maybeSweep(store: StoreId, now: Date): Promise<boolean> {
     let changed = 0;
     changed += await endSeats(q, old.filter((r) => r.stale).map((r) => r.id), "day");
     changed += await endSeats(q, old.filter((r) => !r.stale).map((r) => r.id), "idle");
-    const asks = await q.query(`update tt_asks set status='gone', decided_at=now() where store_id=$1 and status='wait' and created_at < now() - interval '${ASK_TTL}' returning id`, [store]);
-    const joins = await q.query(
-      `update tt_devs d set status='no', out_reason='expired', decided_at=now() from tt_seats s
-       where s.id = d.seat_id and s.store_id=$1 and d.status='wait' and d.created_at < now() - interval '${JOIN_TTL}' returning d.id`,
+    const asks = await q.query<{ from_seat: string; to_seat: string }>(
+      `update tt_asks set status='gone', decided_at=now() where store_id=$1 and status='wait' and created_at < now() - interval '${ASK_TTL}' returning from_seat, to_seat`,
       [store],
     );
-    if (changed + asks.length + joins.length > 0) {
-      await bump(q, store);
-      return true;
-    }
-    return false;
+    const joins = await q.query<{ seat_id: string }>(
+      `update tt_devs d set status='no', out_reason='expired', decided_at=now() from tt_seats s
+       where s.id = d.seat_id and s.store_id=$1 and d.status='wait' and d.created_at < now() - interval '${JOIN_TTL}' returning d.seat_id`,
+      [store],
+    );
+    await bumpSeats(q, [...asks.flatMap((a) => [a.from_seat, a.to_seat]), ...joins.map((j) => j.seat_id)]);
+    return changed + asks.length + joins.length > 0;
   });
 }
 
@@ -140,16 +156,21 @@ export type DevCtx = {
   seatDay: string;
   startedAt: Date;
   endedBy: string | null;
+  /** 이 자리 화면의 변경 번호 */
+  v: number;
+  /** 매장 정리(1분에 한 번)할 때가 됐나 — DB 시계 기준 */
+  due: boolean;
 };
 
 export async function loadDev(dev: string, q: Queryable = { query }): Promise<DevCtx | null> {
   if (!/^[0-9a-f-]{36}$/i.test(dev)) return null;
   const rows = await q.query<{
     id: string; status: DevCtx["status"]; out_reason: string | null; seat_id: string; store_id: StoreId; table_no: number;
-    seat_status: string; day: string; started_at: unknown; ended_by: string | null;
+    seat_status: string; day: string; started_at: unknown; ended_by: string | null; v: string | number; due: boolean | null;
   }>(
-    `select d.id, d.status, d.out_reason, d.seat_id, s.store_id, s.table_no, s.status as seat_status, s.day::text as day, s.started_at, s.ended_by
-     from tt_devs d join tt_seats s on s.id = d.seat_id where d.id = $1`,
+    `select d.id, d.status, d.out_reason, d.seat_id, s.store_id, s.table_no, s.status as seat_status, s.day::text as day, s.started_at, s.ended_by, s.v,
+            (st.swept_at is null or st.swept_at < now() - interval '60 seconds') as due
+     from tt_devs d join tt_seats s on s.id = d.seat_id left join tt_state st on st.store_id = s.store_id where d.id = $1`,
     [dev],
   );
   const r = rows[0];
@@ -157,6 +178,7 @@ export async function loadDev(dev: string, q: Queryable = { query }): Promise<De
   return {
     dev: r.id, status: r.status, outReason: r.out_reason, seat: r.seat_id, store: r.store_id, table: Number(r.table_no),
     seatOn: r.seat_status === "on", seatDay: r.day, startedAt: asDate(r.started_at), endedBy: r.ended_by,
+    v: Number(r.v), due: r.due !== false,
   };
 }
 
@@ -167,18 +189,33 @@ function liveNow(c: DevCtx, now: Date): boolean {
 /** 이 폰이 지금 들어와 있으면 그대로, 아니면 나간 까닭 */
 export function outWhy(c: DevCtx | null, now: Date): OutWhy | null {
   if (!c) return "none";
-  if (c.status === "no") return c.outReason === "expired" ? "expired" : "denied";
-  if (c.status === "out") return (c.outReason as OutWhy) ?? "self";
+  // 허락 대기였던 폰: 거절(denied)·시간 지남(expired)·스스로 그만둠(self)·자리가 끝남(team·staff 등) 그대로
+  if (c.status === "no") return (c.outReason as OutWhy | null) ?? "denied";
+  if (c.status === "out") return (c.outReason as OutWhy | null) ?? "self";
   if (!liveNow(c, now)) return c.seatDay !== serviceDay(now) ? "day" : ((c.endedBy as OutWhy) ?? "idle");
   return null;
 }
 
-async function requireIn(dev: string | null, now: Date, q?: Queryable): Promise<DevCtx> {
-  const c = dev ? await loadDev(dev, q) : null;
+function assertIn(c: DevCtx | null, now: Date): DevCtx {
   const why = outWhy(c, now);
   if (why || !c) throw new TTError("테이블톡에서 나가졌습니다. 테이블 QR 을 다시 찍어 주세요.", 409, "out");
   if (c.status !== "in") throw new TTError("일행의 허락을 기다리는 중입니다.", 409, "waiting");
   return c;
+}
+
+async function requireIn(dev: string | null, now: Date): Promise<DevCtx> {
+  const c = assertIn(dev ? await loadDev(dev) : null, now);
+  if (!(await getTTSettings())[c.store].on) throw new TTError("이 가게는 지금 테이블톡을 쓰지 않습니다.", 409, "out");
+  return c;
+}
+
+/**
+ * 쓰기 트랜잭션 맨 앞 — 매장을 잠근 뒤 이 폰을 다시 읽는다(잠그기 전에 자리가 끝났거나 직원이 막았을 수 있다).
+ * 트랜잭션 안에서는 q 로만 읽는다 — 로컬 PGlite 는 트랜잭션이 열려 있는 동안 바깥 쿼리를 기다리게 해 서로 멈춘다
+ */
+async function enter(q: Queryable, c: DevCtx, now: Date): Promise<DevCtx> {
+  await lockStores(q, c.store);
+  return assertIn(await loadDev(c.dev, q), now);
 }
 
 /** 폰이 보고 있다는 표시 — 1분에 한 번만 쓴다(인스턴스 안에서 기억) */
@@ -188,11 +225,9 @@ async function touch(c: DevCtx): Promise<void> {
   if (Date.now() - last < 60_000) return;
   touched.set(c.dev, Date.now());
   if (touched.size > 5000) touched.clear();
-  if (c.status === "in") {
-    await query(`with d as (update tt_devs set seen_at=now() where id=$1) update tt_seats set seen_at=now() where id=$2`, [c.dev, c.seat]);
-  } else {
-    await query(`update tt_devs set seen_at=now() where id=$1`, [c.dev]);
-  }
+  // 한 문장에 한 줄씩 — 같은 줄을 잡은 쓰기 트랜잭션과 서로 기다리다 멈추지 않게
+  await query(`update tt_devs set seen_at=now() where id=$1`, [c.dev]);
+  if (c.status === "in") await query(`update tt_seats set seen_at=now() where id=$1`, [c.seat]);
 }
 
 async function isLocked(q: Queryable, store: StoreId, table: number, day: string): Promise<boolean> {
@@ -219,29 +254,33 @@ export type JoinResult = { dev: string; status: "in" | "wait" };
  * QR 로 들어오기.
  *  start  — 열린 자리가 없다고 보고 누른 [테이블톡 시작]. 그사이 일행이 먼저 열었으면(5분 안) 그 자리로 들어간다
  *  team   — [일행으로 들어가기]. 5분 안이면 바로, 아니면 허락 대기
- *  fresh  — [방금 앉았습니다]. 이전 자리 폰들이 10분 넘게 안 봤을 때만 이전 자리를 닫고 새로 연다
+ *  fresh  — [방금 앉았습니다]. 이전 자리 폰들이 20분 넘게 안 봤을 때만 이전 자리를 닫고 새로 연다
  */
 export async function join(ref: TableRef, mode: JoinMode, oldDev: string | null, now: Date = new Date()): Promise<JoinResult> {
   const settings = await getTTSettings();
   if (!settings[ref.store].on) throw new TTError("이 가게는 지금 테이블톡을 쓰지 않습니다.", 403, "off");
   const day = serviceDay(now);
-  const old = oldDev ? await loadDev(oldDev) : null;
+  const first = oldDev ? await loadDev(oldDev) : null;
 
-  const result = await tx(async (q) => {
+  return tx(async (q) => {
+    // 이 매장(과, 다른 매장 테이블에서 옮겨 오는 폰이면 그 매장)을 잠근 뒤 폰을 다시 읽는다
+    await lockStores(q, ref.store, ...(first ? [first.store] : []));
+    const old = first ? await loadDev(first.dev, q) : null;
     if (await isLocked(q, ref.store, ref.table, day)) throw new TTError("이 테이블은 오늘 테이블톡이 막혀 있습니다. 직원에게 말씀해 주세요.", 403, "locked");
 
     // 이미 이 테이블 자리에 들어와 있는 폰이면 그대로. 허락을 기다리던 폰이 [방금 앉았습니다]를 고른 경우만 아래로 간다
     if (old && old.store === ref.store && old.table === ref.table && liveNow(old, now)) {
-      if (old.status === "in") return { dev: old.dev, status: "in" as const, moved: false };
-      if (old.status === "wait" && mode !== "fresh") return { dev: old.dev, status: "wait" as const, moved: false };
+      if (old.status === "in") return { dev: old.dev, status: "in" as const };
+      if (old.status === "wait" && mode !== "fresh") return { dev: old.dev, status: "wait" as const };
     }
 
     let seat = await liveSeatAt(q, ref.store, ref.table, day, true);
     let status: "in" | "wait" = "in";
+    let opened = false;
 
     if (seat && mode === "fresh") {
       if (now.getTime() - asDate(seat.seen_at).getTime() < QUIET_FOR_NEW_MS) {
-        throw new TTError("이 테이블의 이전 대화를 10분 안에 본 폰이 있어 아직 새로 시작할 수 없습니다. 같은 일행이면 [일행으로 들어가기], 아니면 직원에게 비워 달라고 말씀해 주세요.", 409, "busy");
+        throw new TTError("이 테이블의 이전 대화를 20분 안에 본 폰이 있어 아직 새로 시작할 수 없습니다. 같은 일행이면 [일행으로 들어가기], 아니면 직원에게 비워 달라고 말씀해 주세요.", 409, "busy");
       }
       await endSeats(q, [seat.id], "new");
       seat = null;
@@ -259,27 +298,28 @@ export async function join(ref: TableRef, mode: JoinMode, oldDev: string | null,
       // 같은 순간 일행이 먼저 열었다 — 그 자리로(방금 열린 자리라 바로 들어간다)
       seat = made[0] ?? (await liveSeatAt(q, ref.store, ref.table, day, true));
       if (!seat) throw new TTError("잠시 후 다시 시도해 주세요.", 503, "retry");
+      opened = !!made[0];
       status = "in";
     }
 
     const dev = await q.query<{ id: string }>(`insert into tt_devs (seat_id, status) values ($1, $2) returning id`, [seat.id, status]);
     if (status === "in") await q.query(`update tt_seats set seen_at=now() where id=$1`, [seat.id]);
+    // 새 자리면 번호판의 칸이 켜진다(매장 전부). 있던 자리에 붙었으면 그 자리만(폰 수·허락 대기)
+    if (opened) await bumpStore(q, ref.store);
+    else await bumpSeats(q, [seat.id]);
 
     // 다른 테이블에 들어가 있던 폰이면 거기서는 나간다. 그 자리에 남은 폰이 없으면 그 자리도 끝낸다
-    let moved = false;
     if (old && (old.status === "in" || old.status === "wait") && old.seat !== seat.id) {
-      await q.query(`update tt_devs set status = case when status='wait' then 'no' else 'out' end, out_reason='self', decided_at=now() where id=$1`, [old.dev]);
-      if (old.status === "in" && liveNow(old, now)) {
-        const left = await q.query(`select 1 from tt_devs where seat_id=$1 and status='in' limit 1`, [old.seat]);
-        if (left.length === 0) await endSeats(q, [old.seat], "team");
-      }
-      moved = old.store !== ref.store;
+      await q.query(
+        `update tt_devs set status = case when status='wait' then 'no' else 'out' end, out_reason='self', decided_at=now() where id=$1 and status in ('in','wait')`,
+        [old.dev],
+      );
+      const left = old.status === "in" && liveNow(old, now) ? await q.query(`select 1 from tt_devs where seat_id=$1 and status='in' limit 1`, [old.seat]) : [{}];
+      if (left.length === 0) await endSeats(q, [old.seat], "team");
+      else await bumpSeats(q, [old.seat]);
     }
-    await bump(q, ref.store);
-    if (moved && old) await bump(q, old.store);
-    return { dev: dev[0]!.id, status, moved };
+    return { dev: dev[0]!.id, status };
   });
-  return { dev: result.dev, status: result.status };
 }
 
 /** QR 을 열었을 때 입장 화면에 보일 것 */
@@ -325,36 +365,40 @@ export async function sync(dev: string | null, clientV: number, after: number, n
   const c = dev ? await loadDev(dev) : null;
   const why = outWhy(c, now);
   if (why || !c) return { kind: "out", why: why ?? "none" };
+  // 사장님이 테이블톡을 끄면 들어와 있던 폰도 닫힌다(설정은 30초 기억)
+  if (!(await getTTSettings())[c.store].on) return { kind: "out", why: "off" };
   await touch(c);
-  // 바뀐 게 없으면 여기까지 두 줄(폰 + 변경 번호)로 끝난다. 정리는 1분에 한 번
-  let st = await stateOf(c.store);
+  // 바뀐 게 없으면 폰 한 줄 읽고 끝난다(변경 번호·정리할 때가 같이 온다). 정리는 1분에 한 번
   let cur: DevCtx = c;
-  if (st.due && (await maybeSweep(c.store, now))) {
+  if (c.due && (await maybeSweep(c.store, now))) {
     // 정리하다 이 자리가 끝났을 수 있다
     const again = await loadDev(c.dev);
     const why2 = outWhy(again, now);
     if (why2 || !again) return { kind: "out", why: why2 ?? "none" };
     cur = again;
-    st = await stateOf(c.store);
   }
   const storeName = getStore(c.store)?.shortName ?? "";
   if (cur.status === "wait") return { kind: "waiting", store: c.store, storeName, table: c.table, since: iso(cur.startedAt) };
-  if (clientV === st.v) return { kind: "same", v: st.v };
-  return { kind: "state", state: await buildState(cur, st.v, after, now) };
+  if (clientV === cur.v) return { kind: "same", v: cur.v };
+  return { kind: "state", state: await buildState(cur, after, now) };
 }
 
-async function buildState(c: DevCtx, v: number, after: number, now: Date): Promise<TTState> {
+async function buildState(c: DevCtx, after: number, now: Date): Promise<TTState> {
   const day = serviceDay(now);
   const settings = await getTTSettings();
   const me = c.seat;
 
-  const [seats, asks, declined, rooms, blocks, joins, locks, phones] = await Promise.all([
+  // 글은 방 목록과 같은 한 문장으로 고른다 — 방 목록을 따로 읽은 뒤 그사이 열린 방의 앞 번호 글을 커서가 건너뛰지 않게.
+  // 처음(after=0)이면 최근 600줄, 아니면 after 뒤로 600줄. 하룻밤 대화가 600줄을 넘을 일은 드물다
+  const cursor = Math.max(0, Math.floor(after));
+  const myRooms = `select r.id from tt_rooms r where (r.seat_a = $1 or r.seat_b = $1) and (r.status = 'open' or r.closed_at > now() - interval '${ROOM_SHOW}')`;
+  const [seats, asks, declined, rooms, blocks, joins, locks, phones, msgRows] = await Promise.all([
     query<{ id: string; table_no: number }>(`select id, table_no from tt_seats where store_id=$1 and status='on' and day=$2::date`, [c.store, day]),
     query<{ id: string; from_seat: string; to_seat: string; note: string | null; created_at: unknown }>(
       `select id, from_seat, to_seat, note, created_at from tt_asks where status='wait' and (from_seat=$1 or to_seat=$1) order by created_at`,
       [me],
     ),
-    query<{ to_seat: string }>(`select to_seat from tt_asks where from_seat=$1 and status='no' and decided_at > now() - interval '${COOLDOWN}'`, [me]),
+    query<{ to_seat: string }>(`select to_seat from tt_asks where from_seat=$1 and status in ('no','cancel') and decided_at > now() - interval '${COOLDOWN}'`, [me]),
     query<{ id: string; status: string; created_at: unknown; closed_at: unknown; close_reason: string | null; closed_by: string | null; other: string; other_table: number; last: string | number }>(
       `select r.id, r.status, r.created_at, r.closed_at, r.close_reason, r.closed_by,
               case when r.seat_a = $1 then r.seat_b else r.seat_a end as other, o.table_no as other_table,
@@ -364,25 +408,25 @@ async function buildState(c: DevCtx, v: number, after: number, now: Date): Promi
        order by r.created_at`,
       [me],
     ),
-    query<{ seat_id: string; other_seat: string }>(`select seat_id, other_seat from tt_blocks where seat_id=$1 or other_seat=$1`, [me]),
+    // 우리가 막은 테이블 + 우리 테이블 번호를 막은 (지금 열린) 자리
+    query<{ seat_id: string; other_seat: string; other_table: number | null }>(
+      `select b.seat_id, b.other_seat, b.other_table from tt_blocks b join tt_seats bs on bs.id = b.seat_id
+       where bs.store_id=$2 and bs.status='on' and bs.day=$3::date and (b.seat_id=$1 or b.other_table=$4 or b.other_seat=$1) and ${BLOCK_LIVE}`,
+      [me, c.store, day, c.table],
+    ),
     query<{ id: string; created_at: unknown }>(`select id, created_at from tt_devs where seat_id=$1 and status='wait' and created_at > now() - interval '${JOIN_TTL}' order by created_at`, [me]),
     query<{ table_no: number }>(`select table_no from tt_locks where store_id=$1 and day=$2::date`, [c.store, day]),
     one<{ n: number }>(`select count(*)::int as n from tt_devs where seat_id=$1 and status='in'`, [me]),
+    query<{ id: string | number; room_id: string; seat_id: string | null; kind: string | null; body: string; nonce: string | null; created_at: unknown }>(
+      cursor === 0
+        ? `select * from (select id, room_id, seat_id, kind, body, nonce, created_at from tt_msgs where room_id in (${myRooms}) order by id desc limit 600) t order by id`
+        : `select id, room_id, seat_id, kind, body, nonce, created_at from tt_msgs where room_id in (${myRooms}) and id > $2 order by id limit 600`,
+      cursor === 0 ? [me] : [me, cursor],
+    ),
   ]);
 
   const tableOfSeat = new Map(seats.map((s) => [s.id, Number(s.table_no)]));
   const seatOfTable = new Map(seats.map((s) => [Number(s.table_no), s.id]));
-  const roomIds = rooms.map((r) => r.id);
-  // 처음(after=0)이면 최근 600줄, 아니면 after 뒤로 600줄. 하룻밤 대화가 600줄을 넘을 일은 드물다
-  const cursor = Math.max(0, Math.floor(after));
-  const msgRows = roomIds.length
-    ? await query<{ id: string | number; room_id: string; seat_id: string | null; kind: string | null; body: string; nonce: string | null; created_at: unknown }>(
-        cursor === 0
-          ? `select * from (select id, room_id, seat_id, kind, body, nonce, created_at from tt_msgs where room_id = any($1::uuid[]) order by id desc limit 600) t order by id`
-          : `select id, room_id, seat_id, kind, body, nonce, created_at from tt_msgs where room_id = any($1::uuid[]) and id > $2 order by id limit 600`,
-        cursor === 0 ? [roomIds] : [roomIds, cursor],
-      )
-    : [];
 
   const openWith = new Map<string, string>();
   const closedRecently = new Set<string>();
@@ -414,7 +458,16 @@ async function buildState(c: DevCtx, v: number, after: number, now: Date): Promi
       sentTo.set(a.to_seat, a.id);
     }
   }
-  const blocked = new Set(blocks.map((b) => (b.seat_id === me ? b.other_seat : b.seat_id)));
+  const blocked = new Set<number>();
+  for (const b of blocks) {
+    if (b.seat_id === me) {
+      const t = b.other_table ?? tableOfSeat.get(b.other_seat);
+      if (t != null) blocked.add(Number(t));
+    } else {
+      const t = tableOfSeat.get(b.seat_id);
+      if (t != null) blocked.add(t);
+    }
+  }
   const cooling = new Set([...declined.map((d) => d.to_seat), ...closedRecently]);
   const locked = new Set(locks.map((l) => Number(l.table_no)));
 
@@ -431,7 +484,7 @@ async function buildState(c: DevCtx, v: number, after: number, now: Date): Promi
     }
     const seat = seatOfTable.get(no);
     if (!seat) tiles.push({ no, state: "empty" });
-    else if (blocked.has(seat)) tiles.push({ no, state: "off" });
+    else if (blocked.has(no)) tiles.push({ no, state: "off" });
     else if (openWith.has(seat)) tiles.push({ no, state: "talk", room: openWith.get(seat) });
     else if (gotFrom.has(seat)) tiles.push({ no, state: "got", ask: gotFrom.get(seat) });
     else if (sentTo.has(seat)) tiles.push({ no, state: "sent", ask: sentTo.get(seat) });
@@ -451,7 +504,7 @@ async function buildState(c: DevCtx, v: number, after: number, now: Date): Promi
   const joinsOut: JoinWait[] = joins.map((j) => ({ id: j.id, at: iso(j.created_at) }));
 
   return {
-    v,
+    v: c.v,
     store: c.store,
     storeName: getStore(c.store)?.shortName ?? "",
     table: c.table,
@@ -491,23 +544,29 @@ async function openRoom(q: Queryable, store: StoreId, a: string, b: string): Pro
   return r[0].id;
 }
 
-async function blockedEither(q: Queryable, a: string, b: string): Promise<boolean> {
-  const r = await q.query(`select 1 from tt_blocks where (seat_id=$1 and other_seat=$2) or (seat_id=$2 and other_seat=$1) limit 1`, [a, b]);
+/** 둘 중 한쪽이 상대 테이블을 막았나. 막은 쪽은 자리, 막힌 쪽은 테이블 번호로 본다 — 막힌 쪽이 자리를 떠났다 다시 찍어도 막혀 있다 */
+async function blockedEither(q: Queryable, me: DevCtx, target: SeatRow): Promise<boolean> {
+  const r = await q.query(
+    `select 1 from tt_blocks b join tt_seats bs on bs.id = b.seat_id
+     where ((b.seat_id=$1 and (b.other_table=$2 or b.other_seat=$3)) or (b.seat_id=$3 and (b.other_table=$4 or b.other_seat=$1))) and ${BLOCK_LIVE} limit 1`,
+    [me.seat, Number(target.table_no), target.id, me.table],
+  );
   return r.length > 0;
 }
 
 export async function ask(dev: string | null, toTable: number, noteRaw: unknown, now: Date = new Date()): Promise<void> {
-  const c = await requireIn(dev, now);
+  const c0 = await requireIn(dev, now);
   if (!Number.isInteger(toTable) || toTable < 1) throw new TTError("테이블 번호가 맞지 않습니다.");
-  if (toTable === c.table) throw new TTError("우리 테이블입니다.");
+  if (toTable === c0.table) throw new TTError("우리 테이블입니다.");
   const note = cleanNote(noteRaw) || null;
-  if (!(await rateLimit(`tt-ask:${c.seat}`, 12, 3600))) throw new TTError("말 걸기를 너무 많이 했습니다. 잠시 뒤에 다시 해 주세요.", 429, "rate");
+  if (!(await rateLimit(`tt-ask:${c0.seat}`, 12, 3600))) throw new TTError("말 걸기를 너무 많이 했습니다. 잠시 뒤에 다시 해 주세요.", 429, "rate");
   const day = serviceDay(now);
   await tx(async (q) => {
+    const c = await enter(q, c0, now);
     if (await isLocked(q, c.store, toTable, day)) throw new TTError("지금은 그 테이블에 말을 걸 수 없습니다.", 409, "off");
     const target = await liveSeatAt(q, c.store, toTable, day);
     if (!target) throw new TTError(`${toTable}번 테이블은 지금 테이블톡을 쓰지 않습니다.`, 409, "empty");
-    if (await blockedEither(q, c.seat, target.id)) throw new TTError("지금은 그 테이블에 말을 걸 수 없습니다.", 409, "off");
+    if (await blockedEither(q, c, target)) throw new TTError("지금은 그 테이블에 말을 걸 수 없습니다.", 409, "off");
     const open = await q.query(`select 1 from tt_rooms where status='open' and least(seat_a, seat_b) = least($1::uuid, $2::uuid) and greatest(seat_a, seat_b) = greatest($1::uuid, $2::uuid)`, [c.seat, target.id]);
     if (open.length) return;
 
@@ -517,24 +576,24 @@ export async function ask(dev: string | null, toTable: number, noteRaw: unknown,
       await assertRoomRoom(q, c.seat, target.id);
       await openRoom(q, c.store, target.id, c.seat);
       await q.query(`update tt_asks set status='ok', decided_at=now() where id=$1`, [reverse[0].id]);
-      await bump(q, c.store);
+      await bumpSeats(q, [c.seat, target.id]);
       return;
     }
 
     const cool = await q.query(
-      `select 1 from tt_asks where from_seat=$1 and to_seat=$2 and status='no' and decided_at > now() - interval '${COOLDOWN}'
+      `select 1 from tt_asks where from_seat=$1 and to_seat=$2 and status in ('no','cancel') and decided_at > now() - interval '${COOLDOWN}'
        union all
        select 1 from tt_rooms where status='closed' and closed_at > now() - interval '${COOLDOWN}'
          and least(seat_a, seat_b) = least($1::uuid, $2::uuid) and greatest(seat_a, seat_b) = greatest($1::uuid, $2::uuid)
        limit 1`,
       [c.seat, target.id],
     );
-    if (cool.length) throw new TTError("방금 끝난 테이블입니다. 15분 뒤에 다시 말을 걸 수 있습니다.", 409, "wait");
+    if (cool.length) throw new TTError("이 테이블에는 15분 뒤에 다시 말을 걸 수 있습니다.", 409, "wait");
     const pend = await q.query<{ n: number }>(`select count(*)::int as n from tt_asks where from_seat=$1 and status='wait'`, [c.seat]);
     if ((pend[0]?.n ?? 0) >= MAX_SENT) throw new TTError(`답을 기다리는 신청이 ${MAX_SENT}개입니다. 답이 오거나 취소한 뒤에 거세요.`, 409, "many");
     if ((await openRoomCount(q, c.seat)) >= MAX_OPEN_ROOMS) throw new TTError(`대화방은 ${MAX_OPEN_ROOMS}개까지 열 수 있습니다.`, 409, "rooms");
-    await q.query(`insert into tt_asks (store_id, from_seat, to_seat, note) values ($1, $2, $3, $4) on conflict do nothing`, [c.store, c.seat, target.id, note]);
-    await bump(q, c.store);
+    const made = await q.query(`insert into tt_asks (store_id, from_seat, to_seat, note) values ($1, $2, $3, $4) on conflict do nothing returning id`, [c.store, c.seat, target.id, note]);
+    if (made.length) await bumpSeats(q, [c.seat, target.id]);
   });
 }
 
@@ -546,37 +605,78 @@ async function assertRoomRoom(q: Queryable, a: string, b: string): Promise<void>
 
 /** 받은 신청에 답하기. 일행 폰이 먼저 답했으면 아무 일도 하지 않는다 */
 export async function answer(dev: string | null, askId: unknown, ok: boolean, now: Date = new Date()): Promise<void> {
-  const c = await requireIn(dev, now);
+  const c0 = await requireIn(dev, now);
   if (typeof askId !== "string" || !/^[0-9a-f-]{36}$/i.test(askId)) throw new TTError("신청을 찾을 수 없습니다.", 404);
-  await tx(async (q) => {
+  const gone = await tx(async (q) => {
+    const c = await enter(q, c0, now);
     const rows = await q.query<{ id: string; from_seat: string; to_seat: string; status: string }>(`select id, from_seat, to_seat, status from tt_asks where id=$1 for update`, [askId]);
     const a = rows[0];
     if (!a || a.to_seat !== c.seat) throw new TTError("신청을 찾을 수 없습니다.", 404);
-    if (a.status !== "wait") return;
+    if (a.status !== "wait") return false;
     if (!ok) {
       await q.query(`update tt_asks set status='no', decided_at=now() where id=$1`, [a.id]);
-      await bump(q, c.store);
-      return;
+      await bumpSeats(q, [a.from_seat, c.seat]);
+      return false;
     }
     const from = await q.query(`select 1 from tt_seats where id=$1 and status='on' and day=$2::date`, [a.from_seat, serviceDay(now)]);
     if (!from.length) {
       await q.query(`update tt_asks set status='gone', decided_at=now() where id=$1`, [a.id]);
-      await bump(q, c.store);
-      throw new TTError("그 테이블이 자리를 떠났습니다.", 409, "gone");
+      await bumpSeats(q, [a.from_seat, c.seat]);
+      return true;
     }
     await assertRoomRoom(q, a.from_seat, c.seat);
     await openRoom(q, c.store, a.from_seat, c.seat);
     await q.query(`update tt_asks set status='ok', decided_at=now() where id=$1 or (from_seat=$2 and to_seat=$3 and status='wait')`, [a.id, c.seat, a.from_seat]);
-    await bump(q, c.store);
+    await bumpSeats(q, [a.from_seat, c.seat]);
+    return false;
   });
+  // 거둔 신청을 저장한 뒤에 알린다 — 트랜잭션 안에서 던지면 거둔 것까지 되돌아가 신청이 계속 남는다
+  if (gone) throw new TTError("그 테이블이 자리를 떠났습니다.", 409, "gone");
 }
 
 export async function cancelAsk(dev: string | null, askId: unknown, now: Date = new Date()): Promise<void> {
-  const c = await requireIn(dev, now);
+  const c0 = await requireIn(dev, now);
   if (typeof askId !== "string" || !/^[0-9a-f-]{36}$/i.test(askId)) return;
   await tx(async (q) => {
-    const r = await q.query(`update tt_asks set status='cancel', decided_at=now() where id=$1 and from_seat=$2 and status='wait' returning id`, [askId, c.seat]);
-    if (r.length) await bump(q, c.store);
+    const c = await enter(q, c0, now);
+    const r = await q.query<{ to_seat: string }>(`update tt_asks set status='cancel', decided_at=now() where id=$1 and from_seat=$2 and status='wait' returning to_seat`, [askId, c.seat]);
+    if (r[0]) await bumpSeats(q, [c.seat, r[0].to_seat]);
+  });
+}
+
+/** 받은 신청을 차단·신고로 닫는다 — 대화방이 열리기 전에도 막을 수 있게. 신고면 첫 마디를 직원에게 남긴다. 상대에게는 신청이 사라진 것으로만 보인다 */
+export async function refuseAsk(dev: string | null, askId: unknown, how: "block" | "report", now: Date = new Date()): Promise<void> {
+  const c0 = await requireIn(dev, now);
+  if (typeof askId !== "string" || !/^[0-9a-f-]{36}$/i.test(askId)) throw new TTError("신청을 찾을 수 없습니다.", 404);
+  await tx(async (q) => {
+    const c = await enter(q, c0, now);
+    const rows = await q.query<{ from_seat: string; to_seat: string; note: string | null; created_at: unknown; from_table: number }>(
+      `select a.from_seat, a.to_seat, a.note, a.created_at, s.table_no as from_table from tt_asks a join tt_seats s on s.id = a.from_seat where a.id=$1`,
+      [askId],
+    );
+    const a = rows[0];
+    if (!a || a.to_seat !== c.seat) throw new TTError("신청을 찾을 수 없습니다.", 404);
+    const fromNo = Number(a.from_table);
+    await q.query(
+      `insert into tt_blocks (seat_id, other_seat, other_table) values ($1, $2, $3) on conflict (seat_id, other_seat) do update set other_table = excluded.other_table`,
+      [c.seat, a.from_seat, fromNo],
+    );
+    await q.query(`update tt_asks set status='no', decided_at=now() where status='wait' and ((from_seat=$1 and to_seat=$2) or (from_seat=$2 and to_seat=$1))`, [a.from_seat, c.seat]);
+    // 그사이 일행 폰이 수락해 방이 열렸어도 막는다 — 막힌 두 테이블 사이에 열린 방이 남지 않게
+    const shut = await q.query<{ id: string }>(
+      `update tt_rooms set status='closed', closed_at=now(), closed_by=$1, close_reason=$3
+       where status='open' and least(seat_a, seat_b) = least($1::uuid, $2::uuid) and greatest(seat_a, seat_b) = greatest($1::uuid, $2::uuid) returning id`,
+      [c.seat, a.from_seat, how === "report" ? "reported" : "blocked"],
+    );
+    for (const r of shut) await q.query(`insert into tt_msgs (room_id, kind, body) values ($1, 'end', '')`, [r.id]);
+    if (how === "report") {
+      const lines = a.note ? [{ at: iso(a.created_at), table: fromNo, body: a.note }] : [];
+      await q.query(
+        `insert into tt_reports (store_id, day, by_table, on_table, on_seat, lines) values ($1, $2::date, $3, $4, $5, $6::jsonb)`,
+        [c.store, serviceDay(now), c.table, fromNo, a.from_seat, JSON.stringify(lines)],
+      );
+    }
+    await bumpSeats(q, [c.seat, a.from_seat]);
   });
 }
 
@@ -591,12 +691,13 @@ async function myRoom(q: Queryable, c: DevCtx, roomId: unknown): Promise<{ id: s
 }
 
 export async function send(dev: string | null, roomId: unknown, bodyRaw: unknown, nonce: string | null, now: Date = new Date()): Promise<void> {
-  const c = await requireIn(dev, now);
+  const c0 = await requireIn(dev, now);
   const body = cleanMessage(bodyRaw);
   if (!body) throw new TTError("보낼 글이 없습니다.");
-  if (!(await rateLimit(`tt-msg:${c.dev}`, 10, 15))) throw new TTError("너무 빨리 보내고 있습니다. 잠깐 쉬었다 보내 주세요.", 429, "rate");
-  if (!(await rateLimit(`tt-msg-seat:${c.seat}`, 60, 60))) throw new TTError("너무 빨리 보내고 있습니다. 잠깐 쉬었다 보내 주세요.", 429, "rate");
+  if (!(await rateLimit(`tt-msg:${c0.dev}`, 10, 15))) throw new TTError("너무 빨리 보내고 있습니다. 잠깐 쉬었다 보내 주세요.", 429, "rate");
+  if (!(await rateLimit(`tt-msg-seat:${c0.seat}`, 60, 60))) throw new TTError("너무 빨리 보내고 있습니다. 잠깐 쉬었다 보내 주세요.", 429, "rate");
   await tx(async (q) => {
+    const c = await enter(q, c0, now);
     const room = await myRoom(q, c, roomId);
     if (room.status !== "open") throw new TTError("대화가 끝났습니다.", 409, "closed");
     const r = await q.query<{ id: string }>(
@@ -604,22 +705,23 @@ export async function send(dev: string | null, roomId: unknown, bodyRaw: unknown
        on conflict (room_id, nonce) where nonce is not null do nothing returning id`,
       [room.id, c.seat, c.dev, body, nonce],
     );
-    if (r.length) await bump(q, c.store);
+    if (r.length) await bumpSeats(q, [c.seat, room.other]);
   });
 }
 
 /** 대화방 닫기 — 나가기(left) · 차단(end) · 신고(end, 직원에게 남김) */
 export async function closeRoom(dev: string | null, roomId: unknown, how: "leave" | "block" | "report", now: Date = new Date()): Promise<void> {
-  const c = await requireIn(dev, now);
+  const c0 = await requireIn(dev, now);
   await tx(async (q) => {
+    const c = await enter(q, c0, now);
     const room = await myRoom(q, c, roomId);
+    const other = await q.query<{ table_no: number }>(`select table_no from tt_seats where id=$1`, [room.other]);
+    const otherNo = Number(other[0]?.table_no ?? 0);
     if (how === "report") {
       const lines = await q.query<{ seat_id: string | null; kind: string | null; body: string; created_at: unknown }>(
         `select seat_id, kind, body, created_at from tt_msgs where room_id=$1 order by id desc limit 40`,
         [room.id],
       );
-      const other = await q.query<{ table_no: number }>(`select table_no from tt_seats where id=$1`, [room.other]);
-      const otherNo = Number(other[0]?.table_no ?? 0);
       const snap = lines
         .reverse()
         .filter((l) => !l.kind)
@@ -630,15 +732,18 @@ export async function closeRoom(dev: string | null, roomId: unknown, how: "leave
       );
     }
     if (how !== "leave") {
-      await q.query(`insert into tt_blocks (seat_id, other_seat) values ($1, $2) on conflict do nothing`, [c.seat, room.other]);
+      await q.query(
+        `insert into tt_blocks (seat_id, other_seat, other_table) values ($1, $2, $3) on conflict (seat_id, other_seat) do update set other_table = excluded.other_table`,
+        [c.seat, room.other, otherNo || null],
+      );
       await q.query(`update tt_asks set status='gone', decided_at=now() where status='wait' and ((from_seat=$1 and to_seat=$2) or (from_seat=$2 and to_seat=$1))`, [c.seat, room.other]);
     }
     if (room.status === "open") {
       const reason = how === "leave" ? "left" : how === "block" ? "blocked" : "reported";
-      await q.query(`update tt_rooms set status='closed', closed_at=now(), closed_by=$2, close_reason=$3 where id=$1 and status='open'`, [room.id, c.seat, reason]);
-      await q.query(`insert into tt_msgs (room_id, kind, body) values ($1, $2, $3)`, [room.id, how === "leave" ? "left" : "end", how === "leave" ? String(c.table) : ""]);
+      const shut = await q.query(`update tt_rooms set status='closed', closed_at=now(), closed_by=$2, close_reason=$3 where id=$1 and status='open' returning id`, [room.id, c.seat, reason]);
+      if (shut.length) await q.query(`insert into tt_msgs (room_id, kind, body) values ($1, $2, $3)`, [room.id, how === "leave" ? "left" : "end", how === "leave" ? String(c.table) : ""]);
     }
-    await bump(q, c.store);
+    await bumpSeats(q, [c.seat, room.other]);
   });
 }
 
@@ -646,38 +751,50 @@ export async function closeRoom(dev: string | null, roomId: unknown, how: "leave
 
 /** 허락 기다리는 새 폰 받기/거절 */
 export async function admit(dev: string | null, joinDev: unknown, ok: boolean, now: Date = new Date()): Promise<void> {
-  const c = await requireIn(dev, now);
+  const c0 = await requireIn(dev, now);
   if (typeof joinDev !== "string" || !/^[0-9a-f-]{36}$/i.test(joinDev)) throw new TTError("요청을 찾을 수 없습니다.", 404);
   await tx(async (q) => {
+    const c = await enter(q, c0, now);
     const r = await q.query(
       `update tt_devs set status=$3, out_reason = case when $3='no' then 'denied' else null end, decided_at=now(), seen_at=now()
        where id=$1 and seat_id=$2 and status='wait' returning id`,
       [joinDev, c.seat, ok ? "in" : "no"],
     );
-    if (r.length) await bump(q, c.store);
+    if (r.length) await bumpSeats(q, [c.seat]);
   });
 }
 
 /** 이 폰만 나가기 — 마지막 폰이면 자리도 끝난다 */
 export async function leaveDevice(dev: string | null, now: Date = new Date()): Promise<void> {
-  const c = dev ? await loadDev(dev) : null;
-  if (!c) return;
+  const first = dev ? await loadDev(dev) : null;
+  if (!first) return;
   await tx(async (q) => {
-    await q.query(`update tt_devs set status = case when status='wait' then 'no' else 'out' end, out_reason='self', decided_at=now() where id=$1 and status in ('in','wait')`, [c.dev]);
+    await lockStores(q, first.store);
+    // 잠근 뒤의 모습으로 — 마지막 두 폰이 같이 나가도 둘째가 첫째를 보고 자리를 끝낸다
+    const c = await loadDev(first.dev, q);
+    if (!c) return;
+    const r = await q.query(`update tt_devs set status = case when status='wait' then 'no' else 'out' end, out_reason='self', decided_at=now() where id=$1 and status in ('in','wait') returning id`, [c.dev]);
+    if (!r.length) return;
     if (c.status === "in" && liveNow(c, now)) {
       const left = await q.query(`select 1 from tt_devs where seat_id=$1 and status='in' limit 1`, [c.seat]);
-      if (left.length === 0) await endSeats(q, [c.seat], "team");
+      if (left.length === 0) {
+        await endSeats(q, [c.seat], "team");
+        return;
+      }
     }
-    await bump(q, c.store);
+    await bumpSeats(q, [c.seat]);
   });
 }
 
-/** 자리 떠나기 — 우리 테이블 폰 모두 나가고 대화방도 모두 닫힌다 */
+/** 자리 떠나기 — 우리 테이블 폰 모두 나가고 대화방도 모두 닫힌다. 이미 끝난 자리면 할 일이 없다 */
 export async function endTeam(dev: string | null, now: Date = new Date()): Promise<void> {
-  const c = await requireIn(dev, now);
+  const first = dev ? await loadDev(dev) : null;
+  if (!first || outWhy(first, now) || first.status !== "in") return;
   await tx(async (q) => {
+    await lockStores(q, first.store);
+    const c = await loadDev(first.dev, q);
+    if (!c || outWhy(c, now) || c.status !== "in") return;
     await endSeats(q, [c.seat], "team");
-    await bump(q, c.store);
   });
 }
 
@@ -737,10 +854,10 @@ export async function openReportCount(store: StoreId | null): Promise<number> {
 export async function adminClear(store: StoreId, table: number, now: Date = new Date()): Promise<boolean> {
   const day = serviceDay(now);
   return tx(async (q) => {
+    await lockStores(q, store);
     const seat = await liveSeatAt(q, store, table, day, true);
     if (!seat) return false;
     await endSeats(q, [seat.id], "staff");
-    await bump(q, store);
     return true;
   });
 }
@@ -749,6 +866,8 @@ export async function adminClear(store: StoreId, table: number, now: Date = new 
 export async function adminLock(store: StoreId, table: number, on: boolean, adminId: string, now: Date = new Date()): Promise<void> {
   const day = serviceDay(now);
   await tx(async (q) => {
+    // 손님 폰의 입장과 한 줄로 — 막는 순간 들어오던 폰이 막힌 테이블에 자리를 열지 못한다
+    await lockStores(q, store);
     if (on) {
       await q.query(`insert into tt_locks (store_id, table_no, day, by_admin) values ($1, $2, $3::date, $4) on conflict do nothing`, [store, table, day, adminId]);
       const seat = await liveSeatAt(q, store, table, day, true);
@@ -756,7 +875,7 @@ export async function adminLock(store: StoreId, table: number, on: boolean, admi
     } else {
       await q.query(`delete from tt_locks where store_id=$1 and table_no=$2 and day=$3::date`, [store, table, day]);
     }
-    await bump(q, store);
+    await bumpStore(q, store);
   });
 }
 

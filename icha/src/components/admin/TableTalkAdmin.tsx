@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { ttClearAction, ttLockAction, ttRegenAction, ttResolveAction, ttSettingsAction, type ActionState } from "@/app/admin/actions";
 import type { AdminReport, AdminSeat } from "@/lib/tabletalk/service";
+import { hhmm as hm } from "@/components/tabletalk/words";
 import ui from "@/app/admin/admin.module.css";
 
 type Props = {
@@ -16,10 +17,6 @@ type Props = {
   usage: { used30: number; today: number; budget: number; pace: number; closed: boolean } | null;
 };
 
-const hm = (iso: string) => {
-  const d = new Date(iso);
-  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
-};
 const minsAgo = (iso: string) => Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 60000));
 
 /**
@@ -125,7 +122,9 @@ export function TableTalkAdmin(p: Props) {
                       <b>{t.table}번</b>
                     </td>
                     <td className={ui.mono}>{hm(t.since)}</td>
-                    <td className={ui.mono}>{minsAgo(t.seen) < 1 ? "방금" : `${minsAgo(t.seen)}분 전`}</td>
+                    <td className={ui.mono} suppressHydrationWarning>
+                      {minsAgo(t.seen) < 1 ? "방금" : `${minsAgo(t.seen)}분 전`}
+                    </td>
                     <td className={ui.num}>
                       {t.phones}
                       {t.waiting ? <span className={ui.dim}> +{t.waiting} 대기</span> : null}

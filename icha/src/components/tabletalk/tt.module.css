@@ -79,6 +79,9 @@
 .slabTitle { font-size: 16px; font-weight: 550; line-height: 1.4; letter-spacing: -0.02em; color: var(--tt-ivory); }
 .slabNote { font-size: 15px; line-height: 1.5; color: var(--tt-text-2); word-break: break-word; }
 .slabWhen { font-size: 12px; color: var(--tt-text-3); }
+/* 차단·신고 — 수락·거절보다 한 단 낮게. 손가락이 닿는 높이는 지킨다 */
+.slabLink { justify-self: start; min-height: 32px; margin: 2px 0 -6px; padding: 0; font-size: 12px; color: var(--tt-text-3); text-decoration: underline; text-underline-offset: 3px; }
+.slabLink:active { color: var(--tt-ivory); }
 .slabActions { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .slabYes { min-height: 48px; background: var(--tt-satin); border: 1px solid rgba(242, 232, 211, 0.25); color: var(--tt-gold-ink); font-size: 15px; font-weight: 550; }
 .slabYes:active { background-color: #b8ad98; transform: translateY(1px); }

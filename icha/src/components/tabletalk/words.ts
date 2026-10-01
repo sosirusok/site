@@ -3,9 +3,12 @@
  */
 import type { Msg, OutWhy } from "@/lib/tabletalk/types";
 
+const KST_MS = 9 * 3600 * 1000;
+
+/** 22:41 — 한국 시간. 서버(UTC)와 폰이 같은 글자를 그려야 화면이 처음 그린 그대로 이어진다 */
 export function hhmm(isoText: string): string {
-  const d = new Date(isoText);
-  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+  const d = new Date(new Date(isoText).getTime() + KST_MS);
+  return `${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")}`;
 }
 
 export function ago(isoText: string, now: number): string {
@@ -64,6 +67,6 @@ export function sysText(m: Msg, myTable: number): string {
 /** 번호판 칸을 눌렀는데 말을 걸 수 없을 때 */
 export const TILE_NOTE = {
   empty: (n: number) => `${n}번 테이블은 아직 테이블톡을 켜지 않았습니다.`,
-  wait: (n: number) => `${n}번 테이블과는 방금 대화가 끝나 15분 뒤에 다시 걸 수 있습니다.`,
+  wait: (n: number) => `${n}번 테이블에는 15분 뒤에 다시 말을 걸 수 있습니다.`,
   off: (n: number) => `지금은 ${n}번 테이블에 말을 걸 수 없습니다.`,
 } as const;

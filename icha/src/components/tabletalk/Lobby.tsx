@@ -41,6 +41,7 @@ export function Lobby({
   const [sentFor, setSentFor] = useState<{ no: number; ask: string } | null>(null);
   const [menu, setMenu] = useState(false);
   const [confirmEnd, setConfirmEnd] = useState(false);
+  const [refuse, setRefuse] = useState<{ ask: string; from: number; step: "menu" | "block" | "report" } | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
 
   async function run(key: string, name: string, payload: Record<string, unknown>) {
@@ -97,13 +98,15 @@ export function Lobby({
               <span className={s.slabNo} aria-hidden="true">{state.table}</span>
               <div className={s.slabText}>
                 <span className={s.slabTitle}>새 폰 한 대가 우리 테이블로 들어오려고 합니다</span>
-                <span className={s.slabWhen}>{ago(j.at, now)} · 같이 온 일행이 맞으면 허락하세요</span>
+                <span className={s.slabWhen} suppressHydrationWarning>
+                  {ago(j.at, now)} · 같이 온 일행이 맞으면 허락하세요
+                </span>
               </div>
               <div className={s.slabActions}>
-                <button type="button" className={s.slabYes} disabled={busy !== null} onClick={() => run(`j${j.id}`, "admit", { dev: j.id, ok: true })}>
+                <button type="button" className={s.slabYes} disabled={busy !== null} onClick={() => run(`j${j.id}:ok`, "admit", { dev: j.id, ok: true })}>
                   허락
                 </button>
-                <button type="button" className={s.slabNo2} disabled={busy !== null} onClick={() => run(`j${j.id}`, "admit", { dev: j.id, ok: false })}>
+                <button type="button" className={s.slabNo2} disabled={busy !== null} onClick={() => run(`j${j.id}:no`, "admit", { dev: j.id, ok: false })}>
                   거절
                 </button>
               </div>
@@ -115,13 +118,18 @@ export function Lobby({
               <div className={s.slabText}>
                 <span className={s.slabTitle}>{a.from}번 테이블이 말을 걸었습니다</span>
                 {a.note && <span className={s.slabNote}>“{a.note}”</span>}
-                <span className={s.slabWhen}>{ago(a.at, now)}</span>
+                <span className={s.slabWhen} suppressHydrationWarning>
+                  {ago(a.at, now)}
+                </span>
+                <button type="button" className={s.slabLink} onClick={() => setRefuse({ ask: a.id, from: a.from, step: "menu" })}>
+                  차단·신고
+                </button>
               </div>
               <div className={s.slabActions}>
-                <button type="button" className={s.slabYes} disabled={busy !== null} onClick={() => run(`a${a.id}`, "answer", { ask: a.id, ok: true })}>
-                  {busy === `a${a.id}` ? "여는 중…" : "수락"}
+                <button type="button" className={s.slabYes} disabled={busy !== null} onClick={() => run(`a${a.id}:ok`, "answer", { ask: a.id, ok: true })}>
+                  {busy === `a${a.id}:ok` ? "여는 중…" : "수락"}
                 </button>
-                <button type="button" className={s.slabNo2} disabled={busy !== null} onClick={() => run(`a${a.id}`, "answer", { ask: a.id, ok: false })}>
+                <button type="button" className={s.slabNo2} disabled={busy !== null} onClick={() => run(`a${a.id}:no`, "answer", { ask: a.id, ok: false })}>
                   거절
                 </button>
               </div>
@@ -190,7 +198,7 @@ export function Lobby({
       </div>
       {!anyoneElse && <p className={s.alone}>아직 테이블톡을 켠 다른 테이블이 없습니다. 다른 테이블이 QR 을 찍으면 그 번호에 불이 들어옵니다.</p>}
       <div className={s.lobbyEnd}>
-        <p className={s.fine}>불쾌한 대화는 대화방에서 차단·신고할 수 있습니다. 신고하면 직원이 봅니다.</p>
+        <p className={s.fine}>불쾌한 신청이나 대화는 차단·신고할 수 있습니다. 신고하면 직원이 봅니다.</p>
       </div>
 
       {askTo !== null && (
@@ -235,6 +243,50 @@ export function Lobby({
           <button type="button" className={s.plainBtn} onClick={() => setSentFor(null)}>
             닫기
           </button>
+        </Sheet>
+      )}
+
+      {refuse && (
+        <Sheet label={`${refuse.from}번 테이블의 신청`} onClose={() => setRefuse(null)}>
+          <p className={s.sheetKicker}>TABLE {refuse.from}</p>
+          {refuse.step === "menu" ? (
+            <>
+              <p className={s.sheetTitle}>{refuse.from}번 테이블의 신청</p>
+              <div className={s.menuList}>
+                <button type="button" className={`${s.menuItem} ${s.menuDanger}`} onClick={() => setRefuse({ ...refuse, step: "block" })}>
+                  <b>차단</b>
+                  <span>오늘 밤 이 테이블과는 서로 말을 걸 수 없습니다</span>
+                </button>
+                <button type="button" className={`${s.menuItem} ${s.menuDanger}`} onClick={() => setRefuse({ ...refuse, step: "report" })}>
+                  <b>신고</b>
+                  <span>차단하고, 받은 첫 마디를 직원에게 보냅니다</span>
+                </button>
+                <button type="button" className={s.menuItem} onClick={() => setRefuse(null)}>
+                  <b>닫기</b>
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className={s.sheetTitle}>{refuse.step === "block" ? `${refuse.from}번 테이블을 차단할까요?` : `${refuse.from}번 테이블을 신고할까요?`}</p>
+              <p className={s.sheetText}>
+                {refuse.step === "block"
+                  ? "상대에게는 차단했다고 알리지 않습니다."
+                  : "상대에게는 신고했다고 알리지 않습니다. 직원이 받은 첫 마디를 보고 필요하면 그 테이블을 내보냅니다."}
+              </p>
+              <button
+                type="button"
+                className="btn btn-outline btn-block"
+                disabled={busy !== null}
+                onClick={async () => (await run("refuse", "refuse", { ask: refuse.ask, how: refuse.step })) && setRefuse(null)}
+              >
+                {busy === "refuse" ? "처리 중…" : refuse.step === "block" ? "차단" : "신고"}
+              </button>
+              <button type="button" className={s.plainBtn} onClick={() => setRefuse({ ...refuse, step: "menu" })}>
+                취소
+              </button>
+            </>
+          )}
         </Sheet>
       )}
 

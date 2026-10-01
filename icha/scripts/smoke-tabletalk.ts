@@ -7,7 +7,7 @@ process.env.ADMIN_INITIAL_PASSWORD = "test-pw";
 import assert from "node:assert/strict";
 import { getDb, query } from "../src/lib/db";
 import {
-  adminClear, adminLock, adminView, answer, ask, cancelAsk, closeRoom, endTeam, join, leaveDevice, send, sync, admit, purgeTableTalk, TTError, type SyncOut,
+  adminClear, adminLock, adminView, answer, ask, cancelAsk, closeRoom, endTeam, join, leaveDevice, refuseAsk, send, sync, admit, purgeTableTalk, TTError, type SyncOut,
 } from "../src/lib/tabletalk/service";
 import { saveTTStore } from "../src/lib/tabletalk/settings";
 import type { TTState } from "../src/lib/tabletalk/types";
@@ -156,10 +156,12 @@ async function main() {
   const denied = (await sync(late2.dev, -1, 0)) as SyncOut;
   assert.deepEqual(denied, { kind: "out", why: "denied" });
 
-  // ── [방금 앉았습니다]: 누가 보고 있으면 안 되고, 10분 넘게 아무도 안 봤으면 이전 자리를 닫고 새로
+  // ── [방금 앉았습니다]: 누가 보고 있으면 안 되고, 20분 넘게 아무도 안 봤으면 이전 자리를 닫고 새로
   await rejects(join(T3, "fresh", null), "busy");
   await rejects(join(T3, "start", null), "exists");
   await query(`update tt_seats set seen_at = now() - interval '11 minutes' where store_id='tokyo' and table_no=3 and status='on'`);
+  await rejects(join(T3, "fresh", null), "busy");
+  await query(`update tt_seats set seen_at = now() - interval '21 minutes' where store_id='tokyo' and table_no=3 and status='on'`);
   const newGroup = await join(T3, "fresh", null);
   assert.equal(newGroup.status, "in");
   assert.deepEqual(await sync(a.dev, -1, 0), { kind: "out", why: "new" }, "이전 일행 폰은 나가진다");
@@ -207,6 +209,70 @@ async function main() {
   await saveTTStore("tokyo", { on: false });
   await rejects(join(T9, "start", null), "off");
   await saveTTStore("tokyo", { on: true });
+
+  // ── 자리마다 변경 번호: 남의 테이블끼리 대화해도 우리 번호는 그대로(조용하면 늦게 묻는 게 먹힌다)
+  await saveTTStore("joseon", { on: true, tables: 12 });
+  const J = (table: number) => ({ store: "joseon" as const, table });
+  const j1 = await join(J(1), "start", null);
+  const j2 = await join(J(2), "start", null);
+  const lone = await join(J(9), "start", null);
+  await ask(j1.dev, 2, "");
+  await answer(j2.dev, (await state(j2.dev)).asks[0]!.id, true);
+  const jr = (await state(j1.dev)).rooms[0]!;
+  const sl = await state(lone.dev);
+  const v2 = (await state(j2.dev)).v;
+  await send(j1.dev, jr.id, "둘이서만", "nonce-j1-0001");
+  assert.equal((await sync(lone.dev, sl.v, 0)).kind, "same", "남의 대화로 우리 번호가 바뀌지 않는다");
+  assert.equal((await sync(j2.dev, v2, 0)).kind, "state", "대화 상대는 새로 받는다");
+  const j5 = await join(J(5), "start", null);
+  assert.equal((await sync(lone.dev, sl.v, 0)).kind, "state", "새 테이블이 켜지면 모두 새로 받는다");
+
+  // ── 받은 신청에서 신고(차단 포함): 방이 없어도 막히고 첫 마디가 직원에게 간다
+  await ask(j5.dev, 9, "이상한 첫 마디");
+  await refuseAsk(lone.dev, (await state(lone.dev)).asks[0]!.id, "report");
+  assert.equal(tile(await state(j5.dev), 9), "off");
+  assert.equal(tile(await state(lone.dev), 5), "off");
+  assert.equal((await state(lone.dev)).asks.length, 0);
+  const rep5 = (await adminView("joseon")).reports.find((r) => r.onTable === 5)!;
+  assert.equal(rep5.lines[0]!.body, "이상한 첫 마디", "신고에 첫 마디가 간다");
+  // 막힌 쪽이 [자리 떠나기] 뒤 다시 찍어도 막혀 있다
+  await endTeam(j5.dev);
+  const j5b = await join(J(5), "start", null);
+  await rejects(ask(j5b.dev, 9, "또"), "off");
+  assert.equal(tile(await state(lone.dev), 5), "off");
+  // 직원이 5번을 비우면 다른 손님으로 보고 풀린다
+  assert.equal(await adminClear("joseon", 5), true);
+  const j5c = await join(J(5), "start", null);
+  await ask(j5c.dev, 9, "");
+  assert.equal(tile(await state(lone.dev), 5), "got");
+
+  // ── 취소한 신청도 15분 동안 다시 못 건다(취소·재신청으로 괴롭히지 못하게)
+  await ask(j1.dev, 9, "");
+  await cancelAsk(j1.dev, (await state(j1.dev)).sent.find((x) => x.to === 9)!.id);
+  await rejects(ask(j1.dev, 9, ""), "wait");
+  assert.equal(tile(await state(j1.dev), 9), "wait");
+
+  // ── 수락하는 사이 신청한 자리가 끝났으면 신청을 거둔다(던져도 거둔 것은 남는다)
+  const j7 = await join(J(7), "start", null);
+  await ask(j7.dev, 9, "");
+  const ask7 = (await state(lone.dev)).asks.find((x) => x.from === 7)!.id;
+  await query(`update tt_seats set day = day - 1 where store_id='joseon' and table_no=7 and status='on'`);
+  await rejects(answer(lone.dev, ask7, true), "gone");
+  assert.equal((await query<{ status: string }>(`select status from tt_asks where id=$1`, [ask7]))[0]!.status, "gone");
+
+  // ── 허락 기다리던 폰: 자리가 끝나면 '거절'이 아니라 끝난 까닭을 본다
+  await query(`update tt_seats set started_at = now() - interval '20 minutes' where store_id='joseon' and table_no=1 and status='on'`);
+  const wj = await join(J(1), "team", null);
+  assert.equal(wj.status, "wait");
+  await endTeam(j1.dev);
+  assert.deepEqual(await sync(wj.dev, -1, 0), { kind: "out", why: "team" });
+
+  // ── 사장님이 끄면 들어와 있던 폰도 닫히고, 다시 켜면 이어진다
+  await saveTTStore("joseon", { on: false });
+  assert.deepEqual(await sync(lone.dev, -1, 0), { kind: "out", why: "off" });
+  await rejects(send(j2.dev, jr.id, "꺼진 뒤", "nonce-off-0001"), "out");
+  await saveTTStore("joseon", { on: true });
+  assert.equal((await sync(lone.dev, -1, 0)).kind, "state", "다시 켜면 이어서");
 
   // ── 보관 정리: 이틀 지난 영업일 것만 지운다
   const p = await purgeTableTalk(new Date(Date.now() + 5 * 86400 * 1000));

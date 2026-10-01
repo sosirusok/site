@@ -3,6 +3,7 @@ import { test } from "node:test";
 import { parseTableCode, serviceDay, serviceDayEndsAt, tableCode } from "./code";
 import { paceFor, pollDelay } from "./pace";
 import { cleanMessage, cleanNonce, cleanNote, MSG_MAX } from "./text";
+import { hhmm } from "../../components/tabletalk/words";
 
 const gen1 = () => 1;
 
@@ -72,4 +73,10 @@ test("묻는 간격", () => {
   assert.equal(pollDelay({ inRoom: false, quietMs: 10 * 60_000, pace: 1 }), 16000);
   assert.equal(pollDelay({ inRoom: true, quietMs: 10 * 60_000, pace: 4 }), 40000);
   assert.ok(pollDelay({ inRoom: false, quietMs: 10 * 60_000, pace: 1 }) <= 20000);
+});
+
+test("시각은 서버(UTC)에서 그려도 한국 시간 — 폰과 같은 글자라 화면이 다시 그려지지 않는다", () => {
+  assert.equal(hhmm("2026-10-01T14:05:00.000Z"), "23:05");
+  assert.equal(hhmm("2026-10-01T15:30:00.000Z"), "00:30");
+  assert.equal(hhmm("2026-10-01T03:00:00.000Z"), "12:00");
 });
