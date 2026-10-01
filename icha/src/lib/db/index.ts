@@ -86,8 +86,11 @@ async function createPgliteDriver(): Promise<Driver> {
 
 async function boot(): Promise<Driver> {
   const url = process.env.DATABASE_URL?.trim();
+  const t0 = Date.now();
   const driver = url ? await createPgDriver(url) : await createPgliteDriver();
   await ensureSchema(driver);
+  // 서버가 새로 뜰 때 한 번 — DB 가 멀거나(지역이 다름) 잠들어 있으면 여기서 길어진다
+  if (url) console.log(`[db] ready in ${Date.now() - t0}ms`);
   return driver;
 }
 
