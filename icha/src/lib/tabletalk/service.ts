@@ -348,6 +348,23 @@ export async function entryInfo(ref: TableRef, dev: string | null, now: Date = n
   };
 }
 
+/** 이 폰이 지금 들어와 있는 테이블(사이트 [테이블톡] 탭의 '이어서 대화하기') */
+export async function currentTable(dev: string | null, now: Date = new Date()): Promise<{ store: StoreId; table: number } | null> {
+  const c = dev ? await loadDev(dev) : null;
+  if (!c || outWhy(c, now) || c.status !== "in") return null;
+  return { store: c.store, table: c.table };
+}
+
+/** 번호 고르는 화면 — 지금 켜진 테이블·오늘 막은 테이블 */
+export async function storeTables(store: StoreId, now: Date = new Date()): Promise<{ live: number[]; locked: number[] }> {
+  const day = serviceDay(now);
+  const [live, locked] = await Promise.all([
+    query<{ table_no: number }>(`select table_no from tt_seats where store_id=$1 and status='on' and day=$2::date`, [store, day]),
+    query<{ table_no: number }>(`select table_no from tt_locks where store_id=$1 and day=$2::date`, [store, day]),
+  ]);
+  return { live: live.map((r) => Number(r.table_no)), locked: locked.map((r) => Number(r.table_no)) };
+}
+
 /* ───────── 동기화 ───────── */
 
 export type SyncOut =

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 /** 글을 쓰려고 자판이 올라오면 화면이 그만큼 줄어든다(안드로이드 크롬) — 아래 입력칸이 자판에 가리지 않게 */
-export const viewport: Viewport = { themeColor: "#06030c", interactiveWidget: "resizes-content" };
+export const viewport: Viewport = { themeColor: "#08080a", interactiveWidget: "resizes-content" };
 
 /**
  * 테이블 QR 이 여는 화면. 주소만 열어서는 아무것도 만들지 않는다 — 카메라 앱·메신저 미리보기가 먼저 열어 봐도 괜찮게.

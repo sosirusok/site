@@ -40,6 +40,13 @@ export function Hero({ rules }: { rules: Rules }) {
           <p className={s.condition}>{ruleLine(rules)}</p>
           <Link href="/guide" className={s.guide}>이용 안내 <span aria-hidden="true">↗</span></Link>
         </div>
+        <Link href="/talk" prefetch={false} className={s.talk}>
+          <span className={s.talkText}>
+            <b>테이블톡</b>
+            <small>같은 가게 다른 테이블과 단체 대화</small>
+          </span>
+          <span className={s.talkArrow} aria-hidden="true">↗</span>
+        </Link>
       </div>
     </section>
   );

@@ -53,7 +53,7 @@ export function JoinScreen({ entry, onJoin }: { entry: JoinEntry; onJoin: (mode:
 
       {!ex ? (
         <>
-          <p className={s.lead}>같은 가게 다른 테이블에 말을 걸고, 받아 주면 두 테이블이 한 방에서 대화합니다. 일행 폰도 이 QR 을 찍으면 같이 들어옵니다.</p>
+          <p className={s.lead}>같은 가게 다른 테이블에 말을 걸고, 받아 주면 두 테이블이 한 방에서 대화합니다. 일행 폰도 이 테이블로 들어오면 같이 봅니다.</p>
           <div className={s.actions}>
             <button type="button" className="btn btn-primary btn-lg btn-block" disabled={busy !== null} onClick={() => go("start")}>
               {busy ? "들어가는 중…" : "테이블톡 시작"}
@@ -154,8 +154,8 @@ export function WaitingScreen({ storeName, table, onCancel, onFresh }: { storeNa
   );
 }
 
-/** 들어갈 수 없거나 나가진 화면 */
-export function NoticeScreen({ kicker, title, text, why, again }: { kicker?: string; title: string; text?: string; why?: OutWhy | null; again?: boolean }) {
+/** 들어갈 수 없거나 나가진 화면. pick 이면 사이트 [테이블톡] 탭(번호로 들어가기)으로 가는 단추 */
+export function NoticeScreen({ kicker, title, text, why, again, pick }: { kicker?: string; title: string; text?: string; why?: OutWhy | null; again?: boolean; pick?: boolean }) {
   const reason = whyText(why ?? null);
   return (
     <section className={s.entry}>
@@ -163,11 +163,18 @@ export function NoticeScreen({ kicker, title, text, why, again }: { kicker?: str
       <p className={s.say}>{title}</p>
       {reason && <p className={s.note}>{reason}</p>}
       {text && <p className={s.lead}>{text}</p>}
-      {again && (
+      {(again || pick) && (
         <div className={s.actions}>
-          <button type="button" className="btn btn-primary btn-lg btn-block" onClick={() => window.location.reload()}>
-            다시 들어가기
-          </button>
+          {again && (
+            <button type="button" className="btn btn-primary btn-lg btn-block" onClick={() => window.location.reload()}>
+              다시 들어가기
+            </button>
+          )}
+          {pick && (
+            <a href="/talk" className={again ? s.plainBtn : "btn btn-primary btn-lg btn-block"}>
+              테이블 번호로 들어가기
+            </a>
+          )}
         </div>
       )}
     </section>

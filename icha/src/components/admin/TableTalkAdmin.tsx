@@ -12,7 +12,7 @@ type Props = {
   seats: AdminSeat[];
   locks: number[];
   reports: AdminReport[];
-  settings: { on: boolean; tables: number; gen: number };
+  settings: { on: boolean; tables: number; pick: boolean; gen: number };
   owner: boolean;
   usage: { used30: number; today: number; budget: number; pace: number; closed: boolean } | null;
 };
@@ -198,12 +198,16 @@ export function TableTalkAdmin(p: Props) {
             onSubmit={(e) => {
               e.preventDefault();
               const fd = new FormData(e.currentTarget);
-              act(ttSettingsAction, { on: fd.get("on") ? "1" : "0", tables: String(fd.get("tables") ?? "") });
+              act(ttSettingsAction, { on: fd.get("on") ? "1" : "0", pick: fd.get("pick") ? "1" : "0", tables: String(fd.get("tables") ?? "") });
             }}
           >
             <label className={ui.check}>
               <input type="checkbox" name="on" defaultChecked={p.settings.on} />
               테이블톡 켜기
+            </label>
+            <label className={ui.check}>
+              <input type="checkbox" name="pick" defaultChecked={p.settings.pick} />
+              QR 없이 번호로 들어오기
             </label>
             <label className={ui.field}>
               <span className={ui.label}>테이블 수</span>
@@ -214,6 +218,9 @@ export function TableTalkAdmin(p: Props) {
             </button>
           </form>
           <p className={ui.help}>테이블 수만큼 손님 번호판에 칸이 생기고, 인쇄물 → 테이블 QR 에 그만큼 QR 이 나옵니다. 테이블 번호는 가게에 붙인 번호와 같아야 합니다.</p>
+          <p className={ui.help}>
+            [QR 없이 번호로 들어오기]를 켜 두면 손님이 사이트 아래 [테이블톡] 탭에서 가게와 테이블 번호를 골라 들어옵니다. 끄면 테이블에 붙인 테이블톡 QR 로만 들어옵니다(가게 밖에서 아무 번호나 골라 들어오는 장난을 막고 싶을 때).
+          </p>
           <div className={ui.inline}>
             <button
               type="button"

@@ -7,9 +7,9 @@ process.env.ADMIN_INITIAL_PASSWORD = "test-pw";
 import assert from "node:assert/strict";
 import { getDb, query } from "../src/lib/db";
 import {
-  adminClear, adminLock, adminView, answer, ask, cancelAsk, closeRoom, endTeam, join, leaveDevice, refuseAsk, send, sync, admit, purgeTableTalk, TTError, type SyncOut,
+  adminClear, adminLock, adminView, answer, ask, cancelAsk, closeRoom, currentTable, endTeam, join, leaveDevice, refuseAsk, send, storeTables, sync, admit, purgeTableTalk, TTError, type SyncOut,
 } from "../src/lib/tabletalk/service";
-import { saveTTStore } from "../src/lib/tabletalk/settings";
+import { getTTSettings, saveTTStore } from "../src/lib/tabletalk/settings";
 import type { TTState } from "../src/lib/tabletalk/types";
 
 const T3 = { store: "tokyo" as const, table: 3 };
@@ -54,6 +54,12 @@ async function main() {
   const c = await join(T7, "start", null);
   sa = await state(a.dev);
   assert.equal(tile(sa, 7), "on", "7번에 불이 들어온다");
+
+  // ── 사이트 [테이블톡] 탭: 켜진 테이블과 이 폰이 있는 테이블
+  assert.equal((await getTTSettings(true)).tokyo.pick, true, "번호로 들어오기는 기본으로 켜짐");
+  assert.deepEqual((await storeTables("tokyo")).live.sort((x, y) => x - y), [3, 7]);
+  assert.deepEqual(await currentTable(c.dev), { store: "tokyo", table: 7 });
+  assert.equal(await currentTable(null), null);
 
   // 변경 번호가 같으면 한 줄로 끝난다
   const same = await sync(a.dev, sa.v, 0);
@@ -183,6 +189,8 @@ async function main() {
 
   // ── 직원: 잠그기 → 그 테이블은 못 들어오고, 열린 자리는 비워진다
   await adminLock("tokyo", 7, true, "owner");
+  assert.ok((await storeTables("tokyo")).locked.includes(7), "번호 고르는 화면에도 막힘");
+  assert.equal(await currentTable(c.dev), null, "나가진 폰은 이어서 할 테이블이 없다");
   assert.deepEqual(await sync(c.dev, -1, 0), { kind: "out", why: "staff" });
   await rejects(join(T7, "start", null), "locked");
   await adminLock("tokyo", 7, false, "owner");

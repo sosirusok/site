@@ -1,5 +1,5 @@
 /**
- * 테이블톡 매장별 설정 — 켜기/끄기, 테이블 수(번호판 칸 수), QR 판(gen).
+ * 테이블톡 매장별 설정 — 켜기/끄기, 테이블 수(번호판 칸 수), QR 없이 번호로 들어오기, QR 판(gen).
  * settings 테이블의 'tabletalk' 한 줄에 둔다. 손님 화면은 몇 초마다 묻기 때문에 30초 동안은 기억해 둔 값을 쓴다.
  */
 import { STORE_IDS, type StoreId } from "@/lib/config";
@@ -10,6 +10,8 @@ export type TTStoreSettings = {
   on: boolean;
   /** 번호판에 보일 테이블 수(1번부터). QR 은 이 수만큼 인쇄된다 */
   tables: number;
+  /** 사이트 [테이블톡] 탭에서 테이블 번호를 골라 들어오기. 끄면 테이블에 붙은 QR 로만 들어온다 */
+  pick: boolean;
   /** QR 판 번호 — 올리면 전에 인쇄한 QR 이 모두 무효가 된다 */
   gen: number;
 };
@@ -17,7 +19,7 @@ export type TTSettings = Record<StoreId, TTStoreSettings>;
 
 const KEY = "tabletalk";
 export const DEFAULT_TABLES = 20;
-const DEFAULT: TTStoreSettings = { on: true, tables: DEFAULT_TABLES, gen: 1 };
+const DEFAULT: TTStoreSettings = { on: true, tables: DEFAULT_TABLES, pick: true, gen: 1 };
 const TTL_MS = 30_000;
 
 let cache: { at: number; value: TTSettings } | null = null;
@@ -32,6 +34,7 @@ function normalize(raw: unknown): TTSettings {
     out[id] = {
       on: typeof s.on === "boolean" ? s.on : DEFAULT.on,
       tables: Number.isInteger(tables) && tables >= 1 && tables <= MAX_TABLE ? tables : DEFAULT.tables,
+      pick: typeof s.pick === "boolean" ? s.pick : DEFAULT.pick,
       gen: Number.isInteger(gen) && gen >= 1 ? gen : DEFAULT.gen,
     };
   }

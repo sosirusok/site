@@ -10,6 +10,7 @@ import styles from "./Header.module.css";
 /**
  * 손님 화면 상단 바. 홈에서는 사진 편집 흐름을 방해하지 않도록 한 번만 지나간다.
  * 공개 홈에서는 로그인 상태와 무관하게 쿠폰함으로 바로 이어진다.
+ * [테이블톡]은 어느 화면에서나 오른쪽 위에 둔다(홈은 하단 탭이 없어 여기가 입구다).
  */
 export function Header() {
   const phone = useMemberPhone();
@@ -27,6 +28,11 @@ export function Header() {
           <Image src="/images/privilege/wordmark.png" alt="" aria-hidden="true" width={720} height={245} sizes="120px" loading="eager" className={styles.markImage} />
         </Link>
         <div className={styles.actions}>
+          {mounted && !path.startsWith("/talk") && (
+            <Link href="/talk" prefetch={false} className={styles.actionLink}>
+              테이블톡
+            </Link>
+          )}
           {!mounted ? null : isHome ? (
             <Link href="/wallet" className={styles.actionLink}>쿠폰함</Link>
           ) : phone ? (

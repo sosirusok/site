@@ -103,7 +103,7 @@ export function TableTalk({ entry }: { entry: Entry }) {
       />
     );
   } else if (phase.kind === "out") {
-    body = <NoticeScreen kicker={storeName} title={phase.why === "self" || phase.why === "team" ? "테이블톡에서 나왔습니다" : "대화가 닫혔습니다"} why={phase.why} again={!!code} />;
+    body = <NoticeScreen kicker={storeName} title={phase.why === "self" || phase.why === "team" ? "테이블톡에서 나왔습니다" : "대화가 닫혔습니다"} why={phase.why} again={!!code} pick />;
   } else if (entry.kind === "join") {
     body = <JoinScreen entry={entry} onJoin={join} />;
   } else if (entry.kind === "off") {
@@ -111,7 +111,7 @@ export function TableTalk({ entry }: { entry: Entry }) {
   } else if (entry.kind === "locked") {
     body = <NoticeScreen kicker={entry.storeName} title={`${entry.table}번 테이블은 오늘 테이블톡을 쓸 수 없습니다`} text="직원에게 말씀해 주세요." />;
   } else {
-    body = <NoticeScreen title="QR 이 맞지 않습니다" text="테이블에 붙은 QR 을 다시 찍어 주세요. 사진으로 받은 QR 은 열리지 않을 수 있습니다." />;
+    body = <NoticeScreen title="QR 이 맞지 않습니다" text="테이블에 붙은 QR 을 다시 찍거나, 사이트 [테이블톡]에서 테이블 번호를 골라 주세요." pick />;
   }
 
   return (

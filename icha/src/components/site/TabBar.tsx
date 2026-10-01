@@ -16,14 +16,21 @@ const TABS: Tab[] = [
   { href: "/", ko: "홈", active: (p) => p === "/" || p.startsWith("/stores") },
   { href: "/wallet", ko: "쿠폰함", active: (p) => p.startsWith("/wallet") || p.startsWith("/coupons") || p.startsWith("/pick") || p.startsWith("/login") },
   { href: "/guide", ko: "안내", active: (p) => p.startsWith("/guide") || p.startsWith("/verify") },
+  { href: "/talk", ko: "테이블톡", active: (p) => p.startsWith("/talk") },
 ];
 
 export function TabBar({ stores }: { stores: PlaceSheetStore[] }) {
   const path = usePathname() ?? "/";
   const [open, setOpen] = useState(false);
-  const [home, wallet, guide] = TABS as [Tab, Tab, Tab];
+  const [home, wallet, guide, talk] = TABS as [Tab, Tab, Tab, Tab];
   const cell = (t: Tab) => (
-    <Link key={t.href} href={t.href} className={`${styles.item} ${t.active(path) ? styles.active : ""}`} aria-current={t.active(path) ? "page" : undefined}>
+    <Link
+      key={t.href}
+      href={t.href}
+      prefetch={t === talk ? false : undefined}
+      className={`${styles.item} ${t.active(path) ? styles.active : ""}`}
+      aria-current={t.active(path) ? "page" : undefined}
+    >
       <span className={styles.ko}>{t.ko}</span>
     </Link>
   );
@@ -37,6 +44,7 @@ export function TabBar({ stores }: { stores: PlaceSheetStore[] }) {
           <span className={styles.ko}>예약</span>
         </button>
         {cell(guide)}
+        {cell(talk)}
       </nav>
       <PlaceSheet stores={stores} open={open} onClose={() => setOpen(false)} />
     </>

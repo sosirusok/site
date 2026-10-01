@@ -534,9 +534,10 @@ export async function ttSettingsAction(_prev: ActionState, fd: FormData): Promis
     const tables = Number(str(fd, "tables"));
     if (!Number.isInteger(tables) || tables < 1 || tables > MAX_TABLE) throw new ActionError(`테이블 수는 1~${MAX_TABLE} 사이로 적으세요.`);
     const on = str(fd, "on") === "1";
-    await saveTTStore(store, { on, tables });
-    await audit(s.adminId, "tabletalk.settings", store, { on, tables });
-    return { message: `${getStore(store)?.shortName ?? store} 테이블톡을 ${on ? "켰습니다" : "껐습니다"} · 테이블 ${tables}개.` };
+    const pick = str(fd, "pick") === "1";
+    await saveTTStore(store, { on, tables, pick });
+    await audit(s.adminId, "tabletalk.settings", store, { on, tables, pick });
+    return { message: `${getStore(store)?.shortName ?? store} 테이블톡을 ${on ? "켰습니다" : "껐습니다"} · 테이블 ${tables}개 · 번호로 들어오기 ${pick ? "켬" : "끔"}.` };
   });
 }
 
