@@ -7,7 +7,8 @@ import { SignJWT, jwtVerify } from "jose";
 export type MemberSession = { memberId: string; phone: string };
 export type AdminSession = { adminId: string; name: string; role: "owner" | "staff"; storeId: string | null };
 
-function secret(): Uint8Array {
+/** 서명 키(SESSION_SECRET). 테이블 QR 서명처럼 같은 비밀로 HMAC 을 거는 곳에서도 쓴다 */
+export function secret(): Uint8Array {
   const s = process.env.SESSION_SECRET;
   if (!s || s.length < 16) {
     if (process.env.NODE_ENV === "production") throw new Error("SESSION_SECRET 환경변수를 설정하세요 (32자 이상).");
@@ -21,6 +22,15 @@ export async function signToken(payload: Record<string, unknown>, days: number):
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(`${days}d`)
+    .sign(secret());
+}
+
+/** 시간 단위로 끝나는 토큰 — 테이블톡 쿠키처럼 하룻밤만 쓰는 것 */
+export async function signTokenHours(payload: Record<string, unknown>, hours: number): Promise<string> {
+  return new SignJWT(payload)
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime(`${hours}h`)
     .sign(secret());
 }
 

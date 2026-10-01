@@ -19,6 +19,9 @@ import {
 import { adminDecideReceipt } from "@/lib/receipt/service";
 import { getRules, saveRules, tierFor } from "@/lib/settings";
 import { getStore } from "@/lib/stores";
+import { adminClear, adminLock, adminResolveReport } from "@/lib/tabletalk/service";
+import { getTTSettings, saveTTStore } from "@/lib/tabletalk/settings";
+import { MAX_TABLE } from "@/lib/tabletalk/code";
 import { fromLocalInput, josa } from "@/components/admin/format";
 
 export type ActionState = { ok: boolean; message: string; at: number; data?: Record<string, string | number | null> } | null;
@@ -469,5 +472,82 @@ export async function resetStaffPasswordAction(_prev: ActionState, fd: FormData)
     await updateAdmin(id, { pwHash: await hashPassword(password) });
     await audit(s.adminId, "staff.password", id, null);
     return { message: `'${id}' 비밀번호를 바꿨습니다.` };
+  });
+}
+
+/* ───────── 테이블톡 ───────── */
+
+/** 직원은 자기 매장만. 총괄은 폼의 매장 */
+function ttStore(s: AdminSession, fd: FormData): StoreId {
+  const want = str(fd, "store");
+  if (s.role !== "owner") {
+    if (!s.storeId) throw new ActionError("매장이 정해지지 않은 직원 계정입니다.");
+    return s.storeId as StoreId;
+  }
+  if (!isStoreId(want)) throw new ActionError("매장을 고르세요.");
+  return want;
+}
+
+function ttTable(fd: FormData): number {
+  const n = Number(str(fd, "table"));
+  if (!Number.isInteger(n) || n < 1 || n > MAX_TABLE) throw new ActionError(`테이블 번호는 1~${MAX_TABLE} 사이로 적으세요.`);
+  return n;
+}
+
+export async function ttClearAction(_prev: ActionState, fd: FormData): Promise<ActionState> {
+  return run(async () => {
+    const s = await requireAdmin();
+    const store = ttStore(s, fd);
+    const table = ttTable(fd);
+    const done = await adminClear(store, table);
+    await audit(s.adminId, "tabletalk.clear", `${store}:${table}`, { done });
+    return { message: done ? `${table}번 테이블 대화를 비웠습니다. 그 테이블 폰들은 나가지고, 상대 테이블에는 "자리를 떠났습니다"로 보입니다.` : `${table}번 테이블은 이미 비어 있습니다.` };
+  });
+}
+
+export async function ttLockAction(_prev: ActionState, fd: FormData): Promise<ActionState> {
+  return run(async () => {
+    const s = await requireAdmin();
+    const store = ttStore(s, fd);
+    const table = ttTable(fd);
+    const on = str(fd, "on") === "1";
+    await adminLock(store, table, on, s.adminId);
+    await audit(s.adminId, on ? "tabletalk.lock" : "tabletalk.unlock", `${store}:${table}`, null);
+    return { message: on ? `${table}번 테이블을 오늘 막았습니다. 영업일이 바뀌면(낮 12시) 풀립니다.` : `${table}번 테이블 막기를 풀었습니다.` };
+  });
+}
+
+export async function ttResolveAction(_prev: ActionState, fd: FormData): Promise<ActionState> {
+  return run(async () => {
+    const s = await requireAdmin();
+    const ok = await adminResolveReport(str(fd, "id"), s.role === "owner" ? null : (s.storeId as StoreId | null), s.adminId);
+    if (!ok) throw new ActionError("이미 처리했거나 없는 신고입니다.");
+    await audit(s.adminId, "tabletalk.report.resolve", str(fd, "id"), null);
+    return { message: "신고를 처리했습니다." };
+  });
+}
+
+export async function ttSettingsAction(_prev: ActionState, fd: FormData): Promise<ActionState> {
+  return run(async () => {
+    const s = await requireAdmin({ owner: true });
+    const store = ttStore(s, fd);
+    const tables = Number(str(fd, "tables"));
+    if (!Number.isInteger(tables) || tables < 1 || tables > MAX_TABLE) throw new ActionError(`테이블 수는 1~${MAX_TABLE} 사이로 적으세요.`);
+    const on = str(fd, "on") === "1";
+    await saveTTStore(store, { on, tables });
+    await audit(s.adminId, "tabletalk.settings", store, { on, tables });
+    return { message: `${getStore(store)?.shortName ?? store} 테이블톡을 ${on ? "켰습니다" : "껐습니다"} · 테이블 ${tables}개.` };
+  });
+}
+
+/** QR 다시 만들기 — 전에 인쇄한 이 매장 테이블 QR 이 모두 안 열린다 */
+export async function ttRegenAction(_prev: ActionState, fd: FormData): Promise<ActionState> {
+  return run(async () => {
+    const s = await requireAdmin({ owner: true });
+    const store = ttStore(s, fd);
+    const cur = (await getTTSettings(true))[store];
+    await saveTTStore(store, { gen: cur.gen + 1 });
+    await audit(s.adminId, "tabletalk.regen", store, { gen: cur.gen + 1 });
+    return { message: "QR 을 새로 만들었습니다. 인쇄물 → 테이블 QR 에서 다시 뽑아 붙이세요. 예전 QR 은 이제 열리지 않습니다." };
   });
 }

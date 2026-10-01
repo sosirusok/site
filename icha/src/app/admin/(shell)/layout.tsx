@@ -4,6 +4,7 @@ import { getStore } from "@/lib/stores";
 import { requireAdminPage } from "@/components/admin/guard";
 import { AdminNav, type NavItem } from "@/components/admin/AdminNav";
 import { logoutAction } from "@/app/admin/actions";
+import { openReportCount } from "@/lib/tabletalk/service";
 import ui from "@/app/admin/admin.module.css";
 
 export default async function AdminShellLayout({ children }: { children: React.ReactNode }) {
@@ -12,8 +13,11 @@ export default async function AdminShellLayout({ children }: { children: React.R
   const store = session.storeId ? getStore(session.storeId) : null;
 
   // 카운터가 첫 번째. 영수증 확인·등급 일괄 발급은 내비에서 뺐다(주소는 남아 있음).
+  // 테이블톡 신고가 있으면 숫자를 단다(직원은 자기 매장 것만)
+  const reports = await openReportCount(owner ? null : (session.storeId as Parameters<typeof openReportCount>[0])).catch(() => 0);
   const items: NavItem[] = [
     { href: "/admin/counter", label: "카운터" },
+    { href: "/admin/tabletalk", label: "테이블톡", badge: reports || undefined },
     { href: "/admin/coupons", label: "쿠폰 조회" },
     ...(owner
       ? [
