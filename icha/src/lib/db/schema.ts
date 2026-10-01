@@ -152,7 +152,6 @@ create table if not exists tt_seats (
   ended_by   text,
   v          bigint not null default nextval('tt_v_seq')
 );
-alter table tt_seats add column if not exists v bigint not null default nextval('tt_v_seq');
 create unique index if not exists tt_seats_live_uq on tt_seats(store_id, table_no) where status = 'on';
 create index if not exists tt_seats_store_idx on tt_seats(store_id, status, day);
 create index if not exists tt_seats_day_idx on tt_seats(day);
@@ -222,7 +221,18 @@ create table if not exists tt_blocks (
   created_at  timestamptz not null default now(),
   primary key (seat_id, other_seat)
 );
-alter table tt_blocks add column if not exists other_table int;
+
+-- 예전 판에서 만든 표에 새 칸 넣기. 칸이 이미 있으면 ALTER 를 아예 하지 않는다 —
+-- ALTER TABLE 은 칸이 있어도 표 전체를 잠가, 서버가 새로 뜰 때마다 그 순간 테이블톡 쿼리가 줄줄이 기다리게 된다
+do $$
+begin
+  if not exists (select 1 from information_schema.columns where table_schema = current_schema() and table_name = 'tt_seats' and column_name = 'v') then
+    alter table tt_seats add column v bigint not null default nextval('tt_v_seq');
+  end if;
+  if not exists (select 1 from information_schema.columns where table_schema = current_schema() and table_name = 'tt_blocks' and column_name = 'other_table') then
+    alter table tt_blocks add column other_table int;
+  end if;
+end $$;
 
 -- 신고. 자리가 지워져도 직원이 볼 수 있게 테이블 번호와 마지막 글들을 복사해 둔다(14일 보관)
 create table if not exists tt_reports (
