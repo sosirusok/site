@@ -5,7 +5,7 @@ import { safeNext } from "./format";
 
 test("safeNext: 같은 사이트 경로만 통과", () => {
   for (const ok of ["/wallet", "/pick/abc?x", "/coupons/1?a=1#b", "/login?next=%2Fwallet"]) assert.equal(safeNext(ok, "/f"), ok);
-  for (const bad of ["//evil.example", "/\\/evil.example", "/\t/evil.example", "/\n/evil.example", "/\r/evil.example", "https://evil.example", "evil", "", "/\u0000x"]) {
+  for (const bad of ["//evil.example", "/\\/evil.example", "/\t/evil.example", "/\n/evil.example", "/\r/evil.example", "https://evil.example", "evil", "", "/\u0000x", "/.//evil.example", "/a/..//evil.example/x", "/%2e//evil.example", "/./\t/evil"]) {
     assert.equal(safeNext(bad, "/f"), "/f", JSON.stringify(bad));
   }
   assert.equal(safeNext(undefined, "/f"), "/f");

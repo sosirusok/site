@@ -13,8 +13,9 @@ const PLACEHOLDER_SECRETS = new Set(["change-me-to-a-long-random-string", "dev-o
 
 /** 서명 키(SESSION_SECRET). 테이블 QR 서명처럼 같은 비밀로 HMAC 을 거는 곳에서도 쓴다 */
 export function secret(): Uint8Array {
-  const s = process.env.SESSION_SECRET?.trim();
-  if (!s || s.length < 16 || PLACEHOLDER_SECRETS.has(s)) {
+  // 값 자체는 손대지 않는다(앞뒤 공백까지 바꾸면 서명 키가 달라져 모든 로그인·인쇄한 QR 이 풀린다)
+  const s = process.env.SESSION_SECRET;
+  if (!s || s.length < 16 || PLACEHOLDER_SECRETS.has(s.trim())) {
     if (process.env.NODE_ENV === "production") throw new Error("SESSION_SECRET 환경변수를 설정하세요 (32자 이상).");
     return new TextEncoder().encode("dev-only-insecure-secret-change-me-please");
   }

@@ -108,7 +108,8 @@ export function safeNext(v: string | string[] | undefined, fallback: string): st
   if (!s || !s.startsWith("/") || s.startsWith("//") || /[\\\u0000-\u001f\u007f]/.test(s)) return fallback;
   try {
     const u = new URL(s, "http://n.invalid");
-    if (u.origin !== "http://n.invalid") return fallback;
+    // "/.//evil" 처럼 점 경로가 풀리며 "//evil" 이 되는 것도 막는다
+    if (u.origin !== "http://n.invalid" || u.pathname.startsWith("//")) return fallback;
     return u.pathname + u.search + u.hash;
   } catch {
     return fallback;

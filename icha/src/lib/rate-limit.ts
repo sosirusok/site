@@ -18,6 +18,20 @@ export async function rateLimit(key: string, limit: number, windowSec: number): 
   return (rows[0]?.count ?? 0) <= limit;
 }
 
+/** 세지 않고 지금 창에서 limit 회 미만인지만 본다 — 실패한 것만 세는 제한(rateHit)과 짝 */
+export async function rateUnder(key: string, limit: number, windowSec: number): Promise<boolean> {
+  const rows = await query<{ count: number }>(
+    `select count from rate_limits where key = $1 and window_start >= now() - ($2::int * interval '1 second')`,
+    [key, windowSec],
+  );
+  return (rows[0]?.count ?? 0) < limit;
+}
+
+/** 한 번 센다(결과는 보지 않는다) */
+export async function rateHit(key: string, windowSec: number): Promise<void> {
+  await rateLimit(key, Number.MAX_SAFE_INTEGER, windowSec);
+}
+
 /**
  * 요청 IP. 신뢰할 수 있는 프록시(Vercel, nginx 등) 뒤에서만 의미가 있다.
  *  - Vercel: x-vercel-forwarded-for / x-real-ip 를 플랫폼이 덮어쓴다.
