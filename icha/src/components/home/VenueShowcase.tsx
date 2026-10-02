@@ -37,13 +37,17 @@ export function VenueShowcase({ venues }: { venues: Venue[] }) {
   // 홈은 정적 HTML — 영업 상태는 브라우저 시각으로 다시 맞춘다
   const now = useClock();
   const today = venues.map((v) => (now ? todayParts({ hours: v.hours }, now) : v.today));
-  // 사진은 지금 칸과(보이는 중이면) 다음 칸만 받는다. 한 번 받은 칸은 그대로 둔다 — 가려진 두 칸의 사진 220KB 를 첫 화면에서 받지 않는다
+  // 사진은 지금 칸과(캐러셀이 보이면) 앞뒤 칸만 받는다. 한 번 받은 칸은 그대로 둔다 — 가려진 두 칸의 사진 220KB 를 첫 화면에서 받지 않는다
   const [shown, setShown] = useState<ReadonlySet<number>>(() => new Set([0]));
   useEffect(() => {
     setShown((prev) => {
       const next = new Set(prev);
       next.add(selected);
-      if (inView) next.add((selected + 1) % count);
+      // 앞뒤 칸 모두 — "이전 매장"·오른쪽 밀기·매장 이름 바로 고르기로 갈 때도 사진이 이미 받아져 있다
+      if (inView) {
+        next.add((selected + 1) % count);
+        next.add((selected + count - 1) % count);
+      }
       return next.size === prev.size ? prev : next;
     });
   }, [selected, inView, count]);

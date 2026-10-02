@@ -5,6 +5,7 @@ import { startTransition, type FormEvent } from "react";
  * <form action={…}> 는 결과와 상관없이 보낸 뒤 입력칸을 비운다(React 19) — 오류가 나면 적은 것이 다 사라진다.
  * onSubmit 에서 직접 보내면 비우지 않는다. 성공했을 때 비우는 것은 각 폼이 key 를 바꾸거나 reset() 해서 한다.
  * prepare 가 null 을 돌려주면 보내지 않는다(예: 사진이 너무 커서 안내만 띄울 때).
+ * prepare(사진 줄이기)가 도는 동안은 아직 pending 이 아니라 버튼이 살아 있다 — 그사이 한 번 더 누르면 새 메뉴가 두 개 생기므로 그동안은 받지 않는다.
  */
 export function keepOnSubmit(action: (fd: FormData) => void, prepare?: (fd: FormData) => Promise<FormData | null>) {
   return (e: FormEvent<HTMLFormElement>) => {
@@ -15,9 +16,16 @@ export function keepOnSubmit(action: (fd: FormData) => void, prepare?: (fd: Form
       startTransition(() => action(fd));
       return;
     }
-    void prepare(fd).then((ready) => {
-      if (ready) startTransition(() => action(ready));
-    });
+    const form = e.currentTarget;
+    if (form.dataset.preparing) return;
+    form.dataset.preparing = "1";
+    void prepare(fd)
+      .then((ready) => {
+        if (ready) startTransition(() => action(ready));
+      })
+      .finally(() => {
+        delete form.dataset.preparing;
+      });
   };
 }
 
