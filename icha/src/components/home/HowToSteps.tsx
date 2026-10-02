@@ -19,7 +19,7 @@ export function HowToSteps({ rules, compact = false }: { rules: Rules; compact?:
             <Image src="/images/privilege/benefit-title.webp" alt="다음 매장의 혜택" width={720} height={134} sizes="(min-width: 760px) 310px, 260px" className={home.titleArtwork} />
           </h2>
           <p className={home.howCondition}>{ruleLine(rules)}<br />{BRAND.condition}</p>
-          <Link href="/wallet" className={home.utilityAction}>내 쿠폰함 <span aria-hidden="true">↗</span></Link>
+          <Link href="/wallet" prefetch={false} className={home.utilityAction}>내 쿠폰함 <span aria-hidden="true">↗</span></Link>
         </div>
         <div className={home.howInstructions}>
           <div className={home.utilityHeading}>
@@ -51,7 +51,7 @@ export function HowToSteps({ rules, compact = false }: { rules: Rules; compact?:
           </li>
         ))}
       </ol>
-      <Button href="/wallet" variant="primary" size="lg" block className={s.walletBtn}>쿠폰함 열기 →</Button>
+      <Button href="/wallet" prefetch={false} variant="primary" size="lg" block className={s.walletBtn}>쿠폰함 열기 →</Button>
     </Section>
   );
 }

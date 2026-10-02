@@ -1,7 +1,7 @@
-import { nowText, openStatus } from "@/components/site/StoreHelpers";
+import { todayParts } from "@/components/site/StoreHelpers";
 import type { Rules, StoreId } from "@/lib/config";
 import { placeLinks } from "@/lib/naver";
-import { STORES, type Store } from "@/lib/stores";
+import { STORES } from "@/lib/stores";
 import { VenueShowcase } from "./VenueShowcase";
 import s from "./vip-lower.module.css";
 
@@ -32,13 +32,6 @@ const STORY: Record<StoreId, { photo: string; alt: string; gallery: Array<{ src:
   },
 };
 
-/** 오늘 영업 — 상태 문구와 시간("17:00~03:00", 휴무면 "") */
-export function todayParts(store: Store, now: Date): { open: boolean; state: string; hours: string } {
-  const st = openStatus(store, now);
-  if (st.today === "휴무") return { open: false, state: "휴무", hours: "" };
-  return { open: st.open, state: nowText(st), hours: st.today.replace(/\s*–\s*/, "~").replace("다음날 ", "익일 ") };
-}
-
 /** 혜택 품목 이름 — DB 혜택 이름들("또는"으로 잇는다), 없으면 기본 혜택 이름 */
 export function giftWhat(names: string[], fallback: string): string {
   return (names.length ? names : [fallback]).map((t) => t.trim()).join(" 또는 ");
@@ -55,6 +48,7 @@ export function StoreCards({ now, rules, gifts }: { now: Date; rules: Rules; gif
     course: store.course.n,
     ...STORY[store.id],
     today: todayParts(store, now),
+    hours: store.hours,
     notice: rules.storeNotices?.[store.id]?.trim() ?? "",
     benefit: giftWhat(gifts[store.id] ?? [], store.benefitLabel),
     booking: placeLinks(store)?.booking ?? null,

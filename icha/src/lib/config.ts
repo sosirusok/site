@@ -123,9 +123,11 @@ export function reasonText(code: string): string {
   return (REASONS as Record<string, string>)[code] ?? code;
 }
 
-/** 전화번호 정규화: 숫자만, 010/011/016/017/018/019 로 시작하는 10~11자리 */
+/** 전화번호 정규화: 숫자만, 010/011/016/017/018/019 로 시작하는 10~11자리. 폰 자동 완성의 +82 10-… · +82 010-… 도 받는다 */
 export function normalizePhone(input: string): string | null {
-  const digits = input.replace(/\D/g, "");
+  let digits = input.replace(/\D/g, "");
+  const intl = /^820?(1[016789]\d{7,8})$/.exec(digits);
+  if (intl) digits = `0${intl[1]}`;
   if (digits.length < 10 || digits.length > 11) return null;
   if (!/^01[016789]/.test(digits)) return null;
   return digits;

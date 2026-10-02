@@ -71,7 +71,8 @@ export default async function CounterPage({ searchParams }: { searchParams: Prom
       )}
 
       <section className={`${ui.panel} ${ui.panelBody}`}>
-        <CounterPhoneForm initial={phone ?? ""} storeId={owner ? store.id : null} />
+        {/* 번호·매장이 바뀌면 새로 그린다 — 안 그러면 [다른 번호] 뒤에도 이전 손님 번호가 칸에 남는다 */}
+        <CounterPhoneForm key={`${store.id}:${phone ?? ""}`} initial={phone ?? ""} storeId={owner ? store.id : null} />
         {raw && !phone ? (
           <p className={`${ui.notice} ${ui.noticeBad}`} style={{ marginTop: 10 }} role="alert">
             휴대폰 번호 형식이 아닙니다. 010으로 시작하는 10~11자리를 넣어 주세요.
@@ -111,6 +112,7 @@ export default async function CounterPage({ searchParams }: { searchParams: Prom
           </section>
 
           <CounterActions
+            key={`${store.id}:${phone}`}
             phone={phone}
             storeId={store.id}
             storeName={store.shortName}

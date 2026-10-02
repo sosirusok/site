@@ -17,7 +17,7 @@ export default async function VipPage() {
   const rules = await getRules();
   const gifts = Object.fromEntries(await Promise.all(STORES.map(async (st) => [st.id, (await listMenu(st.id, { giftOnly: true })).map((g) => ({ id: g.id, name: g.name, price: g.price }))])));
   const counts = await Promise.all(rules.tiers.map(async (t) => ({ ...t, n: (await listMembers({ tier: t.key, limit: 1 })).total })));
-  const recent = (await listCoupons({ limit: 12 })).items.filter((c) => c.kind !== "side");
+  const recent = (await listCoupons({ manualOnly: true, limit: 12 })).items;
   const now = new Date();
 
   return (

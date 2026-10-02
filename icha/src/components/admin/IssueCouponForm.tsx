@@ -1,8 +1,9 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { issueCouponsAction, type ActionState } from "@/app/admin/actions";
 import ui from "@/app/admin/admin.module.css";
+import { keepOnSubmit } from "./keepForm";
 
 type Gift = { id: number; name: string; price: number | null };
 
@@ -27,15 +28,19 @@ export function IssueCouponForm({
   const [storeId, setStoreId] = useState(stores[0]?.id ?? "");
   const [menuItemId, setMenuItemId] = useState<string>("");
   const options = gifts[storeId] ?? [];
+  const formRef = useRef<HTMLFormElement>(null);
   useEffect(() => {
-    if (state?.ok) router.refresh();
+    if (!state?.ok) return;
+    // 발급했으면 입력칸을 비운다(실패하면 적은 그대로 둔다 — keepOnSubmit)
+    formRef.current?.reset();
+    router.refresh();
   }, [state, router]);
   useEffect(() => {
     setMenuItemId("");
   }, [storeId]);
 
   return (
-    <form action={action} className={ui.form}>
+    <form ref={formRef} action={action} onSubmit={keepOnSubmit(action)} className={ui.form}>
       <input type="hidden" name="targetType" value={mode === "member" ? "member" : targetType} />
       {mode === "member" ? <input type="hidden" name="memberId" value={memberId} /> : null}
 

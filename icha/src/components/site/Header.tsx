@@ -34,11 +34,11 @@ export function Header() {
             </Link>
           )}
           {!mounted ? null : isHome ? (
-            <Link href="/wallet" className={styles.actionLink}>쿠폰함</Link>
+            <Link href="/wallet" prefetch={false} className={styles.actionLink}>쿠폰함</Link>
           ) : phone ? (
-            path !== "/wallet" ? <Link href="/wallet" className={styles.actionLink}>쿠폰</Link> : null
+            path !== "/wallet" ? <Link href="/wallet" prefetch={false} className={styles.actionLink}>쿠폰</Link> : null
           ) : path !== "/login" ? (
-            <Link href="/login" className={styles.actionLink}>로그인</Link>
+            <Link href="/login" prefetch={false} className={styles.actionLink}>로그인</Link>
           ) : null}
         </div>
       </div>

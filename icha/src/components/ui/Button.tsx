@@ -21,13 +21,15 @@ type Props = {
   srSuffix?: string;
   "aria-label"?: string;
   "aria-busy"?: boolean;
+  /** 내부 Link 만 — 로그인이 필요한 화면처럼 매번 서버를 부르는 곳은 false */
+  prefetch?: boolean;
 };
 
 /**
  * 버튼 — 모양은 하나(globals.css .btn), 색만 다르다: primary(라임) · naver(예약, 초록) · brand · outline(네온 테두리) · soft · ghost(밑줄) · dark/darkline(라임 색면 위).
  * 크기 md 48px · lg 52px · sm 40px · xs 34px. block 이면 가로 가득.
  */
-export function Button({ href, variant = "primary", size = "md", block = false, className = "", style, children, onClick, type = "button", disabled, id, srSuffix, ...rest }: Props) {
+export function Button({ href, variant = "primary", size = "md", block = false, className = "", style, children, onClick, type = "button", disabled, id, srSuffix, prefetch, ...rest }: Props) {
   const cls = ["btn", `btn-${variant}`, size !== "md" ? `btn-${size}` : "", block ? "btn-block" : "", className].filter(Boolean).join(" ");
   const inner = (
     <>
@@ -38,7 +40,7 @@ export function Button({ href, variant = "primary", size = "md", block = false, 
   const label = rest["aria-label"];
   if (href) {
     if (href.startsWith("/") || href.startsWith("#")) {
-      return <Link id={id} href={href} className={cls} style={style} aria-label={label} onClick={onClick}>{inner}</Link>;
+      return <Link id={id} href={href} prefetch={prefetch} className={cls} style={style} aria-label={label} onClick={onClick}>{inner}</Link>;
     }
     if (href.startsWith("tel:") || href.startsWith("mailto:")) {
       return <a id={id} href={href} className={cls} style={style} aria-label={label} onClick={onClick}>{inner}</a>;

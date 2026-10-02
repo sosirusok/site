@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState, useTransition } from "react";
 import { deleteMenuAction, moveMenuAction, saveMenuAction, toggleMenuActiveAction, toggleMenuGiftAction, type ActionState } from "@/app/admin/actions";
 import type { MenuItem } from "@/lib/db/queries";
+import { keepOnSubmit, shrinkPhoto } from "./keepForm";
 import ui from "@/app/admin/admin.module.css";
 import s from "@/app/admin/(shell)/menus/menus.module.css";
+import { josa } from "./format";
 
 type Editing = { kind: "new" } | { kind: "edit"; item: MenuItem } | null;
 
@@ -155,7 +157,7 @@ export function MenuManager({ storeId, storeName, items }: { storeId: string; st
                           className={`${ui.button} ${ui.buttonDanger} ${ui.buttonSm}`}
                           disabled={pending && busyId === m.id}
                           onClick={() => {
-                            if (window.confirm(`'${m.name}' 을(를) 삭제할까요? 발급된 쿠폰이 있으면 삭제 대신 숨김 처리됩니다.`)) call(deleteMenuAction, fdOf({ id: String(m.id) }), m.id);
+                            if (window.confirm(`'${m.name}'${josa(m.name, "을를").slice(m.name.length)} 삭제할까요? 발급된 쿠폰이 있으면 삭제 대신 숨김 처리됩니다.`)) call(deleteMenuAction, fdOf({ id: String(m.id) }), m.id);
                           }}
                         >
                           삭제
@@ -182,8 +184,13 @@ function MenuEditForm({ storeId, item, onDone, onCancel, onMessage }: { storeId:
     // onDone/onMessage 는 안정적인 setState 래퍼
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
+  const submit = keepOnSubmit(action, async (fd) => {
+    const ready = await shrinkPhoto(fd);
+    if (!ready) onMessage({ ok: false, message: "사진이 너무 큽니다. 4MB 이하 JPG·PNG 로 올려 주세요.", at: Date.now() });
+    return ready;
+  });
   return (
-    <form action={action} className={s.editForm}>
+    <form action={action} onSubmit={submit} className={s.editForm}>
       {item ? <input type="hidden" name="id" value={item.id} /> : null}
       <input type="hidden" name="storeId" value={storeId} />
       <div className={s.editGrid}>
@@ -213,13 +220,12 @@ function MenuEditForm({ storeId, item, onDone, onCancel, onMessage }: { storeId:
         <label className={ui.check}>
           <input type="checkbox" name="active" value="on" defaultChecked={item?.active ?? true} /> 손님 화면에 노출
         </label>
-        {!item || !(item.active ?? true) ? <input type="hidden" name="active" value="off" /> : null}
       </div>
       <div className={s.editBtns}>
         <label className={ui.field} style={{ flex: "1 1 260px" }}>
           <span className={ui.label}>사진 {item?.hasImageData ? "(바꾸려면 새 파일 선택)" : ""}</span>
           <input type="file" name="image" accept="image/*" className={ui.input} style={{ padding: "7px 10px" }} />
-          <span className={ui.help}>긴 변 900px 로 줄여 저장합니다.</span>
+          <span className={ui.help}>긴 변 900px 로 줄여 저장합니다. 큰 사진은 올리기 전에 폰에서 먼저 줄입니다.</span>
         </label>
         {item?.hasImageData ? (
           <label className={ui.check}>

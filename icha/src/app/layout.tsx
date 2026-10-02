@@ -50,9 +50,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://cdn.jsdelivr.net" />
-        {/* 첫 화면의 간판 글자(Black Han Sans 한글·라틴)와 영문 라벨(Anton) — 자체 호스팅, 바로 미리 받는다 */}
-        <link rel="preload" as="font" type="font/woff2" href="/fonts/black-han-sans-korean-400-normal.woff2" crossOrigin="anonymous" />
-        <link rel="preload" as="font" type="font/woff2" href="/fonts/anton-latin-400-normal.woff2" crossOrigin="anonymous" />
         <link rel="preload" as="style" href={PRETENDARD_CSS} />
         <script dangerouslySetInnerHTML={{ __html: PRETENDARD_LOADER }} />
         <noscript dangerouslySetInnerHTML={{ __html: `<link rel="stylesheet" href="${PRETENDARD_CSS}">` }} />

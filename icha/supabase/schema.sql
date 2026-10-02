@@ -25,7 +25,6 @@ create table if not exists menu_items (
   active      boolean not null default true,
   sort        int not null default 0
 );
-alter table menu_items add column if not exists image_updated_at timestamptz;
 create index if not exists menu_items_store_idx on menu_items(store_id, sort);
 
 create table if not exists members (
@@ -225,6 +224,13 @@ begin
   end if;
   if not exists (select 1 from information_schema.columns where table_schema = current_schema() and table_name = 'tt_blocks' and column_name = 'other_table') then
     alter table tt_blocks add column other_table int;
+  end if;
+  if not exists (select 1 from information_schema.columns where table_schema = current_schema() and table_name = 'menu_items' and column_name = 'image_updated_at') then
+    alter table menu_items add column image_updated_at timestamptz;
+  end if;
+  -- 비밀번호를 바꾼 시각 — 그 전에 받은 관리자 쿠키는 더 쓰지 못한다(src/lib/auth/admin.ts)
+  if not exists (select 1 from information_schema.columns where table_schema = current_schema() and table_name = 'admins' and column_name = 'pw_changed_at') then
+    alter table admins add column pw_changed_at timestamptz;
   end if;
 end $$;
 

@@ -22,12 +22,26 @@ type GlobalWithDb = typeof globalThis & { __ichaDb?: Promise<Driver> };
 
 async function createPgDriver(url: string): Promise<Driver> {
   const { Pool } = await import("pg");
-  // DATABASE_CA 에 Supabase 가 제공하는 CA 인증서(PEM)를 넣으면 서버 인증서를 검증한다. 없으면 암호화만 하고 검증은 건너뛴다.
+  // DATABASE_CA 에 CA 인증서(PEM)를 넣으면 서버 인증서를 그 CA 로 검증한다.
+  // 주소에 sslmode 가 있으면 pg 는 아래 ssl 옵션보다 그것을 따르므로(그리고 require 를 verify-full 로 바꿔 읽는다며 경고를 찍는다):
+  //  - CA 를 줬으면 주소의 ssl 설정을 걷어 내 우리 ssl 옵션이 쓰이게 하고
+  //  - 아니면 require/prefer/verify-ca 를 pg 가 실제로 하는 그대로 verify-full 로 적어 경고를 없앤다(Neon 은 공인 인증서라 그대로 통과)
   const ca = process.env.DATABASE_CA?.trim();
+  const local = /localhost|127\.0\.0\.1/.test(url);
+  let connectionString = url;
+  try {
+    const u = new URL(url);
+    if (ca) for (const k of ["sslmode", "sslrootcert", "sslcert", "sslkey"]) u.searchParams.delete(k);
+    else if (["require", "prefer", "verify-ca"].includes(u.searchParams.get("sslmode") ?? "")) u.searchParams.set("sslmode", "verify-full");
+    connectionString = u.toString();
+  } catch {
+    /* 주소 모양이 특이하면 그대로 쓴다 */
+  }
+  const sslInUrl = /[?&]sslmode=/.test(connectionString);
   const pool = new Pool({
-    connectionString: url,
+    connectionString,
     max: 4,
-    ssl: /localhost|127\.0\.0\.1/.test(url) ? undefined : ca ? { ca: ca.replace(/\\n/g, "\n"), rejectUnauthorized: true } : { rejectUnauthorized: false },
+    ssl: local || sslInUrl ? undefined : ca ? { ca: ca.replace(/\\n/g, "\n"), rejectUnauthorized: true } : { rejectUnauthorized: false },
   });
   const q = async <T extends Row>(text: string, params?: unknown[]) => {
     const r = await pool.query(text, params as never[]);

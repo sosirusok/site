@@ -4,6 +4,7 @@ import { useActionState, useEffect } from "react";
 import { decideReceiptAction, type ActionState } from "@/app/admin/actions";
 import ui from "@/app/admin/admin.module.css";
 import s from "@/app/admin/(shell)/receipts/receipts.module.css";
+import { keepOnSubmit } from "./keepForm";
 
 export type DecisionReceipt = {
   id: string;
@@ -25,7 +26,7 @@ export function ReceiptDecisionForm({ receipt, stores, lockStore = null }: { rec
   const locked = receipt.status === "approved" || Boolean(state?.ok);
 
   return (
-    <form action={action} className={ui.form}>
+    <form action={action} onSubmit={keepOnSubmit(action)} className={ui.form}>
       <input type="hidden" name="receiptId" value={receipt.id} />
       <div className={ui.formRow}>
         <div className={ui.field}>

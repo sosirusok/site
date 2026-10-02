@@ -3,7 +3,7 @@ import { query } from "./db";
 /**
  * 고정 윈도우 속도 제한 (서버리스에서도 동작하도록 DB 기반).
  * 허용되면 true, 초과하면 false.
- * 오래된 행은 기동 시(ensureSchema)와 /api/cron/purge 에서 지우고, 여기서도 1% 확률로 비동기 정리한다.
+ * 오래된 행은 /api/cron/purge 에서 지우고, 여기서도 1% 확률로 비동기 정리한다.
  */
 export async function rateLimit(key: string, limit: number, windowSec: number): Promise<boolean> {
   const rows = await query<{ count: number }>(

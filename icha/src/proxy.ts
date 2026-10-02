@@ -36,6 +36,18 @@ export async function proxy(req: NextRequest) {
   return NextResponse.next();
 }
 
+/**
+ * 위 분기는 쿠키가 있느냐 없느냐로만 갈린다 — 그래서 할 일이 있을 때만 들르게 조건을 단다.
+ * 로그인한 손님의 쿠폰함·관리자 화면, 로그인 안 한 손님의 /login(정적, CDN 에서 바로 나감)은 이 함수를 거치지 않는다.
+ * 빌드할 때 그대로 읽으므로 값은 변수 없이 적는다.
+ */
 export const config = {
-  matcher: ["/admin/:path*", "/wallet", "/wallet/:path*", "/pick/:path*", "/coupons/:path*", "/login"],
+  matcher: [
+    { source: "/admin/:path*", missing: [{ type: "cookie", key: "icha_admin" }] },
+    { source: "/wallet", missing: [{ type: "cookie", key: "icha_member" }] },
+    { source: "/wallet/:path*", missing: [{ type: "cookie", key: "icha_member" }] },
+    { source: "/pick/:path*", missing: [{ type: "cookie", key: "icha_member" }] },
+    { source: "/coupons/:path*", missing: [{ type: "cookie", key: "icha_member" }] },
+    { source: "/login", has: [{ type: "cookie", key: "icha_member" }] },
+  ],
 };

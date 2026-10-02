@@ -36,8 +36,9 @@ export default async function CouponPage({ params }: { params: Promise<{ id: str
     note: coupon.note,
   };
   const menu = await listMenu(store.id, { includeInactive: true }).catch(() => []);
-  const item = menu.find((m) => (coupon.menuItemId && m.id === coupon.menuItemId) || m.name === coupon.menuName);
-  const image = item ? (item.imagePath ? { src: item.imagePath, local: true } : item.hasImageData ? { src: menuImageUrl(item), local: false } : null) : null;
+  // 같은 이름보다 같은 메뉴(id)가 먼저. 사진은 쿠폰함·고르기 화면과 같은 순서 — 관리자가 올린 사진이 처음 넣어 둔 사진보다 먼저
+  const item = (coupon.menuItemId != null ? menu.find((m) => m.id === coupon.menuItemId) : undefined) ?? menu.find((m) => m.name === coupon.menuName);
+  const image = item ? (item.hasImageData ? { src: menuImageUrl(item), local: false } : item.imagePath ? { src: item.imagePath, local: true } : null) : null;
   const links = placeLinks(store);
   const ts: TicketStore = { id: store.id, shortName: store.shortName, name: store.name, address: store.address, image, placeReview: links?.review ?? null, placeHome: links?.home ?? null, placeBooking: links?.booking ?? null };
 

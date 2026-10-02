@@ -53,6 +53,15 @@ export async function findOrCreateMember(phone: string): Promise<Member> {
   return mapMember(rows[0]!);
 }
 
+/** 카운터 발급용 — 회원이 없으면 만들되 '최근 로그인' 시각은 건드리지 않는다(손님이 직접 로그인한 때만 바뀌게) */
+export async function findOrCreateMemberQuiet(phone: string): Promise<Member> {
+  const rows = await query<MemberRow>(
+    `insert into members (phone) values ($1) on conflict (phone) do update set phone = excluded.phone returning *`,
+    [phone],
+  );
+  return mapMember(rows[0]!);
+}
+
 export async function getMember(id: string): Promise<Member | null> {
   if (!isUuid(id)) return null;
   const r = await one<MemberRow>(`select * from members where id=$1`, [id]);
@@ -467,9 +476,11 @@ export async function listCouponsForMember(memberId: string): Promise<Coupon[]> 
   return rows.map(mapCoupon);
 }
 
-export async function listCoupons(opts: { status?: CouponStatus; storeId?: string | null; q?: string; limit?: number; offset?: number } = {}): Promise<{ items: Coupon[]; total: number }> {
+export async function listCoupons(opts: { status?: CouponStatus; storeId?: string | null; q?: string; limit?: number; offset?: number; manualOnly?: boolean } = {}): Promise<{ items: Coupon[]; total: number }> {
   const conds: string[] = [];
   const params: unknown[] = [];
+  // 카운터 교환 때 생기는 'side' 쿠폰을 빼고 센다(LIMIT 뒤에 거르면 수동 발급분이 밀려 안 보인다)
+  if (opts.manualOnly) conds.push(`c.kind <> 'side'`);
   // 만료는 DB 상태를 따로 갱신하지 않고 expires_at 으로 판단한다
   if (opts.status === "expired") conds.push(`c.status='active' and c.expires_at <= now()`);
   else if (opts.status === "active") conds.push(`c.status='active' and c.expires_at > now()`);
@@ -489,9 +500,12 @@ export async function listCoupons(opts: { status?: CouponStatus; storeId?: strin
 
 /* ───────────────────────── 관리자 ───────────────────────── */
 
-export type Admin = { id: string; name: string; storeId: StoreId | null; role: "owner" | "staff"; active: boolean; createdAt: Date; pwHash: string };
-type AdminRow = { id: string; name: string; store_id: string | null; role: Admin["role"]; active: boolean; created_at: unknown; pw_hash: string };
-const mapAdmin = (r: AdminRow): Admin => ({ id: r.id, name: r.name, storeId: (r.store_id as StoreId | null) ?? null, role: r.role, active: r.active, createdAt: toDate(r.created_at) ?? new Date(0), pwHash: r.pw_hash });
+export type Admin = { id: string; name: string; storeId: StoreId | null; role: "owner" | "staff"; active: boolean; createdAt: Date; pwHash: string; pwChangedAt: Date | null };
+type AdminRow = { id: string; name: string; store_id: string | null; role: Admin["role"]; active: boolean; created_at: unknown; pw_hash: string; pw_changed_at?: unknown };
+const mapAdmin = (r: AdminRow): Admin => ({
+  id: r.id, name: r.name, storeId: (r.store_id as StoreId | null) ?? null, role: r.role, active: r.active, createdAt: toDate(r.created_at) ?? new Date(0), pwHash: r.pw_hash,
+  pwChangedAt: toDate(r.pw_changed_at ?? null),
+});
 
 export async function getAdmin(id: string): Promise<Admin | null> {
   const r = await one<AdminRow>(`select * from admins where id=$1`, [id]);
@@ -504,7 +518,13 @@ export async function createAdmin(a: { id: string; name: string; storeId: StoreI
   await query(`insert into admins (id, name, store_id, pw_hash, role) values ($1,$2,$3,$4,$5)`, [a.id, a.name, a.storeId, a.pwHash, a.role]);
 }
 export async function updateAdmin(id: string, p: { active?: boolean; pwHash?: string; name?: string }): Promise<void> {
-  await query(`update admins set active=coalesce($2, active), pw_hash=coalesce($3, pw_hash), name=coalesce($4, name) where id=$1`, [id, p.active ?? null, p.pwHash ?? null, p.name ?? null]);
+  await query(
+    `update admins set active=coalesce($2, active), pw_hash=coalesce($3, pw_hash), name=coalesce($4, name),
+       pw_changed_at = case when $3::text is null then pw_changed_at else $5::timestamptz end
+     where id=$1`,
+    // 쿠키의 발급 시각(iat)과 비교하므로 DB 시계가 아니라 이 서버 시계로 적는다
+    [id, p.active ?? null, p.pwHash ?? null, p.name ?? null, new Date()],
+  );
 }
 
 /** 감사 기록. 기록 자체의 실패가 이미 끝난 작업을 실패로 보고하지 않도록 안에서 삼키고 로그만 남긴다. */

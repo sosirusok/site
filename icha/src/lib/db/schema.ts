@@ -2,6 +2,7 @@
  * 스키마 정의 + 최초 1회 초기화(멱등).
  * supabase/schema.sql 은 이 파일의 SQL과 동일하게 유지한다 (수동 실행용).
  */
+import { createHash } from "node:crypto";
 import type { Driver, Queryable } from "./index";
 import { hashPassword } from "../auth/password";
 
@@ -31,7 +32,6 @@ create table if not exists menu_items (
   active      boolean not null default true,
   sort        int not null default 0
 );
-alter table menu_items add column if not exists image_updated_at timestamptz;
 create index if not exists menu_items_store_idx on menu_items(store_id, sort);
 
 create table if not exists members (
@@ -232,6 +232,13 @@ begin
   if not exists (select 1 from information_schema.columns where table_schema = current_schema() and table_name = 'tt_blocks' and column_name = 'other_table') then
     alter table tt_blocks add column other_table int;
   end if;
+  if not exists (select 1 from information_schema.columns where table_schema = current_schema() and table_name = 'menu_items' and column_name = 'image_updated_at') then
+    alter table menu_items add column image_updated_at timestamptz;
+  end if;
+  -- 비밀번호를 바꾼 시각 — 그 전에 받은 관리자 쿠키는 더 쓰지 못한다(src/lib/auth/admin.ts)
+  if not exists (select 1 from information_schema.columns where table_schema = current_schema() and table_name = 'admins' and column_name = 'pw_changed_at') then
+    alter table admins add column pw_changed_at timestamptz;
+  end if;
 end $$;
 
 -- 신고. 자리가 지워져도 직원이 볼 수 있게 테이블 번호와 마지막 글들을 복사해 둔다(14일 보관)
@@ -278,15 +285,46 @@ insert into tt_state (store_id) select id from stores on conflict (store_id) do 
 
 let ensured: Promise<void> | null = null;
 
+/**
+ * 기동 순서·시드 규칙을 바꾸면 올린다. 스키마 SQL·매장/메뉴 시드가 바뀌면 판 번호가 저절로 바뀌므로 그때는 안 올려도 된다.
+ * DB 를 손으로 고쳐 표가 빠졌다면 settings 의 'schema_version' 줄을 지우면 다음 기동 때 전부 다시 맞춘다.
+ */
+const BOOT_REV = 1;
+
+async function schemaVersion(): Promise<string> {
+  const { STORES } = await import("../stores");
+  const seed = STORES.map((s) => [
+    s.id, s.name, s.shortName, s.drink, s.naverPlaceId, s.address, s.phone, s.bizNo ?? null, s.sort,
+    s.menu.map((m) => [m.name, m.price ?? null, m.description ?? null, m.image ?? null, m.gift ?? false]),
+  ]);
+  return createHash("sha256").update(`${BOOT_REV}\n${SCHEMA_SQL}\n${JSON.stringify(seed)}`).digest("hex").slice(0, 32);
+}
+
 export function ensureSchema(db: Driver): Promise<void> {
   if (!ensured) {
     ensured = (async () => {
+      const version = await schemaVersion();
+      // 이 판으로 이미 맞춰 둔 DB 면 한 번 묻고 끝 — 서버가 새로 뜰 때마다 표·인덱스·메뉴 사진 경로를 170번 왕복하며 다시 맞추지 않는다
+      // (새 DB 는 settings 표가 없어 실패하므로 아래 전체 경로로 간다)
+      const cur = await db
+        .query<{ v: string | null; admins: number }>(
+          `select (select value->>'v' from settings where key='schema_version') as v, (select count(*)::int from admins) as admins`,
+        )
+        .catch(() => null);
+      if (cur?.[0]?.v === version && (cur[0]?.admins ?? 0) > 0) {
+        initialAdminNote = null;
+        return;
+      }
       await db.exec(SCHEMA_SQL);
       await seedStores(db);
       await db.query(`insert into tt_state (store_id) select id from stores on conflict (store_id) do nothing`);
       await seedInitialAdmin(db);
-      // 기동 때마다 오래된 속도 제한 행을 정리한다 (실패해도 기동은 계속)
-      await db.query(`delete from rate_limits where window_start < now() - interval '1 day'`).catch(() => {});
+      // 다 맞춘 뒤에만 판을 적는다 — 중간에 실패하면 다음 기동이 처음부터 다시 한다
+      await db.query(
+        `insert into settings (key, value, updated_at) values ('schema_version', jsonb_build_object('v', $1::text), now())
+         on conflict (key) do update set value = excluded.value, updated_at = now()`,
+        [version],
+      );
     })().catch((e) => {
       ensured = null;
       throw e;
@@ -341,7 +379,8 @@ async function seedStores(db: Queryable) {
   }
 }
 
-const WEAK_INITIAL_PASSWORDS = new Set(["change-me", "changeme", "admin", "admin1234", "password", "12345678"]);
+/** 흔한 값과 .env.example·README 에 적힌 예시(공개돼 있다) */
+const WEAK_INITIAL_PASSWORDS = new Set(["change-me", "changeme", "admin", "admin1234", "password", "12345678", "seomyeon2026owner"]);
 
 /**
  * 초기 관리자 계정을 만들지 못한 이유. 약한 ADMIN_INITIAL_PASSWORD 는 계정을 만들지 않을 뿐,

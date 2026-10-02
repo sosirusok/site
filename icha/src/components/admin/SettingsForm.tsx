@@ -6,6 +6,7 @@ import type { Rules } from "@/lib/config";
 import { STORES } from "@/lib/stores";
 import ui from "@/app/admin/admin.module.css";
 import s from "@/app/admin/(shell)/settings/settings.module.css";
+import { keepOnSubmit } from "./keepForm";
 
 /** 1차 → 2차 → 3차 순서로 세 매장 */
 const ORDERED = [...STORES].sort((a, b) => a.course.n - b.course.n);
@@ -19,7 +20,7 @@ export function SettingsForm({ rules }: { rules: Rules }) {
   }, [state, router]);
 
   return (
-    <form action={action} className={ui.form}>
+    <form action={action} onSubmit={keepOnSubmit(action)} className={ui.form}>
       <div className={ui.grid2}>
         <section className={ui.panel}>
           <div className={ui.panelHead}>

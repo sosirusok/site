@@ -43,7 +43,7 @@ export function Footer() {
           <Image className={styles.homeMark} src="/images/privilege/wordmark.png" alt={BRAND.name} width={720} height={245} sizes="(min-width: 960px) 180px, 140px" />
           <nav className={styles.homeLinks} aria-label="하단 링크">
             <Link href="/guide">이용 안내</Link>
-            <Link href="/wallet">쿠폰함</Link>
+            <Link href="/wallet" prefetch={false}>쿠폰함</Link>
           </nav>
         </div>
         <ul className={styles.homeTel} aria-label="매장 전화">
@@ -71,7 +71,7 @@ export function Footer() {
         <p className={styles.homeWarn}>지나친 음주는 뇌졸중, 기억력 손상이나 치매를 유발합니다. 임신 중 음주는 기형아 출생 위험을 높입니다. 만 19세 미만에게는 주류를 판매하지 않습니다.</p>
         <div className={styles.homeBottom}>
           <span>© 2026 {BRAND.name}</span>
-          <Link href="/admin/login">관리자</Link>
+          <Link href="/admin/login" prefetch={false}>관리자</Link>
         </div>
       </div>
 
@@ -94,13 +94,13 @@ export function Footer() {
       </ul>
       <nav className={styles.links} aria-label="하단 링크">
         <Link href="/guide" className={styles.link}>이용 안내</Link>
-        <Link href="/wallet" className={styles.link}>쿠폰함</Link>
+        <Link href="/wallet" prefetch={false} className={styles.link}>쿠폰함</Link>
         <a href={naverSearchUrl(SEARCH_QUERY)} target="_blank" rel="noreferrer" className={styles.link}>네이버 플레이스</a>
       </nav>
       <p className={styles.warn}>지나친 음주는 뇌졸중, 기억력 손상이나 치매를 유발합니다. 임신 중 음주는 기형아 출생 위험을 높입니다. 만 19세 미만에게는 주류를 판매하지 않습니다.</p>
       <p className={styles.copy}>
         <span>© 2026 {BRAND.name}</span>
-        <Link href="/admin/login" className={styles.staff}>관리자</Link>
+        <Link href="/admin/login" prefetch={false} className={styles.staff}>관리자</Link>
       </p>
       </div>
     </footer>

@@ -113,6 +113,29 @@ export function nowText(st: OpenStatus): string {
   return "영업 종료";
 }
 
+/** 홈 캐러셀의 오늘 영업 — 상태 문구와 시간("17:00~03:00", 휴무면 "") */
+export function todayParts(store: Pick<Store, "hours">, now: Date): { open: boolean; state: string; hours: string } {
+  const st = openStatus(store, now);
+  if (st.today === "휴무") return { open: false, state: "휴무", hours: "" };
+  return { open: st.open, state: nowText(st), hours: st.today.replace(/\s*–\s*/, "~").replace("다음날 ", "익일 ") };
+}
+
+/** 매장 화면 첫머리의 영업 줄 — 상태·오늘 시간·주문 마감, 그리고 오늘이 아닌 요일들 */
+export type HeroStatus = { open: boolean; state: string; today: string; lastOrder: string | null; otherDays: string[] };
+export function heroStatus(store: Pick<Store, "hours">, now: Date): HeroStatus {
+  const st = openStatus(store, now);
+  const { dow } = kstNow(now);
+  return {
+    open: st.open,
+    state: st.today === "휴무" ? "휴무" : nowText(st),
+    today: st.today === "휴무" ? "오늘 휴무" : `오늘 ${st.today.replace(/\s*–\s*/, "~").replace("다음날 ", "익일 ")}`,
+    lastOrder: st.lastOrder,
+    otherDays: parseHours(store)
+      .filter((l) => !l.dayset.has(dow))
+      .map((l) => `${l.days} ${l.openText}~${l.closeText}`),
+  };
+}
+
 /* ───────── 사진 ───────── */
 
 export function heroImage(store: Pick<Store, "images">): StoreImage | null {

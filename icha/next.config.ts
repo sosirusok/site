@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   serverExternalPackages: ["@electric-sql/pglite", "pg", "sharp"],
+  // 로컬용 PGlite(21MB)는 운영(DATABASE_URL 있음)에서 한 번도 안 쓴다 — Vercel 함수 묶음에 넣지 않아 처음 뜨는 시간을 줄인다
+  outputFileTracingExcludes: process.env.VERCEL ? { "/*": ["node_modules/@electric-sql/pglite/**/*"] } : {},
   images: {
     // 모든 이미지는 리포지토리 안(public/)에 두고 외부 로더를 쓰지 않는다.
     formats: ["image/avif", "image/webp"],
@@ -14,7 +16,8 @@ const nextConfig: NextConfig = {
     qualities: [70, 75],
   },
   experimental: {
-    serverActions: { bodySizeLimit: "12mb" },
+    // Vercel 함수는 요청 본문 4.5MB 까지만 받는다 — 더 크게 열어 둬도 거기서 끊긴다(메뉴 사진은 화면에서 줄여 보낸다)
+    serverActions: { bodySizeLimit: "4.5mb" },
   },
   async headers() {
     return [

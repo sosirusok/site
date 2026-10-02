@@ -5,9 +5,9 @@
  */
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import sharp from "sharp";
 import { hashPassword } from "@/lib/auth/password";
-import { clearAdminSession, getAdminSession, type AdminSession } from "@/lib/auth/session";
+import { checkAdmin } from "@/lib/auth/admin";
+import { clearAdminSession, getAdminSession, setAdminSession, type AdminSession } from "@/lib/auth/session";
 import { STORE_IDS, formatPhone, normalizePhone, type Rules, type StoreId } from "@/lib/config";
 import { counterRedeemPending, issueCounterPass } from "@/lib/counter";
 import { issueManualCoupons, redeemCoupon, voidCoupon } from "@/lib/coupons";
@@ -28,13 +28,18 @@ export type ActionState = { ok: boolean; message: string; at: number; data?: Rec
 
 class ActionError extends Error {}
 
+/** '메뉴 이름'를 — 따옴표로 묶은 이름 뒤에 맞는 조사 */
+function quoted(name: string, type: "을를" | "은는"): string {
+  return `'${name}'${josa(name, type).slice(name.length)}`;
+}
+
 async function requireAdmin(opts: { owner?: boolean } = {}): Promise<AdminSession> {
-  const s = await getAdminSession();
-  if (!s) throw new ActionError("로그인이 풀렸습니다. 다시 로그인하세요.");
-  const row = await getAdmin(s.adminId);
-  if (!row || !row.active) throw new ActionError("비활성화된 계정입니다.");
-  if (opts.owner && s.role !== "owner") throw new ActionError("총괄 관리자만 할 수 있는 작업입니다.");
-  return s;
+  const c = await checkAdmin();
+  if (!c.ok) {
+    throw new ActionError(c.why === "inactive" ? "비활성화된 계정입니다." : c.why === "pw" ? "비밀번호가 바뀌었습니다. 다시 로그인하세요." : "로그인이 풀렸습니다. 다시 로그인하세요.");
+  }
+  if (opts.owner && c.s.role !== "owner") throw new ActionError("총괄 관리자만 할 수 있는 작업입니다.");
+  return c.s;
 }
 
 async function run(fn: () => Promise<{ message: string; data?: Record<string, string | number | null> }>): Promise<ActionState> {
@@ -276,7 +281,8 @@ export async function saveMenuAction(_prev: ActionState, fd: FormData): Promise<
     if (price != null && (price < 0 || price > 10_000_000)) throw new ActionError("가격이 올바르지 않습니다.");
     const description = str(fd, "description").slice(0, 300) || null;
     const isGift = fd.get("isGift") === "on";
-    const active = fd.get("active") !== "off";
+    // 체크 해제한 칸은 폼에 아예 안 실린다 — '있으면 노출'로 읽어야 [손님 화면에 노출]을 끌 수 있다
+    const active = fd.get("active") === "on";
     let sort = num(fd, "sort");
     if (id) {
       const cur = await getMenuItem(id);
@@ -285,14 +291,15 @@ export async function saveMenuAction(_prev: ActionState, fd: FormData): Promise<
     } else if (sort == null) {
       sort = (await listMenu(storeId, { includeInactive: true })).length;
     }
-    const savedId = await upsertMenuItem({ id, storeId, name, price, description, isGift, active, sort });
-
+    // 사진을 먼저 읽는다 — 사진이 거절되면 아무것도 저장하지 않아야, 다시 눌렀을 때 같은 메뉴가 두 번 생기지 않는다
     const file = fd.get("image");
+    let jpeg: Buffer | null = null;
     if (file instanceof File && file.size > 0) {
-      if (file.size > 12 * 1024 * 1024) throw new ActionError("사진은 12MB 이하로 올려 주세요.");
-      let jpeg: Buffer;
+      // 화면에서 큰 사진은 미리 줄여 보낸다(Vercel 은 요청 본문 4.5MB 까지). 그래도 큰 파일이 오면 여기서 막는다
+      if (file.size > 4 * 1024 * 1024) throw new ActionError("사진이 너무 큽니다. 4MB 이하 JPG·PNG 로 올려 주세요.");
       try {
-        jpeg = await sharp(Buffer.from(await file.arrayBuffer()), { failOn: "none" })
+        const sharp = (await import("sharp")).default;
+        jpeg = await sharp(Buffer.from(await file.arrayBuffer()), { failOn: "none", limitInputPixels: 80_000_000 })
           .rotate()
           .resize({ width: 900, height: 900, fit: "inside", withoutEnlargement: true })
           .jpeg({ quality: 82, mozjpeg: true })
@@ -300,6 +307,10 @@ export async function saveMenuAction(_prev: ActionState, fd: FormData): Promise<
       } catch {
         throw new ActionError("사진 파일을 읽지 못했습니다. JPG 또는 PNG 를 올려 주세요. (아이폰 HEIC 는 설정 > 카메라 > 포맷을 '높은 호환성'으로)");
       }
+    }
+    const savedId = await upsertMenuItem({ id, storeId, name, price, description, isGift, active, sort });
+
+    if (jpeg) {
       await setMenuImage(savedId, jpeg, "image/jpeg");
       await audit(s.adminId, "menu.image", String(savedId), { bytes: jpeg.length });
     } else if (fd.get("removeImage") === "on" && id) {
@@ -308,7 +319,7 @@ export async function saveMenuAction(_prev: ActionState, fd: FormData): Promise<
     }
     await audit(s.adminId, "menu.save", String(savedId), { storeId, name, price, isGift, active, created: !id });
     revalidateCustomerPages();
-    return { message: id ? `'${name}' 을(를) 저장했습니다.` : `'${name}' 을(를) 추가했습니다.`, data: { id: savedId } };
+    return { message: id ? `${quoted(name, "을를")} 저장했습니다.` : `${quoted(name, "을를")} 추가했습니다.`, data: { id: savedId } };
   });
 }
 
@@ -322,7 +333,7 @@ export async function toggleMenuGiftAction(_prev: ActionState, fd: FormData): Pr
     await upsertMenuItem({ ...item, id: item.id, isGift });
     await audit(s.adminId, "menu.gift", String(id), { name: item.name, isGift });
     revalidateCustomerPages();
-    return { message: isGift ? `'${item.name}' 을(를) 무료 증정 품목으로 넣었습니다.` : `'${item.name}' 을(를) 무료 증정에서 뺐습니다.` };
+    return { message: isGift ? `${quoted(item.name, "을를")} 무료 증정 품목으로 넣었습니다.` : `${quoted(item.name, "을를")} 무료 증정에서 뺐습니다.` };
   });
 }
 
@@ -336,7 +347,7 @@ export async function toggleMenuActiveAction(_prev: ActionState, fd: FormData): 
     await upsertMenuItem({ ...item, id: item.id, active });
     await audit(s.adminId, "menu.active", String(id), { name: item.name, active });
     revalidateCustomerPages();
-    return { message: active ? `'${item.name}' 을(를) 다시 노출합니다.` : `'${item.name}' 을(를) 숨겼습니다.` };
+    return { message: active ? `${quoted(item.name, "을를")} 다시 노출합니다.` : `${quoted(item.name, "을를")} 숨겼습니다.` };
   });
 }
 
@@ -369,7 +380,7 @@ export async function deleteMenuAction(_prev: ActionState, fd: FormData): Promis
     const removed = await deleteMenuItem(id);
     await audit(s.adminId, "menu.delete", String(id), { name: item.name, hard: removed });
     revalidateCustomerPages();
-    return { message: removed ? `'${item.name}' 을(를) 삭제했습니다.` : `'${item.name}' 은(는) 발급된 쿠폰이 있어 삭제 대신 숨김·무료 증정 해제 처리했습니다.` };
+    return { message: removed ? `${quoted(item.name, "을를")} 삭제했습니다.` : `${quoted(item.name, "은는")} 발급된 쿠폰이 있어 삭제 대신 숨김·무료 증정 해제 처리했습니다.` };
   });
 }
 
@@ -471,7 +482,9 @@ export async function resetStaffPasswordAction(_prev: ActionState, fd: FormData)
     if (!a) throw new ActionError("계정을 찾을 수 없습니다.");
     await updateAdmin(id, { pwHash: await hashPassword(password) });
     await audit(s.adminId, "staff.password", id, null);
-    return { message: `'${id}' 비밀번호를 바꿨습니다.` };
+    // 그 계정의 다른 기기 로그인은 모두 풀린다. 자기 비밀번호를 바꿨으면 이 기기는 새 쿠키로 이어 간다
+    if (id === s.adminId) await setAdminSession(s);
+    return { message: `'${id}' 비밀번호를 바꿨습니다. 그 계정으로 로그인해 있던 다른 기기는 다시 로그인해야 합니다.` };
   });
 }
 

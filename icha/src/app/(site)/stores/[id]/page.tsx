@@ -18,8 +18,10 @@ import { getRules } from "@/lib/settings";
 import { getStore } from "@/lib/stores";
 import styles from "./page.module.css";
 
-/** 정적(ISR) — 세 매장을 빌드 때 만들어 두고 60초마다 뒤에서 새로 만든다. 관리자가 메뉴·공지를 저장하면 revalidatePath("/stores/[id]") 로 바로. 없는 id 는 notFound(그 결과도 60초 캐시). */
+/** 정적(ISR) — 세 매장을 빌드 때 만들어 두고 60초마다 뒤에서 새로 만든다. 관리자가 메뉴·공지를 저장하면 revalidatePath("/stores/[id]") 로 바로. 없는 id 는 정적 404. */
 export const revalidate = 60;
+/** 세 매장 말고는 미리 만든 404 로 — 낯선 id 마다 함수를 돌리고 캐시를 쌓지 않는다 */
+export const dynamicParams = false;
 
 export function generateStaticParams(): { id: StoreId }[] {
   return STORE_IDS.map((id) => ({ id }));

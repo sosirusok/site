@@ -26,7 +26,10 @@ export function PhoneForm({ next, label = "로그인" }: { next?: string; label?
   const [busy, setBusy] = useState(false);
 
   function onChange(e: ChangeEvent<HTMLInputElement>) {
-    setDigits(e.target.value.replace(/\D/g, "").slice(0, 11));
+    // 폰 자동 완성은 +82 10-… 으로 넣기도 한다 — 국내 번호는 82 로 시작하지 않으므로 바로 010 으로 바꾼다
+    let d = e.target.value.replace(/\D/g, "");
+    if (/^820?1/.test(d)) d = `0${d.replace(/^820?/, "")}`;
+    setDigits(d.slice(0, 11));
     if (error) setError(null);
   }
 

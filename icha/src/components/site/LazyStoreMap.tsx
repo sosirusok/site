@@ -1,9 +1,9 @@
 "use client";
-import dynamic from "next/dynamic";
-import { useEffect, useRef, useState, type ComponentProps } from "react";
+import { Suspense, lazy, useEffect, useRef, useState, type ComponentProps } from "react";
+import type { StoreMap as StoreMapType } from "./StoreMap";
 import styles from "./StoreMap.module.css";
 
-type Props = ComponentProps<typeof StoreMap>;
+type Props = ComponentProps<typeof StoreMapType>;
 
 /** 지도가 뜨기 전 같은 상자(높이·크림 바탕·테두리) — StoreMap 의 "불러오는 중" 상태와 똑같이 그린다 */
 function Placeholder({ height = 440, className = "", inner }: { height?: number; className?: string; inner?: React.Ref<HTMLDivElement> }) {
@@ -16,8 +16,12 @@ function Placeholder({ height = 440, className = "", inner }: { height?: number;
   );
 }
 
-/** Leaflet(약 150KB)은 지도가 화면 가까이(600px) 왔을 때만 받는다 — 서버 HTML 에는 같은 크기의 빈 상자 */
-const StoreMap = dynamic(() => import("./StoreMap").then((m) => m.StoreMap), { ssr: false, loading: () => <Placeholder /> });
+/**
+ * Leaflet(약 150KB)은 지도가 화면 가까이(600px) 왔을 때만 받는다 — 서버 HTML 에는 같은 크기의 빈 상자.
+ * 받는 동안의 상자도 같은 높이여야 한다(next/dynamic 의 loading 은 props 를 못 받아 기본 440px 로 커졌다 줄며 아래 글이 튀었다).
+ * near 는 마운트 뒤에만 켜지므로 서버에서는 그려지지 않는다.
+ */
+const StoreMap = lazy(() => import("./StoreMap").then((m) => ({ default: m.StoreMap })));
 
 /**
  * 지도를 스크롤이 가까워질 때 붙인다 — 홈·매장 화면의 지도는 첫 화면 아래에 있어 처음부터 지도 JS 를 받을 이유가 없다.
@@ -45,6 +49,12 @@ export function LazyStoreMap(props: Props) {
     io.observe(el);
     return () => io.disconnect();
   }, [near]);
-  if (near) return <StoreMap {...props} />;
+  if (near) {
+    return (
+      <Suspense fallback={<Placeholder height={props.height} className={props.className} />}>
+        <StoreMap {...props} />
+      </Suspense>
+    );
+  }
   return <Placeholder inner={ref} height={props.height} className={props.className} />;
 }

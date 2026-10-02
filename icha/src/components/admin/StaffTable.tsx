@@ -4,6 +4,7 @@ import { useActionState, useEffect, useState, useTransition } from "react";
 import { createStaffAction, resetStaffPasswordAction, setStaffActiveAction, type ActionState } from "@/app/admin/actions";
 import ui from "@/app/admin/admin.module.css";
 import s from "@/app/admin/(shell)/staff/staff.module.css";
+import { keepOnSubmit } from "./keepForm";
 
 export type StaffRow = { id: string; name: string; storeId: string | null; storeName: string | null; role: "owner" | "staff"; active: boolean; createdAt: string };
 
@@ -91,7 +92,7 @@ function PasswordForm({ id, onDone, onCancel }: { id: string; onDone: (r: Action
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
   return (
-    <form action={action} className={s.pwForm}>
+    <form action={action} onSubmit={keepOnSubmit(action)} className={s.pwForm}>
       <input type="hidden" name="id" value={id} />
       <input name="password" type="password" className={`${ui.input}`} placeholder="새 비밀번호 8자 이상" minLength={8} required autoFocus style={{ minHeight: 32 }} />
       <button type="submit" className={`${ui.button} ${ui.buttonSm}`} disabled={pending}>
@@ -112,7 +113,7 @@ export function StaffCreateForm({ stores }: { stores: { id: string; shortName: s
     if (state?.ok) router.refresh();
   }, [state, router]);
   return (
-    <form action={action} className={ui.form} key={state?.ok ? state.at : "form"}>
+    <form action={action} onSubmit={keepOnSubmit(action)} className={ui.form} key={state?.ok ? state.at : "form"}>
       <div className={ui.formRow}>
         <div className={ui.field}>
           <label className={ui.label} htmlFor="sc-id">

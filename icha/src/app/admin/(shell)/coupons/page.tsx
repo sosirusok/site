@@ -60,7 +60,7 @@ export default async function CouponsPage({ searchParams }: { searchParams: Prom
           <label className={ui.label} htmlFor="code">
             쿠폰 코드
           </label>
-          <CouponCodeInput initial={code} />
+          <CouponCodeInput key={code} initial={code} />
           <button type="submit" className={`${ui.button} ${ui.buttonLg}`}>
             조회
           </button>
@@ -124,7 +124,7 @@ export default async function CouponsPage({ searchParams }: { searchParams: Prom
               {looked.status === "active" ? (
                 <p className={ui.help}>손님이 {getStore(looked.useStoreId)?.shortName} 테이블에 있고 메뉴가 나갔으면 사용 처리합니다. 처리 후에는 되돌릴 수 없습니다.</p>
               ) : null}
-              <CouponActions couponId={looked.id} status={looked.status} canRedeem={looked.status === "active" && !blocked} redeemBlockedReason={blocked} canVoid={session.role === "owner"} />
+              <CouponActions key={looked.id} couponId={looked.id} status={looked.status} canRedeem={looked.status === "active" && !blocked} redeemBlockedReason={blocked} canVoid={session.role === "owner"} />
             </div>
           </div>
         ) : null}

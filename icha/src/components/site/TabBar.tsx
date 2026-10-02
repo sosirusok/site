@@ -27,7 +27,7 @@ export function TabBar({ stores }: { stores: PlaceSheetStore[] }) {
     <Link
       key={t.href}
       href={t.href}
-      prefetch={t === talk ? false : undefined}
+      prefetch={t === talk || t === wallet ? false : undefined}
       className={`${styles.item} ${t.active(path) ? styles.active : ""}`}
       aria-current={t.active(path) ? "page" : undefined}
     >

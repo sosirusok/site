@@ -3,7 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
+import { useClock } from "@/components/site/useClock";
+import { todayParts } from "@/components/site/StoreHelpers";
 import type { StoreId } from "@/lib/config";
+import type { Store } from "@/lib/stores";
 import s from "./vip-lower.module.css";
 
 type Photo = { src: string; alt: string; label: string };
@@ -11,6 +14,7 @@ type Venue = {
   id: StoreId; name: string; shortName: string; drink: string; course: number;
   photo: string; alt: string; gallery: Photo[];
   today: { open: boolean; state: string; hours: string };
+  hours: Store["hours"];
   notice: string; benefit: string; booking: string | null;
 };
 const TITLE_ART: Record<StoreId, { src: string; height: number }> = {
@@ -30,6 +34,20 @@ export function VenueShowcase({ venues }: { venues: Venue[] }) {
   const swiped = useRef(false);
   const count = venues.length;
   const canPlay = playing && !reducedMotion && inView && pageVisible && count > 1;
+  // 홈은 정적 HTML — 영업 상태는 브라우저 시각으로 다시 맞춘다
+  const now = useClock();
+  const today = venues.map((v) => (now ? todayParts({ hours: v.hours }, now) : v.today));
+  // 사진은 지금 칸과(보이는 중이면) 다음 칸만 받는다. 한 번 받은 칸은 그대로 둔다 — 가려진 두 칸의 사진 220KB 를 첫 화면에서 받지 않는다
+  const [shown, setShown] = useState<ReadonlySet<number>>(() => new Set([0]));
+  useEffect(() => {
+    setShown((prev) => {
+      const next = new Set(prev);
+      next.add(selected);
+      if (inView) next.add((selected + 1) % count);
+      return next.size === prev.size ? prev : next;
+    });
+  }, [selected, inView, count]);
+  const mount = (index: number) => shown.has(index) || index === selected;
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -86,10 +104,10 @@ export function VenueShowcase({ venues }: { venues: Venue[] }) {
       }}>
       <div className={s.carouselHeading}>
         <div className={s.nameWindow} aria-hidden="true">
-          {venues.map((venue, index) => (
+          {venues.map((venue, index) => mount(index) ? (
             <Image key={venue.id} src={TITLE_ART[venue.id].src} alt="" width={720} height={TITLE_ART[venue.id].height}
               sizes="(min-width: 760px) 340px, 260px" className={s.animatedName} data-active={index === selected} />
-          ))}
+          ) : null)}
         </div>
       </div>
       <p className="sr-only" aria-live={playing ? "off" : "polite"} aria-atomic="true">{selected + 1} / {count} · {venues[selected]?.name}</p>
@@ -119,14 +137,14 @@ export function VenueShowcase({ venues }: { venues: Venue[] }) {
             role="group" aria-roledescription="슬라이드" aria-label={`${index + 1} / ${count} · ${venue.name}`}>
             <div className={s.photos}>
               <Link href={`/stores/${venue.id}`} className={s.venuePhoto} aria-label={`${venue.name} 사진과 메뉴 보기`} draggable={false}>
-                <Image src={venue.photo} alt={venue.alt} fill sizes="(min-width: 1200px) 680px, (min-width: 760px) 55vw, calc(100vw - 32px)"
-                  loading={index === 0 ? "eager" : "lazy"} className={s.venueImage} draggable={false} />
+                {mount(index) && <Image src={venue.photo} alt={venue.alt} fill sizes="(min-width: 1200px) 680px, (min-width: 760px) 55vw, calc(100vw - 32px)"
+                  loading={index === 0 ? "eager" : "lazy"} className={s.venueImage} draggable={false} />}
               </Link>
               <div className={s.photoGallery}>
                 {venue.gallery.map(photo => (
                   <Link href={`/stores/${venue.id}`} key={photo.src} className={s.galleryItem} draggable={false}>
-                    <span className={s.galleryFrame}><Image src={photo.src} alt={photo.alt} fill
-                      sizes="(min-width: 1200px) 330px, (min-width: 760px) 27vw, calc((100vw - 44px) / 2)" draggable={false} /></span>
+                    <span className={s.galleryFrame}>{mount(index) && <Image src={photo.src} alt={photo.alt} fill
+                      sizes="(min-width: 1200px) 330px, (min-width: 760px) 27vw, calc((100vw - 44px) / 2)" draggable={false} />}</span>
                     <span>{photo.label} <span aria-hidden="true">↗</span></span>
                   </Link>
                 ))}
@@ -135,7 +153,7 @@ export function VenueShowcase({ venues }: { venues: Venue[] }) {
             <div className={s.venueInformation}>
               <h3 className="sr-only">{venue.name}</h3>
               <p className={s.venueCategory}>{venue.drink} · {venue.id === "joseon" ? "서면밀레오레본점" : "서면점"}</p>
-              <p className={s.venueHours}><span className={s.openState} data-open={venue.today.open}>{venue.today.state}</span><span>{venue.today.hours}</span></p>
+              <p className={s.venueHours}><span className={s.openState} data-open={today[index]!.open}>{today[index]!.state}</span><span>{today[index]!.hours}</span></p>
               <div className={s.venueBenefit}><p>다음 방문 쿠폰 혜택</p><strong>{venue.benefit} 무료</strong></div>
               {venue.notice ? <p className={s.venueNotice}>{venue.notice}</p> : null}
               <nav className={s.venueActions} aria-label={`${venue.shortName} 바로가기`}>

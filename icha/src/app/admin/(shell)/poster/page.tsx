@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BRAND, SITE_URL } from "@/lib/config";
 import { STORES } from "@/lib/stores";
 import { requireAdminPage } from "@/components/admin/guard";
+import { Forbidden } from "@/components/admin/Forbidden";
 import { PosterSheet, isPlaceholderSiteUrl, placeQrUrl } from "@/components/admin/PosterSheet";
 import { TentSheet } from "@/components/admin/TentSheet";
 import { PosterPreview, PrintButton } from "@/components/admin/PosterPreview";
@@ -23,8 +24,12 @@ export default async function PosterPage({ searchParams }: { searchParams: Promi
   const session = await requireAdminPage();
   const sp = await searchParams;
   const preferred = session.storeId ?? sp.store;
-  const store = STORES.find((x) => x.id === (sp.store ?? preferred)) ?? STORES[0]!;
   const type: PrintType = sp.type === "tent" ? "tent" : sp.type === "table" ? "table" : "poster";
+  // 테이블톡 QR 은 서명된 테이블 주소라 매장 직원은 자기 매장 것만(포스터·안내 카드는 공개 정보라 다른 매장도 볼 수 있다)
+  const staffOnly = session.role === "staff" && type === "table";
+  if (staffOnly && !session.storeId) return <Forbidden what="다른 매장 테이블톡 QR" />;
+  const store = (staffOnly ? STORES.find((x) => x.id === session.storeId) : STORES.find((x) => x.id === (sp.store ?? preferred))) ?? STORES[0]!;
+  const choices = staffOnly ? STORES.filter((x) => x.id === store.id) : STORES;
   const tt = type === "table" ? (await getTTSettings(true))[store.id] : null;
   const placeholder = isPlaceholderSiteUrl();
   const placeUrl = placeQrUrl(store);
@@ -63,7 +68,7 @@ export default async function PosterPage({ searchParams }: { searchParams: Promi
           <div className={`${ui.panel} ${ui.panelBody}`}>
             <h2 className={ui.sectionTitle}>매장</h2>
             <div className={s.storeChoice}>
-              {STORES.map((st) => (
+              {choices.map((st) => (
                 <Link key={st.id} href={href(type, st.id)} data-store={st.id} className={`${s.storeBtn} ${st.id === store.id ? s.storeBtnActive : ""}`} aria-current={st.id === store.id ? "true" : undefined}>
                   <span className={ui.storeDot} aria-hidden="true" />
                   {st.shortName}

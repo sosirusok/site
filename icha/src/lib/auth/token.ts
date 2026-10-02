@@ -5,12 +5,16 @@
 import { SignJWT, jwtVerify } from "jose";
 
 export type MemberSession = { memberId: string; phone: string };
-export type AdminSession = { adminId: string; name: string; role: "owner" | "staff"; storeId: string | null };
+/** iat = 토큰을 만든 시각(초). 비밀번호를 바꾼 뒤의 옛 로그인을 가려내는 데 쓴다 */
+export type AdminSession = { adminId: string; name: string; role: "owner" | "staff"; storeId: string | null; iat?: number };
+
+/** 공개된 예시 값(.env.example·개발용) — 그대로 옮겨 적었으면 없는 것과 같다 */
+const PLACEHOLDER_SECRETS = new Set(["change-me-to-a-long-random-string", "dev-only-insecure-secret-change-me-please"]);
 
 /** 서명 키(SESSION_SECRET). 테이블 QR 서명처럼 같은 비밀로 HMAC 을 거는 곳에서도 쓴다 */
 export function secret(): Uint8Array {
-  const s = process.env.SESSION_SECRET;
-  if (!s || s.length < 16) {
+  const s = process.env.SESSION_SECRET?.trim();
+  if (!s || s.length < 16 || PLACEHOLDER_SECRETS.has(s)) {
     if (process.env.NODE_ENV === "production") throw new Error("SESSION_SECRET 환경변수를 설정하세요 (32자 이상).");
     return new TextEncoder().encode("dev-only-insecure-secret-change-me-please");
   }
@@ -53,5 +57,5 @@ export async function verifyMemberToken(token: string | undefined): Promise<Memb
 /** 관리자 쿠키 값 → 세션 */
 export async function verifyAdminToken(token: string | undefined): Promise<AdminSession | null> {
   const s = await verifyToken<AdminSession & { kind?: string }>(token);
-  return s && s.kind === "admin" ? { adminId: s.adminId, name: s.name, role: s.role, storeId: s.storeId ?? null } : null;
+  return s && s.kind === "admin" ? { adminId: s.adminId, name: s.name, role: s.role, storeId: s.storeId ?? null, iat: typeof s.iat === "number" ? s.iat : undefined } : null;
 }

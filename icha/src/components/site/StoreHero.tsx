@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { placeLinks } from "@/lib/naver";
 import type { Store } from "@/lib/stores";
-import { kstNow, nowText, openStatus, parseHours } from "./StoreHelpers";
+import { OpenNow, OtherDays } from "./OpenNow";
+import { heroStatus } from "./StoreHelpers";
 import styles from "./StoreHero.module.css";
 
 /** 술 종류의 영문 라벨 */
@@ -14,14 +15,9 @@ const PHOTOS: Record<string, string> = {
 
 /** 홈과 같은 매장 아트워크에 실제 영업 정보와 이동 링크를 이어 붙인다. */
 export function StoreHero({ store }: { store: Store }) {
-  const st = openStatus(store);
+  // 서버가 그린 값 — 브라우저가 지금 시각으로 다시 맞춘다(OpenNow)
+  const status = heroStatus(store, new Date());
   const r = store.naverRating;
-  const { dow } = kstNow();
-  const otherDays = parseHours(store)
-    .filter((l) => !l.dayset.has(dow))
-    .map((l) => `${l.days} ${l.openText}~${l.closeText}`);
-  const today = st.today === "휴무" ? "오늘 휴무" : `오늘 ${st.today.replace(/\s*–\s*/, "~").replace("다음날 ", "익일 ")}`;
-  const state = st.today === "휴무" ? "휴무" : nowText(st);
   const links = placeLinks(store);
 
   return (
@@ -34,11 +30,7 @@ export function StoreHero({ store }: { store: Store }) {
         <span>{String(store.course.n).padStart(2, "0")} · {DRINK_EN[store.drink] ?? store.drink}</span>
       </div>
 
-      <p className={styles.statusBar}>
-        <span className={`badge ${st.open ? "dot-on" : "dot-off"} ${styles.statusBadge}`}>{state}</span>
-        <span className={`num ${styles.statusHours}`}>{today}</span>
-        {st.lastOrder && <span className={styles.statusLo}>주문 마감 {st.lastOrder}</span>}
-      </p>
+      <OpenNow hours={store.hours} initial={status} />
 
       <div className={styles.body}>
         <p className="lead">{store.headline}</p>
@@ -51,7 +43,7 @@ export function StoreHero({ store }: { store: Store }) {
           </p>
         )}
         {/* 오늘 시간 외에 다른 요일의 영업 정보도 함께 제공한다. */}
-        {otherDays.length > 0 && <p className={`num ${styles.other}`}>{otherDays.join(" · ")}</p>}
+        <OtherDays hours={store.hours} initial={status} />
         <p className={styles.addr}>
           {store.address}
           {links && <> <a href={links.directions} target="_blank" rel="noopener noreferrer" className={styles.addrLink}>길찾기<span className="sr-only"> — {store.shortName}</span></a></>}

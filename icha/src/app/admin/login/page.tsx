@@ -19,7 +19,8 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: P
   const seedIssue = initialAdminIssue();
   // 로그인 뒤 기본 화면은 카운터 (직원이 계산대에서 가장 먼저 여는 화면)
   const next = sp.next && sp.next.startsWith("/admin") && sp.next !== "/admin/login" && sp.next !== "/admin" ? sp.next : "/admin/counter";
-  if (session && sp.reason !== "inactive") redirect(next);
+  // 계정이 정지됐거나 비밀번호가 바뀌어 돌아온 경우(reason)에는 옛 쿠키가 있어도 로그인 화면을 보여 준다
+  if (session && !sp.reason) redirect(next);
   return (
     <div className={styles.page}>
       <div className={styles.bar}>
@@ -29,7 +30,11 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: P
         <div className={styles.card}>
           <div className={styles.brand}>
             <h1 className={styles.title}>{BRAND.name}</h1>
-            <p className={styles.desc}>{sp.reason === "inactive" ? "비활성화된 계정입니다. 총괄 관리자에게 문의하세요." : "매장 직원 계정이나 총괄 계정으로 들어갑니다."}</p>
+            <p className={styles.desc}>{sp.reason === "inactive"
+                ? "비활성화된 계정입니다. 총괄 관리자에게 문의하세요."
+                : sp.reason === "pw"
+                  ? "비밀번호가 바뀌었습니다. 새 비밀번호로 다시 로그인하세요."
+                  : "매장 직원 계정이나 총괄 계정으로 들어갑니다."}</p>
             {seedIssue && <p className={styles.warn}>{seedIssue}</p>}
           </div>
           <AdminLoginForm next={next} />

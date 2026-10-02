@@ -7,7 +7,8 @@
 import { randomUUID } from "node:crypto";
 import { normalizePhone, type StoreId } from "./config";
 import { one, query, tx } from "./db";
-import { applyApprovedSpend, audit, findOrCreateMember, getMemberByPhone, listCouponsForMember, listReceiptsForMember, type Coupon, type Member, type Receipt } from "./db/queries";
+import { applyApprovedSpend, audit, findOrCreateMemberQuiet, getMemberByPhone, listCouponsForMember, listReceiptsForMember, type Coupon, type Member, type Receipt } from "./db/queries";
+import { serviceDayEndsAt } from "./tabletalk/code";
 import { CouponError, isPickExpired, issueSideCoupon, redeemCoupon } from "./coupons";
 import { getRules } from "./settings";
 import { giftStoresFor } from "./stores";
@@ -20,13 +21,17 @@ export async function issueCounterPass(p: { phone: string; storeId: StoreId; amo
   if (!phone) throw new CouponError("휴대폰 번호를 확인해 주세요.");
   const rules = await getRules();
   if (!rules.eventActive) throw new CouponError("이벤트 기간이 아닙니다.");
-  const member = await findOrCreateMember(phone);
-  const today = await query<{ n: number }>(
-    `select count(*)::int as n from receipts where member_id=$1 and store_id=$2 and status='approved' and created_at > now() - interval '1 day'`,
-    [member.id, p.storeId],
-  );
-  if ((today[0]?.n ?? 0) >= rules.dailyLimitPerMember) throw new CouponError(`이 번호는 오늘 ${rules.dailyLimitPerMember}장까지 발급됩니다.`);
+  const member = await findOrCreateMemberQuiet(phone);
+  // '오늘'은 영업일(한국 낮 12시에 바뀜) — 밤 11시 50분과 새벽 0시 10분이 같은 밤으로 세어진다(지난 24시간이 아니라)
   const now = new Date();
+  const dayStart = new Date(serviceDayEndsAt(now).getTime() - 86_400_000);
+  const today = await query<{ n: number }>(
+    `select count(*)::int as n from receipts where member_id=$1 and store_id=$2 and status='approved' and created_at >= $3`,
+    [member.id, p.storeId, dayStart.toISOString()],
+  );
+  if ((today[0]?.n ?? 0) >= rules.dailyLimitPerMember) {
+    throw new CouponError(`이 번호는 오늘(낮 12시 기준) 이 매장에서 ${rules.dailyLimitPerMember}장까지 발급됩니다.`);
+  }
   const receiptId = await tx(async (q) => {
     const rows = await q.query<{ id: string }>(
       `insert into receipts (member_id, store_id, status, reasons, sha256, receipt_at, amount, reviewed_at, reviewed_by, review_note)

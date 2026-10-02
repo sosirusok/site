@@ -2,15 +2,14 @@
  * 관리자 페이지용 세션 확인. (Server Component 전용)
  */
 import { redirect } from "next/navigation";
-import { getAdminSession, type AdminSession } from "@/lib/auth/session";
-import { getAdmin } from "@/lib/db/queries";
+import { checkAdmin } from "@/lib/auth/admin";
+import type { AdminSession } from "@/lib/auth/session";
 
+/** 권한(총괄/직원·매장)은 DB 의 지금 값 — 쿠키를 받은 뒤 바뀌었어도 바로 따른다 */
 export async function requireAdminPage(): Promise<AdminSession> {
-  const s = await getAdminSession();
-  if (!s) redirect("/admin/login");
-  const row = await getAdmin(s.adminId).catch(() => null);
-  if (!row || !row.active) redirect("/admin/login?reason=inactive");
-  return s;
+  const c = await checkAdmin();
+  if (!c.ok) redirect(c.why === "none" ? "/admin/login" : `/admin/login?reason=${c.why}`);
+  return c.s;
 }
 
 export function isOwner(s: AdminSession): boolean {

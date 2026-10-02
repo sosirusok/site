@@ -1,5 +1,7 @@
 import { createHash } from "node:crypto";
-import sharp from "sharp";
+
+/** sharp(libvips)는 무겁다 — 이 파일을 끌어오는 화면마다 처음 뜰 때 싣지 않고, 사진을 다룰 때만 싣는다 */
+const loadSharp = async () => (await import("sharp")).default;
 
 export type NormalizedImage = {
   buffer: Buffer;
@@ -15,6 +17,7 @@ export type NormalizedImage = {
  * 같은 원본을 다시 올리면 같은 결과(=같은 sha256)가 나온다.
  */
 export async function normalizeImage(input: Buffer): Promise<NormalizedImage> {
+  const sharp = await loadSharp();
   const { data, info } = await sharp(input, { failOn: "none", limitInputPixels: 80_000_000 })
     .rotate()
     .resize({ width: 1600, height: 1600, fit: "inside", withoutEnlargement: true })
@@ -27,6 +30,7 @@ export async function normalizeImage(input: Buffer): Promise<NormalizedImage> {
 
 /** 9x8 그레이스케일 차분 해시(64bit, hex 16자) */
 export async function computeDHash(buf: Buffer): Promise<string> {
+  const sharp = await loadSharp();
   const { data } = await sharp(buf).grayscale().resize(9, 8, { fit: "fill" }).raw().toBuffer({ resolveWithObject: true });
   let bits = 0n;
   for (let y = 0; y < 8; y++) {
@@ -52,5 +56,6 @@ export function hammingDistance(a: string, b: string): number {
 
 /** 관리자 화면용 썸네일 */
 export async function thumbnail(buf: Buffer, width = 480): Promise<Buffer> {
+  const sharp = await loadSharp();
   return sharp(buf).resize({ width, withoutEnlargement: true }).jpeg({ quality: 70 }).toBuffer();
 }

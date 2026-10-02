@@ -99,11 +99,20 @@ export function maskApproval(no: string | null | undefined): string {
   return `${t.slice(0, 4)}${"*".repeat(Math.min(6, t.length - 4))}`;
 }
 
-/** 같은 경로 안에서만 이동하도록 next 파라미터를 거른다 */
+/**
+ * 같은 사이트 안에서만 이동하도록 next 파라미터를 거른다.
+ * 브라우저는 주소의 탭·줄바꿈을 지우고 읽는다("/<탭>/evil.example" → "//evil.example") — 그런 글자가 있으면 받지 않고, 실제로 풀어 본 주소가 이 사이트인지도 확인한다.
+ */
 export function safeNext(v: string | string[] | undefined, fallback: string): string {
   const s = Array.isArray(v) ? v[0] : v;
-  if (!s || !s.startsWith("/") || s.startsWith("//") || s.includes("\\")) return fallback;
-  return s;
+  if (!s || !s.startsWith("/") || s.startsWith("//") || /[\\\u0000-\u001f\u007f]/.test(s)) return fallback;
+  try {
+    const u = new URL(s, "http://n.invalid");
+    if (u.origin !== "http://n.invalid") return fallback;
+    return u.pathname + u.search + u.hash;
+  } catch {
+    return fallback;
+  }
 }
 
 /** 매장 번호 01/02/03 — 홈·푸터와 같은 순서(STORE_IDS) */

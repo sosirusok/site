@@ -10,8 +10,14 @@ export type { AdminSession, MemberSession } from "./token";
 
 export const MEMBER_COOKIE = "icha_member";
 export const ADMIN_COOKIE = "icha_admin";
+/** 로그인했다는 표시만(값 1, 스크립트가 읽을 수 있음) — 헤더가 이게 없으면 /api/auth/me 를 부르지 않는다. 권한은 언제나 icha_member 로만 판단한다 */
+export const MEMBER_HINT_COOKIE = "icha_m";
 const MEMBER_DAYS = 180;
 const ADMIN_DAYS = 14;
+
+export function memberHintOpts() {
+  return { ...cookieOpts(MEMBER_DAYS), httpOnly: false };
+}
 
 function cookieOpts(days: number) {
   return {
@@ -31,11 +37,13 @@ export async function getMemberSession(): Promise<MemberSession | null> {
 export async function setMemberSession(s: MemberSession): Promise<void> {
   const jar = await cookies();
   jar.set(MEMBER_COOKIE, await signToken({ ...s, kind: "member" }, MEMBER_DAYS), cookieOpts(MEMBER_DAYS));
+  jar.set(MEMBER_HINT_COOKIE, "1", memberHintOpts());
 }
 
 export async function clearMemberSession(): Promise<void> {
   const jar = await cookies();
   jar.delete(MEMBER_COOKIE);
+  jar.delete(MEMBER_HINT_COOKIE);
 }
 
 export async function getAdminSession(): Promise<AdminSession | null> {
@@ -45,7 +53,9 @@ export async function getAdminSession(): Promise<AdminSession | null> {
 
 export async function setAdminSession(s: AdminSession): Promise<void> {
   const jar = await cookies();
-  jar.set(ADMIN_COOKIE, await signToken({ ...s, kind: "admin" }, ADMIN_DAYS), cookieOpts(ADMIN_DAYS));
+  const { iat: _iat, ...rest } = s; // 만든 시각은 새로 찍는다
+  void _iat;
+  jar.set(ADMIN_COOKIE, await signToken({ ...rest, kind: "admin" }, ADMIN_DAYS), cookieOpts(ADMIN_DAYS));
 }
 
 export async function clearAdminSession(): Promise<void> {

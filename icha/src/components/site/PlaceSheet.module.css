@@ -12,5 +12,5 @@
 .course { font-family: var(--font-label); font-size: 32px; line-height: 0.82; color: transparent; -webkit-text-stroke: 1.8px var(--store); }
 .body { min-width: 0; display: grid; gap: 3px; }
 .name { font-family: var(--font-poster); font-size: 19px; line-height: 1.15; color: #fff; }
-.sub { font-size: 12px; color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sub { font-size: 12px; color: var(--ink-2); overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; }
 .close { justify-self: center; }
