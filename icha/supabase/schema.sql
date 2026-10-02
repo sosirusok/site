@@ -217,20 +217,21 @@ create table if not exists tt_blocks (
 
 -- 예전 판에서 만든 표에 새 칸 넣기. 칸이 이미 있으면 ALTER 를 아예 하지 않는다 —
 -- ALTER TABLE 은 칸이 있어도 표 전체를 잠가, 서버가 새로 뜰 때마다 그 순간 테이블톡 쿼리가 줄줄이 기다리게 된다
+-- 서버 둘이 동시에 처음 뜨면 둘 다 "없다"를 보고 ALTER 로 간다 — 그래서 안에서도 if not exists(늦은 쪽은 건너뛴다)
 do $$
 begin
   if not exists (select 1 from information_schema.columns where table_schema = current_schema() and table_name = 'tt_seats' and column_name = 'v') then
-    alter table tt_seats add column v bigint not null default nextval('tt_v_seq');
+    alter table tt_seats add column if not exists v bigint not null default nextval('tt_v_seq');
   end if;
   if not exists (select 1 from information_schema.columns where table_schema = current_schema() and table_name = 'tt_blocks' and column_name = 'other_table') then
-    alter table tt_blocks add column other_table int;
+    alter table tt_blocks add column if not exists other_table int;
   end if;
   if not exists (select 1 from information_schema.columns where table_schema = current_schema() and table_name = 'menu_items' and column_name = 'image_updated_at') then
-    alter table menu_items add column image_updated_at timestamptz;
+    alter table menu_items add column if not exists image_updated_at timestamptz;
   end if;
   -- 비밀번호를 바꾼 시각 — 그 전에 받은 관리자 쿠키는 더 쓰지 못한다(src/lib/auth/admin.ts)
   if not exists (select 1 from information_schema.columns where table_schema = current_schema() and table_name = 'admins' and column_name = 'pw_changed_at') then
-    alter table admins add column pw_changed_at timestamptz;
+    alter table admins add column if not exists pw_changed_at timestamptz;
   end if;
 end $$;
 
