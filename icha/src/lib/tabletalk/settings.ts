@@ -18,7 +18,7 @@ export type TTStoreSettings = {
 export type TTSettings = Record<StoreId, TTStoreSettings>;
 
 const KEY = "tabletalk";
-export const DEFAULT_TABLES = 20;
+export const DEFAULT_TABLES = 28;
 const DEFAULT: TTStoreSettings = { on: true, tables: DEFAULT_TABLES, pick: true, gen: 1 };
 const TTL_MS = 30_000;
 
